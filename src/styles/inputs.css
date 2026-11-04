@@ -17,8 +17,9 @@
   font: 600 12px var(--font-body);
   cursor: pointer;
 }
-.segmented button:hover { color: var(--x-color-ink); background: var(--x-color-surface-2); }
+.segmented button:not(:disabled):hover { color: var(--x-color-ink); background: var(--x-color-surface-2); }
 .segmented button[aria-pressed="true"] { background: var(--x-color-accent); color: var(--x-color-on-accent); }
+.segmented button:disabled { opacity: 0.6; cursor: default; }
 
 .lang-select {
   min-height: 32px;
@@ -167,6 +168,22 @@
   border-radius: var(--radius-m);
   font-size: 12px;
 }
+/* SearchPicker (.x-search-picker): a SearchInput over a listbox drawn like ListRow */
+.x-search-picker { display: flex; flex-direction: column; gap: var(--x-space-2); min-width: 0; }
+.x-search-picker-list {
+  display: flex;
+  flex-direction: column;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: var(--x-space-1);
+  border: 1px solid var(--x-color-line);
+  border-radius: var(--radius-m);
+}
+.x-search-picker-list[hidden] { display: none; }
+.x-search-picker-option { cursor: pointer; }
+.x-search-picker-option[data-disabled] { cursor: default; }
+.x-search-picker-status { min-height: 0; font-size: 12px; color: var(--text-2); }
+.x-search-picker-status:empty { display: none; }
 .search-count {
   position: absolute;
   right: calc(var(--x-space-8) - var(--x-space-1));
@@ -219,3 +236,30 @@
   color: var(--x-color-muted);
 }
 .task-chip[aria-pressed="true"] .task-chip-count { background: var(--x-color-accent-soft); color: var(--x-color-ink); }
+
+.font-field { position: relative; display: inline-flex; align-items: center; min-width: 200px; }
+.font-field-input {
+  flex: 1;
+  min-height: 32px;
+  padding: 0 calc(var(--x-space-3) + 20px) 0 var(--x-space-3);
+  border: 1px solid var(--x-color-line);
+  border-radius: 10px;
+  background: var(--x-color-surface);
+  color: var(--x-color-ink);
+  font: 600 12px var(--font-body);
+}
+.font-field-input:focus-visible { outline: 2px solid var(--x-color-focus); outline-offset: 2px; }
+.font-field-input:disabled { opacity: 0.55; }
+.font-field-reset {
+  position: absolute;
+  right: 6px;
+  display: inline-flex;
+  padding: 2px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--x-color-muted);
+  cursor: pointer;
+}
+.font-field-reset:hover { color: var(--x-color-ink); background: var(--x-color-surface-2); }
+.font-field-reset:focus-visible { outline: 2px solid var(--x-color-focus); outline-offset: 1px; }

@@ -9,6 +9,8 @@
   --x-tab-color-10: var(--text-2);
   --font-body: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
   --x-font-body: var(--font-body);
+  --font-body-fallback: system-ui, sans-serif;
+  --x-font-body-fallback: var(--font-body-fallback);
   --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
   --x-font-mono: var(--font-mono);
   --x-space-1: 4px;
@@ -39,6 +41,7 @@
   --text-1: #e8e8ec;
   --text-2: #8e8e98;
   --text-3: #62626c;
+  --side-tint: #131724;
   --term: #09090b;
   --accent: #2f62e6;
   --signal: #5bd8ff;
@@ -90,6 +93,7 @@
   --text-1: #111114;
   --text-2: #5c5c66;
   --text-3: #8a8a94;
+  --side-tint: #f2f5fd;
   --term: #fafafb;
   --accent: #2453d6;
   --signal: #0670a0;

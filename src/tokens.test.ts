@@ -48,3 +48,13 @@ describe("tokens.css", () => {
     expect(missing).toEqual([]);
   });
 });
+
+describe("appearance tokens", () => {
+  it("emits the tinted sidebar ground once per theme", () => {
+    expect(tokensCss.match(/--side-tint:/g)).toHaveLength(2);
+  });
+  it("emits the body fallback stack the font setting ends with", () => {
+    expect(tokensCss).toMatch(/--font-body-fallback:\s*system-ui, sans-serif;/);
+    expect(tokensCss).toMatch(/--x-font-body-fallback:\s*var\(--font-body-fallback\);/);
+  });
+});
