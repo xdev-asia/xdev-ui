@@ -20,7 +20,10 @@ function add(name, value) {
 }
 
 for (const tok of t.color.tokens) add(tok.name, tok.value);
-for (const [k, v] of Object.entries(t.type.families ?? {})) add(`font-${k}`, v);
+for (const [k, v] of Object.entries(t.type.families ?? {})) {
+  add(`font-${k}`, v);
+  add(`x-font-${k}`, `{font-${k}}`); // alias: the xDev app uses the x- prefixed names
+}
 for (const group of ["spacing", "radius", "size", "shadow"]) for (const tok of t[group]?.tokens ?? []) add(tok.name, tok.value);
 
 const [first, ...rest] = themes;

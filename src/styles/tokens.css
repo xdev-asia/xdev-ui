@@ -8,7 +8,9 @@
   --x-tab-color-8: var(--violet);
   --x-tab-color-10: var(--text-2);
   --font-body: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+  --x-font-body: var(--font-body);
   --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --x-font-mono: var(--font-mono);
   --x-space-1: 4px;
   --x-space-2: 8px;
   --x-space-3: 12px;
