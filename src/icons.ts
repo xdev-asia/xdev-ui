@@ -1,5 +1,6 @@
 /** Line icons: 24 viewBox, stroke currentColor 1.75, round caps and joins, no fills.
- *  docs…terminal come from apps/desktop/src/components/ActivityBar.tsx. */
+ *  docs…terminal come from apps/desktop/src/components/ActivityBar.tsx; later names keep the path data of the
+ *  inline svg they replace. Keys are lowercase, hyphen allowed (the AI manifest reads them with a regex). */
 type Part = readonly ["path" | "circle" | "rect", Readonly<Record<string, string | number>>];
 
 export const ICONS = {
@@ -16,6 +17,10 @@ export const ICONS = {
   plus: [["path", { d: "M12 5v14M5 12h14" }]],
   search: [["circle", { cx: 11, cy: 11, r: 6 }], ["path", { d: "m20 20-4.5-4.5" }]],
   more: [["circle", { cx: 5, cy: 12, r: 1 }], ["circle", { cx: 12, cy: 12, r: 1 }], ["circle", { cx: 19, cy: 12, r: 1 }]],
+  "chevron-left": [["path", { d: "M15 6l-6 6 6 6" }]],
+  "chevron-right": [["path", { d: "M9 6l6 6-6 6" }]],
+  magnifier: [["circle", { cx: 11, cy: 11, r: 7 }], ["path", { d: "m20 20-3.5-3.5" }]],
+  prompt: [["path", { d: "m5 8 5 4-5 4M12 17h7" }]],
   branch: [["circle", { cx: 6, cy: 5, r: 2 }], ["circle", { cx: 6, cy: 19, r: 2 }], ["circle", { cx: 18, cy: 7, r: 2 }], ["path", { d: "M6 7v10M18 9c0 5-6 4-12 8" }]]
 } as const satisfies Record<string, readonly Part[]>;
 

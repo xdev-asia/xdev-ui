@@ -82,7 +82,7 @@ if (missing.length) {
 }
 
 const iconsSrc = read("src/icons.ts");
-const icons = [...(iconsSrc.split("export const ICONS = {")[1] ?? "").matchAll(/^\s{2}([a-z]+):/gm)].map((m) => m[1]);
+const icons = [...(iconsSrc.split("export const ICONS = {")[1] ?? "").matchAll(/^\s{2}"?([a-z][a-z0-9-]*)"?:/gm)].map((m) => m[1]);
 
 const flatTokens = [];
 for (const [category, block] of Object.entries(tokens)) {
