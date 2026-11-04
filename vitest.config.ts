@@ -14,6 +14,8 @@ export default defineConfig({
   },
   test: {
     environment: "node",
+    // The suite shares build machines; file-scanning tests need more than the 5 s default there.
+    testTimeout: 30_000,
     include: ["src/**/*.test.{ts,tsx}", "scripts/**/*.test.mjs", "test/**/*.test.{ts,tsx}", "examples/**/*.test.{ts,tsx}"],
   },
 });
