@@ -59,6 +59,7 @@ export * from "./components/Popover/Popover";
 export * from "./components/Tooltip/Tooltip";
 export * from "./components/AppShell/AppShell";
 export * from "./components/PageHeader/PageHeader";
+export * from "./components/FormSection/FormSection";
 export { ICONS, ICON_NAMES, type IconName } from "./icons";
 export * from "./theme";
 export type * from "./types";

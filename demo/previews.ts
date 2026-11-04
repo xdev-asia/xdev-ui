@@ -462,6 +462,12 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     style: {"padding": "16px", "width": "480px", "maxWidth": "100%"},
     render: (X, h) => h(X.PageHeader, { title: "Users", description: "People who can sign in to this workspace.", meta: h(X.StatusDot, { tone: "ok", label: "Active" }), actions: h(X.Button, null, "Create user") }),
   },
+  "FormSection": {
+    style: {"padding": "16px", "width": "520px", "maxWidth": "100%"},
+    render: (X, h) => h(X.FormSection, { title: "Profile", description: "Shown to teammates.", columns: 2, actions: h(React.Fragment, null, h(X.Button, { variant: "secondary" }, "Cancel"), h(X.Button, null, "Save changes")) },
+      h(X.Field, { label: "Full name", defaultValue: "Ada Lovelace" }),
+      h(X.Field, { label: "Email", type: "email", defaultValue: "ada@example.com" })),
+  },
 };
 
 function PopoverDemo({ X }) {
