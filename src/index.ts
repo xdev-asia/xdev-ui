@@ -62,6 +62,8 @@ export * from "./components/PageHeader/PageHeader";
 export * from "./components/FormSection/FormSection";
 export * from "./components/DescriptionList/DescriptionList";
 export * from "./components/StatTile/StatTile";
+export * from "./components/DataTable/DataTable";
+export * from "./components/DataTable/table-helpers";
 export { ICONS, ICON_NAMES, type IconName } from "./icons";
 export * from "./theme";
 export type * from "./types";

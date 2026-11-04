@@ -7,6 +7,7 @@ import {
   Breadcrumb,
   CodeBlock,
   CommandPalette,
+  DataTable,
   DiffStat,
   Dialog,
   NavList,
@@ -185,5 +186,17 @@ describe("labels override every default English string", () => {
     const html = renderToStaticMarkup(h(StatTile, { label: "L", value: "1", loading: true, labels: { loading: S("l") } }));
     expect(html).toContain(S("l"));
     expectNoEnglish(html, ["Loading"]);
+  });
+
+  it("DataTable", () => {
+    const DT = DataTable as unknown as (p: Record<string, unknown>) => ReturnType<typeof DataTable>;
+    const labels = { selectAll: S("sa"), selectRow: (n: string) => `${S("sr")}${n}`, sortedAsc: S("as"), sortedDesc: S("ds"), loading: S("ld") };
+    const props = { caption: "c", rowKey: (r: { id: string }) => r.id, rowLabel: (r: { id: string }) => r.id, columns: [{ key: "a", header: "A", sortable: true, cell: (r: { id: string }) => r.id }], labels };
+    const html = renderToStaticMarkup(h(DT, { ...props, rows: [{ id: "x" }], selected: new Set<string>(), sort: { key: "a", dir: "asc" } }));
+    for (const v of [S("sa"), `${S("sr")}x`, S("as")]) expect(html).toContain(v);
+    expectNoEnglish(html, ["Select all rows", "Select", "sorted ascending"]);
+    const desc = renderToStaticMarkup(h(DT, { ...props, rows: [{ id: "x" }], sort: { key: "a", dir: "desc" } }));
+    expect(desc).toContain(S("ds"));
+    expect(renderToStaticMarkup(h(DT, { ...props, rows: [], loading: true }))).toContain(S("ld"));
   });
 });

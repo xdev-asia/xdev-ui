@@ -21,3 +21,23 @@
 .x-stat-delta[data-tone="bad"] { color: var(--danger); }
 .x-stat-hint { color: var(--text-2); }
 .x-stat-extra { margin-top: var(--x-space-2); }
+
+/* DataTable (.x-table) */
+.x-table-wrap { container-type: inline-size; max-width: 100%; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-l); background: var(--bg-1); }
+.x-table-wrap[data-loading] .x-table tbody { opacity: 0.6; }
+.x-table { width: 100%; border-collapse: collapse; font: var(--type-body); color: var(--text-1); }
+.x-table th, .x-table td { padding: var(--x-space-2) var(--x-space-3); border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+.x-table tbody tr:last-child td { border-bottom: 0; }
+.x-table th { font: var(--type-label); color: var(--text-2); white-space: nowrap; background: var(--bg-1); }
+.x-table [data-align="end"] { text-align: right; }
+.x-table [data-width="min"] { width: 1%; white-space: nowrap; }
+.x-table td.ws-mono { font: var(--type-mono); }
+.x-table tbody tr:hover { background: var(--bg-2); }
+.x-table tbody tr[data-selected] { background: var(--bg-3); }
+.x-table-check { padding-right: 0; }
+.x-table-sort { display: inline-flex; align-items: center; gap: var(--x-space-1); padding: 0; border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.x-table-sort:hover { color: var(--text-1); }
+.x-table-sort:focus-visible, .x-table th input:focus-visible, .x-table td input:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: 2px; }
+.x-table-empty { padding: var(--x-space-8) var(--x-space-4); text-align: center; }
+.x-table tbody tr:has(.x-table-empty):hover { background: transparent; }
+@container (max-width: 480px) { .x-table [data-hide-narrow] { display: none; } }

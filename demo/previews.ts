@@ -479,6 +479,12 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.StatTile, { label: "Storage", value: "82 GB" }, h(X.Meter, { value: 82, warnAt: 80, label: "Used" })),
       h(X.StatTile, { label: "Sign-ins", value: "0", loading: true })),
   },
+  "DataTable": {
+    style: {"padding": "16px", "width": "520px", "maxWidth": "100%"},
+    render: (X, h) => h(X.DataTable, { caption: "Users", rowKey: (r) => r.id, rowLabel: (r) => r.name, sort: { key: "name", dir: "asc" }, selected: new Set(["2"]), onSelectedChange() {},
+      rows: [{ id: "1", name: "Ada Lovelace", email: "ada@example.com" }, { id: "2", name: "Grace Hopper", email: "grace@example.com" }],
+      columns: [{ key: "name", header: "Name", sortable: true, cell: (r) => r.name }, { key: "email", header: "Email", mono: true, hideNarrow: true, cell: (r) => r.email }] }),
+  },
 };
 
 function PopoverDemo({ X }) {

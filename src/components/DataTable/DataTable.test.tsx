@@ -1,0 +1,73 @@
+import { renderToStaticMarkup } from "react-dom/server";
+import { describe, expect, it, vi } from "vitest";
+import { findAll } from "../../test-utils";
+import { DataTable, type DataTableColumn } from "./DataTable";
+
+interface Row { id: string; name: string; role: string }
+const rows: Row[] = [
+  { id: "1", name: "Ada", role: "Owner" },
+  { id: "2", name: "Grace", role: "Admin" },
+];
+const columns: DataTableColumn<Row>[] = [
+  { key: "name", header: "Name", cell: (r) => r.name, sortable: true },
+  { key: "role", header: "Role", cell: (r) => r.role, hideNarrow: true },
+];
+const base = { columns, rows, rowKey: (r: Row) => r.id, caption: "Users" };
+
+describe("DataTable", () => {
+  it("renders a captioned table with one row per item", () => {
+    const html = renderToStaticMarkup(<DataTable {...base} />);
+    expect(html).toContain('<div class="x-table-wrap"');
+    expect(html).toContain('<caption class="x-sr-only">Users</caption>');
+    expect(html.match(/<tbody>.*<\/tbody>/)![0].match(/<tr/g)).toHaveLength(2);
+    expect(html).toContain("Grace");
+    expect(html).toContain('data-hide-narrow="true"');
+  });
+  it("marks the sorted column and uses a button for sortable headers", () => {
+    const html = renderToStaticMarkup(<DataTable {...base} sort={{ key: "name", dir: "desc" }} />);
+    expect(html).toContain('aria-sort="descending"');
+    expect(html).toContain('class="x-table-sort"');
+    expect(html).toContain("sorted descending");
+    expect(html.match(/aria-sort/g)).toHaveLength(1);
+  });
+  it("sort button calls onSortChange with the next sort", () => {
+    const onSortChange = vi.fn();
+    const btn = findAll(DataTable({ ...base, sort: { key: "name", dir: "asc" }, onSortChange }), (e) => e.props.className === "x-table-sort")[0];
+    btn.props.onClick();
+    expect(onSortChange).toHaveBeenCalledWith({ key: "name", dir: "desc" });
+  });
+  it("adds a checkbox column when selected is given", () => {
+    const html = renderToStaticMarkup(<DataTable {...base} selected={new Set(["1"])} onSelectedChange={() => {}} rowLabel={(r) => r.name} />);
+    expect(html).toContain('aria-label="Select all rows"');
+    expect(html).toContain('aria-label="Select Ada"');
+    expect(html).toContain('aria-selected="true"');
+    expect(html.match(/aria-selected/g)).toHaveLength(1);
+    expect(renderToStaticMarkup(<DataTable {...base} />)).not.toContain("checkbox");
+  });
+  it("select all adds every row; select all again clears them", () => {
+    const onSelectedChange = vi.fn();
+    const sel = (selected: string[]) => findAll(DataTable({ ...base, selected: new Set(selected), onSelectedChange }), (e) => e.props["aria-label"] === "Select all rows")[0];
+    sel([]).props.onChange();
+    expect([...onSelectedChange.mock.calls[0][0]].sort()).toEqual(["1", "2"]);
+    sel(["1", "2"]).props.onChange();
+    expect([...onSelectedChange.mock.calls[1][0]]).toEqual([]);
+    expect(sel(["1"]).props.indeterminate).toBe(true);
+  });
+  it("shows the empty node when there are no rows", () => {
+    const html = renderToStaticMarkup(<DataTable {...base} rows={[]} empty={<p>No users</p>} />);
+    expect(html).toContain("No users");
+    expect(html).toContain('class="x-table-empty"');
+  });
+  it("loading shows a spinner and sets aria-busy", () => {
+    const html = renderToStaticMarkup(<DataTable {...base} rows={[]} loading labels={{ loading: "Chargement" }} empty={<p>No users</p>} />);
+    expect(html).toContain('aria-busy="true"');
+    expect(html).toContain("Chargement");
+    expect(html).not.toContain("No users");
+  });
+  it("applies column align, mono and width", () => {
+    const html = renderToStaticMarkup(<DataTable {...base} columns={[{ key: "n", header: "N", cell: (r) => r.name, align: "end", mono: true, width: "min" }]} />);
+    expect(html).toContain('data-align="end"');
+    expect(html).toContain("ws-mono");
+    expect(html).toContain('data-width="min"');
+  });
+});

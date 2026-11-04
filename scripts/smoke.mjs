@@ -66,6 +66,7 @@ const cases = {
   FormSection: [{ title: "Profile", description: "Shown to teammates.", columns: 2, actions: h("button", { type: "button" }, "Save changes") }, h("input", { "aria-label": "Name" })],
   DescriptionList: [{ items: [{ term: "Email", value: "ada@example.com", mono: true }, { term: "Role", value: "Owner" }] }],
   StatTile: [{ label: "Active users", value: "1,284", delta: "+12%", deltaTrend: "up", deltaTone: "good", hint: "vs last 7 days" }],
+  DataTable: [{ caption: "Users", rowKey: (r) => r.id, rows: [{ id: "1", name: "Ada" }], columns: [{ key: "name", header: "Name", sortable: true, cell: (r) => r.name }], selected: new Set(), onSelectedChange() {} }],
 };
 let fail = 0;
 for (const [name, [props, child]] of Object.entries(cases)) {
