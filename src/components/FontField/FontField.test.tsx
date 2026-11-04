@@ -33,4 +33,8 @@ describe("FontField", () => {
     expect(html).toContain("font-family:Mine");
     expect(html).not.toContain("Inter,");
   });
+  it("disables the reset button with the field", () => {
+    const html = renderToStaticMarkup(<FontField value="Inter" onChange={() => {}} disabled />);
+    expect(html).toMatch(/<button[^>]*font-field-reset[^>]*disabled=""/);
+  });
 });
