@@ -40,5 +40,12 @@ describe("Icon", () => {
     expect(html("check")).toContain('d="m5 12 5 5L20 7"');
     expect(html("alert")).toContain('d="M12 9v4M12 17h.01"');
     expect(html("warn-dash")).toContain('d="M12 3 2 20h20zM12 10v4M12 17v.5"');
+    expect(html("restore")).toContain('d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"');
+    expect(html("history")).toContain('d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"');
+    expect(html("bot")).toContain('d="M5 10a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2zM12 8V4M10 4h4M9.5 13h.01M14.5 13h.01"');
+    expect(html("download")).toContain('d="M12 4v11M7 10l5 5 5-5M5 20h14"');
+    expect(html("copy")).toContain('d="M11 9h7a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2zM5 15V6a2 2 0 0 1 2-2h9"');
+    expect(html("plug")).toContain('d="M9 7V3M15 7V3M7 7h10v4a5 5 0 0 1-10 0zM12 16v5"');
+    expect(html("lock")).toContain('d="M7 11h10a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2zM8 11V8a4 4 0 0 1 8 0v3"');
   });
 });

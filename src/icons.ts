@@ -26,6 +26,13 @@ export const ICONS = {
   check: [["path", { d: "m5 12 5 5L20 7" }]],
   alert: [["path", { d: "M12 9v4M12 17h.01" }], ["path", { d: "M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" }]],
   "warn-dash": [["path", { d: "M12 3 2 20h20zM12 10v4M12 17v.5" }]],
+  restore: [["path", { d: "M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5" }]],
+  history: [["path", { d: "M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2" }]],
+  bot: [["path", { d: "M5 10a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2zM12 8V4M10 4h4M9.5 13h.01M14.5 13h.01" }]],
+  download: [["path", { d: "M12 4v11M7 10l5 5 5-5M5 20h14" }]],
+  copy: [["path", { d: "M11 9h7a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2zM5 15V6a2 2 0 0 1 2-2h9" }]],
+  plug: [["path", { d: "M9 7V3M15 7V3M7 7h10v4a5 5 0 0 1-10 0zM12 16v5" }]],
+  lock: [["path", { d: "M7 11h10a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2zM8 11V8a4 4 0 0 1 8 0v3" }]],
   branch: [["circle", { cx: 6, cy: 5, r: 2 }], ["circle", { cx: 6, cy: 19, r: 2 }], ["circle", { cx: 18, cy: 7, r: 2 }], ["path", { d: "M6 7v10M18 9c0 5-6 4-12 8" }]]
 } as const satisfies Record<string, readonly Part[]>;
 
