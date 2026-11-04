@@ -32,6 +32,7 @@ const cases = {
   RadioGroup: [{ name: "shell", value: "bash", onChange() {}, options: [{ value: "bash", label: "bash" }, { value: "pwsh", label: "PowerShell" }] }],
   Textarea: [{ label: "Commit message", mono: true }],
   SearchInput: [{ value: "auth", onChange() {}, onClear() {}, count: 4 }],
+  SearchPicker: [{ label: "Find work", value: "da", onValueChange() {}, onPick() {}, items: [{ id: "1", title: "Dark theme", meta: "#1" }], status: "1 match" }],
   FilterChip: [{ pressed: true, count: 3 }, "Failed"],
   Tabs: [{ items: [{ id: "diff", label: "Diff" }, { id: "log", label: "Log", badge: 2 }] }],
   NavList: [{ title: "Settings", items: [{ id: "general", label: "General" }], value: "general", onSelect() {} }],

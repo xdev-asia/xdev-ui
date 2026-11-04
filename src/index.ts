@@ -26,6 +26,7 @@ export * from "./components/Checkbox/Checkbox";
 export * from "./components/RadioGroup/RadioGroup";
 export * from "./components/Textarea/Textarea";
 export * from "./components/SearchInput/SearchInput";
+export * from "./components/SearchPicker/SearchPicker";
 export * from "./components/FilterChip/FilterChip";
 export * from "./components/ListRow/ListRow";
 export * from "./components/Card/Card";

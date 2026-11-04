@@ -167,6 +167,22 @@
   border-radius: var(--radius-m);
   font-size: 12px;
 }
+/* SearchPicker (.x-search-picker): a SearchInput over a listbox drawn like ListRow */
+.x-search-picker { display: flex; flex-direction: column; gap: var(--x-space-2); min-width: 0; }
+.x-search-picker-list {
+  display: flex;
+  flex-direction: column;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: var(--x-space-1);
+  border: 1px solid var(--x-color-line);
+  border-radius: var(--radius-m);
+}
+.x-search-picker-list[hidden] { display: none; }
+.x-search-picker-option { cursor: pointer; }
+.x-search-picker-option[data-disabled] { cursor: default; }
+.x-search-picker-status { min-height: 0; font-size: 12px; color: var(--text-2); }
+.x-search-picker-status:empty { display: none; }
 .search-count {
   position: absolute;
   right: calc(var(--x-space-8) - var(--x-space-1));
