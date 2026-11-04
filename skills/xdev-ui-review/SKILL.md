@@ -25,7 +25,7 @@ node <skill-dir>/scripts/audit.mjs src --i18n src/i18n
 | `raw-px` | error | a size in `px` other than `1px` in CSS or a `style` prop |
 | `raw-font` | error | `font-size`, `fontSize`, or `font:` without `var(--type-*)` |
 | `left-stripe` | error | `border-left`, `border-inline-start` with a width, or an inset left shadow |
-| `unknown-token` | error | `var(--x)` that is not a design token or defined in the app |
+| `unknown-token` | error | `var(--<name>)` that is not a design token or defined in the app |
 | `focus-outline` | error | `outline: none` or `outline: 0` |
 | `i18n-parity` | error | `en` and `vi` differ in keys, or a value is empty |
 | `primary-count` | warn | more than one primary `Button` in one file |

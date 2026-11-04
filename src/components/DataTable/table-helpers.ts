@@ -1,8 +1,4 @@
-export type SortDir = "asc" | "desc";
-export interface TableSort {
-  key: string;
-  dir: SortDir;
-}
+import type { TableSort } from "./DataTable";
 
 /** Click on a sortable header: a new column starts asc; the same column goes asc, desc, off (null). */
 export function nextSort(current: TableSort | null | undefined, key: string): TableSort | null {

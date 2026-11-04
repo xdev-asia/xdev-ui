@@ -3,9 +3,13 @@ import { cx } from "../../internal/cx";
 import { Checkbox } from "../Checkbox/Checkbox";
 import { Icon } from "../Icon/Icon";
 import { Spinner } from "../Spinner/Spinner";
-import { nextSort, type TableSort } from "./table-helpers";
+import { nextSort } from "./table-helpers";
 
-export type { SortDir, TableSort } from "./table-helpers";
+export type SortDir = "asc" | "desc";
+export interface TableSort {
+  key: string;
+  dir: SortDir;
+}
 
 export interface DataTableColumn<Row> {
   key: string;
