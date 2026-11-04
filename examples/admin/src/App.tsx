@@ -8,6 +8,7 @@ import { hrefFor, navigate, useRoute } from "./router";
 import { Shell } from "./shell/Shell";
 import { NotifyContext, useToasts } from "./shell/notify";
 import { useTheme } from "./theme";
+import { DashboardPage } from "./pages/Dashboard";
 import { NotFoundPage } from "./pages/NotFound";
 import { SignInPage } from "./pages/SignIn";
 
@@ -16,6 +17,8 @@ const LOCALE_KEY = "acme-locale";
 function Routes(): JSX.Element {
   const route = useRoute();
   switch (route.name) {
+    case "dashboard":
+      return <DashboardPage />;
     default:
       return <NotFoundPage />;
   }
