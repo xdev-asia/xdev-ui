@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import {
   ActivityBar,
+  AppShell,
   Breadcrumb,
   CodeBlock,
   CommandPalette,
@@ -169,5 +170,13 @@ describe("labels override every default English string", () => {
     const html = renderToStaticMarkup(h(Toolbar, { title: h("b", null, "3"), actions: h("button", { type: "button" }, "x"), labels: { actions: S("ac") } }));
     expect(html).toContain(S("ac"));
     expectNoEnglish(html, ["Actions"]);
+  });
+
+  it("AppShell", () => {
+    const labels = { openNav: S("on"), closeNav: S("cn"), skipToContent: S("sk"), nav: S("nv") };
+    const html = renderToStaticMarkup(h(AppShell, { nav: "n", labels, children: "c" }));
+    for (const v of [S("on"), S("sk"), S("nv")]) expect(html).toContain(v);
+    expectNoEnglish(html, ["Open navigation", "Skip to content", "Navigation"]);
+    expect(renderToStaticMarkup(h(AppShell, { nav: "n", navOpen: true, labels, children: "c" }))).toContain(S("cn"));
   });
 });

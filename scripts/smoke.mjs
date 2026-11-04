@@ -60,6 +60,8 @@ const cases = {
   Tooltip: [{ content: "Copy path" }, h("button", { type: "button" }, "Copy")],
   SplitHandle: [{ direction: "horizontal", value: 240, min: 160, max: 420, onResize() {} }],
   Toolbar: [{ title: "Changes", count: 12, actions: h("button", { type: "button" }, "Stage all") }],
+  Avatar: [{ name: "Trần Thị B" }],
+  AppShell: [{ nav: h("nav", { "aria-label": "Main" }, "Overview"), crumbs: "Overview" }, "Page"],
 };
 let fail = 0;
 for (const [name, [props, child]] of Object.entries(cases)) {

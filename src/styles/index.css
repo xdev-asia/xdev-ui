@@ -6,5 +6,7 @@
 @import "./display.css";
 @import "./status.css";
 @import "./navigation.css";
+@import "./layout.css";
+@import "./data.css";
 @import "./overlays.css";
 @import "./brand.css";

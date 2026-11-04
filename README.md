@@ -43,7 +43,7 @@ import { Button, TabStrip, BrandMark } from "@xdev-asia/ui";
 | `@xdev-asia/ui/ai-manifest.json` | components, props, classes, tokens, icons, guidelines as JSON |
 | `@xdev-asia/ui/llms.txt`, `llms-full.txt` | the same for LLMs ([llmstxt.org](https://llmstxt.org)) |
 
-Components: ActionTile, ActivityBar, AgentChip, Avatar, Badge, Banner, BrandMark, Breadcrumb, Button, Card, Checkbox, CodeBlock, Comment, CommandPalette, CommitGraph, Dialog, DiffStat, Disclosure, EmptyState, Field, FieldMessage, FileIcon, FilterChip, FontField, Heatmap, Icon, IconButton, Kbd, ListRow, Menu, Meter, NavList, PanZoom, Popover, RadioGroup, ReactionBar, SearchInput, SearchPicker, Segmented, Select, SettingRow, Spinner, SplitHandle, StatusBar, StatusDot, Switch, TabStrip, Tabs, Tag, Textarea, ThemeSwitch, Toast, Toolbar, Tooltip, TreeView, ZoomBar. Rules per component: `src/components/<Name>/README.md`. Brand book: [docs/brand.md](docs/brand.md). Foundations: [docs/design-system.md](docs/design-system.md).
+Components: ActionTile, ActivityBar, AgentChip, AppShell, Avatar, Badge, Banner, BrandMark, Breadcrumb, Button, Card, Checkbox, CodeBlock, CommandPalette, Comment, CommitGraph, Dialog, DiffStat, Disclosure, EmptyState, Field, FieldMessage, FileIcon, FilterChip, FontField, Heatmap, Icon, IconButton, Kbd, ListRow, Menu, Meter, NavList, PanZoom, Popover, RadioGroup, ReactionBar, SearchInput, SearchPicker, Segmented, Select, SettingRow, Spinner, SplitHandle, StatusBar, StatusDot, Switch, Tabs, TabStrip, Tag, Textarea, ThemeSwitch, Toast, Toolbar, Tooltip, TreeView, ZoomBar. Rules per component: `src/components/<Name>/README.md`. Brand book: [docs/brand.md](docs/brand.md). Foundations: [docs/design-system.md](docs/design-system.md).
 
 ## AI agents (MCP)
 
