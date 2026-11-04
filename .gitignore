@@ -1,6 +1,7 @@
 node_modules/
 dist/
 dist-demo/
+dist-examples/
 *.tgz
 .DS_Store
 .claude/

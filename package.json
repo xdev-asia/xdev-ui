@@ -61,6 +61,8 @@
     "build:demo": "node scripts/build-tokens.mjs && node scripts/build-ai.mjs && vite build --config vite.demo.config.ts && storybook build -o dist-demo/storybook --quiet && node scripts/postbuild.mjs --demo",
     "mcp": "node dist/mcp.js",
     "test": "node scripts/build-tokens.mjs && node scripts/build-ai.mjs && vitest run",
+    "example:admin": "node scripts/build-tokens.mjs && vite --config examples/admin/vite.config.ts",
+    "build:example:admin": "node scripts/build-tokens.mjs && vite build --config examples/admin/vite.config.ts",
     "test:dist": "node scripts/smoke.mjs && node scripts/mcp-smoke.mjs",
     "storybook": "node scripts/build-tokens.mjs && storybook dev -p 6006 --no-open"
   },
