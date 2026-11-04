@@ -60,7 +60,8 @@
     "dev": "node scripts/build-tokens.mjs && vite --config vite.demo.config.ts",
     "build:demo": "node scripts/build-tokens.mjs && node scripts/build-ai.mjs && vite build --config vite.demo.config.ts && node scripts/postbuild.mjs --demo",
     "mcp": "node dist/mcp.js",
-    "test": "node scripts/smoke.mjs && node scripts/mcp-smoke.mjs"
+    "test": "pnpm tokens && vitest run",
+    "test:dist": "node scripts/smoke.mjs && node scripts/mcp-smoke.mjs"
   },
   "peerDependencies": {
     "react": "^19.0.0",
@@ -79,6 +80,7 @@
     "semantic-release": "^25.0.9",
     "typescript": "^7.0.2",
     "vite": "^8.3.5",
+    "vitest": "^5.0.5",
     "zod": "^4.6.7"
   },
   "engines": {

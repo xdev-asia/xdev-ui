@@ -21,7 +21,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm tokens && git diff --exit-code src/styles/tokens.css
       - run: pnpm typecheck
-      - run: pnpm build
       - run: pnpm test
+      - run: pnpm build
+      - run: pnpm test:dist
       - run: pnpm build:demo
       - run: npm pack --dry-run

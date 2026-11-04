@@ -30,8 +30,9 @@ jobs:
           registry-url: https://npm.pkg.github.com
           scope: "@xdev-asia"
       - run: pnpm install --frozen-lockfile
-      - run: pnpm build
       - run: pnpm test
+      - run: pnpm build
+      - run: pnpm test:dist
       - run: pnpm exec semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
