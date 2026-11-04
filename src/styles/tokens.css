@@ -65,6 +65,7 @@
   --x-color-on-accent: #ffffff;
   --x-color-accent-soft: #2f62e62e;
   --x-color-signal: #5bd8ff;
+  --x-color-focus: var(--x-color-signal);
   --x-color-signal-soft: #5bd8ff1f;
   --x-color-warn: #f2b544;
   --x-color-warn-soft: #f2b5441a;
@@ -113,6 +114,7 @@
   --x-color-on-accent: #ffffff;
   --x-color-accent-soft: #e1e9fb;
   --x-color-signal: #0670a0;
+  --x-color-focus: var(--x-color-signal);
   --x-color-signal-soft: #e1f2fa;
   --x-color-warn: #8a5200;
   --x-color-warn-soft: #fff4dd;
