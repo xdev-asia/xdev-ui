@@ -17,7 +17,7 @@
   font: 600 12px var(--font-body);
   cursor: pointer;
 }
-.segmented button:hover { color: var(--x-color-ink); background: var(--x-color-surface-2); }
+.segmented button:not(:disabled):hover { color: var(--x-color-ink); background: var(--x-color-surface-2); }
 .segmented button[aria-pressed="true"] { background: var(--x-color-accent); color: var(--x-color-on-accent); }
 .segmented button:disabled { opacity: 0.6; cursor: default; }
 
