@@ -13,3 +13,4 @@ export const Default: Story = {};
 export const Vietnamese: Story = {
   args: { value: "dark", labels: { group: "Giao diện", system: "Hệ thống", dark: "Tối", light: "Sáng" } },
 };
+export const Disabled: Story = { args: { disabled: true } };

@@ -17,13 +17,15 @@ export interface ThemeSwitchProps {
   onChange: (value: ThemePreference) => void;
   /** Override the English defaults (e.g. for vi). */
   labels?: Partial<ThemeSwitchLabels>;
+  disabled?: boolean;
 }
 
-export function ThemeSwitch({ value, onChange, labels }: ThemeSwitchProps): JSX.Element {
+export function ThemeSwitch({ value, onChange, labels, disabled }: ThemeSwitchProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
   return (
     <Segmented
       label={l.group}
+      disabled={disabled}
       value={value}
       options={THEME_PREFERENCES.map((p) => ({ value: p, label: l[p] }))}
       onChange={(v) => {

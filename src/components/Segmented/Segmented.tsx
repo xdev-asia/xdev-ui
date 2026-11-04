@@ -12,9 +12,11 @@ export interface SegmentedProps {
   onChange?: (value: string) => void;
   /** aria-label of the group. */
   label?: string;
+  /** Greys out every segment, for example while a save is under way. */
+  disabled?: boolean;
 }
 
-export function Segmented({ options, value, defaultValue, onChange, label }: SegmentedProps): JSX.Element {
+export function Segmented({ options, value, defaultValue, onChange, label, disabled }: SegmentedProps): JSX.Element {
   const [inner, setInner] = useState(defaultValue ?? options[0]?.value);
   const current = value ?? inner;
   return (
@@ -24,6 +26,7 @@ export function Segmented({ options, value, defaultValue, onChange, label }: Seg
           key={o.value}
           type="button"
           aria-pressed={o.value === current}
+          disabled={disabled}
           onClick={() => {
             setInner(o.value);
             onChange?.(o.value);
