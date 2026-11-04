@@ -27,4 +27,9 @@ describe("NavList", () => {
     findAll(NavList({ items, onSelect }), (e) => e.type === "button")[1].props.onClick();
     expect(onSelect).toHaveBeenCalledWith("agents");
   });
+  it("renders an item icon before the label", () => {
+    const html = renderToStaticMarkup(<NavList items={[{ id: "users", label: "Users", icon: "accounts" }, { id: "plain", label: "Plain" }]} />);
+    expect(html).toMatch(/<svg class="x-icon settings-nav-icon"[^>]*width="16"[^>]*>.*<\/svg><span class="settings-nav-label">Users/);
+    expect(html.match(/<svg/g)).toHaveLength(1);
+  });
 });

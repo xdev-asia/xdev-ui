@@ -204,6 +204,9 @@
 }
 .settings-nav-item:hover { background: var(--bg-2); color: var(--text-1); }
 .settings-nav-item[aria-current="page"] { border-color: var(--line); background: var(--bg-3); color: var(--text-1); font-weight: 600; }
+.settings-nav-icon { flex: none; margin-right: var(--x-space-2); }
+.settings-nav-item:has(.settings-nav-icon) { justify-content: flex-start; }
+.settings-nav-item:has(.settings-nav-icon) .settings-nav-label { flex: 1; }
 .settings-nav-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .settings-nav-count {
   min-width: 18px;
