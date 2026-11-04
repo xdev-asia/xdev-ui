@@ -7,6 +7,7 @@ export * from "./components/FontField/FontField";
 export * from "./components/Field/Field";
 export * from "./components/Switch/Switch";
 export * from "./components/Kbd/Kbd";
+export * from "./components/Avatar/Avatar";
 export * from "./components/Badge/Badge";
 export * from "./components/Tag/Tag";
 export * from "./components/AgentChip/AgentChip";

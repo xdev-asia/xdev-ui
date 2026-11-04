@@ -41,7 +41,7 @@ Prompt `xdevui_build_ui` runs those steps in order. Without MCP: `node_modules/@
 corepack pnpm install
 corepack pnpm dev         # demo, http://localhost:5173
 corepack pnpm build       # tokens -> ai manifest -> lib -> mcp.js -> d.ts
-corepack pnpm test        # SSR smoke (49 components) + MCP smoke (all tools)
+corepack pnpm test        # SSR smoke (50 components) + MCP smoke (all tools)
 ```
 
 | change | also update |

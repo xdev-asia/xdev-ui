@@ -22,6 +22,17 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     return el;
     },
   },
+  "Avatar": {
+    style: {"display": "flex", "gap": "12px", "alignItems": "center", "padding": "16px"},
+    render: (X, h) => {
+    var el;
+    el = h(React.Fragment, null,
+      h(X.Avatar, { name: "Duy Tran", size: "sm" }),
+      h(X.Avatar, { name: "Duy Tran" }),
+      h(X.Avatar, { name: "Trần Đức Duy", size: "lg" }));
+    return el;
+    },
+  },
   "Badge": {
     style: {"display": "flex", "gap": "12px", "flexWrap": "wrap", "alignItems": "center", "padding": "16px"},
     render: (X, h) => {
