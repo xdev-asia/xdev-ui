@@ -35,7 +35,7 @@ import { Button, TabStrip, BrandMark } from "@xdev-asia/ui";
 
 | export | content |
 |---|---|
-| `@xdev-asia/ui` | 47 components, `ICONS`, `ICON_NAMES`, prop types |
+| `@xdev-asia/ui` | 48 components, `ICONS`, `ICON_NAMES`, prop types |
 | `@xdev-asia/ui/styles.css` | tokens + component CSS |
 | `@xdev-asia/ui/tokens.css` | tokens only (CSS custom properties, dark + light) |
 | `@xdev-asia/ui/tokens.json` | token source |
@@ -43,7 +43,7 @@ import { Button, TabStrip, BrandMark } from "@xdev-asia/ui";
 | `@xdev-asia/ui/ai-manifest.json` | components, props, classes, tokens, icons, guidelines as JSON |
 | `@xdev-asia/ui/llms.txt`, `llms-full.txt` | the same for LLMs ([llmstxt.org](https://llmstxt.org)) |
 
-Components: Button, IconButton, Segmented, Select, Field, Switch, Kbd, Badge, Tag, AgentChip, DiffStat, StatusDot, Meter, Banner, Toast, TabStrip, ActivityBar, StatusBar, Menu, Dialog, CommandPalette, BrandMark, Icon. Rules per component: `src/components/<Name>/README.md`. Brand book: [docs/brand.md](docs/brand.md). Foundations: [docs/design-system.md](docs/design-system.md).
+Components: ActivityBar, AgentChip, Badge, Banner, BrandMark, Breadcrumb, Button, Card, Checkbox, CodeBlock, CommandPalette, Dialog, DiffStat, Disclosure, EmptyState, Field, FieldMessage, FileIcon, FilterChip, FontField, Icon, IconButton, Kbd, ListRow, Menu, Meter, NavList, Popover, RadioGroup, SearchInput, SearchPicker, Segmented, Select, SettingRow, Spinner, SplitHandle, StatusBar, StatusDot, Switch, TabStrip, Tabs, Tag, Textarea, ThemeSwitch, Toast, Toolbar, Tooltip, TreeView. Rules per component: `src/components/<Name>/README.md`. Brand book: [docs/brand.md](docs/brand.md). Foundations: [docs/design-system.md](docs/design-system.md).
 
 ## AI agents (MCP)
 
@@ -67,7 +67,7 @@ claude mcp add xdev-ui -- npx -y --package=@xdev-asia/ui xdev-ui-mcp
 
 | tool | returns |
 |---|---|
-| `xdevui_list_components` | 47 components by group, with summary |
+| `xdevui_list_components` | 48 components by group, with summary |
 | `xdevui_get_component` | README rules, exported prop types, CSS classes, import line |
 | `xdevui_search_tokens` | tokens by name, usage or category, with dark/light values |
 | `xdevui_get_guidelines` | setup, voice, visual foundations, iconography, brand |
