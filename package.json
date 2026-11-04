@@ -22,13 +22,26 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "xdev-source": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./styles.css": "./dist/styles.css",
-    "./tokens.css": "./dist/tokens.css",
-    "./fonts.css": "./dist/fonts.css",
-    "./tokens.json": "./dist/tokens.json",
+    "./styles.css": {
+      "xdev-source": "./src/styles/index.css",
+      "default": "./dist/styles.css"
+    },
+    "./tokens.css": {
+      "xdev-source": "./src/styles/tokens.css",
+      "default": "./dist/tokens.css"
+    },
+    "./fonts.css": {
+      "xdev-source": "./src/styles/fonts.css",
+      "default": "./dist/fonts.css"
+    },
+    "./tokens.json": {
+      "xdev-source": "./tokens/tokens.json",
+      "default": "./dist/tokens.json"
+    },
     "./brand/*": "./assets/brand/*",
     "./ai-manifest.json": "./dist/ai-manifest.json",
     "./llms.txt": "./dist/llms.txt",
