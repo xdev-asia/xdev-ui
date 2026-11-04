@@ -3,8 +3,8 @@ import { useState } from "react";
 import { Avatar } from "../Avatar/Avatar";
 import { EmptyState } from "../EmptyState/EmptyState";
 import { StatusDot } from "../StatusDot/StatusDot";
-import { DataTable, type DataTableColumn } from "./DataTable";
-import { sortRows, type TableSort } from "./table-helpers";
+import { DataTable, type DataTableColumn, type TableSort } from "./DataTable";
+import { sortRows } from "./table-helpers";
 
 interface Row { id: string; name: string; email: string; status: "ok" | "warn" }
 const data: Row[] = [
