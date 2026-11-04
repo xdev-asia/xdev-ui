@@ -24,7 +24,7 @@ Read the design system through the bundled MCP server instead of guessing props 
 | `xdevui_list_icons` | valid `IconName` values |
 | `xdevui_search_docs` | find which component or rule covers a topic |
 
-Prompt `xdevui_build_ui` runs those steps in order. Without MCP: `node_modules/@xdev-asia/ui/dist/llms-full.txt` (or <https://xdev-asia.github.io/xdev-ui/llms-full.txt>) holds the same content in one file.
+Prompt `xdevui_build_ui` runs those steps in order. Without MCP: `node_modules/@xdev-asia/ui/dist/llms-full.txt` (or <https://ui.xdev.asia/llms-full.txt>) holds the same content in one file.
 
 ### Rules agents break most
 

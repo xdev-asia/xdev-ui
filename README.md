@@ -8,10 +8,15 @@ Design tokens and React components for the xDev agent workspace. Published as **
 
 ```ini
 @xdev-asia:registry=https://npm.pkg.github.com
+```
+
+The token needs `read:packages`, even though the package is public. pnpm ignores `${VAR}` in repo-level credentials, so put the token line in the user `~/.npmrc` (or a file named by `NPM_CONFIG_USERCONFIG` in CI):
+
+```ini
 //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
 ```
 
-The token needs `read:packages`. In GitHub Actions of another `xdev-asia` repo, grant that repo read access under *Package settings → Manage Actions access*, then use `secrets.GITHUB_TOKEN`.
+In GitHub Actions of another `xdev-asia` repo, give the job `permissions: packages: read`, pass `GITHUB_TOKEN: ${{ github.token }}`, and if install returns 403, grant that repo read access under *Package settings → Manage Actions access*.
 
 ```bash
 pnpm add @xdev-asia/ui
@@ -69,7 +74,7 @@ claude mcp add xdev-ui -- npx -y --package=@xdev-asia/ui xdev-ui-mcp
 | `xdevui_list_icons` | valid `IconName` values |
 | `xdevui_search_docs` | matching sections across all docs |
 
-Resources: `xdev-ui://components/{name}`, `xdev-ui://guidelines/{topic}`, `xdev-ui://tokens`. Prompt: `xdevui_build_ui`. Agent rules: [AGENTS.md](AGENTS.md). No MCP client: <https://xdev-asia.github.io/xdev-ui/llms-full.txt>.
+Resources: `xdev-ui://components/{name}`, `xdev-ui://guidelines/{topic}`, `xdev-ui://tokens`. Prompt: `xdevui_build_ui`. Agent rules: [AGENTS.md](AGENTS.md). No MCP client: <https://ui.xdev.asia/llms-full.txt>.
 
 ## Develop
 
@@ -93,7 +98,7 @@ Commits on `main` follow [Conventional Commits](https://www.conventionalcommits.
 | `feat!: …` / `BREAKING CHANGE:` | major |
 | `chore:`, `docs:`, `ci:` | none |
 
-It tags `vX.Y.Z`, publishes to GitHub Packages and writes the GitHub release. `pages.yml` deploys the demo to GitHub Pages.
+It tags `vX.Y.Z`, publishes to GitHub Packages and writes the GitHub release. `pages.yml` deploys the demo to GitHub Pages at <https://ui.xdev.asia>.
 
 ## License
 
