@@ -17,6 +17,9 @@
   display: inline-flex;
   align-items: center;
   gap: var(--x-space-2);
+  justify-content: center;
+  box-sizing: border-box;
+  white-space: nowrap;
   min-height: 32px;
   padding: 0 var(--x-space-3);
   border: 1px solid var(--x-color-line);
