@@ -7,6 +7,7 @@ Modal confirmation over a dimmed backdrop, for decisions that cannot be undone.
 - Body: one or two sentences on the consequence.
 - Actions right-aligned: secondary Cancel, then the primary verb that repeats the title ("Kill session").
 - Use `alert` (`role="alertdialog"`) for destructive confirms.
-- Focus moves into the dialog on open and returns to the trigger on close; Esc cancels. The bundle renders the markup only; wire focus handling in the host app.
-- The preview places it inside the card; in the app the backdrop is `position: fixed`.
+- Pass `modal` in an app: the backdrop becomes `position: fixed` (`data-modal`), Esc calls `onCancel`, focus moves to the first control on mount and returns to the trigger on unmount. Without `modal` it renders the markup only (used for previews inside a card).
+- A string child renders in `p.dialog-body`; an element child (a form) renders in `div.dialog-body`.
+- `confirmDisabled` disables the primary button while saving or while the form is invalid.
 - `labels` (`DialogLabels`: `confirm`, `cancel`) overrides the English defaults; pass translated strings from the app.
