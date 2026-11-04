@@ -21,6 +21,7 @@ export * from "./components/Dialog/Dialog";
 export * from "./components/CommandPalette/CommandPalette";
 export * from "./components/BrandMark/BrandMark";
 export * from "./components/Icon/Icon";
+export * from "./components/FileIcon/FileIcon";
 export * from "./components/Checkbox/Checkbox";
 export * from "./components/RadioGroup/RadioGroup";
 export * from "./components/Textarea/Textarea";
