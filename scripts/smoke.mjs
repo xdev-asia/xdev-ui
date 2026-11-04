@@ -20,6 +20,7 @@ const cases = {
   DiffStat: [{ added: 3, removed: 1 }],
   StatusDot: [{ state: "working", pulse: true, label: "Working" }],
   Meter: [{ value: 82, label: "Context", warnAt: 80 }],
+  Heatmap: [{ cells: [{ key: "a", level: 1, label: "A" }], label: "Tokens per day" }],
   Banner: [{ title: "Agent paused" }, "Waiting for input"],
   Toast: [{ actionLabel: "Undo", onDismiss() {} }, "Session archived"],
   TabStrip: [{ tabs: [{ id: "a", name: "fix-auth", state: "working", profile: "codex", color: 2 }] }],
