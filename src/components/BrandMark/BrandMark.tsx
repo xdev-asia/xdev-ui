@@ -9,18 +9,22 @@ export interface BrandMarkProps {
   size?: BrandMarkSize | number;
   /** `mark`: set on the svg itself. `tile` and `lockup`: set on the wrapper. */
   className?: string;
+  /** Accessible name of the `mark` (default "xDev"). Pass "" when the mark is decorative. */
+  label?: string;
 }
 
 /** Logo v9: a round-capped × (follows the surface colour) + the agent cursor in --brand-agent. */
-function MarkSvg({ size, className }: { size: number; className?: string }): JSX.Element {
+function MarkSvg({ size, className, label }: { size: number; className?: string; label: string }): JSX.Element {
   return (
     <svg
-      className={className}
+      className={["x-mark", className].filter(Boolean).join(" ")}
       width={size}
       height={size}
       viewBox="250 225 550 550"
       fill="currentColor"
-      aria-hidden="true"
+      role={label ? "img" : undefined}
+      aria-label={label || undefined}
+      aria-hidden={label ? undefined : true}
       focusable="false"
     >
       <path d="M316 368L580 632M580 368L316 632" stroke="currentColor" strokeWidth={112} strokeLinecap="round" fill="none" />
@@ -39,7 +43,7 @@ function TileSvg({ size }: { size: number }): JSX.Element {
   );
 }
 
-export function BrandMark({ variant = "mark", size = 24, className }: BrandMarkProps): JSX.Element {
+export function BrandMark({ variant = "mark", size = 24, className, label = "xDev" }: BrandMarkProps): JSX.Element {
   if (variant === "tile") {
     return (
       <span className={["x-mark-tile", className].filter(Boolean).join(" ")} role="img" aria-label="xDev">
@@ -61,6 +65,6 @@ export function BrandMark({ variant = "mark", size = 24, className }: BrandMarkP
       </span>
     );
   }
-  // Bare decorative svg: the × takes `currentColor` from the surrounding CSS, `className` lands on the svg.
-  return <MarkSvg size={size} className={className} />;
+  // Bare svg, no wrapper: the × takes `currentColor` (.x-mark sets --accent; a later rule may override).
+  return <MarkSvg size={size} className={className} label={label} />;
 }

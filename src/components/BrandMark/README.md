@@ -5,7 +5,7 @@ The xDev logo v9: a round-capped `×` plus the agent cursor. As a bare mark, an 
 ## Variants
 | variant | look | use |
 |---|---|---|
-| `mark` | bare decorative `<svg>`; `×` follows `color`, cursor in `--brand-agent` | app chrome, inline |
+| `mark` | bare `<svg class="x-mark">` named by `label` (default "xDev"; `label=""` makes it decorative); `×` follows `color`, cursor in `--brand-agent` | app chrome, inline |
 | `tile` | white `×` and orange cursor on `#2f62e6`, 16 grid, radius 3.5/16 | favicon, avatar, social |
 | `lockup` | tile + "xDev" in Be Vietnam Pro 800 + orange cursor bar | site header, docs, README |
 
