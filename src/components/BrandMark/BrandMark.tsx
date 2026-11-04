@@ -1,16 +1,28 @@
 import type { JSX } from "react";
 
+/** Edge sizes the app chrome uses; any number is accepted. */
+export type BrandMarkSize = 16 | 18 | 20 | 64;
+
 export interface BrandMarkProps {
   variant?: "mark" | "tile" | "lockup";
   /** Mark or tile edge in px (default 24). Lockup wordmark = size × 25/32. */
-  size?: number;
+  size?: BrandMarkSize | number;
+  /** `mark`: set on the svg itself. `tile` and `lockup`: set on the wrapper. */
   className?: string;
 }
 
 /** Logo v9: a round-capped × (follows the surface colour) + the agent cursor in --brand-agent. */
-function MarkSvg({ size }: { size: number }): JSX.Element {
+function MarkSvg({ size, className }: { size: number; className?: string }): JSX.Element {
   return (
-    <svg width={size} height={size} viewBox="250 225 550 550" aria-hidden="true" focusable="false">
+    <svg
+      className={className}
+      width={size}
+      height={size}
+      viewBox="250 225 550 550"
+      fill="currentColor"
+      aria-hidden="true"
+      focusable="false"
+    >
       <path d="M316 368L580 632M580 368L316 632" stroke="currentColor" strokeWidth={112} strokeLinecap="round" fill="none" />
       <rect x={640} y={580} width={150} height={64} rx={18} style={{ fill: "var(--brand-agent)" }} />
     </svg>
@@ -49,9 +61,6 @@ export function BrandMark({ variant = "mark", size = 24, className }: BrandMarkP
       </span>
     );
   }
-  return (
-    <span className={["x-mark", className].filter(Boolean).join(" ")} role="img" aria-label="xDev">
-      <MarkSvg size={size} />
-    </span>
-  );
+  // Bare decorative svg: the × takes `currentColor` from the surrounding CSS, `className` lands on the svg.
+  return <MarkSvg size={size} className={className} />;
 }
