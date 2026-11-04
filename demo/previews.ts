@@ -349,6 +349,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     style: {"padding": "16px"},
     render: (X, h) => h(X.RadioGroup, { name: "shell", label: "Shell", defaultValue: "pwsh", options: [{ value: "pwsh", label: "PowerShell" }, { value: "bash", label: "Git Bash" }, { value: "cmd", label: "cmd" }] }),
   },
+  "FontField": {
+    style: {"padding": "16px", "width": "320px"},
+    render: (X, h) => h(X.FontField, { value: "Inter", onChange: () => {}, "aria-label": "UI font" }),
+  },
   "SearchInput": {
     style: {"padding": "16px", "width": "320px"},
     render: (X, h) => h(X.SearchInput, { placeholder: "Search sessions", shortcut: "Ctrl K", "aria-label": "Search sessions" }),

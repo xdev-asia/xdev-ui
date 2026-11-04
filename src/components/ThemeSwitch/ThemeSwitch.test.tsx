@@ -24,4 +24,7 @@ describe("ThemeSwitch", () => {
     el.props.onChange("sepia");
     expect(onChange.mock.calls).toEqual([["light"]]);
   });
+  it("passes disabled on to the segments", () => {
+    expect(renderToStaticMarkup(<ThemeSwitch value="dark" onChange={() => {}} disabled />).match(/disabled=""/g)).toHaveLength(3);
+  });
 });

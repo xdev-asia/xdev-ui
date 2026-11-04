@@ -7,3 +7,4 @@ Two to four mutually exclusive options shown together, such as a diff view mode 
 - Pressed segment: `--x-color-accent` fill with `--x-color-on-accent` text.
 - More than four options, or options with long labels: use `Select`.
 - Controlled with `value` + `onChange`, or uncontrolled with `defaultValue`.
+- `disabled` greys out every segment (for example while a save is under way).
