@@ -94,3 +94,7 @@ Commits on `main` follow [Conventional Commits](https://www.conventionalcommits.
 | `chore:`, `docs:`, `ci:` | none |
 
 It tags `vX.Y.Z`, publishes to GitHub Packages and writes the GitHub release. `pages.yml` deploys the demo to GitHub Pages.
+
+## License
+
+[Apache-2.0](LICENSE). Section 6 of the license grants no rights to the xDev name or logo.
