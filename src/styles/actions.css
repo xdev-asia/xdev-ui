@@ -47,3 +47,27 @@
 }
 .ws-icon-btn:hover { background: var(--bg-3); color: var(--text-1); }
 .ws-icon-btn svg { width: 16px; height: 16px; }
+
+/* ActionTile (.x-action-tile) */
+.x-action-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: var(--x-space-2); }
+.x-action-tile {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--x-space-1) var(--x-space-2);
+  min-width: 0;
+  padding: var(--x-space-3);
+  border: 1px solid var(--x-color-line);
+  border-radius: var(--x-radius-lg);
+  background: var(--x-color-surface);
+  color: var(--x-color-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.x-action-tile:hover { background: var(--x-color-surface-2); border-color: var(--accent); }
+.x-action-tile:disabled { opacity: 0.6; cursor: default; }
+.x-action-tile:disabled:hover { background: var(--x-color-surface); border-color: var(--x-color-line); }
+.x-action-tile-icon { display: inline-flex; grid-row: 1 / span 2; color: var(--text-2); }
+.x-action-tile-title { overflow: hidden; font: 600 13px var(--font-body); text-overflow: ellipsis; white-space: nowrap; }
+.x-action-tile-desc { grid-column: 2; font-size: 12px; color: var(--x-color-muted); }

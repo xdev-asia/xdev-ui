@@ -34,6 +34,9 @@ export const ICONS = {
   plug: [["path", { d: "M9 7V3M15 7V3M7 7h10v4a5 5 0 0 1-10 0zM12 16v5" }]],
   lock: [["path", { d: "M7 11h10a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2zM8 11V8a4 4 0 0 1 8 0v3" }]],
   branch: [["circle", { cx: 6, cy: 5, r: 2 }], ["circle", { cx: 6, cy: 19, r: 2 }], ["circle", { cx: 18, cy: 7, r: 2 }], ["path", { d: "M6 7v10M18 9c0 5-6 4-12 8" }]],
+  swap: [["path", { d: "M4 8h14M14 4l4 4-4 4M20 16H6M10 12l-4 4 4 4" }]],
+  "list-checks": [["path", { d: "M11 6h9M11 12h9M11 18h9" }], ["path", { d: "m3 6 1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17" }]],
+  workflow: [["rect", { x: 3, y: 3, width: 7, height: 7, rx: 1.5 }], ["rect", { x: 14, y: 14, width: 7, height: 7, rx: 1.5 }], ["path", { d: "M10 6.5h4a3 3 0 0 1 3 3V14" }]],
   chevron: [["path", { d: "m6 9 6 6 6-6" }]],
 
   // Arrows and window

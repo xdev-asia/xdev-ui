@@ -41,7 +41,7 @@ body {
   outline-offset: 2px;
 }
 
-:where(.ws-tick input, .term-radio input, .kit-textarea, .search-clear, .task-chip, .kit-tab, .settings-nav-item, .ws-crumb, .ws-tree-row, .ws-group-head, .x-list-row-main, .connect-copy, .x-popover, .x-split-handle):focus-visible {
+:where(.x-action-tile, .ws-tick input, .term-radio input, .kit-textarea, .search-clear, .task-chip, .kit-tab, .settings-nav-item, .ws-crumb, .ws-tree-row, .ws-group-head, .x-list-row-main, .connect-copy, .x-popover, .x-split-handle):focus-visible {
   outline: 2px solid var(--x-color-signal);
   outline-offset: 2px;
 }
