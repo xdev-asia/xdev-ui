@@ -1,0 +1,7 @@
+/* ---------- Brand ---------- */
+.x-mark { display: inline-block; color: var(--accent); flex: none; line-height: 0; }
+.x-mark-tile { display: inline-block; flex: none; line-height: 0; }
+.x-lockup { display: inline-flex; align-items: center; gap: 0.32em; font-weight: 800; font-family: var(--font-body); letter-spacing: -0.032em; color: var(--text-1); line-height: 1; }
+.x-lockup-word { margin-left: 0.04em; }
+.x-lockup-cursor { width: 0.48em; height: 0.2em; border-radius: 0.06em; background: var(--brand-agent); align-self: flex-end; margin: 0 0 0.16em -0.24em; }
+.x-icon { width: 16px; height: 16px; flex: none; }

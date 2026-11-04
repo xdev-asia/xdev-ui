@@ -1,0 +1,42 @@
+/* xdev-ui base. Class names and values mirror apps/desktop/src/styles (base, workspace, settings, shell, docs, changes, agents) and palette.css.
+   Every colour is a tokens.css var; nothing here redefines a theme value. */
+
+:root {
+  /* Tab colours that are blends in the source (color-mix cannot be a token). */
+  --x-tab-color-5: color-mix(in srgb, var(--ok) 50%, var(--signal));
+  --x-tab-color-7: color-mix(in srgb, var(--accent) 50%, var(--violet));
+  --x-tab-color-9: color-mix(in srgb, var(--danger) 50%, var(--violet));
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--x-color-ink);
+  background: var(--x-color-bg);
+}
+
+/* Workspace remap: inside .x-ws the semantic layer reads the graphite layer (workspace.css). */
+.x-ws {
+  --x-color-bg: var(--bg-0);
+  --x-color-panel: var(--bg-1);
+  --x-color-surface: var(--bg-2);
+  --x-color-surface-2: var(--bg-3);
+  --x-color-line: var(--line);
+  --x-color-ink: var(--text-1);
+  --x-color-muted: var(--text-2);
+  --x-color-code-bg: var(--term);
+  --x-color-accent: var(--accent);
+  --x-color-signal: var(--signal);
+  --x-color-warn: var(--warn);
+  --x-color-warn-soft: var(--warn-bg);
+  --x-color-ok: var(--ok);
+  --x-color-danger: var(--danger);
+  color: var(--text-1);
+  background: var(--bg-0);
+}
+
+:where(.btn, .btn-secondary, .ws-icon-btn, .segmented button, .lang-select, .ws-field input, .dialog-input, .agent-switch, .activity, .ws-tab-main, .ws-tab-close, .ws-tab-add, .x-menu-item, .ws-toast button, .pal-chip):focus-visible {
+  outline: 2px solid var(--x-color-signal);
+  outline-offset: 2px;
+}

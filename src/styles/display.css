@@ -1,0 +1,49 @@
+/* ---------- Display ---------- */
+.kbd {
+  display: inline-block;
+  padding: 1px var(--x-space-1);
+  border: 1px solid var(--x-color-line);
+  border-radius: var(--x-radius-sm);
+  font: 11px var(--font-mono);
+  color: var(--x-color-muted);
+}
+
+.badge {
+  display: inline-block;
+  padding: 1px var(--x-space-2);
+  border-radius: 999px;
+  font: 600 11px/1.5 var(--font-body);
+  color: var(--x-color-muted);
+  background: var(--x-color-surface-2);
+}
+.badge[data-status="new"] { color: var(--x-color-ok); background: var(--x-color-ok-soft); }
+.badge[data-status="changed"] { color: var(--x-color-signal); background: var(--x-color-signal-soft); }
+.badge[data-status="unchanged"] { color: var(--x-color-muted); background: transparent; box-shadow: inset 0 0 0 1px var(--x-color-line); }
+.badge[data-status="foreign"] { color: var(--x-color-warn); background: var(--x-color-warn-soft); }
+
+.ws-tag {
+  display: inline-block;
+  padding: 0 5px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-s);
+  font: 400 10px/16px var(--font-body);
+  color: var(--text-2);
+}
+.ws-tag-warn { border-color: transparent; background: var(--warn-bg); color: var(--warn); font-weight: 600; }
+
+.ws-chip {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-s);
+  background: var(--bg-3);
+  color: var(--text-2);
+  font: 700 10px var(--font-mono);
+}
+.ws-chip[data-profile="claude"] { background: var(--orange-bg); color: var(--orange); }
+.ws-chip[data-profile="codex"] { background: var(--signal-bg); color: var(--signal); }
+
+.ws-stat { font: 10px var(--font-mono); }
+.ws-stat-add { color: var(--ok); }
+.ws-stat-del { color: var(--danger); }

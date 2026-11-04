@@ -1,0 +1,9 @@
+# Segmented
+
+Two to four mutually exclusive options shown together, such as a diff view mode or the theme.
+
+## Rules
+- Each segment is a `<button aria-pressed>`; the group carries `role="group"` and an `aria-label`.
+- Pressed segment: `--x-color-accent` fill with `--x-color-on-accent` text.
+- More than four options, or options with long labels: use `Select`.
+- Controlled with `value` + `onChange`, or uncontrolled with `defaultValue`.

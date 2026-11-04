@@ -1,0 +1,286 @@
+// Generated from the design-system artifact previews. h = React.createElement, X = @xdev-asia/ui.
+// @ts-nocheck
+import * as React from "react";
+
+export const previews: Record<string, { style: React.CSSProperties; render: (X: any, h: any) => any }> = {
+  "ActivityBar": {
+    style: {"padding": "16px", "height": "348px", "display": "flex"},
+    render: (X, h) => {
+    var el;
+    el = h(X.ActivityBar, { active: "terminal", changeCount: 7 });
+    return el;
+    },
+  },
+  "AgentChip": {
+    style: {"display": "flex", "gap": "12px", "flexWrap": "wrap", "alignItems": "center", "padding": "16px"},
+    render: (X, h) => {
+    var el;
+    el = h(React.Fragment, null,
+      h(X.AgentChip, { profile: "claude", title: "Claude" }),
+      h(X.AgentChip, { profile: "codex", title: "Codex" }),
+      h(X.AgentChip, { profile: "custom", letter: "G", title: "Custom profile" }));
+    return el;
+    },
+  },
+  "Badge": {
+    style: {"display": "flex", "gap": "12px", "flexWrap": "wrap", "alignItems": "center", "padding": "16px"},
+    render: (X, h) => {
+    var el;
+    el = h(React.Fragment, null,
+      h(X.Badge, { status: "new" }, "new"),
+      h(X.Badge, { status: "changed" }, "changed"),
+      h(X.Badge, { status: "unchanged" }, "unchanged"),
+      h(X.Badge, { status: "foreign" }, "foreign"),
+      h(X.Badge, null, "neutral"));
+    return el;
+    },
+  },
+  "Banner": {
+    style: {"display": "flex", "flexDirection": "column", "gap": "12px", "alignItems": "flex-start", "padding": "16px", "width": "520px"},
+    render: (X, h) => {
+    var el;
+    el = h(React.Fragment, null,
+      h(X.Banner, { title: "3 files are owned by another kit.", action: h(X.Button, { variant: "secondary" }, "Review") }, "They will be skipped when you sync."),
+      h(X.Banner, { title: "Agent CLI not found on PATH." }));
+    return el;
+    },
+  },
+  "BrandMark": {
+    style: {"display": "flex", "gap": "32px", "flexWrap": "wrap", "alignItems": "center", "padding": "16px"},
+    render: (X, h) => {
+    var el;
+    el = h(React.Fragment, null,
+      h(X.BrandMark, { size: 32 }),
+      h(X.BrandMark, { variant: "tile", size: 32 }),
+      h(X.BrandMark, { variant: "lockup", size: 28 }));
+    return el;
+    },
+  },
+  "Button": {
+    style: {"display": "flex", "gap": "12px", "flexWrap": "wrap", "alignItems": "center", "padding": "16px"},
+    render: (X, h) => {
+    var el;
+    el = h(React.Fragment, null,
+      h(X.Button, null, "Create session"),
+      h(X.Button, { icon: "plus" }, "New tab"),
+      h(X.Button, { variant: "secondary" }, "Cancel"),
+      h(X.Button, { disabled: true }, "Disabled"));
+    return el;
+    },
+  },
+  "CommandPalette": {
+    style: {"padding": "16px"},
+    render: (X, h) => {
+    var el;
+    el = h(X.CommandPalette, {
+      title: "Go to", defaultQuery: "auth",
+      filters: ["All", "Sessions", "Files", "Commands"],
+      sections: [
+        { title: "Sessions", rows: [
+          { title: "fix-auth-redirect", detail: "claude · working", state: "working" },
+          { title: "auth-e2e", detail: "codex · waiting", state: "waiting" }
+        ]},
+        { title: "Files", rows: [
+          { title: "src/auth/redirect.ts", detail: "apps/web", icon: "docs" },
+          { title: "docs/auth.md", detail: "docs", icon: "docs" }
+        ]},
+        { title: "Commands", rows: [{ title: "Rotate auth token", detail: "Accounts", icon: "accounts" }] }
+      ]
+    });
+    return el;
+    },
+  },
+  "Dialog": {
+    style: {"padding": "0", "position": "relative", "height": "244px"},
+    render: (X, h) => {
+    var el;
+    el = h("div", { style: { position: "absolute", inset: 0 } }, h(X.Dialog, {
+      title: "Kill session fix-auth-redirect?",
+      confirmLabel: "Kill session", alert: true,
+      onCancel: function () {}, onConfirm: function () {}
+    }, "The agent stops at once. Uncommitted changes stay in the worktree."));
+    return el;
+    },
+  },
+  "DiffStat": {
+    style: {"display": "flex", "gap": "12px", "flexWrap": "wrap", "alignItems": "center", "padding": "16px"},
+    render: (X, h) => {
+    var el;
+    el = h(React.Fragment, null,
+      h(X.DiffStat, { added: 128, removed: 14 }),
+      h(X.DiffStat, { added: 3, removed: 0 }),
+      h(X.DiffStat, { added: 0, removed: 42 }));
+    return el;
+    },
+  },
+  "Field": {
+    style: {"display": "flex", "flexDirection": "column", "gap": "12px", "alignItems": "flex-start", "padding": "16px", "width": "320px"},
+    render: (X, h) => {
+    var el;
+    el = h(React.Fragment, null,
+      h(X.Field, { label: "Session name", placeholder: "fix-auth-redirect", hint: "Becomes the branch name." }),
+      h(X.Field, { label: "Port", defaultValue: "80", error: "Pick a port above 1024." }));
+    return el;
+    },
+  },
+  "Icon": {
+    style: {"display": "grid", "gridTemplateColumns": "repeat(7,72px)", "gap": "12px", "padding": "16px"},
+    render: (X, h) => {
+    var el;
+    el = h(React.Fragment, null, X.ICON_NAMES.map(function (n) {
+      return h("div", { key: n, style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 6, color: "var(--text-1)" } },
+        h(X.Icon, { name: n, size: 22 }),
+        h("span", { style: { font: "10px var(--font-mono)", color: "var(--text-3)" } }, n));
+    }));
+    return el;
+    },
+  },
+  "IconButton": {
+    style: {"display": "flex", "gap": "12px", "flexWrap": "wrap", "alignItems": "center", "padding": "16px"},
+    render: (X, h) => {
+    var el;
+    el = h(React.Fragment, null,
+      h(X.IconButton, { icon: "plus", label: "New terminal" }),
+      h(X.IconButton, { icon: "search", label: "Search" }),
+      h(X.IconButton, { icon: "more", label: "More actions" }),
+      h(X.IconButton, { icon: "close", label: "Close panel" }));
+    return el;
+    },
+  },
+  "Kbd": {
+    style: {"display": "flex", "gap": "12px", "flexWrap": "wrap", "alignItems": "center", "padding": "16px"},
+    render: (X, h) => {
+    var el;
+    el = h(React.Fragment, null,
+      h(X.Kbd, null, "Ctrl"), h(X.Kbd, null, "K"),
+      h("span", { style: { color: "var(--text-2)", fontSize: 12 } }, "Open palette"),
+      h(X.Kbd, null, "Ctrl+Shift+P"), h(X.Kbd, null, "Esc"));
+    return el;
+    },
+  },
+  "Menu": {
+    style: {"padding": "16px"},
+    render: (X, h) => {
+    var el;
+    el = h(X.Menu, { label: "Tab actions", items: [
+      { label: "Rename", chord: "F2" },
+      { label: "Duplicate", chord: "Ctrl+D", active: true },
+      { label: "Colour", submenu: true, swatch: 6 },
+      { type: "separator" },
+      { type: "group", label: "View" },
+      { label: "Show timestamps", checked: true },
+      { label: "Wrap lines", checked: false },
+      { label: "Split right", disabled: true },
+      { type: "separator" },
+      { label: "Kill session", danger: true, chord: "Ctrl+W" }
+    ] });
+    return el;
+    },
+  },
+  "Meter": {
+    style: {"display": "flex", "flexDirection": "column", "gap": "12px", "alignItems": "flex-start", "padding": "16px", "width": "320px"},
+    render: (X, h) => {
+    var el;
+    el = h(React.Fragment, null,
+      h(X.Meter, { label: "Context", value: 42, warnAt: 80 }),
+      h(X.Meter, { label: "Context", value: 91, warnAt: 80 }),
+      h(X.Meter, { label: "5h limit", value: 63 }));
+    return el;
+    },
+  },
+  "Segmented": {
+    style: {"display": "flex", "flexDirection": "column", "gap": "12px", "alignItems": "flex-start", "padding": "16px"},
+    render: (X, h) => {
+    var el;
+    el = h(React.Fragment, null,
+      h(X.Segmented, { label: "View", options: [{ value: "split", label: "Split" }, { value: "unified", label: "Unified" }] }),
+      h(X.Segmented, { label: "Theme", defaultValue: "dark", options: [{ value: "light", label: "Light" }, { value: "dark", label: "Dark" }, { value: "system", label: "System" }] }));
+    return el;
+    },
+  },
+  "Select": {
+    style: {"display": "flex", "gap": "12px", "flexWrap": "wrap", "alignItems": "center", "padding": "16px"},
+    render: (X, h) => {
+    var el;
+    el = h(React.Fragment, null,
+      h(X.Select, { "aria-label": "Language", defaultValue: "en", options: [{ value: "en", label: "English" }, { value: "vi", label: "Tiếng Việt" }] }),
+      h(X.Select, { "aria-label": "Profile", options: [{ value: "claude", label: "Claude" }, { value: "codex", label: "Codex" }, { value: "custom", label: "Custom" }] }));
+    return el;
+    },
+  },
+  "StatusBar": {
+    style: {"padding": "16px"},
+    render: (X, h) => {
+    var el;
+    el = h("div", { style: { width: 720 } }, h(X.StatusBar, { items: [
+      h(X.StatusDot, { key: 1, state: "working", label: "3 running", pulse: true }),
+      h(X.StatusDot, { key: 2, state: "waiting", label: "1 waiting" }),
+      "spacer",
+      h(X.Meter, { key: 3, label: "Context", value: 42, warnAt: 80 }),
+      h("span", { key: 4, style: { fontFamily: "var(--font-mono)" } }, "main"),
+      "UTF-8"
+    ] }));
+    return el;
+    },
+  },
+  "StatusDot": {
+    style: {"display": "flex", "flexDirection": "column", "gap": "12px", "alignItems": "flex-start", "padding": "16px"},
+    render: (X, h) => {
+    var el;
+    var row = function (title, items) {
+      return h("div", { style: { display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center" } },
+        h("span", { style: { width: 56, color: "var(--text-3)", fontSize: 11 } }, title), items);
+    };
+    el = h(React.Fragment, null,
+      row("session", ["working", "waiting", "failed", "done", "idle", "exited"].map(function (s) { return h(X.StatusDot, { key: s, state: s, label: s, pulse: s === "working" }); })),
+      row("PR", ["open", "draft", "merged", "closed"].map(function (s) { return h(X.StatusDot, { key: s, pr: s, label: s }); })),
+      row("check", ["pass", "pending", "fail", "skipping", "cancel"].map(function (s) { return h(X.StatusDot, { key: s, check: s, label: s }); })));
+    return el;
+    },
+  },
+  "Switch": {
+    style: {"display": "flex", "flexDirection": "column", "gap": "12px", "alignItems": "flex-start", "padding": "16px"},
+    render: (X, h) => {
+    var el;
+    el = h(React.Fragment, null,
+      h(X.Switch, { label: "Auto-accept edits", defaultChecked: true }),
+      h(X.Switch, { label: "Notify when an agent waits" }),
+      h(X.Switch, { label: "Disabled", disabled: true }));
+    return el;
+    },
+  },
+  "TabStrip": {
+    style: {"padding": "16px"},
+    render: (X, h) => {
+    var el;
+    el = h(X.TabStrip, { label: "Terminals", tabs: [
+      { id: "a", name: "fix-auth-redirect", state: "working", profile: "claude", color: 6 },
+      { id: "b", name: "docs-i18n", state: "waiting", profile: "codex", color: 4, unread: true },
+      { id: "c", name: "release.sh", dirty: true, color: 2 },
+      { id: "d", name: "flaky-e2e", state: "failed", profile: "claude", color: 1 },
+      { id: "e", name: "scratch", state: "idle", skipped: true }
+    ] });
+    return el;
+    },
+  },
+  "Tag": {
+    style: {"display": "flex", "gap": "12px", "flexWrap": "wrap", "alignItems": "center", "padding": "16px"},
+    render: (X, h) => {
+    var el;
+    el = h(React.Fragment, null,
+      h(X.Tag, null, "worktree"), h(X.Tag, null, "main"), h(X.Tag, null, "detached"),
+      h(X.Tag, { tone: "warn" }, "uncommitted"));
+    return el;
+    },
+  },
+  "Toast": {
+    style: {"display": "flex", "flexDirection": "column", "gap": "12px", "alignItems": "flex-start", "padding": "16px"},
+    render: (X, h) => {
+    var el;
+    el = h(React.Fragment, null,
+      h(X.Toast, { actionLabel: "Undo", onAction: function () {}, onDismiss: function () {} }, "Session archived."),
+      h(X.Toast, { onDismiss: function () {} }, "Copied branch name."));
+    return el;
+    },
+  },
+};
