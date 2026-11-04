@@ -14,6 +14,7 @@ import {
   SearchPicker,
   Spinner,
   SplitHandle,
+  StatTile,
   TabStrip,
   ThemeSwitch,
   Toast,
@@ -178,5 +179,11 @@ describe("labels override every default English string", () => {
     for (const v of [S("on"), S("sk"), S("nv")]) expect(html).toContain(v);
     expectNoEnglish(html, ["Open navigation", "Skip to content", "Navigation"]);
     expect(renderToStaticMarkup(h(AppShell, { nav: "n", navOpen: true, labels, children: "c" }))).toContain(S("cn"));
+  });
+
+  it("StatTile", () => {
+    const html = renderToStaticMarkup(h(StatTile, { label: "L", value: "1", loading: true, labels: { loading: S("l") } }));
+    expect(html).toContain(S("l"));
+    expectNoEnglish(html, ["Loading"]);
   });
 });

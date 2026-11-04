@@ -9,3 +9,15 @@
 .x-dl-value { margin: 0; min-width: 0; overflow-wrap: anywhere; font: var(--type-body); color: var(--text-1); }
 .x-dl-value.ws-mono { font: var(--type-mono); }
 @container (max-width: 480px) { .x-dl[data-layout="rows"] .x-dl-item { grid-template-columns: minmax(0, 1fr); gap: var(--x-space-1); } }
+
+/* StatTile (.x-stat) */
+.x-stat { display: flex; flex-direction: column; gap: var(--x-space-1); min-width: 0; padding: var(--x-space-4); border: 1px solid var(--line); border-radius: var(--radius-l); background: var(--bg-1); }
+.x-stat-label { margin: 0; font: var(--type-label); color: var(--text-2); }
+.x-stat-value { margin: 0; font: var(--type-stat); color: var(--text-1); overflow-wrap: anywhere; }
+.x-stat-loading { display: flex; align-items: center; min-height: 1.5rem; }
+.x-stat-foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--x-space-1) var(--x-space-2); margin: 0; font: var(--type-status); }
+.x-stat-delta { display: inline-flex; align-items: center; gap: var(--x-space-1); font-weight: 600; color: var(--text-2); }
+.x-stat-delta[data-tone="good"] { color: var(--ok); }
+.x-stat-delta[data-tone="bad"] { color: var(--danger); }
+.x-stat-hint { color: var(--text-2); }
+.x-stat-extra { margin-top: var(--x-space-2); }

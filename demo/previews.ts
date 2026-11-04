@@ -472,6 +472,13 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     style: {"padding": "16px", "width": "420px", "maxWidth": "100%"},
     render: (X, h) => h(X.DescriptionList, { items: [{ term: "Email", value: "ada@example.com", mono: true }, { term: "Role", value: "Owner" }, { term: "Created", value: "4 Nov 2026" }] }),
   },
+  "StatTile": {
+    style: {"display": "flex", "gap": "12px", "flexWrap": "wrap", "padding": "16px"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.StatTile, { label: "Active users", value: "1,284", delta: "+12%", deltaTrend: "up", deltaTone: "good", hint: "vs last 7 days" }),
+      h(X.StatTile, { label: "Storage", value: "82 GB" }, h(X.Meter, { value: 82, warnAt: 80, label: "Used" })),
+      h(X.StatTile, { label: "Sign-ins", value: "0", loading: true })),
+  },
 };
 
 function PopoverDemo({ X }) {
