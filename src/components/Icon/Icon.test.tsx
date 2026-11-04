@@ -29,6 +29,9 @@ describe("Icon", () => {
       expect(named, name).toContain('aria-label="Thing"');
     }
   });
+  it("passes data attributes to the svg", () => {
+    expect(renderToStaticMarkup(<Icon name="folder" data-open={true} />)).toMatch(/^<svg [^>]*data-open="true"/);
+  });
   it("keeps the path data of the app svgs it replaces", () => {
     const html = (name: IconName): string => renderToStaticMarkup(<Icon name={name} />);
     expect(html("chevron-left")).toContain('d="M15 6l-6 6 6 6"');

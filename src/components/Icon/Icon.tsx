@@ -10,9 +10,11 @@ export interface IconProps {
   label?: string;
   className?: string;
   style?: CSSProperties;
+  /** `data-*` attributes land on the svg, so a parent rule can key off state (`data-open`). */
+  [attr: `data-${string}`]: string | number | boolean | undefined;
 }
 
-export function Icon({ name, size = 16, label, className, style }: IconProps): JSX.Element {
+export function Icon({ name, size = 16, label, className, style, ...rest }: IconProps): JSX.Element {
   const parts = ICONS[name] ?? ICONS.docs;
   return (
     <svg
@@ -29,6 +31,7 @@ export function Icon({ name, size = 16, label, className, style }: IconProps): J
       role={label ? "img" : undefined}
       aria-label={label}
       style={style}
+      {...rest}
     >
       {parts.map(([Tag, attrs], i) => {
         const El = Tag as "path";
