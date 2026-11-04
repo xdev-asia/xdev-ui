@@ -64,6 +64,7 @@ const cases = {
   AppShell: [{ nav: h("nav", { "aria-label": "Main" }, "Overview"), crumbs: "Overview" }, "Page"],
   PageHeader: [{ title: "Users", description: "People who can sign in.", meta: "Active", actions: h("button", { type: "button" }, "Create user") }],
   FormSection: [{ title: "Profile", description: "Shown to teammates.", columns: 2, actions: h("button", { type: "button" }, "Save changes") }, h("input", { "aria-label": "Name" })],
+  DescriptionList: [{ items: [{ term: "Email", value: "ada@example.com", mono: true }, { term: "Role", value: "Owner" }] }],
 };
 let fail = 0;
 for (const [name, [props, child]] of Object.entries(cases)) {

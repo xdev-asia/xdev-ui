@@ -468,6 +468,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.Field, { label: "Full name", defaultValue: "Ada Lovelace" }),
       h(X.Field, { label: "Email", type: "email", defaultValue: "ada@example.com" })),
   },
+  "DescriptionList": {
+    style: {"padding": "16px", "width": "420px", "maxWidth": "100%"},
+    render: (X, h) => h(X.DescriptionList, { items: [{ term: "Email", value: "ada@example.com", mono: true }, { term: "Role", value: "Owner" }, { term: "Created", value: "4 Nov 2026" }] }),
+  },
 };
 
 function PopoverDemo({ X }) {
