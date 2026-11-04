@@ -17,6 +17,7 @@ import {
   Toast,
   Toolbar,
   TreeView,
+  FontField,
 } from "./index";
 
 const S = (k: string) => `§${k}§`;
@@ -102,6 +103,12 @@ describe("labels override every default English string", () => {
     expect(html).toContain(S("c"));
     expect(html).toContain(`${S("n")}4`);
     expectNoEnglish(html, ["Search", "Clear search", "results?"]);
+  });
+
+  it("FontField", () => {
+    const html = renderToStaticMarkup(h(FontField, { value: "Inter", onChange: () => {}, labels: { reset: S("r") } }));
+    expect(html).toContain(S("r"));
+    expectNoEnglish(html, ["Use the default font"]);
   });
 
   it("Breadcrumb", () => {

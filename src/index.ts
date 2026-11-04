@@ -3,6 +3,7 @@ export * from "./components/IconButton/IconButton";
 export * from "./components/Segmented/Segmented";
 export * from "./components/ThemeSwitch/ThemeSwitch";
 export * from "./components/Select/Select";
+export * from "./components/FontField/FontField";
 export * from "./components/Field/Field";
 export * from "./components/Switch/Switch";
 export * from "./components/Kbd/Kbd";

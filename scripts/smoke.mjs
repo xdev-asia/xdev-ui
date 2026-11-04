@@ -9,6 +9,7 @@ const cases = {
   Segmented: [{ options: [{ value: "a", label: "A" }, { value: "b", label: "B" }] }],
   ThemeSwitch: [{ value: "system", onChange() {} }],
   Select: [{ options: [{ value: "en", label: "English" }] }],
+  FontField: [{ value: "Inter", onChange() {} }],
   Field: [{ label: "Branch", hint: "kebab-case" }],
   Switch: [{ label: "Auto-commit" }],
   Kbd: [{}, "Ctrl"],
