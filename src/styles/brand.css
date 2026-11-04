@@ -6,3 +6,15 @@
 .x-lockup-cursor { width: 0.48em; height: 0.2em; border-radius: 0.06em; background: var(--brand-agent); align-self: flex-end; margin: 0 0 0.16em -0.24em; }
 /* Size comes from the Icon width/height attributes, so a parent rule can override it. */
 .x-icon { flex: none; }
+
+/* FileIcon: one tone per file family, mapped to theme tokens. */
+.x-file-icon { color: var(--text-3); }
+.x-file-icon[data-tone="folder-open"] { color: var(--signal); }
+.x-file-icon[data-tone="code"] { color: var(--accent); }
+.x-file-icon[data-tone="markup"] { color: var(--orange); }
+.x-file-icon[data-tone="style"] { color: var(--violet); }
+.x-file-icon[data-tone="data"] { color: var(--warn); }
+.x-file-icon[data-tone="doc"] { color: var(--text-2); }
+.x-file-icon[data-tone="media"],
+.x-file-icon[data-tone="shell"],
+.x-file-icon[data-tone="test"] { color: var(--ok); }

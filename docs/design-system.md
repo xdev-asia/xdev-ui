@@ -49,6 +49,6 @@ Inside a workspace surface, `.x-ws` remaps the semantic layer onto graphite, so 
 | Status | StatusDot, Meter, Banner, Toast, Spinner, FieldMessage |
 | Navigation | TabStrip, ActivityBar, StatusBar, Tabs, NavList, Breadcrumb, TreeView, Disclosure, SplitHandle, Toolbar |
 | Overlays | Menu, Dialog, CommandPalette, Popover, Tooltip |
-| Brand | BrandMark, Icon |
+| Brand | BrandMark, Icon, FileIcon |
 
 Each component folder has its rules in `README.md`; props are the exported `*Props` types.

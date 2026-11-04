@@ -1,6 +1,6 @@
 import { useRef, useState, type CSSProperties, type JSX, type KeyboardEvent } from "react";
 import { cx } from "../../internal/cx";
-import { Icon } from "../Icon/Icon";
+import { FileIcon } from "../FileIcon/FileIcon";
 import { treeKey } from "./treeKeys";
 
 export type TreeMark = "added" | "modified" | "deleted" | "renamed";
@@ -93,7 +93,7 @@ export function TreeView({ rows, selected, onToggle, onOpen, labels, className }
           style={{ "--tree-depth": r.depth } as CSSProperties}
           onClick={() => activate(r)}
         >
-          <Icon name={r.kind === "dir" ? "folder" : "file"} size={14} className="ws-tree-icon" />
+          <FileIcon name={r.name} kind={r.kind} open={Boolean(r.open)} size={14} className="ws-tree-icon" />
           <span className="ws-tree-name">{r.name}</span>
           {r.changed ? (
             <span className="ws-tree-dot">
