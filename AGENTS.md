@@ -18,7 +18,7 @@ Read the design system through the bundled MCP server instead of guessing props 
 | tool | use it to |
 |---|---|
 | `xdevui_get_guidelines` `topic="setup"` | install, CSS imports, `data-theme`, shared types |
-| `xdevui_list_components` | pick parts for a screen (44, grouped) |
+| `xdevui_list_components` | pick parts for a screen (46, grouped) |
 | `xdevui_get_component` | README rules + exported props + CSS classes of one part |
 | `xdevui_search_tokens` | find the token for a colour, space, radius or type size |
 | `xdevui_list_icons` | valid `IconName` values |
@@ -41,7 +41,7 @@ Prompt `xdevui_build_ui` runs those steps in order. Without MCP: `node_modules/@
 corepack pnpm install
 corepack pnpm dev         # demo, http://localhost:5173
 corepack pnpm build       # tokens -> ai manifest -> lib -> mcp.js -> d.ts
-corepack pnpm test        # SSR smoke (44 components) + MCP smoke (all tools)
+corepack pnpm test        # SSR smoke (46 components) + MCP smoke (all tools)
 ```
 
 | change | also update |
