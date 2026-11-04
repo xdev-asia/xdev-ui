@@ -324,6 +324,12 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.FieldMessage, { tone: "warn" }, "This deletes 3 files."),
       h(X.FieldMessage, { tone: "info" }, "Saved on this device only.")),
   },
+  "ActionTile": {
+    style: {"display": "grid", "gridTemplateColumns": "repeat(2, 1fr)", "gap": "8px", "padding": "16px", "width": "420px"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.ActionTile, { icon: "swap", title: "Hand off a task", description: "Move ownership to another agent.", onClick: () => {} }),
+      h(X.ActionTile, { icon: "workflow", title: "Child agents in worktrees", description: "Each child gets its own worktree.", onClick: () => {} })),
+  },
   "FilterChip": {
     style: {"display": "flex", "gap": "8px", "flexWrap": "wrap", "padding": "16px"},
     render: (X, h) => h(React.Fragment, null,

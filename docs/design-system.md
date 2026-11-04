@@ -36,14 +36,14 @@ Inside a workspace surface, `.x-ws` remaps the semantic layer onto graphite, so 
 
 - Line icons on a 24 grid, stroke `currentColor` 1.75, round caps and joins, no fills.
 - 16px in controls, 20px in banners, 22px in the activity bar.
-- The set: `docs changes tasks squads agents kit accounts terminal` (from ActivityBar.tsx) plus `warn close plus search more branch chevron-left chevron-right magnifier prompt folder file check alert warn-dash restore history bot download copy plug lock`.
+- The set: `docs changes tasks squads agents kit accounts terminal` (from ActivityBar.tsx) plus `warn close plus search more branch chevron-left chevron-right magnifier prompt folder file check alert warn-dash restore history bot download copy plug lock swap list-checks workflow`.
 - The brand mark (logo v9) is a round-capped `×` plus the agent cursor in `--brand-agent` `#ff7a3d`: a prompt waiting for input. The `×` follows the surface colour; the cursor is always orange.
 
 ## Components
 
 | group | components |
 |---|---|
-| Actions | Button, IconButton |
+| Actions | Button, IconButton, ActionTile |
 | Inputs | Segmented, ThemeSwitch, Select, FontField, Field, Switch, Checkbox, RadioGroup, Textarea, SearchInput, SearchPicker, FilterChip |
 | Display | Kbd, Badge, Tag, AgentChip, DiffStat, ListRow, Card, EmptyState, SettingRow, CodeBlock |
 | Status | StatusDot, Meter, Banner, Toast, Spinner, FieldMessage |
