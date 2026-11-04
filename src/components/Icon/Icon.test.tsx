@@ -52,3 +52,9 @@ describe("Icon", () => {
     expect(html("lock")).toContain('d="M7 11h10a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2zM8 11V8a4 4 0 0 1 8 0v3"');
   });
 });
+
+describe("sliders icon", () => {
+  it("is in the set", () => {
+    expect(ICON_NAMES).toContain("sliders");
+  });
+});

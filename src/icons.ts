@@ -34,7 +34,8 @@ export const ICONS = {
   plug: [["path", { d: "M9 7V3M15 7V3M7 7h10v4a5 5 0 0 1-10 0zM12 16v5" }]],
   lock: [["path", { d: "M7 11h10a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2zM8 11V8a4 4 0 0 1 8 0v3" }]],
   branch: [["circle", { cx: 6, cy: 5, r: 2 }], ["circle", { cx: 6, cy: 19, r: 2 }], ["circle", { cx: 18, cy: 7, r: 2 }], ["path", { d: "M6 7v10M18 9c0 5-6 4-12 8" }]],
-  chevron: [["path", { d: "m6 9 6 6 6-6" }]]
+  chevron: [["path", { d: "m6 9 6 6 6-6" }]],
+  sliders: [["path", { d: "M4 7h9M17 7h3M4 17h3M11 17h9" }], ["circle", { cx: 15, cy: 7, r: 2 }], ["circle", { cx: 9, cy: 17, r: 2 }]]
 } as const satisfies Record<string, readonly Part[]>;
 
 export type IconName = keyof typeof ICONS;
