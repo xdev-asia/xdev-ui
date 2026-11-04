@@ -58,3 +58,10 @@ describe("sliders icon", () => {
     expect(ICON_NAMES).toContain("sliders");
   });
 });
+
+describe("help icon", () => {
+  it("is in the set and renders an svg", () => {
+    expect(ICON_NAMES).toContain("help");
+    expect(renderToStaticMarkup(<Icon name="help" />)).toContain("<svg");
+  });
+});
