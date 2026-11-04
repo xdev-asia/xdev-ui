@@ -45,7 +45,7 @@ Inside a workspace surface, `.x-ws` remaps the semantic layer onto graphite, so 
 |---|---|
 | Actions | Button, IconButton, ActionTile |
 | Inputs | Segmented, ThemeSwitch, Select, FontField, Field, Switch, Checkbox, RadioGroup, Textarea, SearchInput, SearchPicker, FilterChip |
-| Display | Kbd, Badge, Tag, AgentChip, DiffStat, ListRow, Card, EmptyState, SettingRow, CodeBlock |
+| Display | Kbd, Avatar, Badge, Tag, AgentChip, DiffStat, ListRow, Card, EmptyState, SettingRow, CodeBlock |
 | Status | StatusDot, Meter, Banner, Toast, Spinner, FieldMessage |
 | Navigation | TabStrip, ActivityBar, StatusBar, Tabs, NavList, Breadcrumb, TreeView, Disclosure, SplitHandle, Toolbar |
 | Overlays | Menu, Dialog, CommandPalette, Popover, Tooltip |

@@ -13,6 +13,7 @@ const cases = {
   Field: [{ label: "Branch", hint: "kebab-case" }],
   Switch: [{ label: "Auto-commit" }],
   Kbd: [{}, "Ctrl"],
+  Avatar: [{ name: "Duy Tran" }],
   Badge: [{ status: "new" }, "new"],
   Tag: [{ tone: "warn" }, "dirty"],
   AgentChip: [{ profile: "claude" }],

@@ -184,3 +184,24 @@ button.x-list-row-main:disabled { cursor: default; }
 @media (prefers-reduced-motion: reduce) {
   .setting-flash::after { animation: none; opacity: 0; }
 }
+
+/* Avatar (.x-avatar) */
+.x-avatar {
+  --x-avatar-size: 32px;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--x-avatar-size);
+  height: var(--x-avatar-size);
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--x-color-surface-2);
+  box-shadow: inset 0 0 0 1px var(--x-color-line);
+  color: var(--x-color-ink);
+  font: 600 calc(var(--x-avatar-size) * 0.4) / 1 var(--font-body);
+  user-select: none;
+}
+.x-avatar[data-size="sm"] { --x-avatar-size: 20px; }
+.x-avatar[data-size="lg"] { --x-avatar-size: 48px; }
+.x-avatar-img { display: block; width: 100%; height: 100%; object-fit: cover; }
