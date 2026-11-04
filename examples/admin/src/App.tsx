@@ -1,30 +1,92 @@
 import { useCallback, useEffect, useMemo, useState, type JSX } from "react";
 import { signIn, signOut, useSession, type Session } from "./auth/session";
 import type { Role } from "./data/seed";
-import { StoreContext } from "./data/context";
-import { storeFromLocation } from "./data/store";
-import { I18nProvider, readLocale, type Locale } from "./i18n";
+import { StoreContext, useStore } from "./data/context";
+import { storeFromLocation, StoreError } from "./data/store";
+import { I18nProvider, readLocale, useI18n, type Locale } from "./i18n";
 import { hrefFor, navigate, useRoute } from "./router";
 import { Shell } from "./shell/Shell";
-import { NotifyContext, useToasts } from "./shell/notify";
+import { NotifyContext, useNotify, useToasts } from "./shell/notify";
 import { useTheme } from "./theme";
+import { CreateUserDialog } from "./dialogs/CreateUserDialog";
+import { DeleteUsersDialog } from "./dialogs/DeleteUsersDialog";
 import { DashboardPage } from "./pages/Dashboard";
 import { NotFoundPage } from "./pages/NotFound";
-import { SignInPage } from "./pages/SignIn";
+import { UserDetailPage } from "./pages/UserDetail";
 import { UsersPage } from "./pages/Users";
+import type { User } from "./data/seed";
+import { SignInPage } from "./pages/SignIn";
 
 const LOCALE_KEY = "acme-locale";
 
-function Routes({ session, roles }: { session: Session; roles: Role[] }): JSX.Element {
+type Dialog = { kind: "create" } | { kind: "delete"; users: Pick<User, "id" | "name">[]; done: () => void };
+
+interface RoutesProps {
+  session: Session;
+  roles: Role[];
+  version: number;
+  openDialog: (d: Dialog) => void;
+}
+
+function Routes({ session, roles, version, openDialog }: RoutesProps): JSX.Element {
   const route = useRoute();
+  const onDelete = (users: Pick<User, "id" | "name">[], done: () => void): void => openDialog({ kind: "delete", users, done });
   switch (route.name) {
+    case "users":
+      return <UsersPage session={session} roles={roles} version={version} onCreate={() => openDialog({ kind: "create" })} onDelete={onDelete} />;
+    case "user":
+      return <UserDetailPage key={route.params.id} id={route.params.id} session={session} roles={roles} onDelete={onDelete} />;
     case "dashboard":
       return <DashboardPage />;
-    case "users":
-      return <UsersPage session={session} roles={roles} onCreate={() => {}} onDelete={() => {}} version={0} />;
     default:
       return <NotFoundPage />;
   }
+}
+
+/** Hosts the modal dialogs so any page can open them. */
+function Dialogs({ dialog, busy, setBusy, close, changed }: { dialog: Dialog | null; busy: boolean; setBusy: (b: boolean) => void; close: () => void; changed: () => void }): JSX.Element | null {
+  const store = useStore();
+  const { t } = useI18n();
+  const notify = useNotify();
+  if (!dialog) return null;
+  if (dialog.kind === "create")
+    return (
+      <CreateUserDialog
+        onCancel={close}
+        onSubmit={async (input) => {
+          try {
+            await store.createUser(input);
+            notify(t("createUser.created"));
+            changed();
+            close();
+            return "ok";
+          } catch (e) {
+            return e instanceof StoreError && e.code === "email-taken" ? "email-taken" : "failed";
+          }
+        }}
+      />
+    );
+  return (
+    <DeleteUsersDialog
+      users={dialog.users}
+      busy={busy}
+      onCancel={close}
+      onConfirm={() => {
+        setBusy(true);
+        store.deleteUsers(dialog.users.map((u) => u.id)).then(
+          () => {
+            notify(t("users.deleted", { count: dialog.users.length }));
+            dialog.done();
+            changed();
+          },
+          () => notify(t("app.loadFailed")),
+        ).finally(() => {
+          setBusy(false);
+          close();
+        });
+      }}
+    />
+  );
 }
 
 export function App(): JSX.Element {
@@ -35,6 +97,9 @@ export function App(): JSX.Element {
   const store = useMemo(() => storeFromLocation(typeof window === "undefined" ? "" : window.location.search), []);
   const [roles, setRoles] = useState<Role[]>([]);
   const { notify, toasts } = useToasts();
+  const [dialog, setDialog] = useState<Dialog | null>(null);
+  const [version, setVersion] = useState(0);
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     try {
@@ -71,7 +136,8 @@ export function App(): JSX.Element {
             <SignInPage onSignedIn={signIn} theme={theme} onThemeChange={setTheme} />
           ) : (
             <Shell route={route} session={session} roles={roles} toasts={toasts} onSignOut={signOut}>
-              <Routes session={session} roles={roles} />
+              <Routes session={session} roles={roles} version={version} openDialog={setDialog} />
+              <Dialogs dialog={dialog} busy={busy} setBusy={setBusy} close={() => setDialog(null)} changed={() => setVersion((n) => n + 1)} />
             </Shell>
           )}
         </NotifyContext.Provider>
