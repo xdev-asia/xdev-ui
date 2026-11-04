@@ -26,4 +26,9 @@ describe("Segmented", () => {
     expect(onChange).toHaveBeenCalledWith("b");
     expect(setInner).toHaveBeenCalledWith("b");
   });
+  it("disables every segment and ignores clicks while disabled", () => {
+    const html = renderToStaticMarkup(<Segmented options={options} value="a" disabled />);
+    expect(html.match(/disabled=""/g)).toHaveLength(2);
+    expect(renderToStaticMarkup(<Segmented options={options} value="a" />)).not.toContain("disabled");
+  });
 });

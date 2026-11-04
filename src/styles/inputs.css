@@ -19,6 +19,7 @@
 }
 .segmented button:hover { color: var(--x-color-ink); background: var(--x-color-surface-2); }
 .segmented button[aria-pressed="true"] { background: var(--x-color-accent); color: var(--x-color-on-accent); }
+.segmented button:disabled { opacity: 0.6; cursor: default; }
 
 .lang-select {
   min-height: 32px;
