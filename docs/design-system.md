@@ -44,11 +44,11 @@ Inside a workspace surface, `.x-ws` remaps the semantic layer onto graphite, so 
 | group | components |
 |---|---|
 | Actions | Button, IconButton |
-| Inputs | Segmented, Select, Field, Switch |
-| Display | Kbd, Badge, Tag, AgentChip, DiffStat |
-| Status | StatusDot, Meter, Banner, Toast |
-| Navigation | TabStrip, ActivityBar, StatusBar |
-| Overlays | Menu, Dialog, CommandPalette |
+| Inputs | Segmented, Select, Field, Switch, Checkbox, RadioGroup, Textarea, SearchInput, FilterChip |
+| Display | Kbd, Badge, Tag, AgentChip, DiffStat, ListRow, Card, EmptyState, SettingRow, CodeBlock |
+| Status | StatusDot, Meter, Banner, Toast, Spinner, FieldMessage |
+| Navigation | TabStrip, ActivityBar, StatusBar, Tabs, NavList, Breadcrumb, TreeView, Disclosure, SplitHandle, Toolbar |
+| Overlays | Menu, Dialog, CommandPalette, Popover, Tooltip |
 | Brand | BrandMark, Icon |
 
 Each component folder has its rules in `README.md`; props are the exported `*Props` types.

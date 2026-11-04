@@ -1,7 +1,22 @@
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { ActivityBar, CommandPalette, DiffStat, Dialog, TabStrip, Toast } from "./index";
+import {
+  ActivityBar,
+  Breadcrumb,
+  CodeBlock,
+  CommandPalette,
+  DiffStat,
+  Dialog,
+  NavList,
+  SearchInput,
+  Spinner,
+  SplitHandle,
+  TabStrip,
+  Toast,
+  Toolbar,
+  TreeView,
+} from "./index";
 
 const S = (k: string) => `§${k}§`;
 
@@ -69,5 +84,68 @@ describe("labels override every default English string", () => {
     const html = renderToStaticMarkup(h(DiffStat, { added: 2, removed: 5, labels: { diffStat: (a, r) => `${S("d")}${a}/${r}` } }));
     expect(html).toContain(`${S("d")}2/5`);
     expectNoEnglish(html, ["added", "removed"]);
+  });
+
+  it("SearchInput", () => {
+    const html = renderToStaticMarkup(
+      h(SearchInput, { value: "auth", onChange: () => {}, onClear: () => {}, count: 4, labels: { search: S("s"), clear: S("c"), count: (n: number) => `${S("n")}${n}` } }),
+    );
+    expect(html).toContain(S("s"));
+    expect(html).toContain(S("c"));
+    expect(html).toContain(`${S("n")}4`);
+    expectNoEnglish(html, ["Search", "Clear search", "results?"]);
+  });
+
+  it("Breadcrumb", () => {
+    const html = renderToStaticMarkup(h(Breadcrumb, { items: [{ label: "xdev" }, { label: "main", mono: true }], labels: { breadcrumb: S("b") } }));
+    expect(html).toContain(S("b"));
+    expectNoEnglish(html, ["Breadcrumb"]);
+  });
+
+  it("TreeView", () => {
+    const html = renderToStaticMarkup(
+      h(TreeView, {
+        rows: [
+          { id: "src", depth: 0, name: "src", kind: "dir", open: true, changed: true },
+          { id: "src/a.ts", depth: 1, name: "a.ts", kind: "file", mark: "added" },
+          { id: "src/b.ts", depth: 1, name: "b.ts", kind: "file", mark: "modified" },
+          { id: "src/c.ts", depth: 1, name: "c.ts", kind: "file", mark: "deleted" },
+          { id: "src/d.ts", depth: 1, name: "d.ts", kind: "file", mark: "renamed" },
+        ],
+        labels: { tree: S("t"), changed: S("ch"), marks: { added: S("a"), modified: S("m"), deleted: S("d"), renamed: S("r") } },
+      }),
+    );
+    for (const k of ["t", "ch", "a", "m", "d", "r"]) expect(html).toContain(S(k));
+    expectNoEnglish(html, ["Files", "Changed", "Added", "Modified", "Deleted", "Renamed"]);
+  });
+
+  it("NavList", () => {
+    const html = renderToStaticMarkup(h(NavList, { items: [{ id: "general", label: "G" }], value: "general", onSelect: () => {}, labels: { nav: S("nav") } }));
+    expect(html).toContain(S("nav"));
+    expectNoEnglish(html, ["Sections"]);
+  });
+
+  it("CodeBlock", () => {
+    const html = renderToStaticMarkup(h(CodeBlock, { code: "pnpm test", labels: { copy: S("cp"), copied: S("cpd") } }));
+    expect(html).toContain(S("cp"));
+    expectNoEnglish(html, ["Copy", "Copied"]);
+  });
+
+  it("Spinner", () => {
+    const html = renderToStaticMarkup(h(Spinner, { labels: { loading: S("l") } }));
+    expect(html).toContain(S("l"));
+    expectNoEnglish(html, ["Loading"]);
+  });
+
+  it("SplitHandle", () => {
+    const html = renderToStaticMarkup(h(SplitHandle, { direction: "horizontal", value: 240, min: 160, max: 420, onResize: () => {}, labels: { resize: S("rs") } }));
+    expect(html).toContain(S("rs"));
+    expectNoEnglish(html, ["Resize panel"]);
+  });
+
+  it("Toolbar", () => {
+    const html = renderToStaticMarkup(h(Toolbar, { title: h("b", null, "3"), actions: h("button", { type: "button" }, "x"), labels: { actions: S("ac") } }));
+    expect(html).toContain(S("ac"));
+    expectNoEnglish(html, ["Actions"]);
   });
 });

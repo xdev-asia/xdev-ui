@@ -60,3 +60,27 @@
 }
 .ws-toast-text { flex: 1; min-width: 0; }
 .ws-toast .btn-secondary { min-height: 32px; }
+
+/* Spinner (.x-spinner) */
+.x-spinner { display: inline-flex; align-items: center; color: var(--x-color-signal); }
+.x-spinner-ring {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--line);
+  border-top-color: var(--x-color-signal);
+  border-radius: 50%;
+  box-sizing: border-box;
+  animation: x-spin 0.8s linear infinite;
+}
+.x-spinner[data-size="sm"] .x-spinner-ring { width: 10px; height: 10px; border-width: 1.5px; }
+@keyframes x-spin { to { transform: rotate(360deg); } }
+
+/* FieldMessage (.x-field-msg) */
+.x-field-msg { margin: var(--x-space-1) 0 0; font-size: 12px; line-height: 1.45; color: var(--x-color-muted); }
+.x-field-msg[data-tone="error"] { color: var(--x-color-danger); }
+.x-field-msg[data-tone="warn"] { color: var(--x-color-warn); }
+.x-field-msg[data-tone="info"] { color: var(--x-color-muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  .x-spinner-ring { animation: ws-pulse 1.4s ease-in-out infinite; }
+}

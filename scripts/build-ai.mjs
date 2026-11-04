@@ -52,7 +52,7 @@ for (const row of compTable.split("\n")) {
 }
 
 const components = readdirSync(resolve(root, "src/components"), { withFileTypes: true })
-  .filter((d) => d.isDirectory())
+  .filter((d) => d.isDirectory() && !d.name.startsWith("."))
   .map(({ name }) => {
     const readme = read(`src/components/${name}/README.md`);
     const tsx = read(`src/components/${name}/${name}.tsx`);

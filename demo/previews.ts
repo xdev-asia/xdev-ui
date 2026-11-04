@@ -130,7 +130,7 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     el = h(React.Fragment, null, X.ICON_NAMES.map(function (n) {
       return h("div", { key: n, style: { display: "flex", flexDirection: "column", alignItems: "center", gap: 6, color: "var(--text-1)" } },
         h(X.Icon, { name: n, size: 22 }),
-        h("span", { style: { font: "10px var(--font-mono)", color: "var(--text-3)" } }, n));
+        h("code", { style: { fontSize: 13, color: "var(--text-2)" } }, n));
     }));
     return el;
     },
@@ -217,7 +217,7 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.StatusDot, { key: 2, state: "waiting", label: "1 waiting" }),
       "spacer",
       h(X.Meter, { key: 3, label: "Context", value: 42, warnAt: 80 }),
-      h("span", { key: 4, style: { fontFamily: "var(--font-mono)" } }, "main"),
+      h("code", { key: 4 }, "main"),
       "UTF-8"
     ] }));
     return el;
@@ -283,4 +283,129 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     return el;
     },
   },
+  "Breadcrumb": {
+    style: {"padding": "16px"},
+    render: (X, h) => h(X.Breadcrumb, { items: [{ label: "xdev", href: "#" }, { label: "worktrees", href: "#" }, { label: "feat/login-retry", mono: true }] }),
+  },
+  "Card": {
+    style: {"padding": "16px", "width": "360px"},
+    render: (X, h) => h(X.Card, { title: "Worktree", subtitle: "feat/login-retry", monoSubtitle: true, actions: h(X.IconButton, { icon: "more", label: "More actions" }) },
+      h(X.DiffStat, { added: 128, removed: 14 })),
+  },
+  "Checkbox": {
+    style: {"display": "flex", "flexDirection": "column", "gap": "12px", "padding": "16px"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.Checkbox, { label: "Delete the branch too", defaultChecked: true }),
+      h(X.Checkbox, { label: "Select all", indeterminate: true }),
+      h(X.Checkbox, { label: "Keep worktree", hint: "Files stay on disk." })),
+  },
+  "CodeBlock": {
+    style: {"padding": "16px", "width": "420px"},
+    render: (X, h) => h(X.CodeBlock, { language: "bash", code: "pnpm add @xdev-asia/ui" }),
+  },
+  "Disclosure": {
+    style: {"padding": "16px", "width": "320px"},
+    render: (X, h) => h(X.Disclosure, { title: "Staged", count: 2 },
+      h(X.ListRow, { title: "src/auth/retry.ts", meta: "modified" }),
+      h(X.ListRow, { title: "src/auth/retry.test.ts", meta: "added" })),
+  },
+  "EmptyState": {
+    style: {"padding": "16px", "width": "360px"},
+    render: (X, h) => h(X.EmptyState, { size: "center", icon: "branch", title: "No worktrees yet", hint: "Create one to give an agent its own branch.", actions: h(X.Button, { icon: "plus" }, "New worktree") }),
+  },
+  "FieldMessage": {
+    style: {"display": "flex", "flexDirection": "column", "gap": "10px", "padding": "16px"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.FieldMessage, { tone: "error" }, "Branch name is taken."),
+      h(X.FieldMessage, { tone: "warn" }, "This deletes 3 files."),
+      h(X.FieldMessage, { tone: "info" }, "Saved on this device only.")),
+  },
+  "FilterChip": {
+    style: {"display": "flex", "gap": "8px", "flexWrap": "wrap", "padding": "16px"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.FilterChip, { pressed: true, count: 4 }, "Working"),
+      h(X.FilterChip, { pressed: false, count: 2 }, "Waiting"),
+      h(X.FilterChip, { pressed: false, count: 9 }, "Done")),
+  },
+  "ListRow": {
+    style: {"padding": "16px", "width": "340px"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.ListRow, { title: "login-retry", meta: "feat/login-retry · 2m", leading: h(X.StatusDot, { state: "working", label: "working" }), selected: true, onClick: function () {} }),
+      h(X.ListRow, { title: "fix-ci-cache", meta: "fix/ci-cache · 9m", leading: h(X.StatusDot, { state: "waiting", label: "waiting" }), onClick: function () {} })),
+  },
+  "NavList": {
+    style: {"padding": "16px", "width": "240px"},
+    render: (X, h) => h(X.NavList, { title: "Settings", value: "general", items: [{ id: "general", label: "General" }, { id: "agents", label: "Agents", count: 3 }, { id: "keys", label: "Keyboard" }] }),
+  },
+  "Popover": {
+    style: {"padding": "16px", "height": "200px"},
+    render: (X, h) => h(PopoverDemo, { X: X }),
+  },
+  "RadioGroup": {
+    style: {"padding": "16px"},
+    render: (X, h) => h(X.RadioGroup, { name: "shell", label: "Shell", defaultValue: "pwsh", options: [{ value: "pwsh", label: "PowerShell" }, { value: "bash", label: "Git Bash" }, { value: "cmd", label: "cmd" }] }),
+  },
+  "SearchInput": {
+    style: {"padding": "16px", "width": "320px"},
+    render: (X, h) => h(X.SearchInput, { placeholder: "Search sessions", shortcut: "Ctrl K", "aria-label": "Search sessions" }),
+  },
+  "SettingRow": {
+    style: {"padding": "16px", "width": "420px"},
+    render: (X, h) => h(X.SettingRow, { label: "Restore sessions on launch", description: "Reopen the tabs that were open when xDev closed.", control: h(X.Switch, { label: "Restore sessions", defaultChecked: true }) }),
+  },
+  "Spinner": {
+    style: {"display": "flex", "gap": "16px", "alignItems": "center", "padding": "16px"},
+    render: (X, h) => h(React.Fragment, null, h(X.Spinner, { size: "sm", label: "Loading usage" }), h(X.Spinner, { size: "md", label: "Loading sessions" })),
+  },
+  "SplitHandle": {
+    style: {"padding": "16px", "height": "160px"},
+    render: (X, h) => h(SplitDemo, { X: X }),
+  },
+  "Tabs": {
+    style: {"display": "flex", "flexDirection": "column", "gap": "16px", "padding": "16px"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.Tabs, { label: "Panel", items: [{ id: "changes", label: "Changes", badge: 3 }, { id: "files", label: "Files" }, { id: "log", label: "Log" }] }),
+      h(X.Tabs, { label: "View", variant: "pill", items: [{ id: "split", label: "Split" }, { id: "unified", label: "Unified" }] })),
+  },
+  "Textarea": {
+    style: {"padding": "16px", "width": "340px"},
+    render: (X, h) => h(X.Textarea, { label: "Prompt", mono: true, rows: 3, defaultValue: "Add retry with backoff to the login call." }),
+  },
+  "Toolbar": {
+    style: {"display": "flex", "flexDirection": "column", "gap": "12px", "padding": "16px", "width": "340px"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.Toolbar, { title: "Changes", count: 4, actions: h(React.Fragment, null, h(X.IconButton, { icon: "plus", label: "Stage all" }), h(X.IconButton, { icon: "more", label: "More" })) }),
+      h(X.Toolbar, { variant: "bulk", title: "3 selected", actions: h(X.Button, { variant: "secondary" }, "Discard") })),
+  },
+  "Tooltip": {
+    style: {"padding": "48px 16px 16px"},
+    render: (X, h) => h(X.Tooltip, { content: "Copy branch name" }, h(X.IconButton, { icon: "copy", label: "Copy" })),
+  },
+  "TreeView": {
+    style: {"padding": "16px", "width": "280px"},
+    render: (X, h) => h(X.TreeView, { selected: "r", rows: [
+      { id: "s", depth: 0, name: "src", kind: "dir", open: true },
+      { id: "a", depth: 1, name: "auth", kind: "dir", open: true, changed: true },
+      { id: "r", depth: 2, name: "retry.ts", kind: "file", mark: "modified" },
+      { id: "t", depth: 2, name: "retry.test.ts", kind: "file", mark: "added" },
+      { id: "p", depth: 0, name: "package.json", kind: "file" },
+    ] }),
+  },
 };
+
+function PopoverDemo({ X }) {
+  const [open, setOpen] = React.useState(true);
+  return React.createElement(X.Popover, {
+    open: open, onClose: function () { setOpen(false); }, label: "Notifications",
+    trigger: function (p) { return React.createElement(X.Button, Object.assign({ variant: "secondary", onClick: function () { setOpen(!open); } }, p), "Notifications"); },
+  }, React.createElement("p", { style: { margin: 0, padding: 12 } }, "fix-ci-cache is waiting for review."));
+}
+
+function SplitDemo({ X }) {
+  const [w, setW] = React.useState(140);
+  const pane = { background: "var(--bg-2)", borderRadius: 6 };
+  return React.createElement("div", { style: { display: "flex", height: "100%", width: 360 } },
+    React.createElement("div", { style: Object.assign({ width: w }, pane) }),
+    React.createElement(X.SplitHandle, { direction: "horizontal", value: w, min: 80, max: 260, onResize: setW, label: "Resize file tree" }),
+    React.createElement("div", { style: Object.assign({ flex: 1 }, pane) }));
+}

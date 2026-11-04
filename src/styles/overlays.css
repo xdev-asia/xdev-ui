@@ -103,3 +103,54 @@
 .pal-hit { font-weight: 600; color: var(--text-1); }
 .pal-empty { padding: 16px 8px; text-align: center; font-size: 13px; color: var(--text-3); }
 .pal-foot { display: flex; gap: 14px; padding: 8px 14px; border-top: 1px solid var(--line); font-size: 11px; color: var(--text-3); }
+
+/* Popover (.x-popover) */
+.ws-menu-backdrop { position: fixed; inset: 0; z-index: 20; }
+.x-popover-anchor { position: relative; display: inline-flex; }
+.x-popover {
+  position: absolute;
+  z-index: 21;
+  min-width: 220px;
+  padding: var(--x-space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+  background: var(--bg-2);
+  color: var(--text-1);
+  font-size: 13px;
+  box-shadow: var(--shadow-menu);
+  animation: x-pop-in 120ms ease-out;
+}
+.x-popover[data-placement="bottom-start"] { top: calc(100% + var(--x-space-1)); left: 0; }
+.x-popover[data-placement="bottom-end"] { top: calc(100% + var(--x-space-1)); right: 0; }
+.x-popover[data-placement="top-start"] { bottom: calc(100% + var(--x-space-1)); left: 0; }
+@keyframes x-pop-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
+/* Tooltip (.x-tooltip) */
+.x-tooltip-anchor { position: relative; display: inline-flex; }
+.x-tooltip {
+  position: absolute;
+  left: 50%;
+  z-index: 30;
+  width: max-content;
+  max-width: 240px;
+  padding: var(--x-space-1) var(--x-space-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-s);
+  background: var(--bg-3);
+  color: var(--text-1);
+  font: 400 12px/1.4 var(--font-body);
+  box-shadow: var(--shadow-menu);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%);
+  transition: opacity 150ms ease, visibility 0s linear 150ms;
+}
+.x-tooltip[data-placement="top"] { bottom: calc(100% + calc(var(--x-space-1) * 1.5)); }
+.x-tooltip[data-placement="bottom"] { top: calc(100% + calc(var(--x-space-1) * 1.5)); }
+.x-tooltip[data-open] { opacity: 1; visibility: visible; transition-delay: 0s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .x-popover { animation: none; }
+  .x-tooltip { transition: none; }
+}

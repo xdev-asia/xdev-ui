@@ -58,10 +58,11 @@
     "typecheck": "node scripts/build-tokens.mjs && tsc -p tsconfig.json --noEmit",
     "build": "node scripts/build-tokens.mjs && node scripts/build-ai.mjs && vite build && vite build --config vite.mcp.config.ts && tsc -p tsconfig.build.json && node scripts/postbuild.mjs",
     "dev": "node scripts/build-tokens.mjs && vite --config vite.demo.config.ts",
-    "build:demo": "node scripts/build-tokens.mjs && node scripts/build-ai.mjs && vite build --config vite.demo.config.ts && node scripts/postbuild.mjs --demo",
+    "build:demo": "node scripts/build-tokens.mjs && node scripts/build-ai.mjs && vite build --config vite.demo.config.ts && storybook build -o dist-demo/storybook --quiet && node scripts/postbuild.mjs --demo",
     "mcp": "node dist/mcp.js",
     "test": "node scripts/build-tokens.mjs && vitest run",
-    "test:dist": "node scripts/smoke.mjs && node scripts/mcp-smoke.mjs"
+    "test:dist": "node scripts/smoke.mjs && node scripts/mcp-smoke.mjs",
+    "storybook": "node scripts/build-tokens.mjs && storybook dev -p 6006 --no-open"
   },
   "peerDependencies": {
     "react": "^19.0.0",
@@ -70,12 +71,17 @@
   "devDependencies": {
     "@modelcontextprotocol/client": "^2.4.0",
     "@modelcontextprotocol/server": "^2.4.0",
+    "@storybook/addon-a11y": "^10.6.5",
+    "@storybook/addon-docs": "^10.6.5",
+    "@storybook/addon-themes": "^10.6.5",
+    "@storybook/react-vite": "^10.6.5",
     "@types/node": "^24.19.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.2.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
+    "storybook": "^10.6.5",
     "typescript": "^7.0.2",
     "vite": "^8.3.5",
     "vitest": "^5.0.5",

@@ -1,0 +1,45 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Overview" />
+
+# xdev-ui
+
+The component library behind xDev, a desktop workspace for running coding agents in worktrees.
+Dark is the default theme; switch it from the toolbar. Resize with the viewport menu: every story is checked at 375, 768 and 1440.
+
+## Install
+
+```bash
+# .npmrc
+@xdev-asia:registry=https://npm.pkg.github.com
+```
+
+```bash
+pnpm add @xdev-asia/ui
+```
+
+```ts
+import "@xdev-asia/ui/fonts.css";
+import "@xdev-asia/ui/index.css";
+import { Button, TabStrip } from "@xdev-asia/ui";
+```
+
+## Groups
+
+| Group | What lives there |
+| --- | --- |
+| Actions | Button, IconButton |
+| Inputs | Field, Select, Segmented, Switch and form parts |
+| Display | Badge, Tag, Kbd, AgentChip, DiffStat |
+| Status | StatusDot, Meter, Banner, Toast |
+| Navigation | TabStrip, ActivityBar, StatusBar |
+| Overlays | Menu, Dialog, CommandPalette |
+| Brand | BrandMark, Icon |
+| Patterns | Whole-surface compositions |
+
+## Rules
+
+- One primary button per surface.
+- Colours come from tokens (`--x-color-*`, `--bg-*`, `--text-*`). No literals.
+- Every label has an override through `labels` for localisation.
+- AI agents can read the same catalogue through the MCP server and `/llms.txt`.
