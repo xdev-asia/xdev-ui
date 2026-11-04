@@ -23,4 +23,14 @@ describe("FontField", () => {
     expect(html).not.toContain("Inter");
     expect(html).toContain('aria-label="Mac dinh"');
   });
+  it("keeps the font of the name when the caller passes a style", () => {
+    const html = renderToStaticMarkup(<FontField value="Inter" onChange={() => {}} style={{ width: "10rem" }} />);
+    expect(html).toContain("font-family");
+    expect(html).toContain("width:10rem");
+  });
+  it("lets the caller's own font-family win", () => {
+    const html = renderToStaticMarkup(<FontField value="Inter" onChange={() => {}} style={{ fontFamily: "Mine" }} />);
+    expect(html).toContain("font-family:Mine");
+    expect(html).not.toContain("Inter,");
+  });
 });

@@ -20,7 +20,7 @@ export interface FontFieldProps extends Omit<InputHTMLAttributes<HTMLInputElemen
   labels?: Partial<FontFieldLabels>;
 }
 
-export function FontField({ value, onChange, suggestions = UI_FONT_SUGGESTIONS, labels, className, ...rest }: FontFieldProps): JSX.Element {
+export function FontField({ value, onChange, suggestions = UI_FONT_SUGGESTIONS, labels, className, style, ...rest }: FontFieldProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
   const listId = `x-font-${useId()}`;
   const stack = fontStack(value);
@@ -33,7 +33,7 @@ export function FontField({ value, onChange, suggestions = UI_FONT_SUGGESTIONS, 
         value={value}
         spellCheck={false}
         autoComplete="off"
-        style={stack ? { fontFamily: stack } : undefined}
+        style={stack || style ? { ...(stack ? { fontFamily: stack } : null), ...style } : undefined}
         onChange={(e) => onChange(e.target.value)}
         {...rest}
       />
@@ -43,7 +43,7 @@ export function FontField({ value, onChange, suggestions = UI_FONT_SUGGESTIONS, 
         ))}
       </datalist>
       {value !== "" ? (
-        <button type="button" className="font-field-reset" aria-label={l.reset} onClick={() => onChange("")}>
+        <button type="button" className="font-field-reset" aria-label={l.reset} disabled={rest.disabled} onClick={() => onChange("")}>
           <Icon name="close" size={14} />
         </button>
       ) : null}
