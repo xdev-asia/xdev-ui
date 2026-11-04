@@ -188,6 +188,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     return el;
     },
   },
+  "ThemeSwitch": {
+    style: {"display": "flex", "flexDirection": "column", "gap": "12px", "alignItems": "flex-start", "padding": "16px"},
+    render: (X, h) => h(X.ThemeSwitch, { value: "system", onChange: () => {} }),
+  },
   "Segmented": {
     style: {"display": "flex", "flexDirection": "column", "gap": "12px", "alignItems": "flex-start", "padding": "16px"},
     render: (X, h) => {

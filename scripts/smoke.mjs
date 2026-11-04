@@ -7,6 +7,7 @@ const cases = {
   Button: [{}, "Create session"],
   IconButton: [{ icon: "search", label: "Search" }],
   Segmented: [{ options: [{ value: "a", label: "A" }, { value: "b", label: "B" }] }],
+  ThemeSwitch: [{ value: "system", onChange() {} }],
   Select: [{ options: [{ value: "en", label: "English" }] }],
   Field: [{ label: "Branch", hint: "kebab-case" }],
   Switch: [{ label: "Auto-commit" }],
