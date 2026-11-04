@@ -8,3 +8,4 @@ Vertical app switcher at the left edge of the desktop window.
 - Each button's `aria-label` and `title` is the app name; Changes adds its pending count, "Changes (7)".
 - The count badge shows on Changes only, caps at "99+", and hides at zero.
 - Icons are 22px from the `Icon` set.
+- `labels` (`ActivityBarLabels`) takes a name per app plus `nav` (landmark name) and `count(base, n)` (label with pending count).

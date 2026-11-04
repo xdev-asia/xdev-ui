@@ -8,3 +8,4 @@ Keyboard-first search across sessions, files and commands (Ctrl+K).
 - The first visible row is selected; ↑↓ move, Enter opens, Esc closes. The footer states this with `Kbd`.
 - Empty result: "No matches", never a blank list.
 - The bundle filters by substring for the preview; the app supplies its own ranking.
+- `labels` (`CommandPaletteLabels`: `dialog`, `placeholder`, `search`, `noMatches`, `move`, `open`, `close`) overrides the English defaults.

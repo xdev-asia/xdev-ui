@@ -9,3 +9,4 @@ Modal confirmation over a dimmed backdrop, for decisions that cannot be undone.
 - Use `alert` (`role="alertdialog"`) for destructive confirms.
 - Focus moves into the dialog on open and returns to the trigger on close; Esc cancels. The bundle renders the markup only; wire focus handling in the host app.
 - The preview places it inside the card; in the app the backdrop is `position: fixed`.
+- `labels` (`DialogLabels`: `confirm`, `cancel`) overrides the English defaults; pass translated strings from the app.

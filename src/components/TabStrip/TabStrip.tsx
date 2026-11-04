@@ -14,6 +14,21 @@ export interface TabItem {
   skipped?: boolean;
 }
 
+export interface TabStripLabels {
+  skipped: string;
+  unsaved: string;
+  newTab: string;
+  /** aria-label of a tab close button. */
+  close: (name: string) => string;
+}
+
+const DEFAULT_LABELS: TabStripLabels = {
+  skipped: "skipped",
+  unsaved: "Unsaved",
+  newTab: "New tab",
+  close: (name) => `Close ${name}`,
+};
+
 export interface TabStripProps {
   tabs: TabItem[];
   selected?: string;
@@ -23,9 +38,12 @@ export interface TabStripProps {
   /** false hides the + button. */
   onAdd?: (() => void) | false;
   label?: string;
+  /** Override the English defaults (e.g. for vi). */
+  labels?: Partial<TabStripLabels>;
 }
 
-export function TabStrip({ tabs, selected, defaultSelected, onSelect, onClose, onAdd, label }: TabStripProps): JSX.Element {
+export function TabStrip({ tabs, selected, defaultSelected, onSelect, onClose, onAdd, label, labels }: TabStripProps): JSX.Element {
+  const l = { ...DEFAULT_LABELS, ...labels };
   const [inner, setInner] = useState(defaultSelected ?? tabs[0]?.id);
   const current = selected ?? inner;
   return (
@@ -56,12 +74,12 @@ export function TabStrip({ tabs, selected, defaultSelected, onSelect, onClose, o
               {t.state ? <StatusDot state={t.state} pulse={t.state === "working"} /> : null}
               {t.profile ? <AgentChip profile={t.profile} /> : null}
               <span className="ws-tab-name">{t.name}</span>
-              {t.skipped ? <span className="ws-tab-skip">skipped</span> : null}
+              {t.skipped ? <span className="ws-tab-skip">{l.skipped}</span> : null}
             </button>
             {t.dirty ? (
-              <span className="ws-tab-dirty" aria-label="Unsaved" />
+              <span className="ws-tab-dirty" aria-label={l.unsaved} />
             ) : (
-              <button type="button" className="ws-tab-close" aria-label={`Close ${t.name}`} onClick={() => onClose?.(t.id)}>
+              <button type="button" className="ws-tab-close" aria-label={l.close(t.name)} onClick={() => onClose?.(t.id)}>
                 ×
               </button>
             )}
@@ -69,7 +87,7 @@ export function TabStrip({ tabs, selected, defaultSelected, onSelect, onClose, o
         );
       })}
       {onAdd !== false ? (
-        <button type="button" className="ws-tab-add" aria-label="New tab" onClick={onAdd || undefined}>
+        <button type="button" className="ws-tab-add" aria-label={l.newTab} onClick={onAdd || undefined}>
           +
         </button>
       ) : null}

@@ -10,3 +10,4 @@ Horizontal strip of terminal-session tabs with state, agent, colour and close co
 - `unread` marks output the user has not seen; it clears on select.
 - `dirty` replaces the close button with a dot, so a click cannot discard work.
 - Names are the session or branch name, never "Terminal 1".
+- `labels` (`TabStripLabels`: `skipped`, `unsaved`, `newTab`, `close(name)`) overrides the English defaults.

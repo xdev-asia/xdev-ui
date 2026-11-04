@@ -3,6 +3,14 @@ import { Icon } from "../Icon/Icon";
 
 export type AppId = "docs" | "changes" | "tasks" | "squads" | "agents" | "kit" | "accounts" | "terminal";
 
+/** Per-app labels plus the bar name and the Changes count formatter. */
+export type ActivityBarLabels = Partial<Record<AppId, string>> & {
+  /** aria-label of the nav landmark. */
+  nav?: string;
+  /** Label of Changes with a pending count, e.g. "Changes (3)". */
+  count?: (base: string, n: number) => string;
+};
+
 export interface ActivityBarProps {
   active?: AppId;
   apps?: AppId[];
@@ -10,7 +18,7 @@ export interface ActivityBarProps {
   changeCount?: number;
   onSelect?: (id: AppId) => void;
   /** Override the English labels (e.g. for vi). */
-  labels?: Partial<Record<AppId, string>>;
+  labels?: ActivityBarLabels;
 }
 
 export const APPS: AppId[] = ["docs", "changes", "tasks", "squads", "agents", "kit", "accounts", "terminal"];
@@ -30,10 +38,10 @@ export function ActivityBar({ active, apps = APPS, changeCount, onSelect, labels
   const current = active ?? inner;
   const pending = changeCount != null && changeCount > 0 ? changeCount : null;
   return (
-    <nav className="activitybar" aria-label="Apps">
+    <nav className="activitybar" aria-label={labels?.nav ?? "Apps"}>
       {apps.map((id) => {
         const base = labels?.[id] ?? APP_LABELS[id] ?? id;
-        const label = id === "changes" && pending !== null ? `${base} (${pending})` : base;
+        const label = id === "changes" && pending !== null ? (labels?.count ?? ((b, n) => `${b} (${n})`))(base, pending) : base;
         return (
           <button
             key={id}

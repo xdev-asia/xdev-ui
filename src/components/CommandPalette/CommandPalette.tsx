@@ -12,12 +12,37 @@ export interface PaletteRow {
   icon?: IconName;
 }
 
+export interface CommandPaletteLabels {
+  /** aria-label of the dialog when no title is given. */
+  dialog: string;
+  /** Input placeholder (the placeholder prop wins). */
+  placeholder: string;
+  /** aria-label of the input when no placeholder prop is given. */
+  search: string;
+  noMatches: string;
+  move: string;
+  open: string;
+  close: string;
+}
+
+const DEFAULT_LABELS: CommandPaletteLabels = {
+  dialog: "Command palette",
+  placeholder: "Search sessions, files, commands",
+  search: "Search",
+  noMatches: "No matches",
+  move: "move",
+  open: "open",
+  close: "close",
+};
+
 export interface CommandPaletteProps {
   title?: string;
   placeholder?: string;
   defaultQuery?: string;
   filters?: string[];
   sections: { title: string; rows: PaletteRow[] }[];
+  /** Override the English defaults (e.g. for vi). */
+  labels?: Partial<CommandPaletteLabels>;
 }
 
 function highlight(text: string, query: string): ReactNode {
@@ -33,7 +58,8 @@ function highlight(text: string, query: string): ReactNode {
   );
 }
 
-export function CommandPalette({ title, placeholder, defaultQuery = "", filters, sections }: CommandPaletteProps): JSX.Element {
+export function CommandPalette({ title, placeholder, defaultQuery = "", filters, sections, labels }: CommandPaletteProps): JSX.Element {
+  const l = { ...DEFAULT_LABELS, ...labels };
   const [q, setQ] = useState(defaultQuery);
   const [filter, setFilter] = useState<string | null>(filters?.[0] ?? null);
   const needle = q.toLowerCase();
@@ -42,14 +68,14 @@ export function CommandPalette({ title, placeholder, defaultQuery = "", filters,
     .filter((s) => s.rows.length > 0);
   let first = true;
   return (
-    <div className="palette" role="dialog" aria-label={title ?? "Command palette"}>
+    <div className="palette" role="dialog" aria-label={title ?? l.dialog}>
       {title ? <div className="pal-title">{title}</div> : null}
       <input
         className="pal-input"
-        placeholder={placeholder ?? "Search sessions, files, commands"}
+        placeholder={placeholder ?? l.placeholder}
         value={q}
         onChange={(e) => setQ(e.target.value)}
-        aria-label={placeholder ?? "Search"}
+        aria-label={placeholder ?? l.search}
       />
       {filters ? (
         <div className="pal-filters">
@@ -79,18 +105,18 @@ export function CommandPalette({ title, placeholder, defaultQuery = "", filters,
             </div>
           ))
         ) : (
-          <div className="pal-empty">No matches</div>
+          <div className="pal-empty">{l.noMatches}</div>
         )}
       </div>
       <div className="pal-foot">
         <span>
-          <Kbd>↑↓</Kbd> move
+          <Kbd>↑↓</Kbd> {l.move}
         </span>
         <span>
-          <Kbd>Enter</Kbd> open
+          <Kbd>Enter</Kbd> {l.open}
         </span>
         <span>
-          <Kbd>Esc</Kbd> close
+          <Kbd>Esc</Kbd> {l.close}
         </span>
       </div>
     </div>
