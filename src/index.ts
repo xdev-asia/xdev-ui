@@ -39,6 +39,7 @@ export * from "./components/Tabs/Tabs";
 export * from "./components/NavList/NavList";
 export * from "./components/Breadcrumb/Breadcrumb";
 export * from "./components/TreeView/TreeView";
+export * from "./components/TreeView/pathRows";
 export * from "./components/Disclosure/Disclosure";
 export * from "./components/SplitHandle/SplitHandle";
 export * from "./components/Toolbar/Toolbar";

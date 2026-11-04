@@ -13,3 +13,6 @@ File tree over a flat list of visible rows, with git status marks and full keybo
 - Status letters: A added (`--ok`), M modified (`--warn`), D deleted (`--danger`), R renamed (`--violet`). The letter is aria-hidden; `labels.marks` is read out.
 - A dir with changed files inside shows the dot; `labels.changed` reads it out.
 - `TreeViewLabels`: `tree`, `changed`, `marks.{added,modified,deleted,renamed}`.
+
+## pathRows
+`pathRows(files, closed)` builds the visible rows from a flat `{ path, mark? }[]`: folders first, each level sorted by name, folder id `path/`, `changed` on folders that hold a marked file. `closed` is the set of folder ids whose children are hidden; the caller owns it and `onToggle` edits it.
