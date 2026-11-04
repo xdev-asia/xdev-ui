@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, type JSX } from "react";
-import { signIn, signOut, useSession } from "./auth/session";
+import { signIn, signOut, useSession, type Session } from "./auth/session";
 import type { Role } from "./data/seed";
 import { StoreContext } from "./data/context";
 import { storeFromLocation } from "./data/store";
@@ -11,14 +11,17 @@ import { useTheme } from "./theme";
 import { DashboardPage } from "./pages/Dashboard";
 import { NotFoundPage } from "./pages/NotFound";
 import { SignInPage } from "./pages/SignIn";
+import { UsersPage } from "./pages/Users";
 
 const LOCALE_KEY = "acme-locale";
 
-function Routes(): JSX.Element {
+function Routes({ session, roles }: { session: Session; roles: Role[] }): JSX.Element {
   const route = useRoute();
   switch (route.name) {
     case "dashboard":
       return <DashboardPage />;
+    case "users":
+      return <UsersPage session={session} roles={roles} onCreate={() => {}} onDelete={() => {}} version={0} />;
     default:
       return <NotFoundPage />;
   }
@@ -68,7 +71,7 @@ export function App(): JSX.Element {
             <SignInPage onSignedIn={signIn} theme={theme} onThemeChange={setTheme} />
           ) : (
             <Shell route={route} session={session} roles={roles} toasts={toasts} onSignOut={signOut}>
-              <Routes />
+              <Routes session={session} roles={roles} />
             </Shell>
           )}
         </NotifyContext.Provider>
