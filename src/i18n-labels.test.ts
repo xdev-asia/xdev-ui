@@ -11,6 +11,7 @@ import {
   DiffStat,
   Dialog,
   NavList,
+  Pagination,
   SearchInput,
   SearchPicker,
   Spinner,
@@ -198,5 +199,12 @@ describe("labels override every default English string", () => {
     const desc = renderToStaticMarkup(h(DT, { ...props, rows: [{ id: "x" }], sort: { key: "a", dir: "desc" } }));
     expect(desc).toContain(S("ds"));
     expect(renderToStaticMarkup(h(DT, { ...props, rows: [], loading: true }))).toContain(S("ld"));
+  });
+
+  it("Pagination", () => {
+    const labels = { nav: S("nv"), previous: S("pv"), next: S("nx"), range: (a: number, b: number, t: number) => `${S("r")}${a}-${b}-${t}`, pageSize: S("ps") };
+    const html = renderToStaticMarkup(h(Pagination, { page: 1, pageSize: 10, total: 25, onPageChange() {}, pageSizeOptions: [10], labels }));
+    for (const v of [S("nv"), S("pv"), S("nx"), `${S("r")}1-10-25`, S("ps")]) expect(html).toContain(v);
+    expectNoEnglish(html, ["Pagination", "Previous page", "Next page", "of", "Rows per page"]);
   });
 });

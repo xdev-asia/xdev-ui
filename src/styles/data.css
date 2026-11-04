@@ -41,3 +41,9 @@
 .x-table-empty { padding: var(--x-space-8) var(--x-space-4); text-align: center; }
 .x-table tbody tr:has(.x-table-empty):hover { background: transparent; }
 @container (max-width: 480px) { .x-table [data-hide-narrow] { display: none; } }
+
+/* Pagination (.x-pagination) */
+.x-pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--x-space-3); margin-top: var(--x-space-3); font: var(--type-status); color: var(--text-2); }
+.x-pagination-range { font-variant-numeric: tabular-nums; }
+.x-pagination-step { display: inline-flex; gap: var(--x-space-1); }
+.x-pagination .ws-icon-btn:disabled { opacity: 0.4; cursor: default; }

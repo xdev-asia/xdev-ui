@@ -485,6 +485,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       rows: [{ id: "1", name: "Ada Lovelace", email: "ada@example.com" }, { id: "2", name: "Grace Hopper", email: "grace@example.com" }],
       columns: [{ key: "name", header: "Name", sortable: true, cell: (r) => r.name }, { key: "email", header: "Email", mono: true, hideNarrow: true, cell: (r) => r.email }] }),
   },
+  "Pagination": {
+    style: {"padding": "16px", "width": "420px", "maxWidth": "100%"},
+    render: (X, h) => h(X.Pagination, { page: 2, pageSize: 20, total: 57, onPageChange() {}, pageSizeOptions: [10, 20, 50], onPageSizeChange() {} }),
+  },
 };
 
 function PopoverDemo({ X }) {
