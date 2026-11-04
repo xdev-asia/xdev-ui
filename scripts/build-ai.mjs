@@ -105,7 +105,7 @@ for (const group of tokens.type?.groups ?? []) {
   for (const { name, usage, sample, ...style } of group.styles ?? []) {
     flatTokens.push({
       name: `type-${name}`,
-      css: `font: ${style.fontWeight ?? 400} ${style.fontSize}${style.lineHeight ? `/${style.lineHeight}` : ""} var(--font-${group.family})`,
+      css: `font: var(--type-${name})`,
       category: "type",
       value: style,
       usage: usage ?? "",
