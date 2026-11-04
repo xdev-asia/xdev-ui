@@ -13,6 +13,7 @@ import {
   Spinner,
   SplitHandle,
   TabStrip,
+  ThemeSwitch,
   Toast,
   Toolbar,
   TreeView,
@@ -38,6 +39,13 @@ describe("labels override every default English string", () => {
     const html = renderToStaticMarkup(h(Dialog, { title: "T", confirmLabel: "Yes", cancelLabel: null, labels: { confirm: S("c"), cancel: S("x") } }));
     expect(html).toContain("Yes");
     expect(html).not.toContain(S("x"));
+  });
+
+  it("ThemeSwitch", () => {
+    const labels = { group: S("g"), system: S("s"), dark: S("d"), light: S("l") };
+    const html = renderToStaticMarkup(h(ThemeSwitch, { value: "dark", onChange() {}, labels }));
+    for (const v of Object.values(labels)) expect(html).toContain(v);
+    expectNoEnglish(html, ["Theme", "System", "Dark", "Light"]);
   });
 
   it("Toast", () => {
