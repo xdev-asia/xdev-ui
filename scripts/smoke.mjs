@@ -62,6 +62,7 @@ const cases = {
   Toolbar: [{ title: "Changes", count: 12, actions: h("button", { type: "button" }, "Stage all") }],
   Avatar: [{ name: "Trần Thị B" }],
   AppShell: [{ nav: h("nav", { "aria-label": "Main" }, "Overview"), crumbs: "Overview" }, "Page"],
+  PageHeader: [{ title: "Users", description: "People who can sign in.", meta: "Active", actions: h("button", { type: "button" }, "Create user") }],
 };
 let fail = 0;
 for (const [name, [props, child]] of Object.entries(cases)) {

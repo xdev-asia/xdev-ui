@@ -74,3 +74,15 @@
 @media (prefers-reduced-motion: reduce) {
   .x-shell-side { transition: none; }
 }
+
+/* PageHeader (.x-page-header) */
+.x-page-header { margin: 0 0 var(--x-space-6); container-type: inline-size; }
+.x-page-crumb { margin: 0 0 var(--x-space-2); }
+.x-page-row { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: var(--x-space-3) var(--x-space-4); }
+.x-page-heading { flex: 1 1 20ch; min-width: 0; }
+.x-page-titleline { display: flex; flex-wrap: wrap; align-items: center; gap: var(--x-space-1) var(--x-space-3); }
+.x-page-title { margin: 0; font: var(--type-page-title); color: var(--text-1); overflow-wrap: anywhere; }
+.x-page-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--x-space-2); font: var(--type-status); color: var(--text-2); }
+.x-page-desc { margin: var(--x-space-1) 0 0; color: var(--text-2); font: var(--type-body); }
+.x-page-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--x-space-2); }
+@container (max-width: 480px) { .x-page-actions { justify-content: flex-start; width: 100%; } }

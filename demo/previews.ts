@@ -458,6 +458,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     style: {"height": "320px", "width": "640px", "maxWidth": "100%", "transform": "translateZ(0)", "overflow": "hidden"},
     render: (X, h) => h(X.AppShell, { brand: h(X.BrandMark, { size: 20 }), nav: h(X.NavList, { items: [{ id: "home", label: "Overview", icon: "home" }, { id: "users", label: "Users", icon: "accounts" }], value: "home" }), crumbs: h(X.Breadcrumb, { items: [{ label: "Overview" }] }) }, h("p", null, "Page content")),
   },
+  "PageHeader": {
+    style: {"padding": "16px", "width": "480px", "maxWidth": "100%"},
+    render: (X, h) => h(X.PageHeader, { title: "Users", description: "People who can sign in to this workspace.", meta: h(X.StatusDot, { tone: "ok", label: "Active" }), actions: h(X.Button, null, "Create user") }),
+  },
 };
 
 function PopoverDemo({ X }) {
