@@ -9,5 +9,5 @@
     "types": []
   },
   "include": ["src"],
-  "exclude": ["src/lib.ts", "src/**/*.test.*"]
+  "exclude": ["src/lib.ts", "src/mcp", "src/**/*.test.*"]
 }

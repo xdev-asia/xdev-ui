@@ -35,19 +35,52 @@ import { Button, TabStrip, BrandMark } from "@xdev-asia/ui";
 | `@xdev-asia/ui/tokens.css` | tokens only (CSS custom properties, dark + light) |
 | `@xdev-asia/ui/tokens.json` | token source |
 | `@xdev-asia/ui/brand/*` | logo v9 SVG/PNG, mobile icons |
+| `@xdev-asia/ui/ai-manifest.json` | components, props, classes, tokens, icons, guidelines as JSON |
+| `@xdev-asia/ui/llms.txt`, `llms-full.txt` | the same for LLMs ([llmstxt.org](https://llmstxt.org)) |
 
 Components: Button, IconButton, Segmented, Select, Field, Switch, Kbd, Badge, Tag, AgentChip, DiffStat, StatusDot, Meter, Banner, Toast, TabStrip, ActivityBar, StatusBar, Menu, Dialog, CommandPalette, BrandMark, Icon. Rules per component: `src/components/<Name>/README.md`. Brand book: [docs/brand.md](docs/brand.md). Foundations: [docs/design-system.md](docs/design-system.md).
+
+## AI agents (MCP)
+
+The package ships a stdio MCP server, `xdev-ui-mcp` (`dist/mcp.js`, no extra dependencies). It gives agents the real props, tokens and rules, so they do not invent them.
+
+`.mcp.json` in the consuming repo (Claude Code, Cursor, VS Code):
+
+```json
+{
+  "mcpServers": {
+    "xdev-ui": { "command": "node", "args": ["node_modules/@xdev-asia/ui/dist/mcp.js"] }
+  }
+}
+```
+
+Without installing (needs the `.npmrc` above; on Windows use `"command": "cmd", "args": ["/c", "npx", ...]`):
+
+```bash
+claude mcp add xdev-ui -- npx -y --package=@xdev-asia/ui xdev-ui-mcp
+```
+
+| tool | returns |
+|---|---|
+| `xdevui_list_components` | 23 components by group, with summary |
+| `xdevui_get_component` | README rules, exported prop types, CSS classes, import line |
+| `xdevui_search_tokens` | tokens by name, usage or category, with dark/light values |
+| `xdevui_get_guidelines` | setup, voice, visual foundations, iconography, brand |
+| `xdevui_list_icons` | valid `IconName` values |
+| `xdevui_search_docs` | matching sections across all docs |
+
+Resources: `xdev-ui://components/{name}`, `xdev-ui://guidelines/{topic}`, `xdev-ui://tokens`. Prompt: `xdevui_build_ui`. Agent rules: [AGENTS.md](AGENTS.md). No MCP client: <https://xdev-asia.github.io/xdev-ui/llms-full.txt>.
 
 ## Develop
 
 ```bash
 corepack pnpm install
 corepack pnpm dev        # demo at http://localhost:5173
-corepack pnpm build      # dist/
-corepack pnpm test       # SSR smoke test over dist
+corepack pnpm build      # dist/ (lib, mcp.js, AI manifest, llms.txt)
+corepack pnpm test       # SSR smoke test + MCP smoke test over dist
 ```
 
-`tokens/tokens.json` is the source of truth; `scripts/build-tokens.mjs` writes `src/styles/tokens.css`.
+`tokens/tokens.json` is the source of truth; `scripts/build-tokens.mjs` writes `src/styles/tokens.css`, `scripts/build-ai.mjs` writes `generated/` from the component READMEs, sources and docs. The repo's `.mcp.json` points at `dist/mcp.js` for local work.
 
 ## Release (automatic)
 

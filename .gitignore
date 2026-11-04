@@ -5,3 +5,4 @@ src/styles/tokens.css
 *.tgz
 .DS_Store
 .claude/
+generated/
