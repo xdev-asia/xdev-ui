@@ -28,6 +28,7 @@ const cases = {
   CommandPalette: [{ sections: [{ title: "Sessions", rows: [{ title: "fix-auth", state: "done" }] }] }],
   BrandMark: [{ variant: "lockup", size: 32 }],
   Icon: [{ name: "terminal" }],
+  FileIcon: [{ name: "package.json" }],
   Checkbox: [{ label: "Stage all files", hint: "Includes untracked" }],
   RadioGroup: [{ name: "shell", value: "bash", onChange() {}, options: [{ value: "bash", label: "bash" }, { value: "pwsh", label: "PowerShell" }] }],
   Textarea: [{ label: "Commit message", mono: true }],
