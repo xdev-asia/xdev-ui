@@ -54,6 +54,8 @@
   --orange: #f0a070;
   --orange-bg: rgba(240, 160, 112, 0.12);
   --brand-agent: #ff7a3d;
+  --badge-ink-dark: #000000;
+  --badge-ink-light: #ffffff;
   --x-color-bg: #0a0f1e;
   --x-color-panel: #0f1629;
   --x-color-surface: #141d33;
@@ -103,6 +105,8 @@
   --orange: #a04a14;
   --orange-bg: rgba(160, 74, 20, 0.1);
   --brand-agent: #ff7a3d;
+  --badge-ink-dark: #000000;
+  --badge-ink-light: #ffffff;
   --x-color-bg: #eef2f9;
   --x-color-panel: #ffffff;
   --x-color-surface: #ffffff;
