@@ -21,6 +21,11 @@ export const ICONS = {
   "chevron-right": [["path", { d: "M9 6l6 6-6 6" }]],
   magnifier: [["circle", { cx: 11, cy: 11, r: 7 }], ["path", { d: "m20 20-3.5-3.5" }]],
   prompt: [["path", { d: "m5 8 5 4-5 4M12 17h7" }]],
+  folder: [["path", { d: "M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" }]],
+  file: [["path", { d: "M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5" }]],
+  check: [["path", { d: "m5 12 5 5L20 7" }]],
+  alert: [["path", { d: "M12 9v4M12 17h.01" }], ["path", { d: "M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" }]],
+  "warn-dash": [["path", { d: "M12 3 2 20h20zM12 10v4M12 17v.5" }]],
   branch: [["circle", { cx: 6, cy: 5, r: 2 }], ["circle", { cx: 6, cy: 19, r: 2 }], ["circle", { cx: 18, cy: 7, r: 2 }], ["path", { d: "M6 7v10M18 9c0 5-6 4-12 8" }]]
 } as const satisfies Record<string, readonly Part[]>;
 

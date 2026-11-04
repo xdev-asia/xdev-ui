@@ -35,5 +35,10 @@ describe("Icon", () => {
     expect(html("chevron-right")).toContain('d="M9 6l6 6-6 6"');
     expect(html("magnifier")).toContain('d="m20 20-3.5-3.5"');
     expect(html("prompt")).toContain('d="m5 8 5 4-5 4M12 17h7"');
+    expect(html("folder")).toContain('d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"');
+    expect(html("file")).toContain('d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5"');
+    expect(html("check")).toContain('d="m5 12 5 5L20 7"');
+    expect(html("alert")).toContain('d="M12 9v4M12 17h.01"');
+    expect(html("warn-dash")).toContain('d="M12 3 2 20h20zM12 10v4M12 17v.5"');
   });
 });
