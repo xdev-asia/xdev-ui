@@ -9,6 +9,8 @@ export interface PanZoomProps {
   y: number;
   /** Zoom changed (wheel, keys); `x` and `y` are the pan that keeps the zoom point still. */
   onZoom: (next: PanZoomState) => void;
+  /** The `0` key. When given it replaces the default reset to zoom 1 at 0, 0 (a viewer resets to its fit). */
+  onReset?: () => void;
   /** The content was dragged. */
   onPan: (x: number, y: number) => void;
   /** Lowest absolute zoom (default 0.25). Pass a value relative to a fit scale when `zoom` 1 is "fit". */
@@ -21,7 +23,7 @@ export interface PanZoomProps {
 }
 
 /** A viewport that scales and moves its children. The caller owns the state. */
-export function PanZoom({ zoom, x, y, onZoom, onPan, label, min = MIN_ZOOM, max = MAX_ZOOM, children }: PanZoomProps): JSX.Element {
+export function PanZoom({ zoom, x, y, onZoom, onPan, onReset, label, min = MIN_ZOOM, max = MAX_ZOOM, children }: PanZoomProps): JSX.Element {
   const drag = useRef<{ px: number; py: number; x: number; y: number } | null>(null);
   const root = useRef<HTMLDivElement>(null);
   // A React `onWheel` is passive, so its `preventDefault()` is ignored and the page zooms too.
@@ -42,7 +44,7 @@ export function PanZoom({ zoom, x, y, onZoom, onPan, label, min = MIN_ZOOM, max 
     const action = zoomKey(e.key);
     if (action === null) return;
     e.preventDefault();
-    if (action === "reset") return onZoom({ zoom: 1, x: 0, y: 0 });
+    if (action === "reset") return onReset ? onReset() : onZoom({ zoom: 1, x: 0, y: 0 });
     const r = e.currentTarget.getBoundingClientRect();
     const next = stepZoom(zoom, action === "in" ? 1 : -1, undefined, min, max);
     onZoom(zoomAt({ zoom, x, y }, { x: r.width / 2, y: r.height / 2 }, next / zoom));
