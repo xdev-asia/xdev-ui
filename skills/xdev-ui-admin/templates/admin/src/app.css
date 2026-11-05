@@ -1,0 +1,26 @@
+/* App-level layout only. Colours, sizes and type come from the library tokens. */
+.app-title { margin: 0; font: var(--type-page-title); }
+.app-muted { margin: 0; font: var(--type-status); color: var(--text-2); }
+.app-form { display: flex; flex-direction: column; gap: var(--x-space-4); }
+.app-signin { min-height: 100vh; display: grid; place-items: center; padding: var(--x-space-4); box-sizing: border-box; background: var(--bg-0); color: var(--text-1); }
+.app-signin-card { width: 100%; max-width: 44ch; display: flex; flex-direction: column; gap: var(--x-space-3); }
+.app-signin-foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--x-space-3); }
+.app-top-search { width: min(28ch, 40vw); }
+.app-account { display: inline-grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; }
+.app-account:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: 2px; }
+.app-account-who { margin: 0; padding: var(--x-space-2) var(--x-space-3); border-bottom: 1px solid var(--line); font: var(--type-status); color: var(--text-2); }
+.app-stack { display: flex; flex-direction: column; gap: var(--x-space-4); }
+.app-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22ch), 1fr)); gap: var(--x-space-4); }
+.app-grid-wide { grid-template-columns: repeat(auto-fit, minmax(min(100%, 36ch), 1fr)); }
+.app-pane { display: grid; place-items: center; padding: var(--x-space-8) var(--x-space-4); }
+.app-list { margin: 0; padding: 0; list-style: none; }
+.app-filters { display: flex; flex-wrap: wrap; gap: var(--x-space-3); align-items: center; }
+.app-filters-search { flex: 1 1 24ch; min-width: 0; }
+.app-chips { display: flex; flex-wrap: wrap; gap: var(--x-space-2); }
+.app-person { display: inline-flex; align-items: center; gap: var(--x-space-2); }
+.app-link { color: var(--text-1); text-decoration: none; font-weight: 600; }
+.app-link:hover { text-decoration: underline; }
+.app-link:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: 2px; }
+.app-labelled { display: flex; flex-direction: column; gap: var(--x-space-1); }
+.app-label { font: var(--type-label); color: var(--text-1); }
+.app-panel { margin-top: var(--x-space-4); }
