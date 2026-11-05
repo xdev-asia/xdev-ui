@@ -54,6 +54,7 @@
   box-shadow: var(--shadow-dialog);
   color: var(--x-color-ink);
 }
+.dialog[data-size="wide"] { max-width: min(96vw, 1100px); }
 .dialog-title { margin: 0 0 var(--x-space-2); font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
 .dialog-body { margin: 0 0 var(--x-space-6); color: var(--x-color-muted); line-height: 1.6; }
 .dialog-actions { display: flex; justify-content: flex-end; gap: var(--x-space-2); }

@@ -33,6 +33,15 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     return el;
     },
   },
+  "PanZoom": {
+    style: {"display": "flex", "height": "160px", "width": "320px", "padding": "16px"},
+    render: (X, h) => h(X.PanZoom, { zoom: 1, x: 0, y: 0, label: "Preview", onZoom() {}, onPan() {} },
+      h("div", { style: { width: 240, height: 120, background: "var(--x-color-surface-2)" } })),
+  },
+  "ZoomBar": {
+    style: {"display": "flex", "gap": "12px", "alignItems": "center", "padding": "16px"},
+    render: (X, h) => h(X.ZoomBar, { zoom: 100, onZoomOut() {}, onFit() {}, onZoomIn() {}, onActual() {} }),
+  },
   "Badge": {
     style: {"display": "flex", "gap": "12px", "flexWrap": "wrap", "alignItems": "center", "padding": "16px"},
     render: (X, h) => {
