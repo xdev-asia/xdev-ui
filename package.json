@@ -52,7 +52,7 @@
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com",
-    "access": "restricted"
+    "access": "public"
   },
   "scripts": {
     "tokens": "node scripts/build-tokens.mjs",
