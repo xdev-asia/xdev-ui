@@ -1,4 +1,4 @@
-import { useRef, type JSX, type KeyboardEvent, type PointerEvent, type ReactNode, type WheelEvent } from "react";
+import { useEffect, useRef, type JSX, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
 import { MAX_ZOOM, MIN_ZOOM, stepZoom, wheelFactor, zoomAt, zoomKey, type PanZoomState } from "../../panZoom";
 
 export interface PanZoomProps {
@@ -23,12 +23,20 @@ export interface PanZoomProps {
 /** A viewport that scales and moves its children. The caller owns the state. */
 export function PanZoom({ zoom, x, y, onZoom, onPan, label, min = MIN_ZOOM, max = MAX_ZOOM, children }: PanZoomProps): JSX.Element {
   const drag = useRef<{ px: number; py: number; x: number; y: number } | null>(null);
-  const onWheel = (e: WheelEvent<HTMLDivElement>): void => {
-    if (!e.ctrlKey && !e.metaKey) return;
-    e.preventDefault();
-    const r = e.currentTarget.getBoundingClientRect();
-    onZoom(zoomAt({ zoom, x, y }, { x: e.clientX - r.left, y: e.clientY - r.top }, wheelFactor(e.deltaY), min, max));
-  };
+  const root = useRef<HTMLDivElement>(null);
+  // A React `onWheel` is passive, so its `preventDefault()` is ignored and the page zooms too.
+  useEffect(() => {
+    const node = root.current;
+    if (!node) return;
+    const onWheel = (e: globalThis.WheelEvent): void => {
+      if (!e.ctrlKey && !e.metaKey) return;
+      e.preventDefault();
+      const r = node.getBoundingClientRect();
+      onZoom(zoomAt({ zoom, x, y }, { x: e.clientX - r.left, y: e.clientY - r.top }, wheelFactor(e.deltaY), min, max));
+    };
+    node.addEventListener("wheel", onWheel, { passive: false });
+    return () => node.removeEventListener("wheel", onWheel);
+  }, [zoom, x, y, onZoom, min, max]);
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>): void => {
     if (e.ctrlKey || e.metaKey || e.altKey) return;
     const action = zoomKey(e.key);
@@ -54,11 +62,11 @@ export function PanZoom({ zoom, x, y, onZoom, onPan, label, min = MIN_ZOOM, max 
   };
   return (
     <div
+      ref={root}
       className="x-panzoom"
       role="group"
       aria-label={label}
       tabIndex={0}
-      onWheel={onWheel}
       onKeyDown={onKeyDown}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}

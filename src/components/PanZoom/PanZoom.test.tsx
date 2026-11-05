@@ -2,13 +2,33 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import { findAll } from "../../test-utils";
 
-vi.mock("react", async (orig) => ({ ...(await orig<typeof import("react")>()), useRef: (v: unknown) => ({ current: v }) }));
+const effects: Array<() => void | (() => void)> = [];
+vi.mock("react", async (orig) => ({
+  ...(await orig<typeof import("react")>()),
+  useRef: (v: unknown) => ({ current: v }),
+  useEffect: (fn: () => void | (() => void)) => void effects.push(fn),
+}));
 const { PanZoom } = await import("./PanZoom");
 
 const base = { zoom: 2, x: 10, y: -5, label: "Image" };
 const el = { getBoundingClientRect: () => ({ left: 0, top: 0, width: 200, height: 100 }), setPointerCapture() {}, releasePointerCapture() {} };
 const props = (over: Record<string, unknown>) =>
   findAll(PanZoom({ ...base, onZoom() {}, onPan() {}, ...over } as never), (e) => e.type === "div" && e.props.role === "group")[0].props;
+
+/** Renders, attaches a fake node to the viewport ref and runs the effect, like a mount. */
+function mount(over: Record<string, unknown>) {
+  effects.length = 0;
+  const p = props(over);
+  const listeners: Array<{ type: string; fn: (e: unknown) => void; opts: unknown }> = [];
+  const removed: Array<{ type: string; fn: unknown }> = [];
+  p.ref.current = {
+    ...el,
+    addEventListener: (type: string, fn: (e: unknown) => void, opts: unknown) => listeners.push({ type, fn, opts }),
+    removeEventListener: (type: string, fn: unknown) => removed.push({ type, fn }),
+  };
+  const cleanups = effects.map((f) => f());
+  return { p, listeners, removed, unmount: () => cleanups.forEach((c) => typeof c === "function" && c()) };
+}
 
 describe("PanZoom", () => {
   it("is a focusable named group that transforms its content", () => {
@@ -38,14 +58,27 @@ describe("PanZoom", () => {
     expect(onZoom).toHaveBeenCalledTimes(3);
   });
 
-  it("zooms with Ctrl or Cmd plus the wheel, and lets a plain wheel scroll", () => {
+  it("registers a non-passive wheel listener and removes it on unmount", () => {
+    const m = mount({ zoom: 1, x: 0, y: 0 });
+    expect(m.p.onWheel).toBeUndefined();
+    expect(m.listeners).toHaveLength(1);
+    expect(m.listeners[0].type).toBe("wheel");
+    expect(m.listeners[0].opts).toEqual({ passive: false });
+    expect(m.removed).toHaveLength(0);
+    m.unmount();
+    expect(m.removed).toEqual([{ type: "wheel", fn: m.listeners[0].fn }]);
+  });
+
+  it("zooms with Ctrl or Cmd plus the wheel, honours preventDefault, and lets a plain wheel scroll", () => {
     const onZoom = vi.fn();
-    const p = props({ onZoom, zoom: 1, x: 0, y: 0 });
+    const m = mount({ onZoom, zoom: 1, x: 0, y: 0 });
+    const wheel = m.listeners[0].fn;
     const preventDefault = vi.fn();
-    p.onWheel({ deltaY: 100, clientX: 0, clientY: 0, currentTarget: el, preventDefault });
+    wheel({ deltaY: 100, clientX: 0, clientY: 0, preventDefault });
     expect(onZoom).not.toHaveBeenCalled();
-    p.onWheel({ ctrlKey: true, deltaY: -100, clientX: 50, clientY: 50, currentTarget: el, preventDefault });
-    p.onWheel({ metaKey: true, deltaY: -100, clientX: 50, clientY: 50, currentTarget: el, preventDefault });
+    expect(preventDefault).not.toHaveBeenCalled();
+    wheel({ ctrlKey: true, deltaY: -100, clientX: 50, clientY: 50, preventDefault });
+    wheel({ metaKey: true, deltaY: -100, clientX: 50, clientY: 50, preventDefault });
     expect(onZoom).toHaveBeenCalledTimes(2);
     expect(onZoom.mock.calls[0][0].zoom).toBeGreaterThan(1);
     expect(preventDefault).toHaveBeenCalledTimes(2);
@@ -53,19 +86,19 @@ describe("PanZoom", () => {
 
   it("clamps wheel and key zoom to min and max, default 0.25 to 8", () => {
     const onZoom = vi.fn();
-    const wheel = (p: ReturnType<typeof props>, deltaY: number) =>
-      p.onWheel({ ctrlKey: true, deltaY, clientX: 0, clientY: 0, currentTarget: el, preventDefault() {} });
-    const fit = props({ onZoom, zoom: 1, x: 0, y: 0, min: 0.1, max: 4 });
+    const wheel = (p: ReturnType<typeof mount>, deltaY: number) =>
+      p.listeners[0].fn({ ctrlKey: true, deltaY, clientX: 0, clientY: 0, preventDefault() {} });
+    const fit = mount({ onZoom, zoom: 1, x: 0, y: 0, min: 0.1, max: 4 });
     for (let i = 0; i < 10; i++) wheel(fit, 100);
     wheel(fit, -100);
     expect(onZoom.mock.calls[0][0].zoom).toBeGreaterThan(0.1);
-    const atMin = props({ onZoom, zoom: 0.1, x: 0, y: 0, min: 0.1, max: 4 });
+    const atMin = mount({ onZoom, zoom: 0.1, x: 0, y: 0, min: 0.1, max: 4 });
     wheel(atMin, 100);
     expect(onZoom.mock.lastCall![0].zoom).toBe(0.1);
     const atMax = props({ onZoom, zoom: 4, x: 0, y: 0, min: 0.1, max: 4 });
     atMax.onKeyDown({ key: "+", currentTarget: el, preventDefault() {} });
     expect(onZoom.mock.lastCall![0].zoom).toBe(4);
-    const def = props({ onZoom, zoom: 0.25, x: 0, y: 0 });
+    const def = mount({ onZoom, zoom: 0.25, x: 0, y: 0 });
     wheel(def, 100);
     expect(onZoom.mock.lastCall![0].zoom).toBe(0.25);
   });
