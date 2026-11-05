@@ -265,6 +265,7 @@ button.ws-crumb:hover, a.ws-crumb:hover { color: var(--text-1); text-decoration:
 .ws-tree-icon { flex: none; color: var(--text-3); }
 .ws-tree-row[aria-expanded="true"] .ws-tree-icon { color: var(--signal); }
 .ws-tree-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ws-tree-count { flex: none; font-size: 11px; color: var(--text-3); }
 .ws-tree-dot { flex: none; width: 5px; height: 5px; border-radius: 50%; background: var(--warn); }
 .ws-tree-mark { flex: none; font: 700 11px var(--font-mono); color: var(--warn); }
 .ws-tree-mark[data-kind="added"] { color: var(--ok); }
