@@ -51,6 +51,25 @@ describe("PanZoom", () => {
     expect(preventDefault).toHaveBeenCalledTimes(2);
   });
 
+  it("clamps wheel and key zoom to min and max, default 0.25 to 8", () => {
+    const onZoom = vi.fn();
+    const wheel = (p: ReturnType<typeof props>, deltaY: number) =>
+      p.onWheel({ ctrlKey: true, deltaY, clientX: 0, clientY: 0, currentTarget: el, preventDefault() {} });
+    const fit = props({ onZoom, zoom: 1, x: 0, y: 0, min: 0.1, max: 4 });
+    for (let i = 0; i < 10; i++) wheel(fit, 100);
+    wheel(fit, -100);
+    expect(onZoom.mock.calls[0][0].zoom).toBeGreaterThan(0.1);
+    const atMin = props({ onZoom, zoom: 0.1, x: 0, y: 0, min: 0.1, max: 4 });
+    wheel(atMin, 100);
+    expect(onZoom.mock.lastCall![0].zoom).toBe(0.1);
+    const atMax = props({ onZoom, zoom: 4, x: 0, y: 0, min: 0.1, max: 4 });
+    atMax.onKeyDown({ key: "+", currentTarget: el, preventDefault() {} });
+    expect(onZoom.mock.lastCall![0].zoom).toBe(4);
+    const def = props({ onZoom, zoom: 0.25, x: 0, y: 0 });
+    wheel(def, 100);
+    expect(onZoom.mock.lastCall![0].zoom).toBe(0.25);
+  });
+
   it("pans while the primary button is dragged", () => {
     const onPan = vi.fn();
     const p = props({ onPan, x: 10, y: 20 });
