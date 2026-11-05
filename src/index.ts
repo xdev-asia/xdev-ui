@@ -12,6 +12,8 @@ export * from "./components/Badge/Badge";
 export * from "./components/Tag/Tag";
 export * from "./components/AgentChip/AgentChip";
 export * from "./components/DiffStat/DiffStat";
+export * from "./components/Comment/Comment";
+export * from "./components/ReactionBar/ReactionBar";
 export * from "./components/StatusDot/StatusDot";
 export * from "./components/Meter/Meter";
 export * from "./components/Heatmap/Heatmap";

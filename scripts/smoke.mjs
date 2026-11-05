@@ -20,6 +20,8 @@ const cases = {
   Tag: [{ tone: "warn" }, "dirty"],
   AgentChip: [{ profile: "claude" }],
   DiffStat: [{ added: 3, removed: 1 }],
+  Comment: [{ author: "Maya Chen", time: "2h ago" }, "Why this change?"],
+  ReactionBar: [{ items: [{ key: "up", label: "Thumbs up", symbol: "+", count: 2, mine: true }], onToggle() {} }],
   StatusDot: [{ state: "working", pulse: true, label: "Working" }],
   Meter: [{ value: 82, label: "Context", warnAt: 80 }],
   Heatmap: [{ cells: [{ key: "a", level: 1, label: "A" }], label: "Tokens per day" }],

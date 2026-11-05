@@ -22,6 +22,26 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     return el;
     },
   },
+  "Comment": {
+    style: {"display": "flex", "flexDirection": "column", "gap": "12px", "padding": "16px", "maxWidth": "420px"},
+    render: (X, h) => {
+    var el;
+    el = h(React.Fragment, null,
+      h(X.Comment, { author: "Maya Chen", time: "2h ago", location: "src/app.ts:12" }, "Why this change?"),
+      h(X.Comment, { author: "review-bot", bot: true, botLabel: "Bot", state: "resolved", stateLabel: "Resolved" }, "Looks fine."));
+    return el;
+    },
+  },
+  "ReactionBar": {
+    style: {"display": "flex", "gap": "12px", "padding": "16px"},
+    render: (X, h) => {
+    var el;
+    el = h(X.ReactionBar, { onToggle: function () {}, items: [
+      { key: "up", label: "Thumbs up", symbol: h(X.Icon, { name: "check-circle" }), count: 2, mine: true },
+      { key: "heart", label: "Heart", symbol: h(X.Icon, { name: "star" }), count: 0, mine: false }] });
+    return el;
+    },
+  },
   "Avatar": {
     style: {"display": "flex", "gap": "12px", "alignItems": "center", "padding": "16px"},
     render: (X, h) => {
