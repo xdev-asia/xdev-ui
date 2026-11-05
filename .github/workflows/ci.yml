@@ -25,4 +25,5 @@ jobs:
       - run: pnpm build
       - run: pnpm test:dist
       - run: pnpm build:demo
+      - run: pnpm build:example:admin
       - run: npm pack --dry-run
