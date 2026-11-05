@@ -19,3 +19,18 @@ export const Default: Story = {
     );
   },
 };
+
+/** Limits relative to a fit scale: zoom 1 is "fit", so the range is 0.5 to 4 times that. */
+export const Limits: Story = {
+  args: { zoom: 1, x: 0, y: 0, label: "Preview", min: 0.5, max: 4, onZoom() {}, onPan() {} },
+  render: () => {
+    const [s, set] = useState({ zoom: 1, x: 0, y: 0 });
+    return (
+      <div style={{ height: 240, display: "flex" }}>
+        <PanZoom {...s} min={0.5} max={4} label="Preview" onZoom={set} onPan={(x, y) => set({ ...s, x, y })}>
+          <div style={{ width: 320, height: 200, background: "var(--x-color-surface-2)" }} />
+        </PanZoom>
+      </div>
+    );
+  },
+};

@@ -35,16 +35,17 @@ export function clampZoom(z: number, min = MIN_ZOOM, max = MAX_ZOOM): number {
 }
 
 /** One step in (`1`) or out (`-1`), clamped. */
-export function stepZoom(z: number, dir: 1 | -1, step = ZOOM_STEP): number {
-  return clampZoom(dir === 1 ? z * step : z / step);
+export function stepZoom(z: number, dir: 1 | -1, step = ZOOM_STEP, min = MIN_ZOOM, max = MAX_ZOOM): number {
+  return clampZoom(dir === 1 ? z * step : z / step, min, max);
 }
 
 /**
  * Zooms by `factor` keeping the content under `point` (viewport coordinates) where it is.
- * The result is clamped, so a factor past the limit changes nothing.
+ * The result is clamped to `min`..`max` (the absolute zoom, default 0.25..8), so a factor past
+ * the limit changes nothing.
  */
-export function zoomAt(state: PanZoomState, point: Point, factor: number): PanZoomState {
-  const zoom = clampZoom(state.zoom * factor);
+export function zoomAt(state: PanZoomState, point: Point, factor: number, min = MIN_ZOOM, max = MAX_ZOOM): PanZoomState {
+  const zoom = clampZoom(state.zoom * factor, min, max);
   const k = zoom / state.zoom;
   return { zoom, x: point.x - (point.x - state.x) * k, y: point.y - (point.y - state.y) * k };
 }

@@ -1,5 +1,5 @@
 import { useRef, type JSX, type KeyboardEvent, type PointerEvent, type ReactNode, type WheelEvent } from "react";
-import { stepZoom, wheelFactor, zoomAt, zoomKey, type PanZoomState } from "../../panZoom";
+import { MAX_ZOOM, MIN_ZOOM, stepZoom, wheelFactor, zoomAt, zoomKey, type PanZoomState } from "../../panZoom";
 
 export interface PanZoomProps {
   /** Scale of the content. */
@@ -11,19 +11,23 @@ export interface PanZoomProps {
   onZoom: (next: PanZoomState) => void;
   /** The content was dragged. */
   onPan: (x: number, y: number) => void;
+  /** Lowest absolute zoom (default 0.25). Pass a value relative to a fit scale when `zoom` 1 is "fit". */
+  min?: number;
+  /** Highest absolute zoom (default 8). */
+  max?: number;
   /** Accessible name of the viewport. */
   label: string;
   children?: ReactNode;
 }
 
 /** A viewport that scales and moves its children. The caller owns the state. */
-export function PanZoom({ zoom, x, y, onZoom, onPan, label, children }: PanZoomProps): JSX.Element {
+export function PanZoom({ zoom, x, y, onZoom, onPan, label, min = MIN_ZOOM, max = MAX_ZOOM, children }: PanZoomProps): JSX.Element {
   const drag = useRef<{ px: number; py: number; x: number; y: number } | null>(null);
   const onWheel = (e: WheelEvent<HTMLDivElement>): void => {
     if (!e.ctrlKey && !e.metaKey) return;
     e.preventDefault();
     const r = e.currentTarget.getBoundingClientRect();
-    onZoom(zoomAt({ zoom, x, y }, { x: e.clientX - r.left, y: e.clientY - r.top }, wheelFactor(e.deltaY)));
+    onZoom(zoomAt({ zoom, x, y }, { x: e.clientX - r.left, y: e.clientY - r.top }, wheelFactor(e.deltaY), min, max));
   };
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>): void => {
     if (e.ctrlKey || e.metaKey || e.altKey) return;
@@ -32,7 +36,7 @@ export function PanZoom({ zoom, x, y, onZoom, onPan, label, children }: PanZoomP
     e.preventDefault();
     if (action === "reset") return onZoom({ zoom: 1, x: 0, y: 0 });
     const r = e.currentTarget.getBoundingClientRect();
-    const next = stepZoom(zoom, action === "in" ? 1 : -1);
+    const next = stepZoom(zoom, action === "in" ? 1 : -1, undefined, min, max);
     onZoom(zoomAt({ zoom, x, y }, { x: r.width / 2, y: r.height / 2 }, next / zoom));
   };
   const onPointerDown = (e: PointerEvent<HTMLDivElement>): void => {
