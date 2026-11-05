@@ -16,7 +16,7 @@ export function filterUsers(users: User[], f: UserFilters): User[] {
 }
 ```
 
-Slice after sorting with `sortRows(rows, sort, valueOf)` and `pageSlice(rows, page, pageSize)`.
+Slice after sorting with `sortTableRows(rows, sort, valueOf)` and `paginateRows(rows, page, pageSize)`.
 
 ## Table
 

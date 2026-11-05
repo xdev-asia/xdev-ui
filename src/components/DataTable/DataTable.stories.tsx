@@ -4,7 +4,7 @@ import { Avatar } from "../Avatar/Avatar";
 import { EmptyState } from "../EmptyState/EmptyState";
 import { StatusDot } from "../StatusDot/StatusDot";
 import { DataTable, type DataTableColumn, type TableSort } from "./DataTable";
-import { sortRows } from "./table-helpers";
+import { sortTableRows } from "./table-helpers";
 
 interface Row { id: string; name: string; email: string; status: "ok" | "warn" }
 const data: Row[] = [
@@ -31,7 +31,7 @@ export const Interactive: Story = {
   render: (args) => {
     const [sort, setSort] = useState<TableSort | null>(null);
     const [selected, setSelected] = useState<Set<string>>(new Set());
-    const rows = sortRows(data, sort, (r, k) => (k === "name" ? r.name : r.email));
+    const rows = sortTableRows(data, sort, (r, k) => (k === "name" ? r.name : r.email));
     return <DataTable {...args} rows={rows} sort={sort} onSortChange={setSort} selected={selected} onSelectedChange={setSelected} rowLabel={(r) => r.name} />;
   },
 };

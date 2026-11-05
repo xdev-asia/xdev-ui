@@ -1,18 +1,18 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { Avatar, initials } from "./Avatar";
+import { Avatar, avatarInitials } from "./Avatar";
 
-describe("initials", () => {
+describe("avatarInitials", () => {
   it("takes the first code point of the first and last words", () => {
-    expect(initials("Trần Đức Duy")).toBe("TD");
-    expect(initials("duy")).toBe("D");
-    expect(initials("")).toBe("?");
-    expect(initials("   ")).toBe("?");
-    expect(initials("  a  b ")).toBe("AB");
-    expect(initials("Ada Lovelace")).toBe("AL");
+    expect(avatarInitials("Trần Đức Duy")).toBe("TD");
+    expect(avatarInitials("duy")).toBe("D");
+    expect(avatarInitials("")).toBe("?");
+    expect(avatarInitials("   ")).toBe("?");
+    expect(avatarInitials("  a  b ")).toBe("AB");
+    expect(avatarInitials("Ada Lovelace")).toBe("AL");
   });
   it("does not split a surrogate pair", () => {
-    expect(initials("😀 smile")).toBe("😀S");
+    expect(avatarInitials("😀 smile")).toBe("😀S");
   });
 });
 

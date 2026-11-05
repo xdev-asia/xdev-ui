@@ -3,12 +3,12 @@ import { cx } from "../../internal/cx";
 import { Checkbox } from "../Checkbox/Checkbox";
 import { Icon } from "../Icon/Icon";
 import { Spinner } from "../Spinner/Spinner";
-import { nextSort } from "./table-helpers";
+import { nextTableSort } from "./table-helpers";
 
-export type SortDir = "asc" | "desc";
+export type TableSortDir = "asc" | "desc";
 export interface TableSort {
   key: string;
-  dir: SortDir;
+  dir: TableSortDir;
 }
 
 export interface DataTableColumn<Row> {
@@ -123,7 +123,7 @@ export function DataTable<Row>({
                   aria-sort={c.sortable ? (dir === "asc" ? "ascending" : dir === "desc" ? "descending" : "none") : undefined}
                 >
                   {c.sortable ? (
-                    <button type="button" className="x-table-sort" onClick={() => onSortChange?.(nextSort(sort, c.key))}>
+                    <button type="button" className="x-table-sort" onClick={() => onSortChange?.(nextTableSort(sort, c.key))}>
                       {c.header}
                       {dir ? <Icon name={dir === "asc" ? "arrow-up" : "arrow-down"} size={12} /> : null}
                       {dir ? <span className="x-sr-only">{dir === "asc" ? l.sortedAsc : l.sortedDesc}</span> : null}

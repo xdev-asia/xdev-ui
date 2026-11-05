@@ -1,7 +1,7 @@
 import { useMemo, useState, type JSX } from "react";
 import {
   Avatar, Banner, Button, DataTable, EmptyState, FilterChip, PageHeader, Pagination, SearchInput, Select, StatusDot, Tag, Toolbar,
-  pageSlice, sortRows,
+  paginateRows, sortTableRows,
   type DataTableColumn, type StatusTone, type TableSort,
 } from "@xdev-asia/ui";
 import { can } from "../auth/permissions";
@@ -70,8 +70,8 @@ export function UsersView(p: UsersViewProps): JSX.Element {
   const canDelete = can(p.roles, p.viewer.role, "users.delete");
 
   const filtered = useMemo(() => filterUsers(users, p.filters), [users, p.filters]);
-  const sorted = useMemo(() => sortRows(filtered, p.sort, sortValue), [filtered, p.sort]);
-  const rows = pageSlice(sorted, p.page, p.pageSize);
+  const sorted = useMemo(() => sortTableRows(filtered, p.sort, sortValue), [filtered, p.sort]);
+  const rows = paginateRows(sorted, p.page, p.pageSize);
   const counts = statusCounts(users, p.filters);
   const ids = [...p.selected];
   const filtering = Boolean(p.filters.query.trim() || p.filters.statuses.size || p.filters.role);

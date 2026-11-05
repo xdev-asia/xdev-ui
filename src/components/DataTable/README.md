@@ -6,9 +6,9 @@ Controlled table for lists of records: sortable headers, optional row selection,
 `div.x-table-wrap` (scrolls on x inside itself) > `table.x-table` > `caption.x-sr-only`, `thead` (`th[aria-sort]` with `button.x-table-sort`, `th.x-table-check` with a `Checkbox`) and `tbody` (`tr[aria-selected]`, `td`, or `td.x-table-empty` for the empty and loading rows).
 
 ## Helpers (exported from the package)
-- `nextSort(current, key)` returns the next `TableSort | null`: a new column starts `asc`, the same column goes `asc`, `desc`, off.
-- `sortRows(rows, sort, value)` returns a stable sorted copy; `value(row, key)` gives a string or number. Numbers compare numerically, strings with `localeCompare` (numeric).
-- `pageSlice(rows, page, pageSize)` returns the rows of a 1-based page; the page is clamped into range.
+- `nextTableSort(current, key)` returns the next `TableSort | null`: a new column starts `asc`, the same column goes `asc`, `desc`, off.
+- `sortTableRows(rows, sort, value)` returns a stable sorted copy; `value(row, key)` gives a string or number. Numbers compare numerically, strings with `localeCompare` (numeric).
+- `paginateRows(rows, page, pageSize)` returns the rows of a 1-based page; the page is clamped into range.
 
 ## Rules
 - Controlled: keep `sort`, `selected`, the filters and the page in the parent; pass the already sorted, filtered and sliced `rows`.

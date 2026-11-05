@@ -1,5 +1,5 @@
 import { useMemo, useState, type JSX } from "react";
-import { Banner, Button, DataTable, EmptyState, FilterChip, PageHeader, Pagination, SearchInput, StatusDot, pageSlice, type DataTableColumn, type StatusTone } from "@xdev-asia/ui";
+import { Banner, Button, DataTable, EmptyState, FilterChip, PageHeader, Pagination, SearchInput, StatusDot, paginateRows, type DataTableColumn, type StatusTone } from "@xdev-asia/ui";
 import { can } from "../auth/permissions";
 import type { Session } from "../auth/session";
 import { useStore } from "../data/context";
@@ -36,7 +36,7 @@ export function ItemsView(p: ItemsViewProps): JSX.Element {
   const { t, ui, date } = useI18n();
   const items = p.state.status === "ready" ? p.state.data : [];
   const filtered = useMemo(() => filterItems(items, p.query, p.statuses), [items, p.query, p.statuses]);
-  const rows = pageSlice(filtered, p.page, p.pageSize);
+  const rows = paginateRows(filtered, p.page, p.pageSize);
   const filtering = Boolean(p.query.trim() || p.statuses.size);
   const clear = (): void => {
     p.onQueryChange("");

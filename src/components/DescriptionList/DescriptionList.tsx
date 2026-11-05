@@ -1,7 +1,7 @@
 import type { JSX, ReactNode } from "react";
 import { cx } from "../../internal/cx";
 
-export interface DescriptionItem {
+export interface DescriptionListItem {
   term: ReactNode;
   value: ReactNode;
   /** Set the value in the mono face (ids, emails, paths). */
@@ -9,7 +9,7 @@ export interface DescriptionItem {
 }
 
 export interface DescriptionListProps {
-  items: DescriptionItem[];
+  items: DescriptionListItem[];
   /** "rows": term left, value right (stacks below 480px). "columns": term over value in an auto-fit grid. Default "rows". */
   layout?: "rows" | "columns";
   className?: string;

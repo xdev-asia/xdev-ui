@@ -1,5 +1,5 @@
 import { useMemo, type JSX } from "react";
-import { Banner, Button, DataTable, DescriptionList, Disclosure, EmptyState, Field, FilterChip, PageHeader, Pagination, SearchInput, pageSlice, type DataTableColumn } from "@xdev-asia/ui";
+import { Banner, Button, DataTable, DescriptionList, Disclosure, EmptyState, Field, FilterChip, PageHeader, Pagination, SearchInput, paginateRows, type DataTableColumn } from "@xdev-asia/ui";
 import { can } from "../auth/permissions";
 import type { Session } from "../auth/session";
 import { useStore } from "../data/context";
@@ -53,7 +53,7 @@ export function AuditLogView(p: AuditLogViewProps): JSX.Element {
   const { t, ui, date } = useI18n();
   const events = p.state.status === "ready" ? p.state.data : [];
   const filtered = useMemo(() => filterAudit(events, p.filters), [events, p.filters]);
-  const rows = pageSlice(filtered, p.page, p.pageSize);
+  const rows = paginateRows(filtered, p.page, p.pageSize);
   const change = (patch: Partial<AuditFilters>): void => {
     p.onFiltersChange({ ...p.filters, ...patch });
     p.onPageChange(1);
