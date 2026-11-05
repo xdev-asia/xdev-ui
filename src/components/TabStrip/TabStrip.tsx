@@ -1,4 +1,5 @@
-import { useState, type CSSProperties, type JSX } from "react";
+import { useId, useState, type CSSProperties, type JSX, type KeyboardEvent } from "react";
+import { rovingIndex } from "../../internal/keys";
 import type { AgentProfile, SessionState, TabColor } from "../../types";
 import { AgentChip } from "../AgentChip/AgentChip";
 import { StatusDot } from "../StatusDot/StatusDot";
@@ -46,8 +47,29 @@ export function TabStrip({ tabs, selected, defaultSelected, onSelect, onClose, o
   const l = { ...DEFAULT_LABELS, ...labels };
   const [inner, setInner] = useState(defaultSelected ?? tabs[0]?.id);
   const current = selected ?? inner;
+  const uid = useId();
+  const tabId = (id: string): string => `${uid}-${id}`;
+  const stop = tabs.some((t) => t.id === current) ? current : tabs[0]?.id;
+  const onKeyDown = (e: KeyboardEvent<HTMLButtonElement>, t: TabItem): void => {
+    const list = Array.from(e.currentTarget.closest(".ws-tabstrip")?.querySelectorAll<HTMLElement>('[role="tab"]') ?? []);
+    const at = list.indexOf(e.currentTarget);
+    if (e.key === "Delete") {
+      if (!onClose || t.dirty) return;
+      e.preventDefault();
+      list[at + 1 < list.length ? at + 1 : at - 1]?.focus();
+      onClose(t.id);
+      return;
+    }
+    const next = rovingIndex(e.key, at, list.length);
+    if (next == null) return;
+    e.preventDefault();
+    list[next].focus();
+    list[next].click();
+  };
   return (
-    <div className="ws-tabstrip" role="tablist" aria-label={label}>
+    <div className="ws-tabstrip">
+      {/* Close buttons sit beside the tabs, so the tablist owns the tab buttons by id instead of containing them. */}
+      <div className="ws-tabstrip-list" role="tablist" aria-label={label} aria-owns={tabs.map((t) => tabId(t.id)).join(" ") || undefined} />
       {tabs.map((t) => {
         const style = t.color ? ({ "--ws-tab-color": `var(--x-tab-color-${t.color})` } as CSSProperties) : undefined;
         const isSel = t.id === current;
@@ -56,7 +78,7 @@ export function TabStrip({ tabs, selected, defaultSelected, onSelect, onClose, o
             key={t.id}
             className="ws-tab"
             role="presentation"
-            aria-selected={isSel}
+            data-selected={isSel ? "" : undefined}
             data-color={t.color || undefined}
             data-unread={t.unread ? "" : undefined}
             style={style}
@@ -64,8 +86,11 @@ export function TabStrip({ tabs, selected, defaultSelected, onSelect, onClose, o
             <button
               type="button"
               className="ws-tab-main"
+              id={tabId(t.id)}
               role="tab"
               aria-selected={isSel}
+              tabIndex={t.id === stop ? 0 : -1}
+              onKeyDown={(e) => onKeyDown(e, t)}
               onClick={() => {
                 setInner(t.id);
                 onSelect?.(t.id);
@@ -79,7 +104,7 @@ export function TabStrip({ tabs, selected, defaultSelected, onSelect, onClose, o
             {t.dirty ? (
               <span className="ws-tab-dirty" aria-label={l.unsaved} />
             ) : (
-              <button type="button" className="ws-tab-close" aria-label={l.close(t.name)} onClick={() => onClose?.(t.id)}>
+              <button type="button" className="ws-tab-close" aria-label={l.close(t.name)} tabIndex={-1} onClick={() => onClose?.(t.id)}>
                 ×
               </button>
             )}

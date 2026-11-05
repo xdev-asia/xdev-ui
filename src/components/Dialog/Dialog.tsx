@@ -17,7 +17,7 @@ export interface DialogProps {
   cancelLabel?: string | null;
   onConfirm?: () => void;
   onCancel?: () => void;
-  /** role="alertdialog" for destructive confirms. */
+  /** role="alertdialog" for destructive confirms; the body is its aria-describedby. */
   alert?: boolean;
   /** Fixed, full-viewport backdrop: Esc calls onCancel, Tab and Shift+Tab wrap inside the dialog, the page behind it is `inert`, focus moves in on mount and returns to the trigger on unmount. */
   modal?: boolean;
@@ -35,6 +35,7 @@ export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, 
   const l = { ...DEFAULT_LABELS, ...labels };
   const cancelText = cancelLabel === undefined ? l.cancel : cancelLabel;
   const titleId = `x-dialog-${useId()}`;
+  const bodyId = `${titleId}-body`;
   const ref = useRef<HTMLDivElement | null>(null);
   const backdropRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
@@ -64,11 +65,11 @@ export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, 
   const asText = body ? body === "text" : typeof children === "string" || typeof children === "number";
   return (
     <div className="dialog-backdrop" ref={backdropRef} data-modal={modal ? "true" : undefined} onKeyDown={onKeyDown}>
-      <div className="dialog" data-size={size} ref={ref} tabIndex={modal ? -1 : undefined} role={alert ? "alertdialog" : "dialog"} aria-modal={modal ? "true" : undefined} aria-labelledby={titleId}>
+      <div className="dialog" data-size={size} ref={ref} tabIndex={modal ? -1 : undefined} role={alert ? "alertdialog" : "dialog"} aria-modal={modal ? "true" : undefined} aria-labelledby={titleId} aria-describedby={alert && children ? bodyId : undefined}>
         <h2 className="dialog-title" id={titleId}>
           {title}
         </h2>
-        {!children ? null : asText ? <p className="dialog-body">{children}</p> : <div className="dialog-body">{children}</div>}
+        {!children ? null : asText ? <p className="dialog-body" id={alert ? bodyId : undefined}>{children}</p> : <div className="dialog-body" id={alert ? bodyId : undefined}>{children}</div>}
         <div className="dialog-actions">
           {cancelText !== null ? (
             <Button variant="secondary" onClick={onCancel}>

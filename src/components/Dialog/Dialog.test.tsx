@@ -43,6 +43,13 @@ describe("Dialog", () => {
   it("alert uses alertdialog", () => {
     expect(renderToStaticMarkup(<Dialog title="x" alert />)).toContain('role="alertdialog"');
   });
+  it("alert describes itself with its body; a plain dialog does not", () => {
+    const html = renderToStaticMarkup(<Dialog title="x" alert>Kill it?</Dialog>);
+    expect(html).toContain('aria-describedby="x-dialog-id-body"');
+    expect(html).toContain('<p class="dialog-body" id="x-dialog-id-body">Kill it?</p>');
+    expect(renderToStaticMarkup(<Dialog title="x">Kill it?</Dialog>)).not.toContain("aria-describedby");
+    expect(renderToStaticMarkup(<Dialog title="x" alert />)).not.toContain("aria-describedby");
+  });
   it("wires cancel and confirm; the primary button is last", () => {
     const onConfirm = vi.fn();
     const onCancel = vi.fn();
