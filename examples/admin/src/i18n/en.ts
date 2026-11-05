@@ -187,6 +187,8 @@ export const en = {
       security: "Security",
       notifications: "Notifications",
     },
+    readOnly: "Read-only",
+    readOnlyHint: "Your role can view these settings but not change them.",
     orgName: "Workspace name",
     orgNameHint: "Shown in the sidebar and in emails.",
     orgNameRequired: "Enter a workspace name.",

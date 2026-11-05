@@ -189,6 +189,8 @@ export const vi: Dict = {
       security: "Bảo mật",
       notifications: "Thông báo",
     },
+    readOnly: "Chỉ xem",
+    readOnlyHint: "Vai trò của bạn chỉ được xem các cài đặt này, không được sửa.",
     orgName: "Tên không gian làm việc",
     orgNameHint: "Hiển thị ở thanh bên và trong email.",
     orgNameRequired: "Nhập tên không gian làm việc.",

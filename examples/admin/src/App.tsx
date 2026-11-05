@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, type JSX } from "react";
+import type { ThemePreference } from "@xdev-asia/ui";
 import { signIn, signOut, useSession, type Session } from "./auth/session";
 import type { Role } from "./data/seed";
 import { StoreContext, useStore } from "./data/context";
@@ -10,9 +11,11 @@ import { NotifyContext, useNotify, useToasts } from "./shell/notify";
 import { useTheme } from "./theme";
 import { CreateUserDialog } from "./dialogs/CreateUserDialog";
 import { DeleteUsersDialog } from "./dialogs/DeleteUsersDialog";
+import { AuditLogPage } from "./pages/AuditLog";
 import { DashboardPage } from "./pages/Dashboard";
 import { NotFoundPage } from "./pages/NotFound";
 import { RolesPage } from "./pages/Roles";
+import { SettingsPage } from "./pages/Settings";
 import { UserDetailPage } from "./pages/UserDetail";
 import { UsersPage } from "./pages/Users";
 import type { User } from "./data/seed";
@@ -28,9 +31,11 @@ interface RoutesProps {
   version: number;
   openDialog: (d: Dialog) => void;
   onRolesChanged: () => void;
+  theme: ThemePreference;
+  onThemeChange: (value: ThemePreference) => void;
 }
 
-function Routes({ session, roles, version, openDialog, onRolesChanged }: RoutesProps): JSX.Element {
+function Routes({ session, roles, version, openDialog, onRolesChanged, theme, onThemeChange }: RoutesProps): JSX.Element {
   const route = useRoute();
   const onDelete = (users: Pick<User, "id" | "name">[], done: () => void): void => openDialog({ kind: "delete", users, done });
   switch (route.name) {
@@ -42,6 +47,10 @@ function Routes({ session, roles, version, openDialog, onRolesChanged }: RoutesP
       return <DashboardPage />;
     case "roles":
       return <RolesPage session={session} roles={roles} onRolesChanged={onRolesChanged} />;
+    case "settings":
+      return <SettingsPage session={session} roles={roles} section={route.params.section} theme={theme} onThemeChange={onThemeChange} />;
+    case "audit":
+      return <AuditLogPage session={session} roles={roles} />;
     default:
       return <NotFoundPage />;
   }
@@ -140,7 +149,7 @@ export function App(): JSX.Element {
             <SignInPage onSignedIn={signIn} theme={theme} onThemeChange={setTheme} />
           ) : (
             <Shell route={route} session={session} roles={roles} toasts={toasts} onSignOut={signOut}>
-              <Routes session={session} roles={roles} version={version} openDialog={setDialog} onRolesChanged={() => store.listRoles().then(setRoles, () => {})} />
+              <Routes session={session} roles={roles} version={version} openDialog={setDialog} onRolesChanged={() => store.listRoles().then(setRoles, () => {})} theme={theme} onThemeChange={setTheme} />
               <Dialogs dialog={dialog} busy={busy} setBusy={setBusy} close={() => setDialog(null)} changed={() => setVersion((n) => n + 1)} />
             </Shell>
           )}
