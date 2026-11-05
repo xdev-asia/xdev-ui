@@ -1,5 +1,6 @@
-import type { JSX, KeyboardEvent, ReactNode } from "react";
+import { useEffect, useId, useRef, type JSX, type ReactNode } from "react";
 import { cx } from "../../internal/cx";
+import { focusFirst, focusableIn, isShown, restoreFocus, trapTarget } from "../../internal/focus";
 import { IconButton } from "../IconButton/IconButton";
 
 export interface AppShellLabels {
@@ -38,11 +39,41 @@ export interface AppShellProps {
 
 export function AppShell({ brand, nav, navFooter, crumbs, actions, children, toasts, navOpen = false, onNavOpenChange, mainId = "main", labels, className }: AppShellProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
-  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>): void => {
-    if (e.key === "Escape" && navOpen) onNavOpenChange?.(false);
-  };
+  const sideId = `x-shell-side-${useId()}`;
+  const menuRef = useRef<HTMLButtonElement | null>(null);
+  const sideRef = useRef<HTMLElement | null>(null);
+  const backdropRef = useRef<HTMLButtonElement | null>(null);
+  const colRef = useRef<HTMLDivElement | null>(null);
+  const close = useRef(onNavOpenChange);
+  close.current = onNavOpenChange;
+  useEffect(() => {
+    // The drawer only exists below 768px, where the menu button is shown.
+    if (!navOpen || !isShown(menuRef.current)) return;
+    const menu = menuRef.current;
+    const col = colRef.current as (HTMLDivElement & { inert: boolean }) | null;
+    if (col) col.inert = true;
+    focusFirst(sideRef.current);
+    const onKey = (e: globalThis.KeyboardEvent): void => {
+      if (e.key === "Escape") {
+        close.current?.(false);
+      } else if (e.key === "Tab") {
+        const items = [backdropRef.current, ...focusableIn(sideRef.current)].filter((x): x is HTMLElement => x != null);
+        const target = trapTarget(items, document.activeElement, e.shiftKey);
+        if (target) {
+          e.preventDefault();
+          target.focus();
+        }
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      if (col) col.inert = false;
+      restoreFocus(menu);
+    };
+  }, [navOpen]);
   return (
-    <div className={cx("x-shell x-ws", className)} data-nav-open={navOpen ? "true" : undefined} onKeyDown={onKeyDown}>
+    <div className={cx("x-shell x-ws", className)} data-nav-open={navOpen ? "true" : undefined}>
       <a
         className="x-skip-link"
         href={`#${mainId}`}
@@ -54,18 +85,20 @@ export function AppShell({ brand, nav, navFooter, crumbs, actions, children, toa
       >
         {l.skipToContent}
       </a>
-      {navOpen ? <button type="button" className="x-shell-backdrop" aria-label={l.closeNav} onClick={() => onNavOpenChange?.(false)} /> : null}
-      <aside className="x-shell-side" aria-label={l.nav}>
+      {navOpen ? <button type="button" ref={backdropRef} className="x-shell-backdrop" aria-label={l.closeNav} onClick={() => onNavOpenChange?.(false)} /> : null}
+      <aside className="x-shell-side" id={sideId} ref={sideRef} aria-label={l.nav}>
         {brand ? <div className="x-shell-brand">{brand}</div> : null}
         <div className="x-shell-nav">{nav}</div>
         {navFooter ? <div className="x-shell-side-foot">{navFooter}</div> : null}
       </aside>
-      <div className="x-shell-col">
+      <div className="x-shell-col" ref={colRef}>
         <header className="x-shell-top">
           <IconButton
             icon="menu"
             label={navOpen ? l.closeNav : l.openNav}
             className="x-shell-menu"
+            ref={menuRef}
+            aria-controls={sideId}
             aria-expanded={navOpen}
             onClick={() => onNavOpenChange?.(!navOpen)}
           />

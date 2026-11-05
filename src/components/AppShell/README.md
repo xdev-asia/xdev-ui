@@ -8,7 +8,7 @@ Page frame for a generic app or an admin console: a sidebar for navigation, a to
 ## Rules
 - Navigation is `NavList` (with `icon`) in `nav`. `ActivityBar` and `TabStrip` belong to the workspace app, not to a generic app.
 - Put a `BrandMark` and the product name in `brand`, a `Breadcrumb` in `crumbs`, and search, notifications and the account `Menu` in `actions`. Page titles and page actions go in `PageHeader`, inside `children`.
-- Below 768px the sidebar is an off-canvas drawer: the menu `IconButton` in the top bar opens it, the backdrop, Esc and a second click on the menu button close it. Own the state: `navOpen` and `onNavOpenChange`, and close it when the route changes.
+- Below 768px the sidebar is an off-canvas drawer: the menu `IconButton` in the top bar opens it, opening it moves focus to the first control in the sidebar and makes the page column `inert`; Tab and Shift+Tab wrap between the backdrop and the sidebar, the backdrop and Esc (anywhere in the document) close it, and focus returns to the menu button. The menu button has `aria-controls` pointing at the sidebar. Own the state: `navOpen` and `onNavOpenChange`, and close it when the route changes.
 - The skip link is the first focusable element and focuses `main` without changing `location.hash`, so hash-routed apps keep their route; `mainId` changes the target id.
 - Landmarks: the sidebar is `aside` named by `labels.nav`, `header`, `main`. Each `NavList` is its own `nav` with its own name.
 - `toasts` render in a fixed bottom-right `.ws-toasts` region; pass `Toast` elements.

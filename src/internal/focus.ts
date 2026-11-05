@@ -60,3 +60,10 @@ export function inertOutside(node: HTMLElement | null | undefined): () => void {
     for (const el of changed) el.inert = false;
   };
 }
+
+/** True when `el` is rendered (not display: none). Used to tell whether a responsive control is in effect. */
+export function isShown(el: { offsetParent?: unknown; getClientRects?: () => { length: number } } | null | undefined): boolean {
+  if (!el) return false;
+  if (el.getClientRects) return el.getClientRects().length > 0;
+  return el.offsetParent != null;
+}

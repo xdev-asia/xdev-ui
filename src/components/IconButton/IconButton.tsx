@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, JSX } from "react";
+import type { ButtonHTMLAttributes, JSX, Ref } from "react";
 import { cx } from "../../internal/cx";
 import type { IconName } from "../../icons";
 import { Icon } from "../Icon/Icon";
@@ -7,6 +7,7 @@ export interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>
   icon: IconName;
   /** Required: becomes aria-label and title. */
   label: string;
+  ref?: Ref<HTMLButtonElement>;
 }
 
 export function IconButton({ icon, label, className, type = "button", ...rest }: IconButtonProps): JSX.Element {
