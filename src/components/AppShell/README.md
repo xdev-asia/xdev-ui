@@ -9,7 +9,7 @@ Page frame for a generic app or an admin console: a sidebar for navigation, a to
 - Navigation is `NavList` (with `icon`) in `nav`. `ActivityBar` and `TabStrip` belong to the workspace app, not to a generic app.
 - Put a `BrandMark` and the product name in `brand`, a `Breadcrumb` in `crumbs`, and search, notifications and the account `Menu` in `actions`. Page titles and page actions go in `PageHeader`, inside `children`.
 - Below 768px the sidebar is an off-canvas drawer: the menu `IconButton` in the top bar opens it, the backdrop, Esc and a second click on the menu button close it. Own the state: `navOpen` and `onNavOpenChange`, and close it when the route changes.
-- The skip link is the first focusable element and jumps to `main`; `mainId` changes the target id.
+- The skip link is the first focusable element and focuses `main` without changing `location.hash`, so hash-routed apps keep their route; `mainId` changes the target id.
 - Landmarks: the sidebar is `aside` named by `labels.nav`, `header`, `main`. Each `NavList` is its own `nav` with its own name.
 - `toasts` render in a fixed bottom-right `.ws-toasts` region; pass `Toast` elements.
 - `labels` (`AppShellLabels`: `openNav`, `closeNav`, `skipToContent`, `nav`) overrides the English defaults; pass translated strings from the app.

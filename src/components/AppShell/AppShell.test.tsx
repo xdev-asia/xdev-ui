@@ -49,4 +49,20 @@ describe("AppShell", () => {
     expect(html).toContain("Saved");
     expect(renderToStaticMarkup(<AppShell {...base} />)).not.toContain("x-shell-toasts");
   });
+  it("skip link focuses main without changing location.hash", () => {
+    const tree = AppShell({ ...base, mainId: "page" });
+    const link = findAll(tree, (e) => e.props.className === "x-skip-link")[0];
+    const main = { focus: vi.fn() };
+    const getElementById = vi.fn(() => main);
+    vi.stubGlobal("document", { getElementById });
+    const preventDefault = vi.fn();
+    try {
+      link.props.onClick({ preventDefault });
+    } finally {
+      vi.unstubAllGlobals();
+    }
+    expect(preventDefault).toHaveBeenCalledOnce();
+    expect(getElementById).toHaveBeenCalledWith("page");
+    expect(main.focus).toHaveBeenCalledOnce();
+  });
 });

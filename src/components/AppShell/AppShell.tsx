@@ -43,7 +43,15 @@ export function AppShell({ brand, nav, navFooter, crumbs, actions, children, toa
   };
   return (
     <div className={cx("x-shell x-ws", className)} data-nav-open={navOpen ? "true" : undefined} onKeyDown={onKeyDown}>
-      <a className="x-skip-link" href={`#${mainId}`}>
+      <a
+        className="x-skip-link"
+        href={`#${mainId}`}
+        onClick={(e) => {
+          // Focus the region without touching location.hash, which hash-routed apps own.
+          e.preventDefault();
+          document.getElementById(mainId)?.focus();
+        }}
+      >
         {l.skipToContent}
       </a>
       {navOpen ? <button type="button" className="x-shell-backdrop" aria-label={l.closeNav} onClick={() => onNavOpenChange?.(false)} /> : null}
