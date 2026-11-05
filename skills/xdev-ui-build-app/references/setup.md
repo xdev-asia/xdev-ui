@@ -6,7 +6,7 @@
 pnpm add @xdev-asia/ui react react-dom
 ```
 
-The package is on the GitHub registry. `_npmrc` in the template maps the scope; log in once with `npm login --registry=https://npm.pkg.github.com --scope=@xdev-asia`. Never commit a token.
+The package is on the GitHub registry. `_npmrc` in the template maps the scope; log in once with `npm login --registry=https://npm.pkg.github.com --scope=@xdev-asia`. The token needs `read:packages`. Never commit a token. `xdev-ui-skills create` pins `@xdev-asia/ui` to the release that ships the template (`^x.y.z`); if you copy the template by hand, replace `latest` with the version you install.
 
 ## Entry file
 

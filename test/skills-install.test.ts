@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -110,3 +110,30 @@ describe("xdev-ui-skills create", () => {
     expect(run(["create", "app"], tmp()).code).toBe(2);
   });
 });
+
+describe("xdev-ui-skills create: dependency pin", () => {
+  const dep = (out: string): string => JSON.parse(readFileSync(join(out, "package.json"), "utf8")).dependencies["@xdev-asia/ui"];
+  const pkgWith = (version: string) => {
+    const pkgRoot = tmp();
+    mkdirSync(join(pkgRoot, "bin"));
+    cpSync(bin, join(pkgRoot, "bin/xdev-ui-skills.mjs"));
+    cpSync(join(root, "skills"), join(pkgRoot, "skills"), { recursive: true });
+    writeFileSync(join(pkgRoot, "package.json"), JSON.stringify({ name: "@xdev-asia/ui", version }));
+    return join(pkgRoot, "bin/xdev-ui-skills.mjs");
+  };
+  const create = (script: string, kind: string) => {
+    const cwd = tmp();
+    const r = spawnSync(process.execPath, [script, "create", kind, "proj"], { cwd, encoding: "utf8", timeout: 10_000 });
+    expect(r.status).toBe(0);
+    return join(cwd, "proj");
+  };
+  it("pins @xdev-asia/ui to the caret of the package's own release", () => {
+    const script = pkgWith("1.4.2");
+    expect(dep(create(script, "app"))).toBe("^1.4.2");
+    expect(dep(create(script, "admin"))).toBe("^1.4.2");
+  });
+  it("keeps the template value in a development checkout", () => {
+    expect(dep(create(pkgWith("0.0.0-development"), "app"))).toBe("latest");
+  });
+});
+

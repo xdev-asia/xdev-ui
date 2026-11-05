@@ -90,6 +90,15 @@ function install(argv) {
   }
 }
 
+function ownVersion() {
+  try {
+    const v = JSON.parse(readFileSync(fileURLToPath(new URL("../package.json", import.meta.url)), "utf8")).version;
+    return /^\d+\.\d+\.\d+$/.test(v) ? v : null;
+  } catch {
+    return null;
+  }
+}
+
 function create(argv) {
   const { opts, rest } = parse(argv, { force: "flag" });
   const [kind, dir] = rest;
@@ -100,6 +109,9 @@ function create(argv) {
   copyTree(join(SKILLS, KINDS[kind], "templates", kind), out, { rename: true, log: () => {} });
   const pkgPath = join(out, "package.json");
   const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
+  // Pin the UI package to the release that ships these templates; a dev checkout (0.0.0-development) keeps the template value.
+  const own = ownVersion();
+  if (own && pkg.dependencies?.["@xdev-asia/ui"]) pkg.dependencies["@xdev-asia/ui"] = `^${own}`;
   pkg.name = basename(out).toLowerCase().replace(/[^a-z0-9._-]+/g, "-").replace(/^[-.]+/, "") || pkg.name;
   writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
   console.log(`created ${out}\nnext: cd ${dir} && pnpm install && pnpm dev`);
