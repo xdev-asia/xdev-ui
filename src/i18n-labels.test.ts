@@ -3,16 +3,20 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import {
   ActivityBar,
+  AppShell,
   Breadcrumb,
   CodeBlock,
   CommandPalette,
+  DataTable,
   DiffStat,
   Dialog,
   NavList,
+  Pagination,
   SearchInput,
   SearchPicker,
   Spinner,
   SplitHandle,
+  StatTile,
   TabStrip,
   ThemeSwitch,
   Toast,
@@ -169,5 +173,38 @@ describe("labels override every default English string", () => {
     const html = renderToStaticMarkup(h(Toolbar, { title: h("b", null, "3"), actions: h("button", { type: "button" }, "x"), labels: { actions: S("ac") } }));
     expect(html).toContain(S("ac"));
     expectNoEnglish(html, ["Actions"]);
+  });
+
+  it("AppShell", () => {
+    const labels = { openNav: S("on"), closeNav: S("cn"), skipToContent: S("sk"), nav: S("nv") };
+    const html = renderToStaticMarkup(h(AppShell, { nav: "n", labels, children: "c" }));
+    for (const v of [S("on"), S("sk"), S("nv")]) expect(html).toContain(v);
+    expectNoEnglish(html, ["Open navigation", "Skip to content", "Navigation"]);
+    expect(renderToStaticMarkup(h(AppShell, { nav: "n", navOpen: true, labels, children: "c" }))).toContain(S("cn"));
+  });
+
+  it("StatTile", () => {
+    const html = renderToStaticMarkup(h(StatTile, { label: "L", value: "1", loading: true, labels: { loading: S("l") } }));
+    expect(html).toContain(S("l"));
+    expectNoEnglish(html, ["Loading"]);
+  });
+
+  it("DataTable", () => {
+    const DT = DataTable as unknown as (p: Record<string, unknown>) => ReturnType<typeof DataTable>;
+    const labels = { selectAll: S("sa"), selectRow: (n: string) => `${S("sr")}${n}`, sortedAsc: S("as"), sortedDesc: S("ds"), loading: S("ld") };
+    const props = { caption: "c", rowKey: (r: { id: string }) => r.id, rowLabel: (r: { id: string }) => r.id, columns: [{ key: "a", header: "A", sortable: true, cell: (r: { id: string }) => r.id }], labels };
+    const html = renderToStaticMarkup(h(DT, { ...props, rows: [{ id: "x" }], selected: new Set<string>(), sort: { key: "a", dir: "asc" } }));
+    for (const v of [S("sa"), `${S("sr")}x`, S("as")]) expect(html).toContain(v);
+    expectNoEnglish(html, ["Select all rows", "Select", "sorted ascending"]);
+    const desc = renderToStaticMarkup(h(DT, { ...props, rows: [{ id: "x" }], sort: { key: "a", dir: "desc" } }));
+    expect(desc).toContain(S("ds"));
+    expect(renderToStaticMarkup(h(DT, { ...props, rows: [], loading: true }))).toContain(S("ld"));
+  });
+
+  it("Pagination", () => {
+    const labels = { nav: S("nv"), previous: S("pv"), next: S("nx"), range: (a: number, b: number, t: number) => `${S("r")}${a}-${b}-${t}`, pageSize: S("ps") };
+    const html = renderToStaticMarkup(h(Pagination, { page: 1, pageSize: 10, total: 25, onPageChange() {}, pageSizeOptions: [10], labels }));
+    for (const v of [S("nv"), S("pv"), S("nx"), `${S("r")}1-10-25`, S("ps")]) expect(html).toContain(v);
+    expectNoEnglish(html, ["Pagination", "Previous page", "Next page", "of", "Rows per page"]);
   });
 });

@@ -34,7 +34,7 @@ export const COMPONENTS: Comp[] = manifest.components.map((c) => {
   };
 });
 
-export const GROUP_ORDER = ["Actions", "Inputs", "Display", "Status", "Navigation", "Overlays", "Brand"];
+export const GROUP_ORDER = ["Actions", "Inputs", "Display", "Status", "Navigation", "Overlays", "Layout", "Data", "Brand"];
 
 export const GROUPS = [...new Set([...GROUP_ORDER, ...COMPONENTS.map((c) => c.group)])]
   .map((g) => ({ name: g, items: COMPONENTS.filter((c) => c.group === g) }))

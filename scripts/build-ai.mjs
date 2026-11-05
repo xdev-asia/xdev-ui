@@ -1,8 +1,8 @@
 // Builds the AI-facing data from the sources: component READMEs + exported types,
 // tokens.json, icons and docs. Writes generated/ai-manifest.json, llms.txt, llms-full.txt.
 // Consumed by the MCP server (src/mcp/server.ts) and shipped in dist/ and on Pages.
-import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { dirname, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -105,7 +105,7 @@ for (const group of tokens.type?.groups ?? []) {
   for (const { name, usage, sample, ...style } of group.styles ?? []) {
     flatTokens.push({
       name: `type-${name}`,
-      css: `font: ${style.fontWeight ?? 400} ${style.fontSize}${style.lineHeight ? `/${style.lineHeight}` : ""} var(--font-${group.family})`,
+      css: `font: var(--type-${name})`,
       category: "type",
       value: style,
       usage: usage ?? "",
@@ -122,6 +122,33 @@ function sections(md) {
   }
   return out;
 }
+
+/** Skills from skills/<name>/SKILL.md: frontmatter is `key: value` lines (no YAML dependency), plus every text file of the folder. */
+function walkFiles(dir) {
+  return readdirSync(dir, { withFileTypes: true })
+    .filter((d) => d.name !== "node_modules")
+    .flatMap((d) => (d.isDirectory() ? walkFiles(resolve(dir, d.name)) : [resolve(dir, d.name)]))
+    .sort();
+}
+const skillsDir = resolve(root, "skills");
+const skills = (existsSync(skillsDir) ? readdirSync(skillsDir, { withFileTypes: true }) : [])
+  .filter((d) => d.isDirectory() && existsSync(resolve(skillsDir, d.name, "SKILL.md")))
+  .map(({ name }) => {
+    const raw = read(`skills/${name}/SKILL.md`);
+    const m = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/.exec(raw);
+    if (!m) throw new Error(`build-ai: skills/${name}/SKILL.md has no frontmatter`);
+    const meta = {};
+    for (const line of m[1].split("\n")) {
+      const kv = /^([a-z-]+):\s*(.*)$/.exec(line);
+      if (kv) meta[kv[1]] = kv[2].replace(/^"(.*)"$/, "$1");
+    }
+    const folder = resolve(skillsDir, name);
+    const files = walkFiles(folder)
+      .filter((f) => statSync(f).size < 200_000)
+      .map((f) => ({ path: relative(folder, f).split(sep).join("/"), text: readFileSync(f, "utf8").replace(/\r\n/g, "\n") }));
+    return { name, description: meta.description ?? "", body: m[2].trim(), files };
+  })
+  .sort((a, b) => a.name.localeCompare(b.name));
 
 const guidelines = { ...sections(designSystem), brand: brand.trim() };
 
@@ -140,6 +167,7 @@ const manifest = {
   tokens: flatTokens,
   themes: tokens.color?.themes?.map((t) => t.id) ?? ["dark", "light"],
   guidelines,
+  skills,
 };
 
 const gen = resolve(root, "generated");
@@ -171,10 +199,16 @@ const llms = [
   "- State is tint, border or dot. Never a coloured left stripe on a rounded card or row.",
   "- 4px grid: `--x-space-1…8`. Sentence-case verb labels. No emoji or exclamation marks in UI chrome.",
   "",
+  "## Skills",
+  "",
+  ...skills.map((s) => `- ${s.name}: ${s.description}`),
+  "",
+  "Install: `npx -y --package=@xdev-asia/ui xdev-ui-skills install` (add `--codex` or `--user`), or read one through the MCP tool `xdevui_get_skill`.",
+  "",
   "## More",
   "",
   "- [llms-full.txt](llms-full.txt): every component README, exported types and all tokens",
-  "- MCP server: `npx -y --package=@xdev-asia/ui xdev-ui-mcp` (tools: xdevui_list_components, xdevui_get_component, xdevui_search_tokens, xdevui_get_guidelines, xdevui_list_icons, xdevui_search_docs)",
+  "- MCP server: `npx -y --package=@xdev-asia/ui xdev-ui-mcp` (tools: xdevui_list_components, xdevui_get_component, xdevui_search_tokens, xdevui_get_guidelines, xdevui_list_icons, xdevui_search_docs, xdevui_get_skill)",
   "",
 ].join("\n");
 
@@ -184,6 +218,15 @@ const full = [
   "",
   ...Object.values(guidelines),
   "",
+  "# Skills",
+  "",
+  ...skills.flatMap((sk) => [
+    `## ${sk.name}`,
+    "",
+    sk.body,
+    "",
+    ...sk.files.filter((f) => f.path.startsWith("references/") && f.path.endsWith(".md")).flatMap((f) => [`### ${sk.name}/${f.path}`, "", f.text.trim().replace(/^# /, "#### "), ""]),
+  ]),
   "# Shared types",
   "",
   "```ts",
@@ -217,4 +260,4 @@ const full = [
 
 writeFileSync(resolve(gen, "llms.txt"), llms);
 writeFileSync(resolve(gen, "llms-full.txt"), full);
-console.log(`ai: ${components.length} components, ${flatTokens.length} tokens, ${icons.length} icons`);
+console.log(`ai: ${components.length} components, ${flatTokens.length} tokens, ${icons.length} icons, ${skills.length} skills`);

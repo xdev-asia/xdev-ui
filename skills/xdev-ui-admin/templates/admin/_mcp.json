@@ -1,0 +1,5 @@
+{
+  "mcpServers": {
+    "xdev-ui": { "command": "node", "args": ["node_modules/@xdev-asia/ui/dist/mcp.js"] }
+  }
+}

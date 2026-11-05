@@ -14,4 +14,9 @@ describe("StatusDot", () => {
     expect(html).toContain('data-pr="merged"');
     expect(html).toContain("x-dot-label");
   });
+  it("tone carries data-tone", () => {
+    const html = renderToStaticMarkup(<StatusDot tone="warn" label="Invited" />);
+    expect(html).toContain('data-tone="warn"');
+    expect(html).toContain("Invited");
+  });
 });

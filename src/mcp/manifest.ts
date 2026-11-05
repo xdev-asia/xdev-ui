@@ -23,6 +23,15 @@ export interface TokenDoc {
   usage: string;
 }
 
+export interface SkillDoc {
+  name: string;
+  description: string;
+  /** SKILL.md without the frontmatter. */
+  body: string;
+  /** Every text file of the skill folder; `path` is relative and uses forward slashes. */
+  files: { path: string; text: string }[];
+}
+
 export interface Manifest {
   package: string;
   version: string;
@@ -33,12 +42,14 @@ export interface Manifest {
   tokens: TokenDoc[];
   themes: string[];
   guidelines: Record<string, string>;
+  skills: SkillDoc[];
 }
 
 /** dist/mcp.js reads dist/ai-manifest.json; XDEV_UI_MANIFEST overrides the path. */
 export function loadManifest(): Manifest {
   const url = process.env.XDEV_UI_MANIFEST ?? new URL("./ai-manifest.json", import.meta.url);
   const manifest = JSON.parse(readFileSync(url, "utf8")) as Manifest;
+  manifest.skills ??= [];
   // The published package.json carries the released version; the manifest is built before the bump.
   try {
     const pkg = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")) as { version?: string };

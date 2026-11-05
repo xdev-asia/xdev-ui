@@ -21,6 +21,23 @@
   --x-font-body-fallback: var(--font-body-fallback);
   --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
   --x-font-mono: var(--font-mono);
+  --type-page-title: 700 20px/1.3 var(--font-body);
+  --type-dialog-title: 700 18px var(--font-body);
+  --type-body: 400 14px/1.6 var(--font-body);
+  --type-control: 600 13px var(--font-body);
+  --type-menu: 400 13px var(--font-body);
+  --type-label: 600 12px var(--font-body);
+  --type-tab: 400 12px var(--font-body);
+  --type-status: 400 11.5px var(--font-body);
+  --type-badge: 600 11px/1.5 var(--font-body);
+  --type-tag: 400 10px var(--font-body);
+  --type-avatar-sm: 600 8px/1 var(--font-body);
+  --type-avatar-md: 600 13px/1 var(--font-body);
+  --type-avatar-lg: 600 19px/1 var(--font-body);
+  --type-mono: 400 12px var(--font-mono);
+  --type-mono-stat: 400 10px var(--font-mono);
+  --type-stat: 600 22px/1.2 var(--font-mono);
+  --type-kbd: 400 11px var(--font-mono);
   --x-space-1: 4px;
   --x-space-2: 8px;
   --x-space-3: 12px;
@@ -37,6 +54,9 @@
   --h-footer: 26px;
   --w-side: 296px;
   --w-panel: 300px;
+  --avatar-sm: 20px;
+  --avatar-md: 32px;
+  --avatar-lg: 48px;
 }
 :root,
 [data-theme="dark"] {

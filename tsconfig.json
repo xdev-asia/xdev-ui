@@ -12,7 +12,14 @@
     "verbatimModuleSyntax": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "types": ["vite/client", "node"]
+    "types": ["vite/client", "node"],
+    "paths": {
+      "@xdev-asia/ui": ["./src/index.ts"],
+      "@xdev-asia/ui/styles.css": ["./src/styles/index.css"],
+      "@xdev-asia/ui/tokens.css": ["./src/styles/tokens.css"],
+      "@xdev-asia/ui/fonts.css": ["./src/styles/fonts.css"]
+    }
   },
-  "include": ["src", "demo", ".storybook", "vite.config.ts", "vitest.config.ts", "vite.demo.config.ts", "vite.mcp.config.ts"]
+  "include": ["src", "demo", "test", "examples", "skills/*/templates/*/src", "skills/*/templates/*/vite.config.ts", ".storybook", "vite.config.ts", "vitest.config.ts", "vite.demo.config.ts", "vite.mcp.config.ts"],
+  "exclude": ["test/fixtures", "node_modules"]
 }

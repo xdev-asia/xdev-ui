@@ -1,0 +1,98 @@
+/* ---------- Layout ---------- */
+
+/* AppShell (.x-shell). Breakpoint: drawer below 768px. CSS cannot put var() in a media query, so the value is fixed here. */
+.x-shell {
+  display: grid;
+  grid-template-columns: var(--w-side) minmax(0, 1fr);
+  height: 100vh;
+  height: 100dvh;
+  background: var(--bg-0);
+  color: var(--text-1);
+  font: var(--type-body);
+}
+.x-skip-link {
+  position: fixed;
+  top: var(--x-space-2);
+  left: var(--x-space-2);
+  z-index: 60;
+  padding: var(--x-space-2) var(--x-space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  background: var(--bg-1);
+  color: var(--text-1);
+  transform: translateY(-300%);
+}
+.x-skip-link:focus { transform: none; outline: 2px solid var(--x-color-signal); outline-offset: 2px; }
+.x-shell-side {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-right: 1px solid var(--line);
+  background: var(--bg-1);
+}
+.x-shell-brand { display: flex; align-items: center; gap: var(--x-space-2); height: var(--h-header); padding: 0 var(--x-space-4); border-bottom: 1px solid var(--line); box-sizing: border-box; font-weight: 700; }
+.x-shell-nav { flex: 1; min-height: 0; overflow-y: auto; }
+.x-shell-nav .settings-nav { width: auto; border-right: 0; }
+.x-shell-side-foot { padding: var(--x-space-3) var(--x-space-4); border-top: 1px solid var(--line); }
+.x-shell-col { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.x-shell-top { display: flex; align-items: center; gap: var(--x-space-3); height: var(--h-header); padding: 0 var(--x-space-4); border-bottom: 1px solid var(--line); background: var(--bg-1); box-sizing: border-box; flex: none; }
+.x-shell-crumbs { flex: 1; min-width: 0; overflow: hidden; }
+.x-shell-actions { display: flex; align-items: center; gap: var(--x-space-2); flex: none; }
+.x-shell-main { flex: 1; min-height: 0; overflow: auto; padding: var(--x-space-6); }
+.x-shell-main:focus:not(:focus-visible) { outline: none; }
+.x-shell-menu { display: none; }
+.x-shell-backdrop { display: none; }
+.x-shell-toasts { position: fixed; right: var(--x-space-4); bottom: var(--x-space-4); z-index: 50; }
+
+@media (max-width: 767px) {
+  .x-shell { grid-template-columns: minmax(0, 1fr); }
+  .x-shell-menu { display: inline-flex; }
+  .x-shell-side {
+    position: fixed;
+    inset-block: 0;
+    left: 0;
+    z-index: 30;
+    width: min(var(--w-side), 85vw);
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition: transform 0.18s ease, visibility 0s linear 0.18s;
+  }
+  .x-shell[data-nav-open] .x-shell-side { transform: none; visibility: visible; transition: transform 0.18s ease; }
+  .x-shell-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 29;
+    border: 0;
+    padding: 0;
+    background: color-mix(in srgb, var(--bg-0) 70%, transparent);
+  }
+  .x-shell-main { padding: var(--x-space-4); }
+  .x-shell-toasts { left: var(--x-space-4); }
+  .x-shell-toasts.ws-toasts { width: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .x-shell-side { transition: none; }
+}
+
+/* PageHeader (.x-page-header) */
+.x-page-header { margin: 0 0 var(--x-space-6); container-type: inline-size; }
+.x-page-crumb { margin: 0 0 var(--x-space-2); }
+.x-page-row { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: var(--x-space-3) var(--x-space-4); }
+.x-page-heading { flex: 1 1 20ch; min-width: 0; }
+.x-page-titleline { display: flex; flex-wrap: wrap; align-items: center; gap: var(--x-space-1) var(--x-space-3); }
+.x-page-title { margin: 0; font: var(--type-page-title); color: var(--text-1); overflow-wrap: anywhere; }
+.x-page-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--x-space-2); font: var(--type-status); color: var(--text-2); }
+.x-page-desc { margin: var(--x-space-1) 0 0; color: var(--text-2); font: var(--type-body); }
+.x-page-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--x-space-2); }
+@container (max-width: 480px) { .x-page-actions { justify-content: flex-start; width: 100%; } }
+
+/* FormSection (.x-form-section) */
+.x-form-section { container-type: inline-size; padding: var(--x-space-4); border: 1px solid var(--line); border-radius: var(--radius-l); background: var(--bg-1); }
+.x-form-section + .x-form-section { margin-top: var(--x-space-4); }
+.x-form-section-head { margin: 0 0 var(--x-space-4); }
+.x-form-section-title { margin: 0; font: var(--type-label); color: var(--text-1); }
+.x-form-section-desc { margin: var(--x-space-1) 0 0; font: var(--type-status); color: var(--text-2); }
+.x-form-section-fields { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--x-space-4); }
+.x-form-section-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--x-space-2); margin-top: var(--x-space-4); padding-top: var(--x-space-4); border-top: 1px solid var(--line); }
+@container (min-width: 481px) { .x-form-section-fields[data-columns="2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

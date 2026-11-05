@@ -1,0 +1,24 @@
+{
+  "name": "my-admin",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit",
+    "audit": "node node_modules/@xdev-asia/ui/skills/xdev-ui-review/scripts/audit.mjs src --i18n src/i18n"
+  },
+  "dependencies": {
+    "@xdev-asia/ui": "latest",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^6.0.0",
+    "typescript": "^7.0.0",
+    "vite": "^8.0.0"
+  }
+}

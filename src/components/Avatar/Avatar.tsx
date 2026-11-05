@@ -13,7 +13,7 @@ export interface AvatarProps {
 }
 
 /** First code point of the first and last words, upper-cased; "?" when there is no word. */
-export function initials(name: string): string {
+export function avatarInitials(name: string): string {
   const words = name.trim().split(/\s+/).filter(Boolean);
   if (words.length === 0) return "?";
   const first = Array.from(words[0])[0] ?? "";
@@ -30,7 +30,7 @@ export function Avatar({ name, src, size = "md", className }: AvatarProps): JSX.
         <img className="x-avatar-img" alt="" src={src ?? undefined} onError={() => setFailed(src ?? null)} />
       ) : (
         <span className="x-avatar-initials" aria-hidden="true">
-          {initials(name)}
+          {avatarInitials(name)}
         </span>
       )}
     </span>

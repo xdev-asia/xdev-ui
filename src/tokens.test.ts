@@ -58,3 +58,23 @@ describe("appearance tokens", () => {
     expect(tokensCss).toMatch(/--x-font-body-fallback:\s*var\(--font-body-fallback\);/);
   });
 });
+
+describe("type tokens", () => {
+  const styles: { name: string }[] = tokens.type.groups.flatMap((g: { styles: { name: string }[] }) => g.styles);
+  const manifest = JSON.parse(readFileSync(resolve(src, "../generated/ai-manifest.json"), "utf8"));
+
+  it("emits --type-<name> for every type style", () => {
+    expect(styles.length).toBeGreaterThan(10);
+    for (const s of styles) expect(tokensCss, s.name).toMatch(new RegExp(`--type-${s.name}: [^;]*var\\(--font-(body|mono)\\);`));
+  });
+  it("defines page-title and stat", () => {
+    expect(tokensCss).toContain("--type-page-title: 700 20px/1.3 var(--font-body);");
+    expect(tokensCss).toContain("--type-stat: 600 22px/1.2 var(--font-mono);");
+  });
+  it("points the manifest at the variable", () => {
+    for (const s of styles) {
+      const t = manifest.tokens.find((x: { name: string }) => x.name === `type-${s.name}`);
+      expect(t.css).toBe(`font: var(--type-${s.name})`);
+    }
+  });
+});

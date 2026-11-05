@@ -18,13 +18,18 @@ Read the design system through the bundled MCP server instead of guessing props 
 | tool | use it to |
 |---|---|
 | `xdevui_get_guidelines` `topic="setup"` | install, CSS imports, `data-theme`, shared types |
-| `xdevui_list_components` | pick parts for a screen (46, grouped) |
+| `xdevui_list_components` | pick parts for a screen (63, grouped) |
 | `xdevui_get_component` | README rules + exported props + CSS classes of one part |
 | `xdevui_search_tokens` | find the token for a colour, space, radius or type size |
 | `xdevui_list_icons` | valid `IconName` values |
 | `xdevui_search_docs` | find which component or rule covers a topic |
+| `xdevui_get_skill` | read a skill (`xdev-ui-build-app`, `xdev-ui-admin`, `xdev-ui-review`) and its references |
 
-Prompt `xdevui_build_ui` runs those steps in order. Without MCP: `node_modules/@xdev-asia/ui/dist/llms-full.txt` (or <https://ui.xdev.asia/llms-full.txt>) holds the same content in one file.
+Prompt `xdevui_build_ui` runs those steps in order; `xdevui_build_app` and `xdevui_build_admin` do the same through a skill and its template. Without MCP: `node_modules/@xdev-asia/ui/dist/llms-full.txt` (or <https://ui.xdev.asia/llms-full.txt>) holds the same content in one file.
+
+### Skills
+
+`npx xdev-ui-skills install` copies `xdev-ui-build-app`, `xdev-ui-admin` and `xdev-ui-review` into `.claude/skills` (`--codex` or `--cursor`: `.agents/skills`; `--user`: your home). `npx xdev-ui-skills create app|admin <dir>` scaffolds a project. Run the review skill's `scripts/audit.mjs src --i18n src/i18n` before you finish UI work.
 
 ### Rules agents break most
 
@@ -41,13 +46,15 @@ Prompt `xdevui_build_ui` runs those steps in order. Without MCP: `node_modules/@
 corepack pnpm install
 corepack pnpm dev         # demo, http://localhost:5173
 corepack pnpm build       # tokens -> ai manifest -> lib -> mcp.js -> d.ts
-corepack pnpm test        # SSR smoke (56 components) + MCP smoke (all tools)
+corepack pnpm test        # SSR smoke (63 components) + MCP smoke (all tools)
 ```
 
 | change | also update |
 |---|---|
 | new component `X` | `src/components/X/X.tsx` + `README.md` (first paragraph = summary, `## Rules`), export in `src/index.ts`, row in the Components table of `docs/design-system.md` (build fails without it), CSS in `src/styles/<group>.css`, preview in `demo/previews.ts` |
 | token | `tokens/tokens.json` only; `tokens.css` and the AI manifest are generated |
+| skill or template | `skills/<name>/SKILL.md` (frontmatter `name`, `description`, `license`; body at most 150 lines), `references/`, `templates/`; every name it uses must exist (`test/skills-names.test.ts`); dotfiles in templates are `_npmrc`, `_gitignore`, `_mcp.json` |
+| admin example | `examples/admin`; `test/app-rules.test.ts` runs the audit on it, and `pnpm build:example:admin` runs in CI |
 | icon | `src/icons.ts` (24 grid, stroke 1.75, no fills) |
 | rule or voice | `docs/design-system.md`; the MCP `xdevui_get_guidelines` reads its `##` sections |
 

@@ -454,6 +454,41 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       { id: "p", depth: 0, name: "package.json", kind: "file" },
     ] }),
   },
+  "AppShell": {
+    style: {"height": "320px", "width": "640px", "maxWidth": "100%", "transform": "translateZ(0)", "overflow": "hidden"},
+    render: (X, h) => h(X.AppShell, { brand: h(X.BrandMark, { size: 20 }), nav: h(X.NavList, { items: [{ id: "home", label: "Overview", icon: "home" }, { id: "users", label: "Users", icon: "accounts" }], value: "home" }), crumbs: h(X.Breadcrumb, { items: [{ label: "Overview" }] }) }, h("p", null, "Page content")),
+  },
+  "PageHeader": {
+    style: {"padding": "16px", "width": "480px", "maxWidth": "100%"},
+    render: (X, h) => h(X.PageHeader, { title: "Users", description: "People who can sign in to this workspace.", meta: h(X.StatusDot, { tone: "ok", label: "Active" }), actions: h(X.Button, null, "Create user") }),
+  },
+  "FormSection": {
+    style: {"padding": "16px", "width": "520px", "maxWidth": "100%"},
+    render: (X, h) => h(X.FormSection, { title: "Profile", description: "Shown to teammates.", columns: 2, actions: h(React.Fragment, null, h(X.Button, { variant: "secondary" }, "Cancel"), h(X.Button, null, "Save changes")) },
+      h(X.Field, { label: "Full name", defaultValue: "Ada Lovelace" }),
+      h(X.Field, { label: "Email", type: "email", defaultValue: "ada@example.com" })),
+  },
+  "DescriptionList": {
+    style: {"padding": "16px", "width": "420px", "maxWidth": "100%"},
+    render: (X, h) => h(X.DescriptionList, { items: [{ term: "Email", value: "ada@example.com", mono: true }, { term: "Role", value: "Owner" }, { term: "Created", value: "4 Nov 2026" }] }),
+  },
+  "StatTile": {
+    style: {"display": "flex", "gap": "12px", "flexWrap": "wrap", "padding": "16px"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.StatTile, { label: "Active users", value: "1,284", delta: "+12%", deltaTrend: "up", deltaTone: "good", hint: "vs last 7 days" }),
+      h(X.StatTile, { label: "Storage", value: "82 GB" }, h(X.Meter, { value: 82, warnAt: 80, label: "Used" })),
+      h(X.StatTile, { label: "Sign-ins", value: "0", loading: true })),
+  },
+  "DataTable": {
+    style: {"padding": "16px", "width": "520px", "maxWidth": "100%"},
+    render: (X, h) => h(X.DataTable, { caption: "Users", rowKey: (r) => r.id, rowLabel: (r) => r.name, sort: { key: "name", dir: "asc" }, selected: new Set(["2"]), onSelectedChange() {},
+      rows: [{ id: "1", name: "Ada Lovelace", email: "ada@example.com" }, { id: "2", name: "Grace Hopper", email: "grace@example.com" }],
+      columns: [{ key: "name", header: "Name", sortable: true, cell: (r) => r.name }, { key: "email", header: "Email", mono: true, hideNarrow: true, cell: (r) => r.email }] }),
+  },
+  "Pagination": {
+    style: {"padding": "16px", "width": "420px", "maxWidth": "100%"},
+    render: (X, h) => h(X.Pagination, { page: 2, pageSize: 20, total: 57, onPageChange() {}, pageSizeOptions: [10, 20, 50], onPageSizeChange() {} }),
+  },
 };
 
 function PopoverDemo({ X }) {

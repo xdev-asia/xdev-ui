@@ -35,7 +35,7 @@ import { Button, TabStrip, BrandMark } from "@xdev-asia/ui";
 
 | export | content |
 |---|---|
-| `@xdev-asia/ui` | 56 components, `ICONS`, `ICON_NAMES`, prop types |
+| `@xdev-asia/ui` | 63 components, `ICONS`, `ICON_NAMES`, prop types |
 | `@xdev-asia/ui/styles.css` | tokens + component CSS |
 | `@xdev-asia/ui/tokens.css` | tokens only (CSS custom properties, dark + light) |
 | `@xdev-asia/ui/tokens.json` | token source |
@@ -43,7 +43,7 @@ import { Button, TabStrip, BrandMark } from "@xdev-asia/ui";
 | `@xdev-asia/ui/ai-manifest.json` | components, props, classes, tokens, icons, guidelines as JSON |
 | `@xdev-asia/ui/llms.txt`, `llms-full.txt` | the same for LLMs ([llmstxt.org](https://llmstxt.org)) |
 
-Components: ActionTile, ActivityBar, AgentChip, Avatar, Badge, Banner, BrandMark, Breadcrumb, Button, Card, Checkbox, CodeBlock, Comment, CommandPalette, CommitGraph, Dialog, DiffStat, Disclosure, EmptyState, Field, FieldMessage, FileIcon, FilterChip, FontField, Heatmap, Icon, IconButton, Kbd, ListRow, Menu, Meter, NavList, PanZoom, Popover, RadioGroup, ReactionBar, SearchInput, SearchPicker, Segmented, Select, SettingRow, Spinner, SplitHandle, StatusBar, StatusDot, Switch, TabStrip, Tabs, Tag, Textarea, ThemeSwitch, Toast, Toolbar, Tooltip, TreeView, ZoomBar. Rules per component: `src/components/<Name>/README.md`. Brand book: [docs/brand.md](docs/brand.md). Foundations: [docs/design-system.md](docs/design-system.md).
+Components: ActionTile, ActivityBar, AgentChip, AppShell, Avatar, Badge, Banner, BrandMark, Breadcrumb, Button, Card, Checkbox, CodeBlock, CommandPalette, Comment, CommitGraph, DataTable, DescriptionList, Dialog, DiffStat, Disclosure, EmptyState, Field, FieldMessage, FileIcon, FilterChip, FontField, FormSection, Heatmap, Icon, IconButton, Kbd, ListRow, Menu, Meter, NavList, PageHeader, Pagination, PanZoom, Popover, RadioGroup, ReactionBar, SearchInput, SearchPicker, Segmented, Select, SettingRow, Spinner, SplitHandle, StatTile, StatusBar, StatusDot, Switch, Tabs, TabStrip, Tag, Textarea, ThemeSwitch, Toast, Toolbar, Tooltip, TreeView, ZoomBar. Rules per component: `src/components/<Name>/README.md`. Brand book: [docs/brand.md](docs/brand.md). Foundations: [docs/design-system.md](docs/design-system.md).
 
 ## AI agents (MCP)
 
@@ -67,14 +67,27 @@ claude mcp add xdev-ui -- npx -y --package=@xdev-asia/ui xdev-ui-mcp
 
 | tool | returns |
 |---|---|
-| `xdevui_list_components` | 56 components by group, with summary |
+| `xdevui_list_components` | 63 components by group, with summary |
 | `xdevui_get_component` | README rules, exported prop types, CSS classes, import line |
 | `xdevui_search_tokens` | tokens by name, usage or category, with dark/light values |
-| `xdevui_get_guidelines` | setup, voice, visual foundations, iconography, brand |
+| `xdevui_get_guidelines` | setup, voice, visual foundations, iconography, layout, data and forms, agent skills, brand |
 | `xdevui_list_icons` | valid `IconName` values |
 | `xdevui_search_docs` | matching sections across all docs |
+| `xdevui_get_skill` | an agent skill: list, `SKILL.md` with its files, or one file |
 
-Resources: `xdev-ui://components/{name}`, `xdev-ui://guidelines/{topic}`, `xdev-ui://tokens`. Prompt: `xdevui_build_ui`. Agent rules: [AGENTS.md](AGENTS.md). No MCP client: <https://ui.xdev.asia/llms-full.txt>.
+Resources: `xdev-ui://components/{name}`, `xdev-ui://guidelines/{topic}`, `xdev-ui://skills/{name}`, `xdev-ui://tokens`. Prompts: `xdevui_build_ui`, `xdevui_build_app`, `xdevui_build_admin`. Agent rules: [AGENTS.md](AGENTS.md). No MCP client: <https://ui.xdev.asia/llms-full.txt>.
+
+## Agent skills
+
+Three skills teach a coding agent to build with the library: `xdev-ui-build-app` (app shell, theme, i18n, routing, states), `xdev-ui-admin` (dashboards, lists, forms, roles, settings, audit log) and `xdev-ui-review` (rules audit). They live in `skills/` and ship in the package.
+
+```bash
+npx xdev-ui-skills install                 # .claude/skills in this project
+npx xdev-ui-skills install --codex --user  # ~/.agents/skills
+npx xdev-ui-skills create admin my-console # a Vite app from the admin template
+```
+
+Or in Claude Code: `/plugin marketplace add xdev-asia/xdev-ui`, then `/plugin install xdev-ui@xdev-asia`. `examples/admin` is a full console (sign-in, dashboard, users, roles, settings, audit log) in en and vi; run it with `pnpm example:admin`.
 
 ## Develop
 

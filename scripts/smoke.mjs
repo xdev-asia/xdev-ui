@@ -60,6 +60,14 @@ const cases = {
   Tooltip: [{ content: "Copy path" }, h("button", { type: "button" }, "Copy")],
   SplitHandle: [{ direction: "horizontal", value: 240, min: 160, max: 420, onResize() {} }],
   Toolbar: [{ title: "Changes", count: 12, actions: h("button", { type: "button" }, "Stage all") }],
+  Avatar: [{ name: "Trần Thị B" }],
+  AppShell: [{ nav: h("nav", { "aria-label": "Main" }, "Overview"), crumbs: "Overview" }, "Page"],
+  PageHeader: [{ title: "Users", description: "People who can sign in.", meta: "Active", actions: h("button", { type: "button" }, "Create user") }],
+  FormSection: [{ title: "Profile", description: "Shown to teammates.", columns: 2, actions: h("button", { type: "button" }, "Save changes") }, h("input", { "aria-label": "Name" })],
+  DescriptionList: [{ items: [{ term: "Email", value: "ada@example.com", mono: true }, { term: "Role", value: "Owner" }] }],
+  StatTile: [{ label: "Active users", value: "1,284", delta: "+12%", deltaTrend: "up", deltaTone: "good", hint: "vs last 7 days" }],
+  DataTable: [{ caption: "Users", rowKey: (r) => r.id, rows: [{ id: "1", name: "Ada" }], columns: [{ key: "name", header: "Name", sortable: true, cell: (r) => r.name }], selected: new Set(), onSelectedChange() {} }],
+  Pagination: [{ page: 2, pageSize: 20, total: 57, onPageChange() {}, pageSizeOptions: [10, 20, 50], onPageSizeChange() {} }],
 };
 let fail = 0;
 for (const [name, [props, child]] of Object.entries(cases)) {

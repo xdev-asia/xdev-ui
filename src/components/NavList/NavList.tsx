@@ -1,9 +1,13 @@
 import type { JSX, ReactNode } from "react";
 import { cx } from "../../internal/cx";
+import type { IconName } from "../../icons";
+import { Icon } from "../Icon/Icon";
 
 export interface NavListItem {
   id: string;
   label: ReactNode;
+  /** 16px icon before the label. */
+  icon?: IconName;
   /** Count after the label, e.g. settings that match a search. */
   count?: number;
   /** Renders a link instead of a button. */
@@ -38,6 +42,7 @@ export function NavList({ items, value, onSelect, title, labels, className }: Na
         const current = it.id === value ? "page" : undefined;
         const body = (
           <>
+            {it.icon ? <Icon name={it.icon} size={16} className="settings-nav-icon" /> : null}
             <span className="settings-nav-label">{it.label}</span>
             {it.count != null ? <span className="settings-nav-count">{it.count}</span> : null}
           </>

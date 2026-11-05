@@ -18,6 +18,11 @@
 .ws-dot[data-pr="merged"] { background: var(--accent); }
 .ws-dot[data-pr="closed"], .ws-dot[data-check="fail"], .ws-dot[data-check="cancel"] { background: var(--danger); }
 .ws-dot[data-check="pending"] { background: var(--warn); }
+.ws-dot[data-tone="ok"] { background: var(--ok); }
+.ws-dot[data-tone="warn"] { background: var(--warn); }
+.ws-dot[data-tone="danger"] { background: var(--danger); }
+.ws-dot[data-tone="accent"] { background: var(--accent); }
+.ws-dot[data-tone="neutral"] { background: transparent; border: 1.5px solid var(--text-2); }
 .ws-pulse { animation: ws-pulse 1.4s ease-in-out infinite; }
 @keyframes ws-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 @media (prefers-reduced-motion: reduce) { .ws-pulse { animation: none; } }

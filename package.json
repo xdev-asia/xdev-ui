@@ -13,6 +13,8 @@
   ],
   "files": [
     "dist",
+    "skills",
+    "bin",
     "assets/brand",
     "README.md",
     "AGENTS.md"
@@ -50,7 +52,7 @@
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com",
-    "access": "restricted"
+    "access": "public"
   },
   "scripts": {
     "tokens": "node scripts/build-tokens.mjs",
@@ -60,7 +62,9 @@
     "dev": "node scripts/build-tokens.mjs && vite --config vite.demo.config.ts",
     "build:demo": "node scripts/build-tokens.mjs && node scripts/build-ai.mjs && vite build --config vite.demo.config.ts && storybook build -o dist-demo/storybook --quiet && node scripts/postbuild.mjs --demo",
     "mcp": "node dist/mcp.js",
-    "test": "node scripts/build-tokens.mjs && vitest run",
+    "test": "node scripts/build-tokens.mjs && node scripts/build-ai.mjs && vitest run",
+    "example:admin": "node scripts/build-tokens.mjs && vite --config examples/admin/vite.config.ts",
+    "build:example:admin": "node scripts/build-tokens.mjs && vite build --config examples/admin/vite.config.ts",
     "test:dist": "node scripts/smoke.mjs && node scripts/mcp-smoke.mjs",
     "storybook": "node scripts/build-tokens.mjs && storybook dev -p 6006 --no-open"
   },
@@ -92,7 +96,8 @@
   },
   "packageManager": "pnpm@12.14.0",
   "bin": {
-    "xdev-ui-mcp": "./dist/mcp.js"
+    "xdev-ui-mcp": "./dist/mcp.js",
+    "xdev-ui-skills": "./bin/xdev-ui-skills.mjs"
   },
   "keywords": [
     "design-system",

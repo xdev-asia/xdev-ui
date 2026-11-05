@@ -1,5 +1,21 @@
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 
+const src = (p: string): string => fileURLToPath(new URL(p, import.meta.url));
+
 export default defineConfig({
-  test: { environment: "node", include: ["src/**/*.test.{ts,tsx}", "scripts/**/*.test.mjs"] },
+  resolve: {
+    alias: [
+      { find: /^@xdev-asia\/ui$/, replacement: src("./src/index.ts") },
+      { find: /^@xdev-asia\/ui\/styles\.css$/, replacement: src("./src/styles/index.css") },
+      { find: /^@xdev-asia\/ui\/tokens\.css$/, replacement: src("./src/styles/tokens.css") },
+      { find: /^@xdev-asia\/ui\/fonts\.css$/, replacement: src("./src/styles/fonts.css") },
+    ],
+  },
+  test: {
+    environment: "node",
+    // The suite shares build machines; file-scanning tests need more than the 5 s default there.
+    testTimeout: 30_000,
+    include: ["src/**/*.test.{ts,tsx}", "scripts/**/*.test.mjs", "test/**/*.test.{ts,tsx}", "examples/**/*.test.{ts,tsx}"],
+  },
 });

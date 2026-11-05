@@ -39,6 +39,36 @@ Inside a workspace surface, `.x-ws` remaps the semantic layer onto graphite, so 
 - The set: `docs changes tasks squads agents kit accounts terminal` (from ActivityBar.tsx) plus `warn close plus search more branch chevron-left chevron-right magnifier prompt folder file check alert warn-dash restore history bot download copy plug lock swap list-checks workflow`.
 - The brand mark (logo v9) is a round-capped `Ã—` plus the agent cursor in `--brand-agent` `#ff7a3d`: a prompt waiting for input. The `Ã—` follows the surface colour; the cursor is always orange.
 
+## Layout
+
+- **One shell per app.** `AppShell` holds the brand, the `NavList` groups, the `Breadcrumb` and account actions in the top bar, and the page in `<main>`. `ActivityBar` is for the xDev workspace rail, not for page navigation.
+- **Drawer below 768px.** The sidebar becomes a drawer: control it with `navOpen` and `onNavOpenChange`, close it when an item is chosen, and let Escape close it.
+- **One `PageHeader` per page.** It renders the page's only `h1`; actions sit at the end with the primary one last, and wrap under the title on narrow screens.
+- **`FormSection` groups fields.** A heading, an optional description, fields in one column (two above 480px with `columns={2}`) and the Save and Cancel actions at the end.
+- **Design for 360px.** No horizontal page scroll. Widths come from `%`, `ch`, `rem` and the space tokens; rows of controls use `flex-wrap`. A `DataTable` scrolls inside its own wrapper and drops its `hideNarrow` columns.
+- **Hairlines divide regions.** Cards and rows are separated by 1px `--line`, not by shadows or coloured edges.
+
+## Data and forms
+
+- **Lists.** A `DataTable` has a `caption`, sortable columns, optional row selection and a `labels` object for each language. Pair it with `SearchInput`, `FilterChip` (with counts) and `Pagination`; reset to page 1 when a filter changes. Put filtering, sorting and paging in pure functions (`sortTableRows`, `paginateRows`) and test them.
+- **Summaries.** `StatTile` shows one number with an optional delta; the caller decides whether up is good (`deltaTone`). Use `Meter` for a share of a limit and `DescriptionList` for the facts of one record.
+- **Forms.** Validate in a pure function and show the message through `Field` `error`, which replaces the hint. Save stays disabled until the form changes and while it saves; Cancel is secondary and comes first. A `Switch` applies at once and does not belong in a form with Save.
+- **Destructive actions.** A modal `Dialog` with `alert` names the thing removed and has the primary confirm button last.
+- **Three states per page.** Loading (`Spinner`, or `loading` on `DataTable` and `StatTile`), error (`Banner` with a secondary "Try again") and empty (`EmptyState` naming the search text when filters match nothing). Confirm saves with a `Toast`.
+- **Permissions.** Hide an action the role can never use; disable one the role may see but not use now, and say why. The server checks again.
+
+## Agent skills
+
+The package ships three skills in `skills/`, in the open Agent Skills format (a `SKILL.md` with `name`, `description` and `license`, plus `references/` and `templates/`):
+
+| skill | use it to |
+|---|---|
+| `xdev-ui-build-app` | start an app: shell, theme, i18n, routing, states; template `templates/app` |
+| `xdev-ui-admin` | build console screens: dashboard, lists, detail, forms, roles, settings, audit log; template `templates/admin` |
+| `xdev-ui-review` | audit a UI with `scripts/audit.mjs` (tokens, stripes, primary buttons, en and vi parity) and a manual checklist |
+
+Install them with `npx xdev-ui-skills install` (`--codex`, `--cursor`, `--user`, `--dir <path>`, `--skill <name>`, `--force`, `--dry-run`), scaffold an app with `npx xdev-ui-skills create app|admin <dir>`, or add the Claude Code plugin: `/plugin marketplace add xdev-asia/xdev-ui`, then `/plugin install xdev-ui@xdev-asia`. Agents without a file install read a skill through the MCP tool `xdevui_get_skill`, or use the prompts `xdevui_build_app` and `xdevui_build_admin`.
+
 ## Components
 
 | group | components |
@@ -50,5 +80,7 @@ Inside a workspace surface, `.x-ws` remaps the semantic layer onto graphite, so 
 | Navigation | TabStrip, ActivityBar, StatusBar, Tabs, NavList, Breadcrumb, TreeView, Disclosure, SplitHandle, Toolbar |
 | Overlays | Menu, Dialog, CommandPalette, Popover, Tooltip |
 | Brand | BrandMark, Icon, FileIcon |
+| Layout | AppShell, PageHeader, FormSection |
+| Data | DescriptionList, StatTile, DataTable, Pagination |
 
 Each component folder has its rules in `README.md`; props are the exported `*Props` types.

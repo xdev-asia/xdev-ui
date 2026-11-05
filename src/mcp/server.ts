@@ -6,13 +6,14 @@
 import { McpServer, ProtocolError, ProtocolErrorCode, ResourceTemplate } from "@modelcontextprotocol/server";
 import { serveStdio } from "@modelcontextprotocol/server/stdio";
 import * as z from "zod/v4";
-import { loadManifest, type ComponentDoc, type TokenDoc } from "./manifest";
+import { loadManifest, type ComponentDoc, type SkillDoc, type TokenDoc } from "./manifest";
 
 const M = loadManifest();
 const CHARACTER_LIMIT = 25_000;
 const READ_ONLY = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false } as const;
 const GROUPS = [...new Set(M.components.map((c) => c.group))];
 const CATEGORIES = [...new Set(M.tokens.map((t) => t.category))];
+const SKILL_NAMES = M.skills.map((s) => s.name);
 const TOPICS = ["setup", ...Object.keys(M.guidelines)];
 
 const Format = z.enum(["markdown", "json"]).default("markdown").describe("'markdown' for reading, 'json' for structured data");
@@ -59,6 +60,18 @@ function componentMarkdown(c: ComponentDoc): string {
     "",
     `CSS classes: ${c.classes.map((k) => `\`.${k}\``).join(" ") || "none"}`,
   ].join("\n");
+}
+
+function findSkill(name: string): SkillDoc | undefined {
+  return M.skills.find((s) => s.name === name.trim().toLowerCase());
+}
+
+function clip(t: string): string {
+  return t.length <= CHARACTER_LIMIT ? t : `${t.slice(0, CHARACTER_LIMIT)}\n\n[cut at ${CHARACTER_LIMIT} characters]`;
+}
+
+function skillMarkdown(s: SkillDoc): string {
+  return `# ${s.name}\n\n${s.description}\n\n${s.body}\n\n## Files\n\n${s.files.map((f) => `- ${f.path}`).join("\n")}\n\nRead one with xdevui_get_skill name="${s.name}" file="<path>".`;
 }
 
 function guideline(topic: string): string | undefined {
@@ -245,6 +258,36 @@ Use xdevui_get_component or xdevui_get_guidelines to read a whole source.`,
     },
   );
 
+  server.registerTool(
+    "xdevui_get_skill",
+    {
+      title: "Get skill",
+      description: `Read an agent skill that ships with ${M.package}: ${SKILL_NAMES.join(", ")}.
+
+  - no arguments: list the skills with their descriptions
+  - name: the skill's SKILL.md and the list of its files
+  - name and file: one file of the skill, e.g. file="references/resource-list.md" or a template file
+Use xdev-ui-build-app to start an app, xdev-ui-admin for back-office screens and xdev-ui-review to audit a UI.`,
+      inputSchema: z.strictObject({
+        name: z.string().max(40).optional().describe(`Skill name, one of: ${SKILL_NAMES.join(", ")}`),
+        file: z.string().max(200).optional().describe("Path inside the skill, from the file list, e.g. references/setup.md"),
+      }),
+      annotations: READ_ONLY,
+    },
+    async ({ name, file }) => {
+      if (!name) {
+        if (file) return fail("Pass name together with file.");
+        return text(SKILL_NAMES.length ? `# Skills\n\n${M.skills.map((s) => `- **${s.name}**: ${s.description}`).join("\n")}\n\nNext: xdevui_get_skill name="<name>".` : "This build ships no skills.");
+      }
+      const s = findSkill(name);
+      if (!s) return fail(`No skill "${name}". Available: ${SKILL_NAMES.join(", ")}.`);
+      if (!file) return text(clip(skillMarkdown(s)));
+      const f = s.files.find((x) => x.path === file.replace(/^\.?\//, ""));
+      if (!f) return fail(`No file "${file}" in ${s.name}. Files: ${s.files.map((x) => x.path).join(", ")}.`);
+      return text(clip(f.text));
+    },
+  );
+
   // Resources: the same data for clients that attach context instead of calling tools.
   server.registerResource(
     "component",
@@ -273,6 +316,21 @@ Use xdevui_get_component or xdevui_get_guidelines to read a whole source.`,
       const body = guideline(String(topic));
       if (!body) throw new ProtocolError(ProtocolErrorCode.InvalidParams, `Unknown topic "${String(topic)}"; use ${TOPICS.join(", ")}`);
       return { contents: [{ uri: uri.href, mimeType: "text/markdown", text: body }] };
+    },
+  );
+
+  server.registerResource(
+    "skill",
+    new ResourceTemplate("xdev-ui://skills/{name}", {
+      list: async () => ({
+        resources: M.skills.map((sk) => ({ uri: `xdev-ui://skills/${sk.name}`, name: sk.name, description: sk.description, mimeType: "text/markdown" })),
+      }),
+    }),
+    { title: "Skill", description: "SKILL.md and file list of one agent skill", mimeType: "text/markdown" },
+    async (uri, { name }) => {
+      const sk = findSkill(String(name));
+      if (!sk) throw new ProtocolError(ProtocolErrorCode.InvalidParams, `Unknown skill "${String(name)}"; use ${SKILL_NAMES.join(", ")}`);
+      return { contents: [{ uri: uri.href, mimeType: "text/markdown", text: clip(skillMarkdown(sk)) }] };
     },
   );
 
@@ -308,6 +366,30 @@ Use xdevui_get_component or xdevui_get_guidelines to read a whole source.`,
       ],
     }),
   );
+
+  const skillPrompt = (name: string, title: string, description: string, what: string, create: string) =>
+    server.registerPrompt(
+      name,
+      { title, description, argsSchema: z.object({ task: z.string().describe(what) }) },
+      async ({ task }) => ({
+        messages: [
+          {
+            role: "user",
+            content: {
+              type: "text",
+              text: `${task}
+
+1. xdevui_get_skill name="${create}" and follow its steps.
+2. Scaffold with \`xdev-ui-skills create ${create === "xdev-ui-admin" ? "admin" : "app"} <dir>\` when the project is new.
+3. xdevui_get_component for every part you use; only the props it returns. xdevui_search_tokens for every colour, space and type size.
+4. Run \`node <skill-dir>/scripts/audit.mjs src --i18n src/i18n\` from the xdev-ui-review skill and fix every error.`,
+            },
+          },
+        ],
+      }),
+    );
+  skillPrompt("xdevui_build_app", "Build an app with xdev-ui", "Start or extend an app: shell, theme, i18n, routing and states", "What to build, e.g. 'notes app with a settings page'", "xdev-ui-build-app");
+  skillPrompt("xdevui_build_admin", "Build admin screens with xdev-ui", "Build a console, dashboard or CRUD screen", "What to build, e.g. 'invoices list with filters and a detail page'", "xdev-ui-admin");
 
   return server;
 }

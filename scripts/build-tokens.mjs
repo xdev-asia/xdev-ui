@@ -24,6 +24,11 @@ for (const [k, v] of Object.entries(t.type.families ?? {})) {
   add(`font-${k}`, v);
   add(`x-font-${k}`, `{font-${k}}`); // alias: the xDev app uses the x- prefixed names
 }
+for (const group of t.type.groups ?? []) {
+  for (const st of group.styles ?? []) {
+    add(`type-${st.name}`, `${st.fontWeight ?? 400} ${st.fontSize}${st.lineHeight ? `/${st.lineHeight}` : ""} var(--font-${group.family})`);
+  }
+}
 for (const group of ["spacing", "radius", "size", "shadow"]) for (const tok of t[group]?.tokens ?? []) add(tok.name, tok.value);
 
 const [first, ...rest] = themes;
