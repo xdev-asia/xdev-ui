@@ -1,0 +1,16 @@
+{
+  "name": "xdev-ui",
+  "description": "Agent skills for building apps and admin consoles on the @xdev-asia/ui design system, and for auditing them against its rules.",
+  "author": {
+    "name": "xdev-asia"
+  },
+  "homepage": "https://ui.xdev.asia",
+  "repository": "https://github.com/xdev-asia/xdev-ui",
+  "license": "Apache-2.0",
+  "keywords": [
+    "design-system",
+    "react",
+    "admin",
+    "skills"
+  ]
+}

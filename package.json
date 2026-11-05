@@ -13,6 +13,8 @@
   ],
   "files": [
     "dist",
+    "skills",
+    "bin",
     "assets/brand",
     "README.md",
     "AGENTS.md"

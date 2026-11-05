@@ -1,0 +1,13 @@
+{
+  "name": "xdev-asia",
+  "owner": {
+    "name": "xdev-asia"
+  },
+  "plugins": [
+    {
+      "name": "xdev-ui",
+      "source": "./",
+      "description": "Build apps and admin consoles with @xdev-asia/ui and audit them against the design-system rules."
+    }
+  ]
+}
