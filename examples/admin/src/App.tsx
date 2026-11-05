@@ -12,6 +12,7 @@ import { CreateUserDialog } from "./dialogs/CreateUserDialog";
 import { DeleteUsersDialog } from "./dialogs/DeleteUsersDialog";
 import { DashboardPage } from "./pages/Dashboard";
 import { NotFoundPage } from "./pages/NotFound";
+import { RolesPage } from "./pages/Roles";
 import { UserDetailPage } from "./pages/UserDetail";
 import { UsersPage } from "./pages/Users";
 import type { User } from "./data/seed";
@@ -26,9 +27,10 @@ interface RoutesProps {
   roles: Role[];
   version: number;
   openDialog: (d: Dialog) => void;
+  onRolesChanged: () => void;
 }
 
-function Routes({ session, roles, version, openDialog }: RoutesProps): JSX.Element {
+function Routes({ session, roles, version, openDialog, onRolesChanged }: RoutesProps): JSX.Element {
   const route = useRoute();
   const onDelete = (users: Pick<User, "id" | "name">[], done: () => void): void => openDialog({ kind: "delete", users, done });
   switch (route.name) {
@@ -38,6 +40,8 @@ function Routes({ session, roles, version, openDialog }: RoutesProps): JSX.Eleme
       return <UserDetailPage key={route.params.id} id={route.params.id} session={session} roles={roles} onDelete={onDelete} />;
     case "dashboard":
       return <DashboardPage />;
+    case "roles":
+      return <RolesPage session={session} roles={roles} onRolesChanged={onRolesChanged} />;
     default:
       return <NotFoundPage />;
   }
@@ -136,7 +140,7 @@ export function App(): JSX.Element {
             <SignInPage onSignedIn={signIn} theme={theme} onThemeChange={setTheme} />
           ) : (
             <Shell route={route} session={session} roles={roles} toasts={toasts} onSignOut={signOut}>
-              <Routes session={session} roles={roles} version={version} openDialog={setDialog} />
+              <Routes session={session} roles={roles} version={version} openDialog={setDialog} onRolesChanged={() => store.listRoles().then(setRoles, () => {})} />
               <Dialogs dialog={dialog} busy={busy} setBusy={setBusy} close={() => setDialog(null)} changed={() => setVersion((n) => n + 1)} />
             </Shell>
           )}
