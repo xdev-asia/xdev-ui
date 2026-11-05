@@ -29,7 +29,7 @@ The review audit rules `focus-outline`, `forced-colors`, `positive-tabindex`, `i
 1. Pick the APG pattern for every interactive part from [patterns](references/patterns.md). If no pattern fits, use a native element (`button`, `input`, `select`, `a`) instead of a custom role.
 2. Take the platform decisions from [platforms](references/platforms.md): dialog button order, capitalization, shortcuts, window controls.
 3. Name the four states of each region: empty, loading, error and done. Check them against heuristics 1, 3, 5 and 9 in [heuristics checklist](references/heuristics-checklist.md).
-4. Use colour tokens only. Text tokens on their grounds pass 4.5:1. The known exceptions (`--text-3`, `--line`, `--x-color-line`) are listed in the standards map. Do not use them for text a user must read or as the only boundary of a control.
+4. Use colour tokens only. Text tokens on their grounds pass 4.5:1. The known exceptions (`--line`, `--x-color-line`) are decorative hairlines listed in the standards map. Do not use them as the only boundary of a control: use `--line-strong` or `--x-color-line-strong`.
 
 ## 2. Build
 

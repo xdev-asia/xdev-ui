@@ -188,11 +188,35 @@ describe("audit: token contrast", () => {
     expect(report.length).toBeGreaterThan(100);
     expect(report.filter((p) => p.level === "error" && !p.pass).map((p) => `${p.fg}/${p.bg}/${p.theme} ${p.ratio.toFixed(2)}`)).toEqual([]);
   });
+  it("text-3 reaches 4.5:1 and line-strong 3:1 on every ground in both themes", () => {
+    const tokens = JSON.parse(readFileSync(manifest, "utf8")).tokens;
+    const report = contrastReport(tokens) as { fg: string; bg: string; theme: string; ratio: number }[];
+    const of = (fg: string) => report.filter((p) => p.fg === fg);
+    for (const fg of ["text-3"]) {
+      expect(of(fg).map((p) => p.bg).sort()).toEqual(["bg-0", "bg-1", "bg-2", "bg-3", "side-tint", "term"].flatMap((b) => [b, b]).sort());
+      expect(of(fg).filter((p) => p.ratio < 4.5).map((p) => `${p.bg}/${p.theme} ${p.ratio.toFixed(2)}`)).toEqual([]);
+    }
+    for (const fg of ["line-strong", "x-color-line-strong"]) {
+      expect(of(fg).length).toBeGreaterThanOrEqual(8);
+      expect(of(fg).filter((p) => p.ratio < 3).map((p) => `${fg}/${p.bg}/${p.theme} ${p.ratio.toFixed(2)}`)).toEqual([]);
+    }
+  });
+  it("keeps the hairline tokens and strengthens them under prefers-contrast: more", () => {
+    const css = readFileSync(resolve(here, "../src/styles/tokens.css"), "utf8");
+    const tokens = JSON.parse(readFileSync(resolve(here, "../tokens/tokens.json"), "utf8"));
+    const line = tokens.color.tokens.find((t: { name: string }) => t.name === "line");
+    expect(line.value).toEqual({ dark: "#232329", light: "#dedee3" });
+    const more = css.slice(css.indexOf("@media (prefers-contrast: more)"));
+    expect(more).toContain("--line: var(--line-strong)");
+    expect(more).toContain("--x-color-line: var(--x-color-line-strong)");
+    expect(more).toMatch(/--text-2: color-mix/);
+    expect(more).toMatch(/--text-3: color-mix/);
+  });
   it("is opt-in and reports known exceptions as warnings", () => {
     expect(run("good", { i18n: fx("good/i18n") }).some((x) => x.rule === "contrast")).toBe(false);
     const f = audit(fx("good"), { manifest, contrast: true }).findings as Finding[];
     const c = f.filter((x) => x.rule === "contrast");
     expect(c.length).toBeGreaterThan(0);
-    expect(c.every((x) => x.level === "warn" && /^(text-3|line|x-color-line) /.test(x.message))).toBe(true);
+    expect(c.every((x) => x.level === "warn" && /^(line|x-color-line) /.test(x.message))).toBe(true);
   });
 });

@@ -37,7 +37,7 @@ One row per rule: the source, what it means in xDev, and the pass or fail check.
 | id | rule | source | in xDev | check |
 |---|---|---|---|---|
 | C1 | Contrast is `(L1 + 0.05) / (L2 + 0.05)` with sRGB linearised at 0.04045; never round, 4.499:1 fails | WCAG glossary; Understanding `contrast-minimum` | Translucent grounds are composited over their base before measuring | audit `contrast` uses this formula |
-| C2 | Text and images of text 4.5:1; large text (24px, or 18.5px bold) 3:1; inactive, decorative and logo text exempt | WCAG 1.4.3 AA; Understanding `contrast-minimum` | Body, label and hint text use `--text-1`, `--text-2`, `--x-color-ink` or `--x-color-muted`. `--text-3` fails 4.5:1 and is allowed only on disabled controls or decoration | audit `--contrast`; by hand for text on tints and images |
+| C2 | Text and images of text 4.5:1; large text (24px, or 18.5px bold) 3:1; inactive, decorative and logo text exempt | WCAG 1.4.3 AA; Understanding `contrast-minimum` | Body, label and hint text use `--text-1`, `--text-2`, `--x-color-ink` or `--x-color-muted`. `--text-3` now passes 4.5:1 on every ground (it is the quietest text step) | audit `--contrast`; by hand for text on tints and images |
 | C3 | Parts needed to identify a control or its state, focus indicators and needed graphics 3:1 against adjacent colours; inactive controls exempt | WCAG 1.4.11 AA; Understanding `non-text-contrast` | `--line` and `--x-color-line` are below 3:1. A field or control whose only boundary is that hairline fails; text or an icon that identifies it passes | audit `--contrast` (warn); by hand per control |
 | C4 | The focus ring is a UI component state, so it needs 3:1 | Understanding `non-text-contrast` | `--x-color-focus` passes on every ground in both themes | audit `--contrast` (error level) |
 | C5 | Information is not conveyed by colour alone | Understanding `error-identification` (errors must be in text) | A `StatusDot` has a text label or a tooltip with the state; errors use `Field` `error` text | by hand |
@@ -107,7 +107,7 @@ One row per rule: the source, what it means in xDev, and the pass or fail check.
 | M1 | Motion triggered by interaction can be turned off unless essential; colour, blur and opacity changes are not motion | WCAG 2.3.3 AAA (adopted as a goal); Understanding `animation-from-interactions` | Slides, scales and spins stop under reduced motion; fades may stay | audit `reduced-motion` |
 | M2 | Test: turn on reduced motion in the OS; each motion is either essential or suppressed | C39 | A `Spinner` is essential progress feedback [Inference]; it may keep turning | by hand on macOS (Reduce motion) and Windows 11 (Animation effects) |
 | M3 | `prefers-reduced-motion` has `no-preference` and `reduce`; the bare query means `reduce` | MDN reduced motion | A single universal guard in the app's base CSS counts for every file | audit `reduced-motion` accepts either form |
-| M4 | `prefers-contrast` has `no-preference`, `more`, `less` and `custom`; `custom` matches forced colours | MDN contrast | Raising `--line` and `--text-3` under `more` is the expected fix for C2 and C3; not shipped yet | by hand |
+| M4 | `prefers-contrast` has `no-preference`, `more`, `less` and `custom`; `custom` matches forced colours | MDN contrast | The token build ships a `prefers-contrast: more` block that maps `--line` to `--line-strong` and strengthens `--text-2`, `--text-3` and `--x-color-muted` | by hand |
 | M5 | Under `forced-colors: active` the browser forces `color`, `background-color`, `border-color`, `outline-color` and SVG `fill` and `stroke`, and sets `box-shadow` and `text-shadow` to none | MDN forced colours | A focus ring or state drawn only with `box-shadow` disappears. A transparent `outline` next to the shadow becomes visible because its colour is forced [Inference] | audit `forced-colors` |
 | M6 | Fix forced colours with system colours (`Canvas`, `CanvasText`, `ButtonText`, `ButtonBorder`, `Highlight`, `HighlightText`, `GrayText` for disabled); use `forced-color-adjust: none` only for small parts | MDN forced colours; MDN system colours | Selected rows use `Highlight` and `HighlightText`; disabled text `GrayText` | by hand with a Windows contrast theme |
 
@@ -130,13 +130,10 @@ These come from the VS Code UX guidelines. They are advice for a developer tool,
 
 ## Token contrast results
 
-Measured with the C1 formula over the dark and light values in `ai-manifest.json`. Every pair at error level passes (body and muted text on every ground, signal colours on their tints, focus ring on nine grounds). These pairs fail; the audit reports them as warnings and the tokens are unchanged pending a design decision.
+Measured with the C1 formula over the dark and light values in `ai-manifest.json`. Every pair at error level passes, including `--text-3` on every ground and `--line-strong` (the control edge). The hairlines below are decorative and stay under 3:1; the audit reports them as warnings. A control whose border is its only boundary uses `--line-strong` or `--x-color-line-strong`.
 
 | pair | need | dark | light |
 |---|---|---|---|
-| `--text-3` on `--bg-0` | 4.5 | 3.26 | 3.11 |
-| `--text-3` on `--bg-1` | 4.5 | 3.15 | 3.42 |
-| `--text-3` on `--bg-2` | 4.5 | 2.99 | 3.42 |
 | `--line` on `--bg-0` | 3 | 1.26 | 1.22 |
 | `--line` on `--bg-1` | 3 | 1.22 | 1.34 |
 | `--line` on `--bg-2` | 3 | 1.15 | 1.34 |
