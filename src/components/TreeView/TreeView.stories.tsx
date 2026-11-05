@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { TreeView, type TreeRow } from "./TreeView";
+import { pathRows } from "./pathRows";
 
 interface Node {
   name: string;
@@ -64,5 +65,17 @@ export const Interactive: Story = {
         return next;
       });
     return <TreeView {...args} rows={flatten(repo, open)} selected={sel} onToggle={toggle} onOpen={setSel} />;
+  },
+};
+
+/** Folder chains merged into one row, with the file count of each folder. */
+export const Compact: Story = {
+  args: {
+    rows: pathRows(
+      [{ path: "apps/desktop/src/ports/PortsPanel.tsx", mark: "added" }, { path: "apps/desktop/src/ports/portsStore.ts" }, { path: "crates/xdev-ports/src/lib.rs", mark: "modified" }, { path: "README.md" }],
+      new Set(),
+      { compact: true },
+    ),
+    selected: "README.md",
   },
 };

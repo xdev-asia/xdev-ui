@@ -27,6 +27,11 @@ describe("TreeView", () => {
     expect(html).toContain('<span aria-hidden="true">A</span>');
     expect(html).toContain('<span class="x-sr-only">Changed</span>');
   });
+  it("shows the file count of a folder after its name", () => {
+    const html = renderToStaticMarkup(<TreeView rows={[{ id: "src/", depth: 0, name: "src", kind: "dir" as const, open: true, count: 4 }]} />);
+    expect(html).toContain('<span class="ws-tree-count">4</span>');
+    expect(renderToStaticMarkup(<TreeView rows={rows} />)).not.toContain("ws-tree-count");
+  });
   it("toggles dirs and opens files on click", () => {
     const onToggle = vi.fn();
     const onOpen = vi.fn();

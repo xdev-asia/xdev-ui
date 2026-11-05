@@ -16,6 +16,8 @@ export interface TreeRow {
   open?: boolean;
   /** Shows a dot for a dir that holds changed files. */
   changed?: boolean;
+  /** Dirs only: how many files are under it. Shown after the name. */
+  count?: number;
   /** Git status letter at the end of the row. */
   mark?: TreeMark;
 }
@@ -95,6 +97,7 @@ export function TreeView({ rows, selected, onToggle, onOpen, labels, className }
         >
           <FileIcon name={r.name} kind={r.kind} open={Boolean(r.open)} size={14} className="ws-tree-icon" />
           <span className="ws-tree-name">{r.name}</span>
+          {r.count !== undefined ? <span className="ws-tree-count">{r.count}</span> : null}
           {r.changed ? (
             <span className="ws-tree-dot">
               <span className="x-sr-only">{l.changed}</span>

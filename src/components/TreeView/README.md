@@ -3,7 +3,7 @@
 File tree over a flat list of visible rows, with git status marks and full keyboard support.
 
 ## Anatomy
-`div.ws-tree[role=tree]` > `button.ws-tree-row[role=treeitem]` > `.ws-tree-icon` (folder or file), `.ws-tree-name`, optional `.ws-tree-dot`, optional `.ws-tree-mark[data-kind]`.
+`div.ws-tree[role=tree]` > `button.ws-tree-row[role=treeitem]` > `.ws-tree-icon` (folder or file), `.ws-tree-name`, optional `.ws-tree-count` (a dir's file count, from `TreeRow.count`), optional `.ws-tree-dot`, optional `.ws-tree-mark[data-kind]`.
 
 ## Rules
 - Pass only visible rows, children right after their dir. The caller owns open state; `onToggle` flips it.
@@ -16,3 +16,5 @@ File tree over a flat list of visible rows, with git status marks and full keybo
 
 ## pathRows
 `pathRows(files, closed)` builds the visible rows from a flat `{ path, mark? }[]`: folders first, each level sorted by name, folder id `path/`, `changed` on folders that hold a marked file. `closed` is the set of folder ids whose children are hidden; the caller owns it and `onToggle` edits it.
+
+With `{ compact: true }` a chain of folders that each hold only the next one is one row (`a/b/c`) whose id is the deepest folder, and each folder row carries `count`, the number of files below it. Without the option the rows are unchanged.
