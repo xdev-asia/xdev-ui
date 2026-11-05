@@ -224,3 +224,6 @@ button.x-list-row-main:disabled { cursor: default; }
 .x-heatmap-legend { display: flex; align-items: center; gap: 3px; font: 11px var(--font-body); color: var(--x-color-muted); }
 .x-heatmap-legend span:first-child { margin-right: var(--x-space-1); }
 .x-heatmap-legend span:last-child { margin-left: var(--x-space-1); }
+
+/* CommitGraph: one row of lanes and a node */
+.x-commit-graph { display: block; flex: none; overflow: visible; }

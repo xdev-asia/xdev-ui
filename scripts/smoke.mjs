@@ -43,6 +43,7 @@ const cases = {
   NavList: [{ title: "Settings", items: [{ id: "general", label: "General" }], value: "general", onSelect() {} }],
   Breadcrumb: [{ items: [{ label: "xdev" }, { label: "fix-auth", mono: true }] }],
   TreeView: [{ rows: [{ id: "src", depth: 0, name: "src", kind: "dir", open: true }, { id: "src/a.ts", depth: 1, name: "a.ts", kind: "file", mark: "modified" }] }],
+  CommitGraph: [{ row: { input: [], output: [{ id: "b", color: 0 }], lane: 0, color: 0, kind: "commit" } }],
   Disclosure: [{ title: "Staged", count: 2 }, "a.ts"],
   ListRow: [{ title: "fix-auth", meta: "main", selected: true, onClick() {} }],
   Card: [{ title: "Worktree", subtitle: "~/code/xdev", monoSubtitle: true }, "Clean"],

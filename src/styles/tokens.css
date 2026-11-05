@@ -7,6 +7,14 @@
   --x-tab-color-6: var(--accent);
   --x-tab-color-8: var(--violet);
   --x-tab-color-10: var(--text-2);
+  --x-graph-head: var(--accent);
+  --x-graph-remote: var(--violet);
+  --x-graph-base: var(--orange);
+  --x-graph-lane-1: var(--warn);
+  --x-graph-lane-2: var(--ok);
+  --x-graph-lane-3: var(--signal);
+  --x-graph-lane-4: var(--danger);
+  --x-graph-lane-5: var(--text-2);
   --font-body: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
   --x-font-body: var(--font-body);
   --font-body-fallback: system-ui, sans-serif;
