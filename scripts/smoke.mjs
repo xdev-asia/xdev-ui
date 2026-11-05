@@ -14,6 +14,8 @@ const cases = {
   Switch: [{ label: "Auto-commit" }],
   Kbd: [{}, "Ctrl"],
   Avatar: [{ name: "Duy Tran" }],
+  PanZoom: [{ zoom: 1, x: 0, y: 0, label: "Image", onZoom() {}, onPan() {} }, "content"],
+  ZoomBar: [{ zoom: 100, onZoomOut() {}, onFit() {}, onZoomIn() {}, onActual() {} }],
   Badge: [{ status: "new" }, "new"],
   Tag: [{ tone: "warn" }, "dirty"],
   AgentChip: [{ profile: "claude" }],
