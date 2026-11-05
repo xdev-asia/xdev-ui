@@ -8,7 +8,7 @@
   height: 100dvh;
   background: var(--bg-0);
   color: var(--text-1);
-  font: 400 14px var(--font-body);
+  font: var(--type-body);
 }
 .x-skip-link {
   position: fixed;
@@ -39,7 +39,7 @@
 .x-shell-crumbs { flex: 1; min-width: 0; overflow: hidden; }
 .x-shell-actions { display: flex; align-items: center; gap: var(--x-space-2); flex: none; }
 .x-shell-main { flex: 1; min-height: 0; overflow: auto; padding: var(--x-space-6); }
-.x-shell-main:focus { outline: none; }
+.x-shell-main:focus:not(:focus-visible) { outline: none; }
 .x-shell-menu { display: none; }
 .x-shell-backdrop { display: none; }
 .x-shell-toasts { position: fixed; right: var(--x-space-4); bottom: var(--x-space-4); z-index: 50; }

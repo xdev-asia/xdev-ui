@@ -3,7 +3,7 @@
 Round picture of a person, or their initials when there is no picture.
 
 ## Anatomy
-`span.x-avatar[role=img][aria-label=name][data-size]` > `img.x-avatar-img[alt=""]` or `span.x-avatar-initials[aria-hidden]`.
+`span.x-avatar[role=img][aria-label=name][data-size]` > `img.x-avatar-img[alt=""]` or `span.x-avatar-initials[aria-hidden]`. Sizes: `sm`, `md`, `lg` (tokens `--avatar-sm`, `--avatar-md`, `--avatar-lg` and `--type-avatar-*`). `avatarInitials(name)` is exported.
 
 ## Rules
 - `name` is required: it gives the initials and the accessible label. The image itself has an empty `alt`.

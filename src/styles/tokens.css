@@ -31,6 +31,9 @@
   --type-status: 400 11.5px var(--font-body);
   --type-badge: 600 11px/1.5 var(--font-body);
   --type-tag: 400 10px var(--font-body);
+  --type-avatar-sm: 600 8px/1 var(--font-body);
+  --type-avatar-md: 600 13px/1 var(--font-body);
+  --type-avatar-lg: 600 19px/1 var(--font-body);
   --type-mono: 400 12px var(--font-mono);
   --type-mono-stat: 400 10px var(--font-mono);
   --type-stat: 600 22px/1.2 var(--font-mono);
@@ -51,6 +54,9 @@
   --h-footer: 26px;
   --w-side: 296px;
   --w-panel: 300px;
+  --avatar-sm: 20px;
+  --avatar-md: 32px;
+  --avatar-lg: 48px;
 }
 :root,
 [data-theme="dark"] {

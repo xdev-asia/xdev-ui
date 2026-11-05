@@ -65,6 +65,19 @@ describe("audit: one bad fixture per rule", () => {
   });
 });
 
+describe("audit: focus-outline exemption", () => {
+  it("allows outline: none only under :not(:focus-visible)", () => {
+    const dir = mkdtempSync(join(tmpdir(), "xdev-audit-"));
+    try {
+      writeFileSync(join(dir, "a.css"), ".a:focus:not(:focus-visible) { outline: none; }\n.b:focus { outline: none; }\n");
+      const f = audit(dir, { manifest }).findings.filter((x: Finding) => x.rule === "focus-outline");
+      expect(f.map((x: Finding) => x.line)).toEqual([2]);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});
+
 describe("audit: default manifest", () => {
   it("finds a manifest without --manifest, so unknown-token runs", () => {
     const r = audit(fx("bad/unknown-token"));

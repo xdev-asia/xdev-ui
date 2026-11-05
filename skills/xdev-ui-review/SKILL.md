@@ -26,7 +26,7 @@ node <skill-dir>/scripts/audit.mjs src --i18n src/i18n
 | `raw-font` | error | `font-size`, `fontSize`, or `font:` without `var(--type-*)` |
 | `left-stripe` | error | `border-left`, `border-inline-start` with a width, or an inset left shadow |
 | `unknown-token` | error | `var(--<name>)` that is not a design token or defined in the app |
-| `focus-outline` | error | `outline: none` or `outline: 0` |
+| `focus-outline` | error | `outline: none` or `outline: 0`, except in a `:not(:focus-visible)` rule |
 | `i18n-parity` | error | `en` and `vi` differ in keys, or a value is empty |
 | `primary-count` | warn | more than one primary `Button` in one file |
 | `label-voice` | warn | `!`, emoji, or Title Case Of Three Words in UI text |

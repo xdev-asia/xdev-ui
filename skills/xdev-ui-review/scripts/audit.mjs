@@ -153,7 +153,7 @@ export function audit(dir, opts = {}) {
       } else if (style && /box-shadow|boxShadow/.test(line) && /inset\s+-?(?:0?\.\d+|[1-9]\d*(?:\.\d+)?)(?:px|rem|em)?\s+0(?:px|rem|em)?\s+0/.test(line)) {
         add(file, n, "left-stripe", "error", "Inset box-shadow stripe on the left edge.");
       }
-      if (style && /outline\s*:\s*["']?(none|0)\b/.test(line)) add(file, n, "focus-outline", "error", "Do not remove the focus outline; restyle it with --x-color-signal.");
+      if (style && /outline\s*:\s*["']?(none|0)\b/.test(line) && !line.includes(":not(:focus-visible)")) add(file, n, "focus-outline", "error", "Do not remove the focus outline; restyle it with --x-color-signal.");
       if (tokens) {
         for (const m of line.matchAll(/var\(\s*--([a-z0-9-]+)/g)) {
           if (!tokens.has(m[1]) && !local.has(m[1])) add(file, n, "unknown-token", "error", `--${m[1]} is not a design token.`);
