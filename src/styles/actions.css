@@ -22,7 +22,7 @@
   white-space: nowrap;
   min-height: 32px;
   padding: 0 var(--x-space-3);
-  border: 1px solid var(--x-color-line);
+  border: 1px solid var(--x-color-line-strong);
   border-radius: var(--x-radius-md);
   background: transparent;
   color: var(--x-color-ink);
