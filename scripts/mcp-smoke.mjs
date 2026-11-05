@@ -15,6 +15,7 @@ const { tools } = await client.listTools();
 assert.deepEqual(tools.map((t) => t.name).sort(), [
   "xdevui_get_component",
   "xdevui_get_guidelines",
+  "xdevui_get_skill",
   "xdevui_list_components",
   "xdevui_list_icons",
   "xdevui_search_docs",
@@ -46,15 +47,30 @@ assert.ok(docs.body.includes("guideline:"));
 const invalid = await call("xdevui_search_docs", { query: "x" });
 assert.equal(invalid.isError, true, "one-character query should be rejected");
 
+const skills = await call("xdevui_get_skill");
+assert.ok(["xdev-ui-admin", "xdev-ui-build-app", "xdev-ui-review"].every((n) => skills.body.includes(n)), "skill list incomplete");
+const skill = await call("xdevui_get_skill", { name: "xdev-ui-admin" });
+assert.ok(!skill.isError && skill.body.includes("references/resource-list.md"));
+const skillFile = await call("xdevui_get_skill", { name: "xdev-ui-admin", file: "references/resource-list.md" });
+assert.ok(!skillFile.isError && skillFile.body.includes("# Resource list"));
+assert.equal((await call("xdevui_get_skill", { name: "xdev-ui-nope" })).isError, true, "unknown skill should be an error");
+assert.equal((await call("xdevui_get_skill", { name: "xdev-ui-admin", file: "nope.md" })).isError, true, "unknown file should be an error");
+
 const { resources } = await client.listResources();
 assert.ok(resources.some((r) => r.uri === "xdev-ui://components/Dialog"));
+assert.ok(resources.some((r) => r.uri === "xdev-ui://skills/xdev-ui-admin"));
+const skillRes = await client.readResource({ uri: "xdev-ui://skills/xdev-ui-admin" });
+assert.ok(skillRes.contents[0].text.includes("# xdev-ui-admin"));
 const res = await client.readResource({ uri: "xdev-ui://guidelines/brand" });
 assert.ok(res.contents[0].text.includes("xDev"));
 
 const { prompts } = await client.listPrompts();
-assert.deepEqual(prompts.map((p) => p.name), ["xdevui_build_ui"]);
+assert.deepEqual(prompts.map((p) => p.name).sort(), ["xdevui_build_admin", "xdevui_build_app", "xdevui_build_ui"]);
 const prompt = await client.getPrompt({ name: "xdevui_build_ui", arguments: { task: "settings dialog" } });
 assert.ok(prompt.messages[0].content.text.includes("settings dialog"));
 
+const appPrompt = await client.getPrompt({ name: "xdevui_build_app", arguments: { task: "notes app" } });
+assert.ok(appPrompt.messages[0].content.text.includes("notes app") && appPrompt.messages[0].content.text.includes("xdev-ui-build-app"));
+
 await client.close();
-console.log(`mcp ok: ${tools.length} tools, ${resources.length} resources, 1 prompt`);
+console.log(`mcp ok: ${tools.length} tools, ${resources.length} resources, ${prompts.length} prompts`);
