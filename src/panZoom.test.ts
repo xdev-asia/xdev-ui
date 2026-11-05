@@ -31,6 +31,11 @@ describe("zoom steps", () => {
     expect(stepZoom(8, 1)).toBe(8);
     expect(stepZoom(0.25, -1)).toBe(0.25);
   });
+  it("steps within custom limits", () => {
+    expect(stepZoom(0.2, -1, 1.25, 0.1, 4)).toBeCloseTo(0.16);
+    expect(stepZoom(0.1, -1, 1.25, 0.1, 4)).toBe(0.1);
+    expect(stepZoom(4, 1, 1.25, 0.1, 4)).toBe(4);
+  });
 });
 
 describe("zoomAt", () => {
@@ -46,6 +51,13 @@ describe("zoomAt", () => {
   it("changes nothing past a limit", () => {
     const state = { zoom: 8, x: 5, y: 5 };
     expect(zoomAt(state, { x: 50, y: 50 }, 2)).toEqual(state);
+  });
+  it("takes its own limits, so a fit scale below 0.25 can zoom out", () => {
+    const state = { zoom: 1, x: 0, y: 0 };
+    expect(zoomAt(state, { x: 0, y: 0 }, 0.5, 0.1, 4).zoom).toBe(0.5);
+    expect(zoomAt(state, { x: 0, y: 0 }, 0.01, 0.1, 4).zoom).toBe(0.1);
+    expect(zoomAt(state, { x: 0, y: 0 }, 100, 0.1, 4).zoom).toBe(4);
+    expect(zoomAt(state, { x: 0, y: 0 }, 0.01).zoom).toBe(0.25);
   });
 });
 
