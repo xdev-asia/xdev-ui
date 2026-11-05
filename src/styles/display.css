@@ -282,7 +282,7 @@ button.x-list-row-main:disabled { cursor: default; }
   cursor: pointer;
 }
 .x-reaction:hover:not(:disabled) { background: var(--x-color-surface-2); }
-.x-reaction[aria-pressed="true"] { border-color: var(--x-color-signal); background: var(--x-color-signal-soft); color: var(--x-color-ink); }
+.x-reaction[aria-pressed="true"] { border-color: var(--x-color-accent); background: var(--x-color-accent-soft); color: var(--x-color-ink); }
 .x-reaction:disabled { cursor: default; opacity: 0.55; }
 .x-reaction:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: 1px; }
 .x-reaction-symbol { display: inline-flex; align-items: center; }

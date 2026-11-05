@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { ReactionBar } from "./ReactionBar";
@@ -40,5 +42,15 @@ describe("ReactionBar", () => {
   it("uses no inline colour", () => {
     const html = renderToStaticMarkup(<ReactionBar items={ITEMS} onToggle={() => {}} />);
     expect(html).not.toMatch(/style=|#[0-9a-f]{3,8}\b|rgb\(/i);
+  });
+
+  it("paints the pressed state with the accent, and keeps the signal for the focus ring", () => {
+    const css = readFileSync(resolve(__dirname, "../../styles/display.css"), "utf8");
+    const rule = (selector: string) => css.split(/\r?\n/).find((l) => l.startsWith(selector)) ?? "";
+    const pressed = rule('.x-reaction[aria-pressed="true"]');
+    expect(pressed).toContain("--x-color-accent");
+    expect(pressed).toContain("--x-color-accent-soft");
+    expect(pressed).not.toContain("signal");
+    expect(rule(".x-reaction:focus-visible")).toContain("--x-color-signal");
   });
 });
