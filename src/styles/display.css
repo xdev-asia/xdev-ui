@@ -227,3 +227,18 @@ button.x-list-row-main:disabled { cursor: default; }
 
 /* CommitGraph: one row of lanes and a node */
 .x-commit-graph { display: block; flex: none; overflow: visible; }
+
+/* PanZoom (.x-panzoom) and ZoomBar (.x-zoombar) */
+.x-panzoom {
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+  cursor: grab;
+  touch-action: none;
+  background: var(--x-color-bg);
+}
+.x-panzoom:active { cursor: grabbing; }
+.x-panzoom:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: -2px; }
+.x-panzoom-content { transform-origin: 0 0; will-change: transform; }
+.x-zoombar { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--x-space-1); }
+.x-zoombar-pct { min-width: 56px; font-variant-numeric: tabular-nums; }

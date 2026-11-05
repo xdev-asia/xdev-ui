@@ -14,6 +14,21 @@ describe("Dialog", () => {
     expect(html).toContain('aria-labelledby="x-dialog-id"');
     expect(html).toContain("dialog-actions");
   });
+  it("is default size with a text body unless asked otherwise", () => {
+    const html = renderToStaticMarkup(<Dialog title="x">Body</Dialog>);
+    expect(html).toContain('data-size="default"');
+    expect(html).toContain('<p class="dialog-body">Body</p>');
+  });
+  it("size wide and body plain allow block content", () => {
+    const html = renderToStaticMarkup(
+      <Dialog title="x" size="wide" body="plain">
+        <div>block</div>
+      </Dialog>,
+    );
+    expect(html).toContain('data-size="wide"');
+    expect(html).toContain('<div class="dialog-body"><div>block</div></div>');
+    expect(html).not.toContain("<p");
+  });
   it("alert uses alertdialog", () => {
     expect(renderToStaticMarkup(<Dialog title="x" alert />)).toContain('role="alertdialog"');
   });
