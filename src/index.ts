@@ -45,6 +45,7 @@ export * from "./components/SettingRow/SettingRow";
 export * from "./components/CodeBlock/CodeBlock";
 export * from "./components/Spinner/Spinner";
 export * from "./components/FieldMessage/FieldMessage";
+export * from "./components/StepDots/StepDots";
 export * from "./components/Tabs/Tabs";
 export * from "./components/NavList/NavList";
 export * from "./components/Breadcrumb/Breadcrumb";

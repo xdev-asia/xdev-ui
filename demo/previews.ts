@@ -420,6 +420,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     style: {"display": "flex", "gap": "16px", "alignItems": "center", "padding": "16px"},
     render: (X, h) => h(React.Fragment, null, h(X.Spinner, { size: "sm", label: "Loading usage" }), h(X.Spinner, { size: "md", label: "Loading sessions" })),
   },
+  "StepDots": {
+    style: {"padding": "16px"},
+    render: (X, h) => h(X.StepDots, { total: 3, current: 2 }),
+  },
   "SplitHandle": {
     style: {"padding": "16px", "height": "160px"},
     render: (X, h) => h(SplitDemo, { X: X }),

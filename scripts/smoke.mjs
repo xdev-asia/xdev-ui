@@ -56,6 +56,7 @@ const cases = {
   CodeBlock: [{ code: "npx -y -p @xdev-asia/ui xdev-ui-mcp", language: "bash" }],
   Spinner: [{ size: "sm" }],
   FieldMessage: [{ tone: "error" }, "Branch name is taken"],
+  StepDots: [{ total: 3, current: 2 }],
   Popover: [{ open: true, onClose() {}, label: "Branch", trigger: "main" }, "Switch branch"],
   Tooltip: [{ content: "Copy path" }, h("button", { type: "button" }, "Copy")],
   SplitHandle: [{ direction: "horizontal", value: 240, min: 160, max: 420, onResize() {} }],

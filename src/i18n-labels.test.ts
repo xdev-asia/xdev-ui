@@ -17,6 +17,7 @@ import {
   Spinner,
   SplitHandle,
   StatTile,
+  StepDots,
   TabStrip,
   ThemeSwitch,
   Toast,
@@ -157,6 +158,11 @@ describe("labels override every default English string", () => {
     expectNoEnglish(html, ["Copy", "Copied"]);
   });
 
+  it("StepDots", () => {
+    const html = renderToStaticMarkup(h(StepDots, { total: 3, current: 2, labels: { step: (c: number, t: number) => S(`${c}/${t}`) } }));
+    expect(html).toContain(S("2/3"));
+    expectNoEnglish(html, ["Step", "of"]);
+  });
   it("Spinner", () => {
     const html = renderToStaticMarkup(h(Spinner, { labels: { loading: S("l") } }));
     expect(html).toContain(S("l"));
