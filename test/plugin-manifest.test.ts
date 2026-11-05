@@ -23,7 +23,7 @@ describe("plugin.json", () => {
   it("uses the default skills folder: every skills/* has a SKILL.md and no custom path is set", () => {
     expect(plugin.skills).toBeUndefined();
     const dirs = readdirSync(join(root, "skills"));
-    expect(dirs.length).toBe(3);
+    expect(dirs.length).toBe(4);
     for (const d of dirs) expect(existsSync(join(root, "skills", d, "SKILL.md")), d).toBe(true);
   });
 });

@@ -54,7 +54,7 @@ const invalid = await call("xdevui_search_docs", { query: "x" });
 assert.equal(invalid.isError, true, "one-character query should be rejected");
 
 const skills = await call("xdevui_get_skill");
-assert.ok(["xdev-ui-admin", "xdev-ui-build-app", "xdev-ui-review"].every((n) => skills.body.includes(n)), "skill list incomplete");
+assert.ok(["xdev-ui-admin", "xdev-ui-build-app", "xdev-ui-review", "xdev-ui-ux-standards"].every((n) => skills.body.includes(n)), "skill list incomplete");
 const skill = await call("xdevui_get_skill", { name: "xdev-ui-admin" });
 assert.ok(!skill.isError && skill.body.includes("references/resource-list.md"));
 const skillFile = await call("xdevui_get_skill", { name: "xdev-ui-admin", file: "references/resource-list.md" });

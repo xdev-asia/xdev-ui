@@ -7,10 +7,10 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const gen = (f: string): string => readFileSync(join(root, "generated", f), "utf8");
 const manifest = JSON.parse(gen("ai-manifest.json")) as {
   guidelines: Record<string, string>; skills: { name: string; description: string; body: string; files: { path: string; text: string }[] }[] };
-const NAMES = ["xdev-ui-admin", "xdev-ui-build-app", "xdev-ui-review"];
+const NAMES = ["xdev-ui-admin", "xdev-ui-build-app", "xdev-ui-review", "xdev-ui-ux-standards"];
 
 describe("ai manifest skills", () => {
-  it("has the three skills, sorted, with description and body from SKILL.md", () => {
+  it("has the four skills, sorted, with description and body from SKILL.md", () => {
     expect(manifest.skills.map((s) => s.name)).toEqual(NAMES);
     for (const s of manifest.skills) {
       expect(s.description).toMatch(/\bUse (when|before|for)\b/);

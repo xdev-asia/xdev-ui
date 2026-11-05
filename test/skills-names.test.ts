@@ -19,7 +19,7 @@ const typeText = manifest.components.map((c) => c.types).join("\n") + "\n" + man
 const runtimeExports = new Set(Object.keys(lib));
 
 /** Command-line flags of the skills tooling; they look like tokens in prose. */
-const CLI_FLAGS = new Set(["i18n", "manifest", "claude", "codex", "cursor", "dir", "user", "skill", "force", "dry-run"]);
+const CLI_FLAGS = new Set(["i18n", "manifest", "contrast", "claude", "codex", "cursor", "dir", "user", "skill", "force", "dry-run"]);
 const REACT = new Set(["Fragment", "StrictMode", "Suspense", "Profiler"]);
 const DOM_PROPS = new Set([
   "key", "ref", "id", "className", "style", "role", "tabIndex", "title", "lang", "hidden", "children",

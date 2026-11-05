@@ -1,6 +1,6 @@
 {
   "name": "xdev-ui",
-  "description": "Agent skills for building apps and admin consoles on the @xdev-asia/ui design system, and for auditing them against its rules.",
+  "description": "Agent skills for building apps and admin consoles on the @xdev-asia/ui design system, auditing them against its rules, and checking them against accessibility and platform standards.",
   "author": {
     "name": "xdev-asia"
   },

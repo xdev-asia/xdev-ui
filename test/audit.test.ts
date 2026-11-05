@@ -1,10 +1,10 @@
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 // @ts-expect-error plain ESM script without types
-import { audit } from "../skills/xdev-ui-review/scripts/audit.mjs";
+import { audit, contrastRatio, contrastReport, parseColour } from "../skills/xdev-ui-review/scripts/audit.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const fx = (p: string) => resolve(here, "fixtures/audit", p);
@@ -97,5 +97,102 @@ describe("audit: default manifest", () => {
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
+  });
+});
+
+const inDir = (files: Record<string, string>, opts: Record<string, unknown> = {}): Finding[] => {
+  const dir = mkdtempSync(join(tmpdir(), "xdev-audit-"));
+  try {
+    for (const [name, body] of Object.entries(files)) writeFileSync(join(dir, name), body);
+    return audit(dir, { manifest, ...opts }).findings;
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+};
+
+describe("audit: accessibility rules", () => {
+  it("positive-tabindex flags tabIndex above 0 only", () => {
+    const f = run("bad/positive-tabindex");
+    expect(f.map((x) => [x.rule, x.level, x.line])).toEqual([
+      ["positive-tabindex", "error", 4],
+      ["positive-tabindex", "error", 7],
+    ]);
+  });
+  it("icon-button-name flags unnamed icon-only buttons, not named ones or ones with text", () => {
+    const f = run("bad/icon-button-name");
+    expect(f.map((x) => [x.rule, x.level, x.line])).toEqual([
+      ["icon-button-name", "error", 6],
+      ["icon-button-name", "error", 12],
+    ]);
+  });
+  it("icon-button-name skips buttons with a spread or an expression child", () => {
+    const f = inDir({
+      "a.tsx": 'export const A = (p: object) => (<div><button {...p}><Icon name="close" /></button><button>{p.toString()}</button></div>);\n',
+    });
+    expect(f.filter((x) => x.rule === "icon-button-name")).toEqual([]);
+  });
+  it("target-size warns on fixed sizes under 24px on interactive subjects only", () => {
+    const f = run("bad/target-size");
+    expect(f.every((x) => x.rule === "target-size" && x.level === "warn")).toBe(true);
+    expect(f.map((x) => x.line)).toEqual([1, 1]);
+  });
+  it("target-size resolves size tokens and ignores visually hidden inputs", () => {
+    const f = inDir({
+      "a.css": '.x-btn { height: var(--x-space-4); }\n.sw input[type="checkbox"] { width: 1rem; height: 1rem; opacity: 0; }\n.x-btn-group { height: 1rem; }\n',
+    });
+    expect(f.filter((x) => x.rule === "target-size").map((x) => x.line)).toEqual([1]);
+  });
+  it("target-size treats classes put on a button in TSX as controls", () => {
+    const f = inDir({
+      "a.tsx": 'export const A = () => <div><button type="button" className="tab-close">Close tab</button><span className="tag">Tag</span></div>;\n',
+      "a.css": ".tab-close { width: 1.25rem; }\n.tag { width: 1rem; }\n",
+    });
+    expect(f.map((x) => [x.rule, x.file, x.line])).toEqual([["target-size", "a.css", 1]]);
+  });
+  it("reduced-motion warns only for keyframes that move, in a file with no guard", () => {
+    const f = run("bad/reduced-motion");
+    expect(f.map((x) => [x.rule, x.level, x.line])).toEqual([["reduced-motion", "warn", 3]]);
+  });
+  it("reduced-motion accepts a guard in the file or a universal guard anywhere", () => {
+    const anim = "@keyframes x-slide { from { transform: translateY(0.5rem); } }\n.t { animation: x-slide 1s; }\n";
+    expect(inDir({ "a.css": `${anim}@media (prefers-reduced-motion: reduce) { .t { animation: none; } }\n` })).toEqual([]);
+    expect(inDir({ "a.css": anim, "b.css": "@media (prefers-reduced-motion: reduce) { *, *::before { animation-duration: 0.01ms !important; } }\n" })).toEqual([]);
+  });
+  it("focus-outline accepts a :focus-visible rule that restores a ring for the same selector", () => {
+    const f = inDir({ "a.css": ".c { outline: none; }\n.c:focus-visible { outline: 2px solid var(--x-color-signal); }\n.d { outline: 0; }\n" });
+    expect(f.map((x) => [x.rule, x.line])).toEqual([["focus-outline", 3]]);
+  });
+  it("forced-colors warns when box-shadow is the only focus ring", () => {
+    const f = run("bad/forced-colors");
+    expect(f.map((x) => [x.rule, x.level, x.line])).toEqual([["forced-colors", "warn", 1]]);
+    const guarded = inDir({ "a.css": ".f:focus-visible { outline: none; box-shadow: 0 0 0 0.125rem var(--x-color-signal); }\n@media (forced-colors: active) { .f:focus-visible { outline: 0.125rem solid; } }\n" });
+    expect(guarded).toEqual([]);
+  });
+});
+
+describe("audit: token contrast", () => {
+  it("uses the WCAG 2.2 formula", () => {
+    expect(contrastRatio([255, 255, 255, 1], [0, 0, 0, 1])).toBeCloseTo(21, 5);
+    expect(contrastRatio(parseColour("#777777"), parseColour("#ffffff"))).toBeLessThan(4.5);
+    expect(contrastRatio(parseColour("#767676"), parseColour("#ffffff"))).toBeGreaterThanOrEqual(4.5);
+  });
+  it("composites a translucent ground over its base before measuring", () => {
+    const tint = parseColour("rgba(0, 0, 0, 0.5)");
+    expect(tint).toEqual([0, 0, 0, 0.5]);
+    expect(parseColour("#00000080")?.[3]).toBeCloseTo(0.5, 2);
+    expect(contrastRatio([255, 255, 255, 1], tint, [255, 255, 255, 1])).toBeCloseTo(contrastRatio([255, 255, 255, 1], [127.5, 127.5, 127.5, 1]), 5);
+  });
+  it("every error-level token pair passes in dark and light", () => {
+    const tokens = JSON.parse(readFileSync(manifest, "utf8")).tokens;
+    const report = contrastReport(tokens) as { fg: string; bg: string; theme: string; ratio: number; pass: boolean; level: string }[];
+    expect(report.length).toBeGreaterThan(100);
+    expect(report.filter((p) => p.level === "error" && !p.pass).map((p) => `${p.fg}/${p.bg}/${p.theme} ${p.ratio.toFixed(2)}`)).toEqual([]);
+  });
+  it("is opt-in and reports known exceptions as warnings", () => {
+    expect(run("good", { i18n: fx("good/i18n") }).some((x) => x.rule === "contrast")).toBe(false);
+    const f = audit(fx("good"), { manifest, contrast: true }).findings as Finding[];
+    const c = f.filter((x) => x.rule === "contrast");
+    expect(c.length).toBeGreaterThan(0);
+    expect(c.every((x) => x.level === "warn" && /^(text-3|line|x-color-line) /.test(x.message))).toBe(true);
   });
 });

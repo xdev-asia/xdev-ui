@@ -1,0 +1,4 @@
+@keyframes x-slide { from { transform: translateY(0.5rem); } to { transform: none; } }
+@keyframes x-fade { from { opacity: 0; } to { opacity: 1; } }
+.toast { animation: x-slide 120ms ease-out; }
+.hint { animation: x-fade 1s; }
