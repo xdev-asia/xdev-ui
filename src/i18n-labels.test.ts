@@ -5,6 +5,7 @@ import {
   ActivityBar,
   AppShell,
   Breadcrumb,
+  Coachmark,
   CodeBlock,
   CommandPalette,
   DataTable,
@@ -158,6 +159,15 @@ describe("labels override every default English string", () => {
     expectNoEnglish(html, ["Copy", "Copied"]);
   });
 
+  it("Coachmark", () => {
+    const labels = { back: S("b"), next: S("n"), done: S("d"), skip: S("s"), step: (c: number, t: number) => S(`${c}/${t}`) };
+    const anchor = { top: 40, left: 40, width: 80, height: 24 };
+    const mid = renderToStaticMarkup(h(Coachmark, { anchor, title: "T", step: 2, total: 3, onBack() {}, onNext() {}, onSkip() {}, labels }));
+    const last = renderToStaticMarkup(h(Coachmark, { anchor, title: "T", step: 3, total: 3, onBack() {}, onNext() {}, onSkip() {}, labels }));
+    for (const k of ["b", "n", "s", "2/3"]) expect(mid).toContain(S(k));
+    expect(last).toContain(S("d"));
+    expectNoEnglish(mid + last, ["Back", "Next", "Done", "Skip tour", "Step", "of"]);
+  });
   it("StepDots", () => {
     const html = renderToStaticMarkup(h(StepDots, { total: 3, current: 2, labels: { step: (c: number, t: number) => S(`${c}/${t}`) } }));
     expect(html).toContain(S("2/3"));

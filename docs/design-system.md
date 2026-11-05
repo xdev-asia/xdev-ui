@@ -78,7 +78,7 @@ Install them with `npx xdev-ui-skills install` (`--codex`, `--cursor`, `--user`,
 | Display | Kbd, Avatar, Badge, Tag, AgentChip, DiffStat, Comment, ReactionBar, ListRow, Card, EmptyState, SettingRow, CodeBlock, Heatmap, CommitGraph, PanZoom |
 | Status | StatusDot, Meter, Banner, Toast, Spinner, FieldMessage, StepDots |
 | Navigation | TabStrip, ActivityBar, StatusBar, Tabs, NavList, Breadcrumb, TreeView, Disclosure, SplitHandle, Toolbar |
-| Overlays | Menu, Dialog, CommandPalette, Popover, Tooltip |
+| Overlays | Menu, Dialog, CommandPalette, Popover, Tooltip, Coachmark |
 | Brand | BrandMark, Icon, FileIcon |
 | Layout | AppShell, PageHeader, FormSection |
 | Data | DescriptionList, StatTile, DataTable, Pagination |

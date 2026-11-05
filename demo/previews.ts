@@ -444,6 +444,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.Toolbar, { title: "Changes", count: 4, actions: h(React.Fragment, null, h(X.IconButton, { icon: "plus", label: "Stage all" }), h(X.IconButton, { icon: "more", label: "More" })) }),
       h(X.Toolbar, { variant: "bulk", title: "3 selected", actions: h(X.Button, { variant: "secondary" }, "Discard") })),
   },
+  "Coachmark": {
+    style: {"position": "relative", "height": "240px", "transform": "translateZ(0)"},
+    render: (X, h) => h(X.Coachmark, { anchor: { top: 16, left: 16, width: 120, height: 28 }, placement: "bottom", title: "Start an agent", step: 2, total: 3, onBack() {}, onNext() {}, onSkip() {} }, "Each agent works in its own worktree, so tasks never collide."),
+  },
   "Tooltip": {
     style: {"padding": "48px 16px 16px"},
     render: (X, h) => h(X.Tooltip, { content: "Copy branch name" }, h(X.IconButton, { icon: "copy", label: "Copy" })),

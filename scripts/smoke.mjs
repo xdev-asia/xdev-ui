@@ -59,6 +59,7 @@ const cases = {
   StepDots: [{ total: 3, current: 2 }],
   Popover: [{ open: true, onClose() {}, label: "Branch", trigger: "main" }, "Switch branch"],
   Tooltip: [{ content: "Copy path" }, h("button", { type: "button" }, "Copy")],
+  Coachmark: [{ anchor: { top: 40, left: 40, width: 80, height: 24 }, title: "New agent", step: 2, total: 3, onBack() {}, onNext() {}, onSkip() {} }, "Start a task in its own worktree."],
   SplitHandle: [{ direction: "horizontal", value: 240, min: 160, max: 420, onResize() {} }],
   Toolbar: [{ title: "Changes", count: 12, actions: h("button", { type: "button" }, "Stage all") }],
   Avatar: [{ name: "Trần Thị B" }],

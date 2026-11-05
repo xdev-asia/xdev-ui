@@ -58,6 +58,8 @@ export * from "./components/SplitHandle/SplitHandle";
 export * from "./components/Toolbar/Toolbar";
 export * from "./components/Popover/Popover";
 export * from "./components/Tooltip/Tooltip";
+export * from "./components/Coachmark/Coachmark";
+export * from "./components/Coachmark/placeCoachmark";
 export * from "./components/AppShell/AppShell";
 export * from "./components/PageHeader/PageHeader";
 export * from "./components/FormSection/FormSection";
