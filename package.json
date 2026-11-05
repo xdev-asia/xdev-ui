@@ -94,7 +94,8 @@
   },
   "packageManager": "pnpm@12.14.0",
   "bin": {
-    "xdev-ui-mcp": "./dist/mcp.js"
+    "xdev-ui-mcp": "./dist/mcp.js",
+    "xdev-ui-skills": "./bin/xdev-ui-skills.mjs"
   },
   "keywords": [
     "design-system",
