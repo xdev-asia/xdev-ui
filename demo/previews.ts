@@ -318,6 +318,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     style: {"padding": "16px", "width": "420px"},
     render: (X, h) => h(X.CodeBlock, { language: "bash", code: "pnpm add @xdev-asia/ui" }),
   },
+  "CommitGraph": {
+    style: {"padding": "16px"},
+    render: (X, h) => h(X.CommitGraph, { row: X.graphRows([{ id: "a", parents: ["b", "c"] }])[0] }),
+  },
   "Disclosure": {
     style: {"padding": "16px", "width": "320px"},
     render: (X, h) => h(X.Disclosure, { title: "Staged", count: 2 },
