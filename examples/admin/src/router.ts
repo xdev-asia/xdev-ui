@@ -16,15 +16,25 @@ const STATIC: Record<string, RouteName> = {
   "/sign-in": "sign-in",
 };
 
+const decode = (s: string): string | null => {
+  try {
+    return decodeURIComponent(s);
+  } catch {
+    return null; // malformed escape such as %E0
+  }
+};
+
 /** Pure: turns a path such as "/users/u12?tab=activity" into a route. */
 export function matchRoute(input: string): Route {
   const path = ("/" + input.replace(/^#/, "").split("?")[0].replace(/^\/+|\/+$/g, "")).replace(/\/$/, "") || "/";
   const name = STATIC[path];
   if (name) return { name, params: {}, path };
   const user = /^\/users\/([^/]+)$/.exec(path);
-  if (user) return { name: "user", params: { id: decodeURIComponent(user[1]) }, path };
+  const userId = user ? decode(user[1]) : null;
+  if (userId !== null) return { name: "user", params: { id: userId }, path };
   const section = /^\/settings\/([^/]+)$/.exec(path);
-  if (section) return { name: "settings", params: { section: decodeURIComponent(section[1]) }, path };
+  const sectionId = section ? decode(section[1]) : null;
+  if (sectionId !== null) return { name: "settings", params: { section: sectionId }, path };
   return { name: "not-found", params: {}, path };
 }
 

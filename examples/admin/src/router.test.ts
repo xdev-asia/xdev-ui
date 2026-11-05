@@ -14,6 +14,10 @@ describe("matchRoute", () => {
     expect(matchRoute("#/settings/security")).toMatchObject({ name: "settings", params: { section: "security" } });
     expect(matchRoute("#/users/a%20b").params.id).toBe("a b");
   });
+  it("treats a malformed escape as not-found instead of throwing", () => {
+    expect(matchRoute("#/users/%E0").name).toBe("not-found");
+    expect(matchRoute("#/settings/%E0%A4%A").name).toBe("not-found");
+  });
   it("ignores a query string", () => {
     expect(matchRoute("#/users?role=admin").name).toBe("users");
   });

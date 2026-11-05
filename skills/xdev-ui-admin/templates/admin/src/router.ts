@@ -8,13 +8,22 @@ export interface Route {
 
 const STATIC: Record<string, RouteName> = { "/": "dashboard", "/items": "items", "/settings": "settings", "/sign-in": "sign-in" };
 
+const decode = (s: string): string | null => {
+  try {
+    return decodeURIComponent(s);
+  } catch {
+    return null; // malformed escape such as %E0
+  }
+};
+
 /** Pure: turns "#/items/i3?x=1" into a route. */
 export function matchRoute(hash: string): Route {
   const path = "/" + hash.replace(/^#/, "").split("?")[0].replace(/^\/+|\/+$/g, "");
   const name = STATIC[path];
   if (name) return { name, params: {} };
   const item = /^\/items\/([^/]+)$/.exec(path);
-  return item ? { name: "item", params: { id: decodeURIComponent(item[1]) } } : { name: "not-found", params: {} };
+  const id = item ? decode(item[1]) : null;
+  return id !== null ? { name: "item", params: { id } } : { name: "not-found", params: {} };
 }
 
 export const href = {
