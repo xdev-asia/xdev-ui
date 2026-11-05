@@ -14,6 +14,7 @@ export * from "./components/AgentChip/AgentChip";
 export * from "./components/DiffStat/DiffStat";
 export * from "./components/StatusDot/StatusDot";
 export * from "./components/Meter/Meter";
+export * from "./components/Heatmap/Heatmap";
 export * from "./components/Banner/Banner";
 export * from "./components/Toast/Toast";
 export * from "./components/TabStrip/TabStrip";
