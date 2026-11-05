@@ -44,6 +44,12 @@ const icons = await call("xdevui_list_icons");
 assert.ok(icons.structuredContent.icons.includes("terminal"));
 const docs = await call("xdevui_search_docs", { query: "stripe" });
 assert.ok(docs.body.includes("guideline:"));
+const skillDocs = await call("xdevui_search_docs", { query: "skill" });
+assert.ok(skillDocs.body.includes("guideline:agent-skills"), "agent-skills guideline missing from search");
+for (const topic of ["layout", "data-and-forms", "agent-skills"]) {
+  const g = await call("xdevui_get_guidelines", { topic });
+  assert.ok(!g.isError && g.body.length > 200, `guideline ${topic} missing`);
+}
 const invalid = await call("xdevui_search_docs", { query: "x" });
 assert.equal(invalid.isError, true, "one-character query should be rejected");
 

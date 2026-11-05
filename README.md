@@ -70,11 +70,24 @@ claude mcp add xdev-ui -- npx -y --package=@xdev-asia/ui xdev-ui-mcp
 | `xdevui_list_components` | 56 components by group, with summary |
 | `xdevui_get_component` | README rules, exported prop types, CSS classes, import line |
 | `xdevui_search_tokens` | tokens by name, usage or category, with dark/light values |
-| `xdevui_get_guidelines` | setup, voice, visual foundations, iconography, brand |
+| `xdevui_get_guidelines` | setup, voice, visual foundations, iconography, layout, data and forms, agent skills, brand |
 | `xdevui_list_icons` | valid `IconName` values |
 | `xdevui_search_docs` | matching sections across all docs |
+| `xdevui_get_skill` | an agent skill: list, `SKILL.md` with its files, or one file |
 
-Resources: `xdev-ui://components/{name}`, `xdev-ui://guidelines/{topic}`, `xdev-ui://tokens`. Prompt: `xdevui_build_ui`. Agent rules: [AGENTS.md](AGENTS.md). No MCP client: <https://ui.xdev.asia/llms-full.txt>.
+Resources: `xdev-ui://components/{name}`, `xdev-ui://guidelines/{topic}`, `xdev-ui://skills/{name}`, `xdev-ui://tokens`. Prompts: `xdevui_build_ui`, `xdevui_build_app`, `xdevui_build_admin`. Agent rules: [AGENTS.md](AGENTS.md). No MCP client: <https://ui.xdev.asia/llms-full.txt>.
+
+## Agent skills
+
+Three skills teach a coding agent to build with the library: `xdev-ui-build-app` (app shell, theme, i18n, routing, states), `xdev-ui-admin` (dashboards, lists, forms, roles, settings, audit log) and `xdev-ui-review` (rules audit). They live in `skills/` and ship in the package.
+
+```bash
+npx xdev-ui-skills install                 # .claude/skills in this project
+npx xdev-ui-skills install --codex --user  # ~/.agents/skills
+npx xdev-ui-skills create admin my-console # a Vite app from the admin template
+```
+
+Or in Claude Code: `/plugin marketplace add xdev-asia/xdev-ui`, then `/plugin install xdev-ui@xdev-asia`. `examples/admin` is a full console (sign-in, dashboard, users, roles, settings, audit log) in en and vi; run it with `pnpm example:admin`.
 
 ## Develop
 

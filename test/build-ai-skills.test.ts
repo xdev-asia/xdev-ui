@@ -5,7 +5,8 @@ import { describe, expect, it } from "vitest";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const gen = (f: string): string => readFileSync(join(root, "generated", f), "utf8");
-const manifest = JSON.parse(gen("ai-manifest.json")) as { skills: { name: string; description: string; body: string; files: { path: string; text: string }[] }[] };
+const manifest = JSON.parse(gen("ai-manifest.json")) as {
+  guidelines: Record<string, string>; skills: { name: string; description: string; body: string; files: { path: string; text: string }[] }[] };
 const NAMES = ["xdev-ui-admin", "xdev-ui-build-app", "xdev-ui-review"];
 
 describe("ai manifest skills", () => {
@@ -42,5 +43,23 @@ describe("llms files", () => {
     expect(t).toContain("# Skills");
     expect(t).toContain("# Resource list");
     expect(t).not.toContain("export function createStore");
+  });
+});
+
+describe("guidelines", () => {
+  it("has the layout, data-and-forms and agent-skills topics, built from design-system.md", () => {
+    for (const topic of ["layout", "data-and-forms", "agent-skills"]) expect(Object.keys(manifest.guidelines), topic).toContain(topic);
+    expect(manifest.guidelines["agent-skills"]).toContain("xdev-ui-skills install");
+    expect(manifest.guidelines["layout"]).toContain("AppShell");
+    expect(manifest.guidelines["data-and-forms"]).toContain("DataTable");
+  });
+  it("the component count in README and AGENTS.md matches the manifest", () => {
+    const count = (manifest as unknown as { components: unknown[] }).components.length;
+    for (const f of ["README.md", "AGENTS.md"]) {
+      const t = readFileSync(join(root, f), "utf8");
+      const nums = [...t.matchAll(/\b(\d+) components\b/g)].map((m) => Number(m[1]));
+      expect(nums.length, f).toBeGreaterThan(0);
+      expect(new Set(nums), f).toEqual(new Set([count]));
+    }
   });
 });

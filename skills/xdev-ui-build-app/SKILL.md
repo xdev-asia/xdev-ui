@@ -21,7 +21,7 @@ The template is in `templates/app`: shell, hash router, theme, `en` and `vi` str
 
 Add `_mcp.json` as `.mcp.json`. Then ask the server instead of the source:
 
-- `xdevui_get_guidelines` with `topic="setup"` once;
+- `xdevui_get_guidelines` with `topic="setup"` once, then `topic="layout"` before you build the shell;
 - `xdevui_list_components` to pick parts;
 - `xdevui_get_component` for every part you use;
 - `xdevui_search_tokens` for a colour, space, radius or type size.
