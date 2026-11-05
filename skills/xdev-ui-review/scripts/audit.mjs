@@ -3,8 +3,8 @@
 //   node audit.mjs <src-dir> [--i18n <dir>] [--manifest <path>]
 // Prints `file:line rule message` per finding; exit code 1 on any error. Also exports audit(dir, opts).
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
-import { extname, join, relative, resolve } from "node:path";
-import { pathToFileURL } from "node:url";
+import { dirname, extname, join, relative, resolve } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const SKIP_DIRS = new Set(["node_modules", "dist", "dist-examples", ".git", "generated", "fixtures"]);
 const EXTS = new Set([".css", ".ts", ".tsx"]);
@@ -71,6 +71,21 @@ function dictKeys(text) {
 
 const strValue = (raw) => /^(["'`])(.*)\1$/.exec(raw)?.[2];
 
+// Where ai-manifest.json can be: the installed package of the scanned project (walking up from the
+// scanned dir and the cwd), then the package this script ships in (skills/<name>/scripts -> dist or generated).
+function findManifest(root) {
+  const here = dirname(fileURLToPath(import.meta.url));
+  const found = [];
+  for (const start of [root, process.cwd()]) {
+    for (let dir = start; ; dir = dirname(dir)) {
+      found.push(join(dir, "node_modules/@xdev-asia/ui/dist/ai-manifest.json"));
+      if (dirname(dir) === dir) break;
+    }
+  }
+  found.push(resolve(here, "../../../dist/ai-manifest.json"), resolve(here, "../../../generated/ai-manifest.json"));
+  return found.find((p) => existsSync(p)) ?? found[0];
+}
+
 export function audit(dir, opts = {}) {
   const root = resolve(dir);
   const findings = [];
@@ -78,7 +93,7 @@ export function audit(dir, opts = {}) {
   const notes = [];
 
   let tokens = null;
-  const manifestPath = opts.manifest ? resolve(opts.manifest) : resolve(root, "node_modules/@xdev-asia/ui/dist/ai-manifest.json");
+  const manifestPath = opts.manifest ? resolve(opts.manifest) : findManifest(root);
   if (existsSync(manifestPath)) tokens = new Set(JSON.parse(readFileSync(manifestPath, "utf8")).tokens.map((t) => t.name));
   else notes.push(`unknown-token skipped: no manifest at ${manifestPath} (pass --manifest)`);
 

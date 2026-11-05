@@ -1,4 +1,6 @@
-import { dirname, resolve } from "node:path";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 // @ts-expect-error plain ESM script without types
@@ -60,5 +62,27 @@ describe("audit: one bad fixture per rule", () => {
     const r = audit(fx("bad/unknown-token"), { manifest: fx("missing.json") });
     expect(r.findings).toEqual([]);
     expect(r.notes[0]).toContain("unknown-token skipped");
+  });
+});
+
+describe("audit: default manifest", () => {
+  it("finds a manifest without --manifest, so unknown-token runs", () => {
+    const r = audit(fx("bad/unknown-token"));
+    expect(r.notes.filter((n: string) => n.includes("skipped"))).toEqual([]);
+    expect(r.findings.some((f: Finding) => f.rule === "unknown-token")).toBe(true);
+  });
+  it("prefers the manifest installed in the scanned project", () => {
+    const dir = mkdtempSync(join(tmpdir(), "xdev-audit-"));
+    try {
+      mkdirSync(join(dir, "node_modules/@xdev-asia/ui/dist"), { recursive: true });
+      writeFileSync(join(dir, "node_modules/@xdev-asia/ui/dist/ai-manifest.json"), JSON.stringify({ tokens: [{ name: "only-here" }] }));
+      mkdirSync(join(dir, "src"));
+      writeFileSync(join(dir, "src/a.css"), ".a { color: var(--only-here); background: var(--bg-0); }\n");
+      const r = audit(join(dir, "src"));
+      expect(r.findings.map((f: Finding) => f.message).join("\n")).toContain("bg-0");
+      expect(r.findings.every((f: Finding) => !f.message.includes("only-here"))).toBe(true);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });
