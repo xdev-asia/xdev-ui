@@ -20,19 +20,23 @@ export interface DialogProps {
   alert?: boolean;
   /** Override the English defaults (e.g. for vi). confirmLabel and cancelLabel win over these. */
   labels?: Partial<DialogLabels>;
+  /** "wide" fills most of the window (a diagram, an image). Default "default", 440px. */
+  size?: "default" | "wide";
+  /** "plain" wraps children in a div, for block content; "text" wraps them in a p. Default "text". */
+  body?: "text" | "plain";
 }
 
-export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, onCancel, alert, labels }: DialogProps): JSX.Element {
+export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, onCancel, alert, labels, size = "default", body = "text" }: DialogProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
   const cancelText = cancelLabel === undefined ? l.cancel : cancelLabel;
   const titleId = `x-dialog-${useId()}`;
   return (
     <div className="dialog-backdrop">
-      <div className="dialog" role={alert ? "alertdialog" : "dialog"} aria-modal="true" aria-labelledby={titleId}>
+      <div className="dialog" data-size={size} role={alert ? "alertdialog" : "dialog"} aria-modal="true" aria-labelledby={titleId}>
         <h2 className="dialog-title" id={titleId}>
           {title}
         </h2>
-        {children ? <p className="dialog-body">{children}</p> : null}
+        {children ? body === "plain" ? <div className="dialog-body">{children}</div> : <p className="dialog-body">{children}</p> : null}
         <div className="dialog-actions">
           {cancelText !== null ? (
             <Button variant="secondary" onClick={onCancel}>
