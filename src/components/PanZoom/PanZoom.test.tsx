@@ -58,6 +58,17 @@ describe("PanZoom", () => {
     expect(onZoom).toHaveBeenCalledTimes(3);
   });
 
+  it("calls onReset instead of the default reset when given", () => {
+    const onZoom = vi.fn();
+    const onReset = vi.fn();
+    const p = props({ onZoom, onReset, zoom: 3, x: 5, y: 5 });
+    const preventDefault = vi.fn();
+    p.onKeyDown({ key: "0", currentTarget: el, preventDefault });
+    expect(onReset).toHaveBeenCalledTimes(1);
+    expect(onZoom).not.toHaveBeenCalled();
+    expect(preventDefault).toHaveBeenCalled();
+  });
+
   it("registers a non-passive wheel listener and removes it on unmount", () => {
     const m = mount({ zoom: 1, x: 0, y: 0 });
     expect(m.p.onWheel).toBeUndefined();
