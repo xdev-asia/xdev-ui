@@ -116,6 +116,18 @@ describe("AppShell", () => {
         done();
       }
     });
+    it("does nothing when the menu button is hidden (desktop width) or the drawer is closed", () => {
+      h.effects.length = 0;
+      h.refs.length = 0;
+      AppShell({ ...base, navOpen: true });
+      h.refs[0].current = { focus: vi.fn(), getClientRects: () => [] };
+      h.refs[3].current = { inert: false };
+      expect(h.effects[0]()).toBeUndefined();
+      expect(h.refs[3].current.inert).toBe(false);
+      h.effects.length = 0;
+      AppShell({ ...base, navOpen: false });
+      expect(h.effects[0]()).toBeUndefined();
+    });
     it("closing returns focus to the menu button and drops the listener", () => {
       const { menu, cleanup } = open();
       try {
