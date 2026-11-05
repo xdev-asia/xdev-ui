@@ -313,7 +313,8 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     var el;
     el = h(React.Fragment, null,
       h(X.Tag, null, "worktree"), h(X.Tag, null, "main"), h(X.Tag, null, "detached"),
-      h(X.Tag, { tone: "warn" }, "uncommitted"));
+      h(X.Tag, { tone: "warn" }, "uncommitted"),
+      h(X.Tag, { onRemove: function () {}, removeLabel: "Remove flag" }, "--yolo"));
     return el;
     },
   },

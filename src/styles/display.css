@@ -30,6 +30,9 @@
   color: var(--text-2);
 }
 .ws-tag-warn { border-color: transparent; background: var(--warn-bg); color: var(--warn); font-weight: 600; }
+.ws-tag-removable { display: inline-flex; align-items: center; gap: 2px; padding-right: 0; }
+.ws-tag-remove { width: 16px; height: 16px; padding: 0; border-radius: var(--radius-s); }
+.ws-tag-remove svg { width: 10px; height: 10px; }
 
 .ws-chip {
   display: inline-grid;
