@@ -1,4 +1,4 @@
-import { useId, useRef, type FormEvent, type JSX, type ReactNode } from "react";
+import { useId, useRef, type FormEvent, type JSX, type ReactNode, type RefObject } from "react";
 import { useModal } from "../../internal/modal";
 import { Button } from "../Button/Button";
 
@@ -19,6 +19,7 @@ export interface FormDialogProps {
   children?: ReactNode;
   /** Called with the submit event; the default navigation is already prevented. */
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
+  formId?: undefined;
   /** Cancel, Esc and the backdrop. Not called while `busy`. */
   onCancel: () => void;
   /** Submitting: the submit button shows `labels.saving` with a spinner and every close request is ignored. */
@@ -35,36 +36,40 @@ export interface FormDialogProps {
   labels?: Partial<FormDialogLabels>;
 }
 
-export function FormDialog({ title, description, children, onSubmit, onCancel, busy, error, submitDisabled, submitLabel, size = "default", modal = true, labels }: FormDialogProps): JSX.Element {
+/** FormDialog around a `<form id={formId}>` you render in `children` (e.g. one owned by a form library). */
+export interface FormDialogExternalFormProps extends Omit<FormDialogProps, "onSubmit" | "formId"> {
+  /** id of your form: FormDialog renders no form of its own and the submit button gets `form={formId}`. Handle submit and `busy` on that form. */
+  formId: string;
+  onSubmit?: undefined;
+}
+
+export function FormDialog({ title, description, children, onSubmit, formId, onCancel, busy, error, submitDisabled, submitLabel, size = "default", modal = true, labels }: FormDialogProps | FormDialogExternalFormProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
   const id = useId();
   const titleId = `x-fdialog-${id}`;
   const descId = `x-fdialog-d-${id}`;
   const root = useRef<HTMLDivElement | null>(null);
-  const panel = useRef<HTMLFormElement | null>(null);
+  const panel = useRef<HTMLElement | null>(null);
   const cancel = (): void => {
     if (!busy) onCancel();
   };
   const onKeyDown = useModal(modal, root, panel, cancel);
   const submit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    if (!busy) onSubmit(e);
+    if (!busy) onSubmit?.(e);
   };
-  return (
-    <div className="dialog-backdrop" ref={root} data-modal={modal ? "true" : undefined} onKeyDown={onKeyDown}>
-      <form
-        ref={panel}
-        className="dialog x-form-dialog"
-        data-size={size}
-        role="dialog"
-        aria-modal={modal ? "true" : undefined}
-        aria-labelledby={titleId}
-        aria-describedby={description ? descId : undefined}
-        aria-busy={busy ? "true" : undefined}
-        tabIndex={modal ? -1 : undefined}
-        noValidate
-        onSubmit={submit}
-      >
+  const panelProps = {
+    className: "dialog x-form-dialog",
+    "data-size": size,
+    role: "dialog",
+    "aria-modal": modal ? ("true" as const) : undefined,
+    "aria-labelledby": titleId,
+    "aria-describedby": description ? descId : undefined,
+    "aria-busy": busy ? ("true" as const) : undefined,
+    tabIndex: modal ? -1 : undefined,
+  };
+  const content = (
+    <>
         <h2 className="dialog-title" id={titleId}>
           {title}
         </h2>
@@ -83,7 +88,7 @@ export function FormDialog({ title, description, children, onSubmit, onCancel, b
           <Button variant="secondary" onClick={cancel} disabled={busy}>
             {l.cancel}
           </Button>
-          <Button type="submit" disabled={submitDisabled || busy}>
+          <Button type="submit" form={formId} disabled={submitDisabled || busy}>
             {busy ? (
               <span className="x-spinner" data-size="sm" aria-hidden="true">
                 <span className="x-spinner-ring" />
@@ -92,7 +97,19 @@ export function FormDialog({ title, description, children, onSubmit, onCancel, b
             {busy ? l.saving : (submitLabel ?? l.submit)}
           </Button>
         </div>
-      </form>
+    </>
+  );
+  return (
+    <div className="dialog-backdrop" ref={root} data-modal={modal ? "true" : undefined} onKeyDown={onKeyDown}>
+      {formId ? (
+        <div ref={panel as RefObject<HTMLDivElement | null>} {...panelProps}>
+          {content}
+        </div>
+      ) : (
+        <form ref={panel as RefObject<HTMLFormElement | null>} {...panelProps} noValidate onSubmit={submit}>
+          {content}
+        </form>
+      )}
     </div>
   );
 }

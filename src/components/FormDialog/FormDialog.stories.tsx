@@ -22,3 +22,13 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 export const Busy: Story = { args: { busy: true } };
 export const ServerError: Story = { args: { error: "This email is already used by another account." } };
+/** The form is owned outside (a form library); the submit button targets it with `form`. */
+export const ExternalForm: Story = {
+  render: () => (
+    <FormDialog title="Rename banner" submitLabel="Rename" modal={false} formId="rename-banner" onCancel={() => {}}>
+      <form id="rename-banner" onSubmit={(e) => e.preventDefault()}>
+        <Field label="Name" defaultValue="Spring sale" />
+      </form>
+    </FormDialog>
+  ),
+};

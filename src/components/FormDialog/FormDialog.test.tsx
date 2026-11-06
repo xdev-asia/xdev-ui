@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import { findAll } from "../../test-utils";
@@ -55,5 +57,19 @@ describe("FormDialog", () => {
     expect(renderToStaticMarkup(<FormDialog title="x" error="Email already used" onSubmit={noop} onCancel={noop} />)).toContain(
       '<p class="x-form-dialog-error" role="alert">Email already used</p>',
     );
+  });
+  it("formId renders no form; the submit button targets the external form", () => {
+    const html = renderToStaticMarkup(
+      <FormDialog title="Edit" formId="user-form" onCancel={noop}>
+        <form id="user-form" />
+      </FormDialog>,
+    );
+    expect(html).toContain('<div class="dialog x-form-dialog"');
+    expect(html.match(/<form/g)).toHaveLength(1);
+    expect(html).toMatch(/<button type="submit" class="btn" form="user-form">Save<\/button>/);
+  });
+  it("grid children can shrink (min-width: 0)", () => {
+    const css = readFileSync(resolve(__dirname, "../../styles/overlays.css"), "utf8");
+    expect(css).toMatch(/\.x-form-dialog-fields > \* \{[^}]*min-width: 0/);
   });
 });

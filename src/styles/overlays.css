@@ -192,5 +192,6 @@
 /* FormDialog (.x-form-dialog) */
 .x-form-dialog-desc { margin: 0 0 var(--x-space-4); color: var(--x-color-muted); line-height: 1.5; }
 .x-form-dialog-fields { display: grid; gap: var(--x-space-4); color: var(--x-color-ink); }
+.x-form-dialog-fields > * { min-width: 0; }
 .x-form-dialog-error { margin: 0 0 var(--x-space-4); padding: var(--x-space-2) var(--x-space-3); border-radius: var(--x-radius-sm); background: var(--x-color-danger-soft); color: var(--x-color-danger); font-size: 13px; }
 .x-form-dialog .btn { display: inline-flex; align-items: center; gap: var(--x-space-2); }
