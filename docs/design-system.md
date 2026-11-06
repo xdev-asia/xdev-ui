@@ -99,7 +99,7 @@ Install them with `npx xdev-ui-skills install` (`--codex`, `--cursor`, `--user`,
 | Overlays | Menu, MenuButton, Dialog, FormDialog, Drawer, CommandPalette, Popover, Tooltip |
 | Brand | BrandMark, Icon, FileIcon |
 | Layout | AppShell, PageHeader, FormSection, SaveBar, Container, Stack, Grid |
-| Data | DescriptionList, StatTile, DataTable, Pagination, FacetFilter, BulkBar |
+| Data | DescriptionList, StatTile, DataTable, Pagination, FacetFilter, BulkBar, SortableList |
 | Image (`@xdev-asia/ui/image`, peer `react-easy-crop`) | ImageCropper, ImageField |
 
 Each component folder has its rules in `README.md`; props are the exported `*Props` types.

@@ -565,11 +565,24 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.Button, { variant: "secondary" }, "Suspend"),
       h(X.Button, { variant: "secondary", icon: "trash" }, "Delete")),
   },
+  "SortableList": {
+    style: {"padding": "16px", "width": "360px", "maxWidth": "100%"},
+    render: (X, h) => h(SortableListDemo, { X: X }),
+  },
   "Pagination": {
     style: {"padding": "16px", "width": "420px", "maxWidth": "100%"},
     render: (X, h) => h(X.Pagination, { page: 2, pageSize: 20, total: 57, onPageChange() {}, pageSizeOptions: [10, 20, 50], onPageSizeChange() {} }),
   },
 };
+
+function SortableListDemo({ X }) {
+  const [items, setItems] = React.useState(["Install the app", "Create an account", "Pick a plan", "Invite the team"]);
+  return React.createElement(X.SortableList, {
+    items: items, label: "Onboarding steps", getKey: function (s) { return s; },
+    onReorder: function (from, to) { setItems(X.moveItem(items, from, to)); },
+    renderItem: function (s, i, handle) { return React.createElement(React.Fragment, null, handle, React.createElement("span", null, (i + 1) + ". " + s)); },
+  });
+}
 
 function PopoverDemo({ X }) {
   const [open, setOpen] = React.useState(true);

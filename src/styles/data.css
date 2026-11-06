@@ -59,6 +59,18 @@
 .x-table tbody tr[data-drop="before"] td { box-shadow: inset 0 2px 0 var(--accent); }
 .x-table tbody tr[data-drop="after"] td { box-shadow: inset 0 -2px 0 var(--accent); }
 
+/* SortableList (.x-sortable) */
+.x-sortable { display: flex; flex-direction: column; gap: var(--x-space-1); margin: 0; padding: 0; list-style: none; }
+.x-sortable-item { display: flex; align-items: center; gap: var(--x-space-2); padding: var(--x-space-1) var(--x-space-2); border: 1px solid var(--line); border-radius: var(--radius-m); background: var(--bg-2); }
+.x-sortable-item[data-lifted], .x-sortable-item[data-dragging] { background: var(--bg-3); }
+.x-sortable-item[data-drop="before"] { box-shadow: 0 -2px 0 var(--accent); }
+.x-sortable-item[data-drop="after"] { box-shadow: 0 2px 0 var(--accent); }
+.x-sortable-handle { display: inline-flex; flex: none; align-items: center; justify-content: center; padding: var(--x-space-1); border: 0; border-radius: var(--radius-s); background: transparent; color: var(--text-3); cursor: grab; touch-action: none; }
+.x-sortable-handle:hover { color: var(--text-1); background: var(--bg-3); }
+.x-sortable-handle:active { cursor: grabbing; }
+.x-sortable-handle:disabled { cursor: default; opacity: 0.4; background: transparent; color: var(--text-3); }
+.x-sortable-handle:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: 2px; }
+
 /* FacetFilter (.x-facet) */
 .x-facet-trigger[data-active] { background: var(--bg-3); border-color: var(--accent); color: var(--x-color-ink); }
 .x-facet-trigger[data-active] .task-chip-count { background: var(--x-color-accent-soft); color: var(--x-color-ink); }

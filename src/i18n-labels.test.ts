@@ -34,6 +34,7 @@ import {
   FormDialog,
   SaveBar,
   Skeleton,
+  SortableList,
 } from "./index";
 
 const S = (k: string) => `§${k}§`;
@@ -287,6 +288,13 @@ describe("labels override every default English string", () => {
     const none = renderToStaticMarkup(h(FacetFilter, { label: "L", options: [], selected: [], onChange() {}, searchable: true, defaultOpen: true, labels }));
     expect(none).toContain(S("nr"));
     expectNoEnglish(none, ["No options match"]);
+  });
+
+  it("SortableList", () => {
+    const labels = { handle: (n: string) => `${S("h")}${n}`, lifted: S, moved: () => S("m"), dropped: () => S("d"), cancelled: S("c") };
+    const html = renderToStaticMarkup(h(SortableList<string>, { items: ["x", "y"], getKey: (k: string) => k, renderItem: (_k: string, _i: number, hd: unknown) => hd as never, labels }));
+    expect(html).toContain(`${S("h")}x`);
+    expectNoEnglish(html, ["Drag to reorder"]);
   });
 
   it("BulkBar", () => {

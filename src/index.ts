@@ -74,6 +74,7 @@ export * from "./components/StatTile/StatTile";
 export * from "./components/DataTable/DataTable";
 export * from "./components/DataTable/table-helpers";
 export * from "./components/DataTable/table-reorder";
+export * from "./components/SortableList/SortableList";
 export * from "./components/FacetFilter/FacetFilter";
 export * from "./components/FacetFilter/facet-helpers";
 export * from "./components/BulkBar/BulkBar";

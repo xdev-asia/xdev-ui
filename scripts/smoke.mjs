@@ -83,6 +83,7 @@ const cases = {
   DataTable: [{ caption: "Users", rowKey: (r) => r.id, rows: [{ id: "1", name: "Ada" }], columns: [{ key: "name", header: "Name", sortable: true, cell: (r) => r.name }], selected: new Set(), onSelectedChange() {} }],
   FacetFilter: [{ label: "Role", options: [{ value: "a", label: "Admin" }], selected: ["a"], onChange() {}, defaultOpen: true }],
   BulkBar: [{ count: 2, onClear() {} }, "Delete"],
+  SortableList: [{ items: ["a", "b"], getKey: (k) => k, renderItem: (k, _i, handle) => h("span", null, handle, k) }],
   Pagination: [{ page: 2, pageSize: 20, total: 57, onPageChange() {}, pageSizeOptions: [10, 20, 50], onPageSizeChange() {} }],
 };
 let fail = 0;
