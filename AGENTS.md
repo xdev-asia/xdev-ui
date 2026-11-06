@@ -23,13 +23,13 @@ Read the design system through the bundled MCP server instead of guessing props 
 | `xdevui_search_tokens` | find the token for a colour, space, radius or type size |
 | `xdevui_list_icons` | valid `IconName` values |
 | `xdevui_search_docs` | find which component or rule covers a topic |
-| `xdevui_get_skill` | read a skill (`xdev-ui-build-app`, `xdev-ui-admin`, `xdev-ui-review`) and its references |
+| `xdevui_get_skill` | read a skill (`xdev-ui-build-app`, `xdev-ui-admin`, `xdev-ui-review`, `xdev-ui-ux-standards`) and its references |
 
 Prompt `xdevui_build_ui` runs those steps in order; `xdevui_build_app` and `xdevui_build_admin` do the same through a skill and its template. Without MCP: `node_modules/@xdev-asia/ui/dist/llms-full.txt` (or <https://ui.xdev.asia/llms-full.txt>) holds the same content in one file.
 
 ### Skills
 
-`npx xdev-ui-skills install` copies `xdev-ui-build-app`, `xdev-ui-admin` and `xdev-ui-review` into `.claude/skills` (`--codex` or `--cursor`: `.agents/skills`; `--user`: your home). `npx xdev-ui-skills create app|admin <dir>` scaffolds a project. Run the review skill's `scripts/audit.mjs src --i18n src/i18n` before you finish UI work.
+`npx xdev-ui-skills install` copies `xdev-ui-build-app`, `xdev-ui-admin`, `xdev-ui-review` and `xdev-ui-ux-standards` into `.claude/skills` (`--codex` or `--cursor`: `.agents/skills`; `--user`: your home). `npx xdev-ui-skills create app|admin <dir>` scaffolds a project. Run the review skill's `scripts/audit.mjs src --i18n src/i18n` before you finish UI work.
 
 ### Rules agents break most
 

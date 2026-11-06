@@ -59,15 +59,27 @@ Inside a workspace surface, `.x-ws` remaps the semantic layer onto graphite, so 
 
 ## Agent skills
 
-The package ships three skills in `skills/`, in the open Agent Skills format (a `SKILL.md` with `name`, `description` and `license`, plus `references/` and `templates/`):
+The package ships four skills in `skills/`, in the open Agent Skills format (a `SKILL.md` with `name`, `description` and `license`, plus `references/` and `templates/`):
 
 | skill | use it to |
 |---|---|
 | `xdev-ui-build-app` | start an app: shell, theme, i18n, routing, states; template `templates/app` |
 | `xdev-ui-admin` | build console screens: dashboard, lists, detail, forms, roles, settings, audit log; template `templates/admin` |
-| `xdev-ui-review` | audit a UI with `scripts/audit.mjs` (tokens, stripes, primary buttons, en and vi parity) and a manual checklist |
+| `xdev-ui-review` | audit a UI with `scripts/audit.mjs` (tokens, stripes, primary buttons, en and vi parity, focus, names, target size, motion, contrast) and a manual checklist |
+| `xdev-ui-ux-standards` | design and review against WCAG 2.2 AA, the APG patterns, the macOS, Windows and GNOME guidelines and the ten usability heuristics |
 
 Install them with `npx xdev-ui-skills install` (`--codex`, `--cursor`, `--user`, `--dir <path>`, `--skill <name>`, `--force`, `--dry-run`), scaffold an app with `npx xdev-ui-skills create app|admin <dir>`, or add the Claude Code plugin: `/plugin marketplace add xdev-asia/xdev-ui`, then `/plugin install xdev-ui@xdev-asia`. Agents without a file install read a skill through the MCP tool `xdevui_get_skill`, or use the prompts `xdevui_build_app` and `xdevui_build_admin`.
+
+## Standards
+
+The library targets WCAG 2.2 level AA on macOS, Windows and Linux. The `xdev-ui-ux-standards` skill holds each rule with the page it came from.
+
+- **Keyboard.** Every component follows its WAI-ARIA Authoring Practices pattern; a composite widget is one Tab stop and arrow keys move inside it. Known gaps: `Menu`, `TabStrip`, `CommandPalette`, `Toolbar` and `ZoomBar`.
+- **Focus.** The ring is `--x-color-focus`, at least 3:1 on every ground. Never remove the outline without a `:focus-visible` replacement.
+- **Contrast.** Body text 4.5:1, UI parts 3:1. `--text-3` and the hairline tokens are below that; use them only for text and boundaries a user does not need. `audit.mjs --contrast` lists every pair.
+- **Targets.** Pointer targets are 24 by 24 CSS px, or have 24px of clear space.
+- **Preferences.** Motion stops under `prefers-reduced-motion: reduce`; focus and state stay visible under `forced-colors: active`.
+- **Platforms.** One behaviour on every platform: Cancel before the primary button, sentence case, Cmd or Ctrl plus comma for settings, F6 to the next pane, native window controls.
 
 ## Components
 

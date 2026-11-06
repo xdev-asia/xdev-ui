@@ -27,7 +27,7 @@ function files(dir: string): string[] {
 }
 
 describe("skills", () => {
-  it("ships the three skills", () => {
+  it("ships the skills", () => {
     expect(names.sort()).toEqual(expect.arrayContaining(["xdev-ui-review"]));
   });
   for (const name of names) {

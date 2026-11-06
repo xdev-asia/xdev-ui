@@ -21,10 +21,10 @@ function run(args: string[], cwd: string, home = tmp()) {
 }
 
 describe("xdev-ui-skills list", () => {
-  it("prints the three skills", () => {
+  it("prints the four skills", () => {
     const r = run(["list"], tmp());
     expect(r.code).toBe(0);
-    for (const n of ["xdev-ui-admin", "xdev-ui-build-app", "xdev-ui-review"]) expect(r.out).toContain(n);
+    for (const n of ["xdev-ui-admin", "xdev-ui-build-app", "xdev-ui-review", "xdev-ui-ux-standards"]) expect(r.out).toContain(n);
   });
 });
 
@@ -33,7 +33,7 @@ describe("xdev-ui-skills install", () => {
     const cwd = tmp();
     const r = run(["install"], cwd);
     expect(r.code).toBe(0);
-    expect(readdirSync(join(cwd, ".claude/skills")).sort()).toEqual(["xdev-ui-admin", "xdev-ui-build-app", "xdev-ui-review"]);
+    expect(readdirSync(join(cwd, ".claude/skills")).sort()).toEqual(["xdev-ui-admin", "xdev-ui-build-app", "xdev-ui-review", "xdev-ui-ux-standards"]);
     expect(existsSync(join(cwd, ".claude/skills/xdev-ui-review/scripts/audit.mjs"))).toBe(true);
     expect(existsSync(join(cwd, ".claude/skills/xdev-ui-admin/templates/admin/_npmrc"))).toBe(true);
     expect(r.out).toContain(join(".claude", "skills", "xdev-ui-admin", "SKILL.md"));

@@ -9,6 +9,7 @@ Tick each item in the running app. Items marked (auto) are also covered by `scri
 - Keyboard and focus
 - States
 - Actions and labels
+- Standards
 
 ## Tokens and type
 - (auto) No colour literal, no raw `px` except 1px hairlines, no raw font size: `font: var(--type-*)`.
@@ -21,7 +22,7 @@ Tick each item in the running app. Items marked (auto) are also covered by `scri
 - A `DataTable` scrolls inside its own wrapper; `hideNarrow` columns have dropped.
 - The `AppShell` sidebar is a drawer: the menu button opens it, the backdrop and Esc close it, and focus is not trapped behind it.
 - `PageHeader` actions wrap under the title; `FormSection` is one column; `Pagination` fits on one or two lines.
-- Touch targets are at least `--x-space-6` high; nothing overlaps.
+- Touch targets are at least `--x-space-6` high; nothing overlaps. (auto, partial) Controls under 24px are flagged by `target-size`.
 
 ## Themes and language
 - Switch `data-theme` between `dark` and `light` on `<html>`: no text loses contrast, no surface turns white or black by accident.
@@ -31,7 +32,8 @@ Tick each item in the running app. Items marked (auto) are also covered by `scri
 
 ## Keyboard and focus
 - Tab through the page: the order follows the reading order and the focus ring is visible on every control.
-- (auto) No `outline: none`.
+- (auto) No `outline: none` without a `:focus-visible` replacement; no positive `tabIndex`; icon-only buttons are named.
+- Each widget follows its keyboard and ARIA contract in the `xdev-ui-ux-standards` skill (`references/patterns.md`).
 - The skip link is the first stop and jumps to `main`.
 - A `Dialog` with `modal` moves focus in, Esc cancels, and focus returns to the trigger.
 - Icon-only buttons are `IconButton` with a `label`.
@@ -49,3 +51,6 @@ Tick each item in the running app. Items marked (auto) are also covered by `scri
 - Actions the role can never do are hidden; actions that become possible later (bulk actions with nothing selected) are disabled, not hidden.
 - Labels are sentence-case verbs ("Create session"), with no emoji and no exclamation marks.
 - State is a tint, a 1px border or a `StatusDot`; never a coloured left stripe on a rounded card or row.
+
+## Standards
+- This list covers the design-system rules. For WCAG 2.2 AA, the APG patterns, the platform decisions and the ten usability heuristics, walk `references/heuristics-checklist.md` in the `xdev-ui-ux-standards` skill. Run the audit with `--contrast` to list token pairs below WCAG contrast.
