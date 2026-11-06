@@ -438,7 +438,9 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
   },
   "NavList": {
     style: {"padding": "16px", "width": "240px"},
-    render: (X, h) => h(X.NavList, { title: "Settings", value: "general", items: [{ id: "general", label: "General" }, { id: "agents", label: "Agents", count: 3 }, { id: "keys", label: "Keyboard" }] }),
+    render: (X, h) => h(React.Fragment, null,
+      h(X.NavList, { title: "Settings", value: "general", items: [{ id: "general", label: "General" }, { id: "agents", label: "Agents", count: 3 }, { id: "keys", label: "Keyboard" }] }),
+      h(X.NavList, { title: "Content", collapsible: true, items: [{ id: "posts", label: "Posts", href: "#posts" }, { id: "pages", label: "Pages", href: "#pages" }] })),
   },
   "Popover": {
     style: {"padding": "16px", "height": "200px"},
