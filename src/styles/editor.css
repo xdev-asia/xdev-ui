@@ -21,7 +21,7 @@
 .x-editor-bars {
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: var(--x-z-sticky);
   border-bottom: 1px solid var(--line);
   border-radius: var(--radius-l) var(--radius-l) 0 0;
   background: var(--bg-1);
