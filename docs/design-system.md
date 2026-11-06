@@ -104,4 +104,11 @@ Install them with `npx xdev-ui-skills install` (`--codex`, `--cursor`, `--user`,
 
 Each component folder has its rules in `README.md`; props are the exported `*Props` types.
 
-The image components live in the subpath `@xdev-asia/ui/image` so the core entry never loads `react-easy-crop`; their rules are in `src/image/<Name>/README.md` and their CSS (`src/styles/image.css`) ships in `styles.css`.
+### Subpaths
+
+| entry | content | peers |
+|---|---|---|
+| `@xdev-asia/ui/editor` | RichTextEditor (Markdown by default, or HTML) | `@tiptap/*` (core, react, pm, starter-kit, extension-image, extension-link, extensions, markdown) |
+| `@xdev-asia/ui/image` | ImageCropper, ImageField, crop helpers (`cropToBlob`, `resizeToBlob`, `sameAspect`) | `react-easy-crop` |
+
+Subpath components keep their rules in `src/<entry>/<Name>/README.md`; their CSS ships in `styles.css`. The core entry never loads a peer.
