@@ -68,6 +68,7 @@ const cases = {
   SaveBar: [{ dirty: true, onSave() {}, onDiscard() {} }],
   FileDrop: [{ label: "Files", onFiles() {} }],
   FieldMessage: [{ tone: "error" }, "Branch name is taken"],
+  MenuButton: [{ label: "Actions", items: [{ label: "Edit" }, { label: "Profile", href: "/me" }] }],
   Popover: [{ open: true, onClose() {}, label: "Branch", trigger: "main" }, "Switch branch"],
   Tooltip: [{ content: "Copy path" }, h("button", { type: "button" }, "Copy")],
   SplitHandle: [{ direction: "horizontal", value: 240, min: 160, max: 420, onResize() {} }],

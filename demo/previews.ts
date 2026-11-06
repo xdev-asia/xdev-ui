@@ -262,7 +262,9 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       { type: "separator" },
       { label: "Kill session", danger: true, chord: "Ctrl+W" }
     ] });
-    return el;
+    return h("div", { style: { display: "flex", flexDirection: "column", gap: 12, alignItems: "flex-start" } },
+      h(X.MenuButton, { label: "Row actions", items: [{ label: "Edit" }, { label: "Open profile", href: "#profile" }, { type: "separator" }, { label: "Delete", danger: true }] }),
+      el);
     },
   },
   "Meter": {

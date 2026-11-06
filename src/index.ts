@@ -23,6 +23,7 @@ export * from "./components/TabStrip/TabStrip";
 export * from "./components/ActivityBar/ActivityBar";
 export * from "./components/StatusBar/StatusBar";
 export * from "./components/Menu/Menu";
+export * from "./components/Menu/MenuButton";
 export * from "./components/Dialog/Dialog";
 export * from "./components/FormDialog/FormDialog";
 export * from "./components/Drawer/Drawer";

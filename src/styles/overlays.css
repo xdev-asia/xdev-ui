@@ -35,6 +35,14 @@
 .x-menu-sep { height: 1px; margin: 4px 0; background: var(--line); }
 .x-menu-swatch { width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--line); box-sizing: border-box; }
 .x-menu-group { padding: 6px 8px 2px; font: 600 11px var(--font-body); color: var(--text-2); }
+a.x-menu-item { text-decoration: none; }
+
+/* MenuButton (.x-menubutton) */
+.x-menubutton { position: relative; display: inline-flex; }
+.x-menubutton-caret { margin-inline-start: var(--x-space-1); color: var(--text-2); }
+.x-menubutton-pop { position: absolute; top: calc(100% + var(--x-space-1)); left: 0; z-index: var(--x-z-dropdown); animation: x-pop-in 120ms ease-out; }
+.x-menubutton-pop[data-align="end"] { left: auto; right: 0; }
+.x-menubutton-pop[data-portal] { position: fixed; top: 0; left: 0; right: auto; }
 
 .dialog-backdrop {
   display: grid;
@@ -157,7 +165,7 @@
 .x-tooltip[data-open] { opacity: 1; visibility: visible; transition-delay: 0s; }
 
 @media (prefers-reduced-motion: reduce) {
-  .x-popover { animation: none; }
+  .x-popover, .x-menubutton-pop { animation: none; }
   .x-tooltip { transition: none; }
 }
 

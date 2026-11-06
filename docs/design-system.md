@@ -96,7 +96,7 @@ Install them with `npx xdev-ui-skills install` (`--codex`, `--cursor`, `--user`,
 | Display | Kbd, Avatar, Badge, Tag, AgentChip, DiffStat, Comment, ReactionBar, ListRow, Card, EmptyState, SettingRow, CodeBlock, Heatmap, CommitGraph, PanZoom |
 | Status | StatusDot, Meter, Banner, Toast, Spinner, Skeleton, FieldMessage |
 | Navigation | TabStrip, ActivityBar, StatusBar, Tabs, NavList, Breadcrumb, TreeView, Disclosure, SplitHandle, Toolbar |
-| Overlays | Menu, Dialog, FormDialog, Drawer, CommandPalette, Popover, Tooltip |
+| Overlays | Menu, MenuButton, Dialog, FormDialog, Drawer, CommandPalette, Popover, Tooltip |
 | Brand | BrandMark, Icon, FileIcon |
 | Layout | AppShell, PageHeader, FormSection, SaveBar, Container, Stack, Grid |
 | Data | DescriptionList, StatTile, DataTable, Pagination, FacetFilter, BulkBar |
