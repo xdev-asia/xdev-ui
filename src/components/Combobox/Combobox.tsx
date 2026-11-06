@@ -4,6 +4,7 @@ import { rovingIndex } from "../../internal/keys";
 import { Icon } from "../Icon/Icon";
 import { IconButton } from "../IconButton/IconButton";
 import { Tag } from "../Tag/Tag";
+import { foldText } from "../../internal/text";
 
 export interface ComboboxOption<T extends string = string> {
   value: T;
@@ -68,10 +69,7 @@ export interface ComboboxMultipleProps<T extends string = string> extends Combob
 
 export type ComboboxProps<T extends string = string> = ComboboxSingleProps<T> | ComboboxMultipleProps<T>;
 
-/** Lower case without diacritics; "đ" folds to "d", so "Đà Nẵng" matches "da nang". */
-export function foldText(s: string): string {
-  return s.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().replace(/đ/g, "d");
-}
+export { foldText };
 
 /** Default filter: the folded label contains the folded, trimmed query. */
 export function comboboxFilter(option: { label: string }, query: string): boolean {

@@ -63,7 +63,6 @@ export const en = {
     searchPlaceholder: "Search by name or email",
     filterStatus: "Status",
     filterRole: "Role",
-    allRoles: "All roles",
     status: {
       active: "Active",
       invited: "Invited",

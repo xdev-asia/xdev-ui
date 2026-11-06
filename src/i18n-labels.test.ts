@@ -4,12 +4,14 @@ import { describe, expect, it } from "vitest";
 import {
   ActivityBar,
   AppShell,
+  BulkBar,
   Breadcrumb,
   CodeBlock,
   Combobox,
   CommandPalette,
   DataTable,
   DiffStat,
+  FacetFilter,
   Dialog,
   NavList,
   Pagination,
@@ -257,5 +259,31 @@ describe("labels override every default English string", () => {
     const html = renderToStaticMarkup(h(FileDrop, { label: "F", maxSize: 10, onFiles() {}, onRemove() {}, items: [{ id: "1", name: "a", progress: 5 }], labels }));
     for (const v of [S("d"), S("b"), S("l"), `${S("x")}a`, S("u")]) expect(html).toContain(v);
     expectNoEnglish(html, ["Drop", "browse", "Remove", "Uploading", "Accepted"]);
+  });
+
+  it("DataTable reorder", () => {
+    const DT = DataTable as unknown as (p: Record<string, unknown>) => ReturnType<typeof DataTable>;
+    const labels = { reorderColumn: S("oc"), reorderHandle: (n: string) => `${S("rh")}${n}`, lifted: (n: string) => S(`lf${n}`), moved: (a: number, b: number) => S(`mv${a}${b}`), dropped: (a: number, b: number) => S(`dr${a}${b}`), cancelled: S("cc") };
+    const html = renderToStaticMarkup(h(DT, { caption: "c", rowKey: (r: { id: string }) => r.id, columns: [{ key: "a", header: "A", cell: (r: { id: string }) => r.id }], rows: [{ id: "x" }, { id: "y" }], reorderable: true, labels }));
+    for (const v of [S("oc"), `${S("rh")}x`, `${S("rh")}y`]) expect(html).toContain(v);
+    expectNoEnglish(html, ["Order", "Reorder"]);
+  });
+
+  it("FacetFilter", () => {
+    const labels = { search: S("se"), clearSearch: S("cs"), clear: S("cl"), noResults: S("nr"), selected: (n: number) => `${S("sl")}${n}` };
+    const options = [{ value: "a", label: "A" }];
+    const html = renderToStaticMarkup(h(FacetFilter, { label: "L", options, selected: ["a"], onChange() {}, searchable: true, defaultOpen: true, labels }));
+    for (const v of [S("se"), S("cl"), `${S("sl")}1`]) expect(html).toContain(v);
+    expectNoEnglish(html, ["Search options", "Clear", "selected"]);
+    const none = renderToStaticMarkup(h(FacetFilter, { label: "L", options: [], selected: [], onChange() {}, searchable: true, defaultOpen: true, labels }));
+    expect(none).toContain(S("nr"));
+    expectNoEnglish(none, ["No options match"]);
+  });
+
+  it("BulkBar", () => {
+    const labels = { region: S("rg"), selected: (n: number) => `${S("sl")}${n}`, clear: S("cl") };
+    const html = renderToStaticMarkup(h(BulkBar, { count: 2, onClear() {}, labels }));
+    for (const v of [S("rg"), `${S("sl")}2`, S("cl")]) expect(html).toContain(v);
+    expectNoEnglish(html, ["Bulk actions", "selected", "Clear selection"]);
   });
 });

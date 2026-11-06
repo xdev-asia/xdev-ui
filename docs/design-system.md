@@ -50,7 +50,7 @@ Inside a workspace surface, `.x-ws` remaps the semantic layer onto graphite, so 
 
 ## Data and forms
 
-- **Lists.** A `DataTable` has a `caption`, sortable columns, optional row selection and a `labels` object for each language. Pair it with `SearchInput`, `FilterChip` (with counts) and `Pagination`; reset to page 1 when a filter changes. Put filtering, sorting and paging in pure functions (`sortTableRows`, `paginateRows`) and test them.
+- **Lists.** A `DataTable` has a `caption`, sortable columns, optional row selection and a `labels` object for each language. Pair it with `SearchInput`, `FilterChip` (with counts) and `Pagination`; reset to page 1 when a filter changes. Put filtering, sorting and paging in pure functions (`sortTableRows`, `paginateRows`) and test them. A facet with many values (status, role, tag) is a `FacetFilter`; actions on the selected rows go in a `BulkBar` that appears while rows are selected. `reorderable` adds drag handles for lists with a manual order; it is off while a sort is active.
 - **Summaries.** `StatTile` shows one number with an optional delta; the caller decides whether up is good (`deltaTone`). Use `Meter` for a share of a limit and `DescriptionList` for the facts of one record.
 - **Forms.** Validate in a pure function and show the message through `Field` `error`, which replaces the hint. Save stays disabled until the form changes and while it saves; Cancel is secondary and comes first. A `Switch` applies at once and does not belong in a form with Save.
 - **Destructive actions.** A modal `Dialog` with `alert` names the thing removed and has the primary confirm button last.
@@ -81,6 +81,6 @@ Install them with `npx xdev-ui-skills install` (`--codex`, `--cursor`, `--user`,
 | Overlays | Menu, Dialog, FormDialog, Drawer, CommandPalette, Popover, Tooltip |
 | Brand | BrandMark, Icon, FileIcon |
 | Layout | AppShell, PageHeader, FormSection, SaveBar |
-| Data | DescriptionList, StatTile, DataTable, Pagination |
+| Data | DescriptionList, StatTile, DataTable, Pagination, FacetFilter, BulkBar |
 
 Each component folder has its rules in `README.md`; props are the exported `*Props` types.

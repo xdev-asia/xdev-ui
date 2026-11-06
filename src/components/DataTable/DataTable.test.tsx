@@ -70,4 +70,28 @@ describe("DataTable", () => {
     expect(html).toContain("ws-mono");
     expect(html).toContain('data-width="min"');
   });
+  it("reorderable adds a named drag handle per row and a polite live region", () => {
+    const html = renderToStaticMarkup(<DataTable {...base} reorderable onReorder={() => {}} rowLabel={(r) => r.name} />);
+    expect(html.match(/class="x-table-handle"/g)).toHaveLength(2);
+    expect(html).toContain('aria-label="Reorder Ada"');
+    expect(html).toContain('aria-label="Reorder Grace"');
+    expect(html).toContain('<span class="x-sr-only">Order</span>');
+    expect(html).toContain('aria-live="polite"');
+    expect(html).not.toMatch(/class="x-table-handle"[^>]*disabled/);
+    expect(renderToStaticMarkup(<DataTable {...base} />)).not.toContain("x-table-handle");
+  });
+  it("disables the handles while a sort is active, while loading, or with one row", () => {
+    const disabled = (html: string) => html.match(/<button[^>]*class="x-table-handle"[^>]*disabled=""/g)?.length ?? 0;
+    expect(disabled(renderToStaticMarkup(<DataTable {...base} reorderable sort={{ key: "name", dir: "asc" }} />))).toBe(2);
+    expect(disabled(renderToStaticMarkup(<DataTable {...base} reorderable loading />))).toBe(2);
+    expect(disabled(renderToStaticMarkup(<DataTable {...base} rows={[rows[0]]} reorderable />))).toBe(1);
+  });
+  it("the empty row spans the handle column too", () => {
+    expect(renderToStaticMarkup(<DataTable {...base} rows={[]} reorderable selected={new Set()} empty="none" />)).toContain('colSpan="4"');
+  });
+  it("reorder labels are overridable", () => {
+    const html = renderToStaticMarkup(<DataTable {...base} reorderable labels={{ reorderHandle: (n) => `Kéo ${n}`, reorderColumn: "Thứ tự" }} />);
+    expect(html).toContain('aria-label="Kéo 1"');
+    expect(html).toContain("Thứ tự");
+  });
 });

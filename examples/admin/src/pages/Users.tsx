@@ -1,6 +1,6 @@
 import { useMemo, useState, type JSX } from "react";
 import {
-  Avatar, Banner, Button, DataTable, EmptyState, FilterChip, PageHeader, Pagination, SearchInput, Select, StatusDot, Tag, Toolbar,
+  Avatar, Banner, BulkBar, Button, DataTable, EmptyState, FacetFilter, FilterChip, PageHeader, Pagination, SearchInput, StatusDot, Tag,
   paginateRows, sortTableRows,
   type DataTableColumn, type StatusTone, type TableSort,
 } from "@xdev-asia/ui";
@@ -19,17 +19,17 @@ const TONE: Record<UserStatus, StatusTone> = { active: "ok", invited: "warn", su
 export interface UserFilters {
   query: string;
   statuses: ReadonlySet<UserStatus>;
-  role: RoleId | "";
+  roles: ReadonlySet<RoleId>;
 }
 
-/** Pure: the users that match the search text (name or email), the chosen statuses and the role. */
+/** Pure: the users that match the search text (name or email), the chosen statuses and the chosen roles. */
 export function filterUsers(users: User[], f: UserFilters): User[] {
   const q = f.query.trim().toLowerCase();
   return users.filter(
     (u) =>
       (!q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)) &&
       (f.statuses.size === 0 || f.statuses.has(u.status)) &&
-      (!f.role || u.role === f.role),
+      (f.roles.size === 0 || f.roles.has(u.role)),
   );
 }
 
@@ -37,6 +37,12 @@ export function filterUsers(users: User[], f: UserFilters): User[] {
 export function statusCounts(users: User[], f: UserFilters): Record<UserStatus, number> {
   const base = filterUsers(users, { ...f, statuses: new Set() });
   return { active: base.filter((u) => u.status === "active").length, invited: base.filter((u) => u.status === "invited").length, suspended: base.filter((u) => u.status === "suspended").length };
+}
+
+/** Pure: how many users each role has with the other filters applied (for the role facet counts). */
+export function roleCounts(users: User[], f: UserFilters): Record<RoleId, number> {
+  const base = filterUsers(users, { ...f, roles: new Set() });
+  return Object.fromEntries(ROLE_IDS.map((r) => [r, base.filter((u) => u.role === r).length])) as Record<RoleId, number>;
 }
 
 const sortValue = (u: User, key: string): string | number => (key === "lastSeen" ? (u.lastSeen ? Date.parse(u.lastSeen) : 0) : key === "name" ? u.name : key === "email" ? u.email : key === "role" ? u.role : u.status);
@@ -73,8 +79,9 @@ export function UsersView(p: UsersViewProps): JSX.Element {
   const sorted = useMemo(() => sortTableRows(filtered, p.sort, sortValue), [filtered, p.sort]);
   const rows = paginateRows(sorted, p.page, p.pageSize);
   const counts = statusCounts(users, p.filters);
+  const byRole = roleCounts(users, p.filters);
   const ids = [...p.selected];
-  const filtering = Boolean(p.filters.query.trim() || p.filters.statuses.size || p.filters.role);
+  const filtering = Boolean(p.filters.query.trim() || p.filters.statuses.size || p.filters.roles.size);
 
   const columns: DataTableColumn<User>[] = [
     {
@@ -111,7 +118,7 @@ export function UsersView(p: UsersViewProps): JSX.Element {
       icon="search"
       title={p.filters.query.trim() ? t("users.noMatchTitle", { query: p.filters.query.trim() }) : t("users.noMatchFilters")}
       hint={t("users.noMatchHint")}
-      actions={<Button variant="secondary" onClick={() => change({ query: "", statuses: new Set(), role: "" })}>{t("users.clearFilters")}</Button>}
+      actions={<Button variant="secondary" onClick={() => change({ query: "", statuses: new Set(), roles: new Set() })}>{t("users.clearFilters")}</Button>}
     />
   ) : (
     <EmptyState
@@ -147,11 +154,13 @@ export function UsersView(p: UsersViewProps): JSX.Element {
                 labels={ui.searchInput}
               />
             </div>
-            <Select
-              aria-label={t("users.filterRole")}
-              value={p.filters.role}
-              onChange={(e) => change({ role: e.target.value as RoleId | "" })}
-              options={[{ value: "", label: t("users.allRoles") }, ...ROLE_IDS.map((r) => ({ value: r, label: t(`roles.names.${r}`) }))]}
+            <FacetFilter
+              label={t("users.filterRole")}
+              options={ROLE_IDS.map((r) => ({ value: r, label: t(`roles.names.${r}`), count: byRole[r] }))}
+              selected={[...p.filters.roles]}
+              onChange={(next) => change({ roles: new Set(next as RoleId[]) })}
+              placement="bottom-end"
+              labels={ui.facetFilter}
             />
           </div>
           <div className="app-chips" role="group" aria-label={t("users.filterStatus")}>
@@ -161,19 +170,6 @@ export function UsersView(p: UsersViewProps): JSX.Element {
               </FilterChip>
             ))}
           </div>
-          {canUpdate || canDelete ? (
-            <Toolbar
-              variant="bulk"
-              title={t("users.selected", { count: p.selected.size })}
-              labels={ui.toolbar}
-              actions={
-                <>
-                  {canUpdate ? <Button variant="secondary" disabled={!ids.length} onClick={() => p.onSuspend(ids)}>{t("users.suspend")}</Button> : null}
-                  {canDelete ? <Button variant="secondary" disabled={!ids.length} onClick={() => p.onDelete(ids)}>{t("users.delete")}</Button> : null}
-                </>
-              }
-            />
-          ) : null}
           <DataTable
             caption={t("users.table")}
             columns={columns}
@@ -188,6 +184,12 @@ export function UsersView(p: UsersViewProps): JSX.Element {
             empty={empty}
             labels={ui.dataTable}
           />
+          {canUpdate || canDelete ? (
+            <BulkBar count={p.selected.size} onClear={() => p.onSelectedChange(new Set())} labels={{ ...ui.bulkBar, selected: (count) => t("users.selected", { count }) }}>
+              {canUpdate ? <Button variant="secondary" onClick={() => p.onSuspend(ids)}>{t("users.suspend")}</Button> : null}
+              {canDelete ? <Button variant="secondary" onClick={() => p.onDelete(ids)}>{t("users.delete")}</Button> : null}
+            </BulkBar>
+          ) : null}
           <Pagination
             page={p.page}
             pageSize={p.pageSize}
@@ -220,7 +222,7 @@ export function UsersPage({ session, roles, onCreate, onDelete, version }: Users
   const { t } = useI18n();
   const notify = useNotify();
   const { state, reload } = useLoad(() => store.listUsers(), [store, version]);
-  const [filters, setFilters] = useState<UserFilters>(() => ({ query: queryOf(typeof window === "undefined" ? "" : window.location.hash).get("q") ?? "", statuses: new Set(), role: "" }));
+  const [filters, setFilters] = useState<UserFilters>(() => ({ query: queryOf(typeof window === "undefined" ? "" : window.location.hash).get("q") ?? "", statuses: new Set(), roles: new Set() }));
   const [sort, setSort] = useState<TableSort | null>(null);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
