@@ -41,15 +41,19 @@ Slice after sorting with `sortTableRows(rows, sort, valueOf)` and `paginateRows(
 - Columns: `{ key, header, cell, sortable, mono, hideNarrow }`. Mark long columns `hideNarrow` so 360px keeps name and status.
 - Show status with `StatusDot` and a label, a role with `Tag`, a person with `Avatar` and a link.
 - Chips: `FilterChip` with `pressed` and `count`; count each status with the other filters applied.
+- More than five values, or little room: `FacetFilter` (`label`, `options` with `count`, controlled `selected`). Keep it next to the search box.
+- Manually ordered lists (menu items, banners): `reorderable` and `onReorder={(from, to) => save(moveItem(rows, from, to))}`. Reorder is off while a sort is active; reorder the full list, not one page.
 
 ## Bulk actions
 
 ```tsx
-<Toolbar variant="bulk" title={t("users.selected", { count: selected.size })} labels={ui.toolbar}
-  actions={<Button variant="secondary" disabled={!ids.length} onClick={() => onSuspend(ids)}>{t("users.suspend")}</Button>} />
+<BulkBar count={selected.size} onClear={() => setSelected(new Set())} labels={ui.bulkBar}>
+  <Button variant="secondary" onClick={() => onSuspend(ids)}>{t("users.suspend")}</Button>
+  <Button variant="secondary" onClick={() => askDelete(ids)}>{t("users.delete")}</Button>
+</BulkBar>
 ```
 
-Show the bar only to roles that may act; disable the buttons while nothing is selected.
+`BulkBar` renders nothing at 0 selected. At most four secondary actions with verbs; a destructive one opens a `Dialog` that names the count. After the action clear the selection and toast. Show it only to roles that may act.
 
 ## Empty states
 

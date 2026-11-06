@@ -12,6 +12,10 @@ const manifest = JSON.parse(readFileSync(join(root, "generated/ai-manifest.json"
   sharedTypes: string;
 };
 const components = new Map(manifest.components.map((c) => [c.name, c]));
+// Secondary components (GridItem in Grid) live in their main component's entry; find them by their Props interface.
+for (const c of manifest.components) {
+  for (const m of c.types.matchAll(/export interface (\w+)Props\b/g)) if (!components.has(m[1])) components.set(m[1], c);
+}
 const tokenNames = new Set(manifest.tokens.map((t) => t.name));
 const iconNames = new Set(manifest.icons);
 const classNames = new Set(manifest.components.flatMap((c) => c.classes));

@@ -33,7 +33,7 @@ const DEFAULT_LABELS: ComboboxLabels = {
   clear: "Clear",
 };
 
-interface ComboboxBaseProps<T extends string> {
+export interface ComboboxBaseProps<T extends string> {
   /** Accessible name of the box and the list; shown above the box unless `hideLabel`. */
   label: string;
   /** Keep `label` as aria-label only, when a heading or a table column already names the box. */
