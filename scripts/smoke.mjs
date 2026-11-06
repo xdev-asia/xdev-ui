@@ -7,6 +7,8 @@ const cases = {
   Button: [{}, "Create session"],
   IconButton: [{ icon: "search", label: "Search" }],
   Segmented: [{ options: [{ value: "a", label: "A" }, { value: "b", label: "B" }] }],
+  PairingCode: [{ value: "7K4QM-2XD9P", label: "Pairing code", copyLabel: "Copy code", onCopy() {} }],
+  CodeInput: [{ length: 10, value: "7K4QM", onChange() {}, label: "Pairing code" }],
   ThemeSwitch: [{ value: "system", onChange() {} }],
   Select: [{ options: [{ value: "en", label: "English" }] }],
   FontField: [{ value: "Inter", onChange() {} }],

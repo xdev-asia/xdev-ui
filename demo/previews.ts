@@ -232,6 +232,18 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     style: {"display": "flex", "flexDirection": "column", "gap": "12px", "alignItems": "flex-start", "padding": "16px"},
     render: (X, h) => h(X.ThemeSwitch, { value: "system", onChange: () => {} }),
   },
+  "PairingCode": {
+    style: {"display": "flex", "flexDirection": "column", "gap": "12px", "padding": "16px", "maxWidth": "100%"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.PairingCode, { value: "7K4QM-2XD9P", label: "Pairing code", copyLabel: "Copy code", onCopy: function () {} }),
+      h(X.PairingCode, { value: "482 913", groupSize: 3, size: "md", label: "Check code" })),
+  },
+  "CodeInput": {
+    style: {"display": "flex", "flexDirection": "column", "gap": "12px", "padding": "16px", "width": "360px", "maxWidth": "100%"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.CodeInput, { length: 10, value: "7K4QM2", onChange: function () {}, label: "Pairing code" }),
+      h(X.CodeInput, { length: 6, groupSize: 3, alphabet: "digits", value: "482913", invalid: true, onChange: function () {}, label: "Check code" })),
+  },
   "Segmented": {
     style: {"display": "flex", "flexDirection": "column", "gap": "12px", "alignItems": "flex-start", "padding": "16px"},
     render: (X, h) => {

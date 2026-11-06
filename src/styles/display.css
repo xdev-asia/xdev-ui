@@ -289,3 +289,22 @@ button.x-list-row-main:disabled { cursor: default; }
 .x-reaction:disabled { cursor: default; opacity: 0.55; }
 .x-reaction:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: 1px; }
 .x-reaction-symbol { display: inline-flex; align-items: center; }
+
+/* PairingCode (.x-pairing-code) */
+.x-pairing-code {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--x-space-3);
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: var(--x-space-3) var(--x-space-4);
+  border: 1px solid var(--x-color-line-strong);
+  border-radius: var(--x-radius-md);
+  background: var(--x-color-surface);
+  color: var(--x-color-ink);
+}
+.x-pairing-code-value { min-width: 0; font: var(--type-stat); user-select: all; }
+.x-pairing-code-groups { display: flex; flex-wrap: wrap; gap: var(--x-space-1) var(--x-space-4); }
+.x-pairing-code-group { letter-spacing: 0.08em; }
+.x-pairing-code[data-size="md"] .x-pairing-code-value { font: 600 16px/1.4 var(--font-mono); }
