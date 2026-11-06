@@ -1,6 +1,7 @@
 export * from "./components/Button/Button";
 export * from "./components/IconButton/IconButton";
 export * from "./components/Segmented/Segmented";
+export * from "./components/SwatchGroup/SwatchGroup";
 export * from "./components/ThemeSwitch/ThemeSwitch";
 export * from "./components/Select/Select";
 export * from "./components/FontField/FontField";

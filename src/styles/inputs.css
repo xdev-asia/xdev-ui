@@ -268,3 +268,23 @@
 @media (forced-colors: active) {
   .search-input:focus { outline-color: Highlight; }
 }
+
+/* SwatchGroup (.x-swatches) */
+.x-swatches { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--x-space-2); padding: var(--x-space-1); }
+.x-swatch {
+  flex: none;
+  box-sizing: border-box;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: var(--text-1);
+  cursor: pointer;
+}
+.x-swatches[data-size="sm"] .x-swatch { width: 24px; height: 24px; }
+.x-swatch[data-tone="danger"] { background: var(--danger); }
+.x-swatch[data-tone="warning"] { background: var(--warn); }
+.x-swatch[data-tone="accent"] { background: var(--accent); }
+.x-swatch[data-tone="neutral"] { background: var(--text-1); }
+.x-swatch[aria-checked="true"], .x-swatch:focus-visible { outline: 2px solid var(--x-color-focus); outline-offset: 2px; }
