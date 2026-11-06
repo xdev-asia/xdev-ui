@@ -2,7 +2,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import { findAll } from "../../test-utils";
 import { CodeInput, type CodeInputProps } from "./CodeInput";
-import { groupCode, normalizeCode } from "./normalizeCode";
+import { formatCode, groupCode, normalizeCode } from "./normalizeCode";
 
 const base: CodeInputProps = { length: 10, value: "", onChange: () => {}, label: "Pairing code" };
 
@@ -78,5 +78,22 @@ describe("normalizeCode and groupCode", () => {
     expect(groupCode("482 913", 3)).toEqual(["482", "913"]);
     expect(groupCode("7K4", 5)).toEqual(["7K4"]);
     expect(groupCode("", 5)).toEqual([]);
+  });
+});
+
+describe("formatCode", () => {
+  it("groups by 5 with a dash by default", () => {
+    expect(formatCode("7K4QM2XD9P")).toBe("7K4QM-2XD9P");
+  });
+  it("takes a group size and a separator", () => {
+    expect(formatCode("482913", 3, " ")).toBe("482 913");
+    expect(formatCode("ABCDEFG", 3, "")).toBe("ABCDEFG");
+  });
+  it("ignores separators already in the code and keeps a short tail", () => {
+    expect(formatCode("7K4QM-2XD")).toBe("7K4QM-2XD");
+    expect(formatCode("48 29 13", 2, ".")).toBe("48.29.13");
+  });
+  it("gives an empty string for an empty code", () => {
+    expect(formatCode("")).toBe("");
   });
 });

@@ -1,8 +1,8 @@
-import { useId, type JSX, type ReactNode } from "react";
+import { forwardRef, useId, type HTMLAttributes, type ReactNode } from "react";
 import { cx } from "../../internal/cx";
 import { Badge } from "../Badge/Badge";
 
-export interface BoardColumnProps {
+export interface BoardColumnProps extends Omit<HTMLAttributes<HTMLElement>, "title" | "children"> {
   /** Column name ("In progress"). */
   title: string;
   /** Number of cards, shown as a Badge after the title. */
@@ -15,13 +15,15 @@ export interface BoardColumnProps {
   dropTarget?: boolean;
   /** Names the list of cards. Defaults to the title. */
   "aria-label"?: string;
-  className?: string;
 }
 
-export function BoardColumn({ title, count, actions, children, dropTarget = false, "aria-label": ariaLabel, className }: BoardColumnProps): JSX.Element {
+export const BoardColumn = forwardRef<HTMLElement, BoardColumnProps>(function BoardColumn(
+  { title, count, actions, children, dropTarget = false, "aria-label": ariaLabel, className, ...rest },
+  ref,
+) {
   const titleId = `x-board-col-${useId()}`;
   return (
-    <section className={cx("x-board-col", className)} aria-labelledby={titleId} data-drop-target={dropTarget ? "" : undefined}>
+    <section {...rest} ref={ref} className={cx("x-board-col", className)} aria-labelledby={titleId} data-drop-target={dropTarget ? "" : undefined}>
       <header className="x-board-col-head">
         <h3 className="x-board-col-title" id={titleId}>
           {title}
@@ -34,4 +36,4 @@ export function BoardColumn({ title, count, actions, children, dropTarget = fals
       </div>
     </section>
   );
-}
+});

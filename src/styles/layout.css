@@ -133,6 +133,20 @@
 .x-board-card:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: 2px; }
 .x-board-card-head { display: flex; align-items: center; gap: var(--x-space-2); min-width: 0; }
 .x-board-card-title { flex: 1; min-width: 0; font: var(--type-body); overflow-wrap: anywhere; }
+.x-board-card-actions { display: inline-flex; flex: none; align-items: center; gap: var(--x-space-1); }
 .x-board-card-menu { display: inline-flex; flex: none; margin: calc(var(--x-space-1) * -1) 0; }
 .x-board-card-meta { font: var(--type-status); color: var(--text-2); overflow-wrap: anywhere; }
 .x-board-card-tags { display: flex; flex-wrap: wrap; gap: var(--x-space-1); }
+
+/* ThemeEditor (.x-theme-editor) */
+.x-theme-editor { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--x-space-3); min-width: 0; }
+.x-theme-editor-group { display: flex; flex-direction: column; gap: var(--x-space-2); min-width: 0; margin: 0; padding: 0; border: 0; }
+.x-theme-editor-group legend { padding: 0; margin-bottom: var(--x-space-2); color: var(--x-color-muted); font: 600 12px var(--font-body); }
+.x-theme-editor-issues { display: flex; flex-direction: column; gap: var(--x-space-2); }
+.x-theme-editor-issues h5 { margin: 0; }
+.x-theme-editor-count { color: var(--x-color-muted); font: var(--type-status); }
+.x-theme-editor-issue-list { margin: 0; padding-left: var(--x-space-4); overflow-wrap: anywhere; }
+@media (min-width: 600px) {
+  .x-theme-editor { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .x-theme-editor > :not(.x-theme-editor-group) { grid-column: 1 / -1; }
+}

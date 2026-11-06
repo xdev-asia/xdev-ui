@@ -12,6 +12,9 @@ const cases = {
   CodeInput: [{ length: 10, value: "7K4QM", onChange() {}, label: "Pairing code" }],
   ThemeSwitch: [{ value: "system", onChange() {} }],
   Select: [{ options: [{ value: "en", label: "English" }] }],
+  ColorField: [{ label: "Accent", value: "#2f62e6", overridden: true, onChange() {}, onReset() {}, labels: { reset: "Reset", picker: "Pick", invalid: "Invalid" } }],
+  ThemePreview: [{ mode: "dark", title: "Preview", sample: "Sample", hint: "Hint", button: "Button" }],
+  ThemeEditor: [{ mode: "dark", onMode() {}, name: "T", onName() {}, groups: [{ id: "a", title: "A", keys: [{ key: "k", label: "K" }] }], colors: { k: "#000000" }, overridden: new Set(), onColor() {}, onReset() {}, issues: [], labels: { name: "Name", mode: "Mode", dark: "Dark", light: "Light", reset: "Reset", picker: "Pick", invalid: "Bad", preview: { title: "P", sample: "S", hint: "H", button: "B" }, issuesTitle: "Issues", noIssues: "None" } }],
   FontField: [{ value: "Inter", onChange() {} }],
   Field: [{ label: "Branch", hint: "kebab-case" }],
   Switch: [{ label: "Auto-commit" }],
@@ -87,7 +90,7 @@ for (const [name, [props, child]] of Object.entries(cases)) {
     console.error(`FAIL ${name}: ${e.message}`);
   }
 }
-const missing = Object.keys(cases).filter((n) => typeof X[n] !== "function");
+const missing = Object.keys(cases).filter((n) => !(typeof X[n] === "function" || (typeof X[n] === "object" && X[n] !== null && typeof X[n].render === "function")));
 if (missing.length) { console.error("missing exports", missing); fail++; }
 console.log(`${Object.keys(cases).length - fail}/${Object.keys(cases).length} components render`);
 process.exit(fail ? 1 : 0);

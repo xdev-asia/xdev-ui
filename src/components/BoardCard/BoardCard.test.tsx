@@ -1,7 +1,12 @@
+import type { ReactElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import { findAll } from "../../test-utils";
 import { BoardCard } from "./BoardCard";
+
+/** forwardRef components keep their render function here; calling it gives the unrendered root element. */
+const renderCard = (props: Record<string, unknown>, ref: unknown = null): ReactElement<any> =>
+  (BoardCard as unknown as { render(p: unknown, r: unknown): ReactElement<any> }).render(props, ref);
 
 describe("BoardCard", () => {
   it("is a focusable listitem with a status dot and hidden status text", () => {
@@ -28,7 +33,7 @@ describe("BoardCard", () => {
   });
   it("calls onOpen on Enter and click, but not for keys from the menu", () => {
     const onOpen = vi.fn();
-    const root = BoardCard({ title: "T", onOpen, menu: <button type="button">More</button> });
+    const root = renderCard({ title: "T", onOpen, menu: <button type="button">More</button> }, null);
     const { onKeyDown, onClick } = root.props;
     const self = {};
     onKeyDown({ key: "Enter", target: self, currentTarget: self });
@@ -43,5 +48,39 @@ describe("BoardCard", () => {
     wrap.props.onClick({ stopPropagation: stop });
     wrap.props.onKeyDown({ stopPropagation: stop });
     expect(stop).toHaveBeenCalledTimes(2);
+  });
+  it("hands the ref to the root and passes attributes through", () => {
+    const ref = { current: null };
+    const onKeyDown = vi.fn();
+    const root = renderCard({ title: "T", "data-x": "1", draggable: true, className: "mine", onKeyDown } as never, ref);
+    expect(root.props.ref).toBe(ref);
+    expect(root.props["data-x"]).toBe("1");
+    expect(root.props.draggable).toBe(true);
+    expect(root.props.className).toBe("x-board-card mine");
+    const self = {};
+    root.props.onKeyDown({ key: "a", target: self, currentTarget: self });
+    expect(onKeyDown).toHaveBeenCalledTimes(1);
+    const html = renderToStaticMarkup(<BoardCard title="T" data-x="1" draggable className="mine" />);
+    expect(html).toContain('data-x="1"');
+    expect(html).toContain('draggable="true"');
+    expect(html).toContain('class="x-board-card mine"');
+  });
+  it("keeps clicks and keys in actions away from onOpen", () => {
+    const onOpen = vi.fn();
+    const root = renderCard({ title: "T", onOpen, actions: <button type="button">x</button> }, null);
+    const wrap = findAll(root, (e) => e.props.className === "x-board-card-actions")[0];
+    const stop = vi.fn();
+    wrap.props.onClick({ stopPropagation: stop });
+    wrap.props.onKeyDown({ stopPropagation: stop });
+    expect(stop).toHaveBeenCalledTimes(2);
+    expect(onOpen).not.toHaveBeenCalled();
+    const html = renderToStaticMarkup(<BoardCard title="T" actions={<button type="button">x</button>} />);
+    expect(html.indexOf("x-board-card-title")).toBeLessThan(html.indexOf("x-board-card-actions"));
+  });
+  it("runs the onClick of the caller before onOpen", () => {
+    const calls: string[] = [];
+    const root = renderCard({ title: "T", onOpen: () => calls.push("open"), onClick: () => calls.push("click") }, null);
+    root.props.onClick({});
+    expect(calls).toEqual(["click", "open"]);
   });
 });

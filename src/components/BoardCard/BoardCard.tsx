@@ -1,4 +1,4 @@
-import type { JSX, KeyboardEvent, ReactNode } from "react";
+import { forwardRef, type HTMLAttributes, type KeyboardEvent, type MouseEvent, type ReactNode } from "react";
 import { cx } from "../../internal/cx";
 import { StatusDot } from "../StatusDot/StatusDot";
 
@@ -13,7 +13,7 @@ const DEFAULT_LABELS: BoardCardLabels = { status: { idle: "Idle", running: "Runn
 
 const DOT = { idle: "idle", running: "working", waiting: "waiting", error: "failed" } as const;
 
-export interface BoardCardProps {
+export interface BoardCardProps extends Omit<HTMLAttributes<HTMLDivElement>, "title" | "role" | "children"> {
   title: string;
   /** Muted line under the title (assignee, date). */
   meta?: ReactNode;
@@ -29,30 +29,46 @@ export interface BoardCardProps {
   onOpen?: () => void;
   /** An IconButton that opens a Menu. Its clicks and keys do not reach `onOpen`. */
   menu?: ReactNode;
+  /** Inline controls after the title (a count, a small button). Clicks and keys inside do not reach `onOpen`. */
+  actions?: ReactNode;
   /** Override the English defaults (e.g. for vi). */
   labels?: Partial<BoardCardLabels>;
-  className?: string;
 }
 
-export function BoardCard({ title, meta, tags, status, selected = false, dragging = false, onOpen, menu, labels, className }: BoardCardProps): JSX.Element {
+export const BoardCard = forwardRef<HTMLDivElement, BoardCardProps>(function BoardCard(
+  { title, meta, tags, status, selected = false, dragging = false, onOpen, menu, actions, labels, className, onClick, onKeyDown, ...rest },
+  ref,
+) {
   const l = { ...DEFAULT_LABELS, ...labels };
-  const onKeyDown = (e: KeyboardEvent<HTMLElement>): void => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>): void => {
+    onKeyDown?.(e);
     if (e.key === "Enter" && e.target === e.currentTarget) onOpen?.();
+  };
+  const handleClick = (e: MouseEvent<HTMLDivElement>): void => {
+    onClick?.(e);
+    onOpen?.();
   };
   return (
     <div
+      {...rest}
+      ref={ref}
       className={cx("x-board-card", className)}
       role="listitem"
       tabIndex={0}
       aria-current={selected ? "true" : undefined}
       data-selected={selected ? "" : undefined}
       data-dragging={dragging ? "" : undefined}
-      onClick={onOpen}
-      onKeyDown={onKeyDown}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
     >
       <div className="x-board-card-head">
         {status ? <StatusDot state={DOT[status]} /> : null}
         <span className="x-board-card-title">{title}</span>
+        {actions ? (
+          <span className="x-board-card-actions" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+            {actions}
+          </span>
+        ) : null}
         {status ? <span className="x-sr-only">{l.status[status]}</span> : null}
         {menu ? (
           <span className="x-board-card-menu" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
@@ -64,4 +80,4 @@ export function BoardCard({ title, meta, tags, status, selected = false, draggin
       {tags ? <div className="x-board-card-tags">{tags}</div> : null}
     </div>
   );
-}
+});

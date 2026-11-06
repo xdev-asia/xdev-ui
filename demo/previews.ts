@@ -416,6 +416,34 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     style: {"padding": "16px"},
     render: (X, h) => h(X.RadioGroup, { name: "shell", label: "Shell", defaultValue: "pwsh", options: [{ value: "pwsh", label: "PowerShell" }, { value: "bash", label: "Git Bash" }, { value: "cmd", label: "cmd" }] }),
   },
+  "ColorField": {
+    style: {"display": "flex", "flexDirection": "column", "gap": "12px", "padding": "16px", "width": "360px", "maxWidth": "100%"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.ColorField, { label: "Accent", value: "#2f62e6", overridden: true, onChange: function () {}, onReset: function () {}, labels: { reset: "Reset Accent", picker: "Pick Accent", invalid: "Use a colour like #2f62e6" } }),
+      h(X.ColorField, { label: "Background", value: "#0a0f1e", overridden: false, onChange: function () {}, onReset: function () {}, labels: { reset: "Reset Background", picker: "Pick Background", invalid: "Use a colour like #0a0f1e" } })),
+  },
+  "ThemePreview": {
+    style: {"display": "flex", "gap": "12px", "padding": "16px", "flexWrap": "wrap"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.ThemePreview, { mode: "dark", title: "Dark preview", sample: "Sample text", hint: "A hint line", button: "Button" }),
+      h(X.ThemePreview, { mode: "light", title: "Light preview", sample: "Sample text", hint: "A hint line", button: "Button" })),
+  },
+  "ThemeEditor": {
+    style: {"padding": "16px", "maxWidth": "720px"},
+    render: (X, h) => h(X.ThemeEditor, {
+      mode: "dark", onMode: function () {}, name: "Midnight", onName: function () {},
+      groups: [
+        { id: "surface", title: "Surfaces", keys: [{ key: "bg", label: "Background" }, { key: "panel", label: "Panel" }] },
+        { id: "accent", title: "Accent", keys: [{ key: "accent", label: "Accent" }] },
+      ],
+      colors: { bg: "#0a0f1e", panel: "#0f1629", accent: "#2f62e6" },
+      overridden: new Set(["accent"]),
+      onColor: function () {}, onReset: function () {},
+      issues: [{ key: "accent", message: "Contrast 2.9 against Panel; 4.5 needed" }],
+      labels: { name: "Theme name", mode: "Mode", dark: "Dark", light: "Light", reset: "Reset {token}", picker: "Pick {token}", invalid: "Use a colour like #2f62e6",
+        preview: { title: "Preview", sample: "Sample text", hint: "A hint line", button: "Button" }, issuesTitle: "Contrast", noIssues: "All pairs pass" },
+    }),
+  },
   "FontField": {
     style: {"padding": "16px", "width": "320px"},
     render: (X, h) => h(X.FontField, { value: "Inter", onChange: () => {}, "aria-label": "UI font" }),

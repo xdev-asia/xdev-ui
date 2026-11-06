@@ -11,3 +11,4 @@ One vertical column of a `Board`: a head with title, count and actions, then a s
 - At most one primary action per column head, as a `Button` or `IconButton` in `actions`; more go in a `Menu`.
 - The body is `role="list"` named by `aria-label`, which defaults to the title; children are `BoardCard`s.
 - State is a tint, a 1px border or a dot, never a coloured left stripe.
+- The root takes a `ref` and the rest of the `section` attributes (`data-*`, drag events such as `onDragOver` and `onDrop`); `className` is merged.

@@ -308,3 +308,30 @@ button.x-list-row-main:disabled { cursor: default; }
 .x-pairing-code-groups { display: flex; flex-wrap: wrap; gap: var(--x-space-1) var(--x-space-4); }
 .x-pairing-code-group { letter-spacing: 0.08em; }
 .x-pairing-code[data-size="md"] .x-pairing-code-value { font: 600 16px/1.4 var(--font-mono); }
+
+/* ThemePreview (.x-theme-preview) */
+.x-theme-preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--x-space-2);
+  padding: var(--x-space-3);
+  border: 1px solid var(--x-color-line);
+  border-radius: var(--x-radius-md);
+  background: var(--x-color-bg);
+  color: var(--x-color-ink);
+}
+.x-theme-preview-title,
+.x-theme-preview-text,
+.x-theme-preview-hint { margin: 0; overflow-wrap: anywhere; }
+.x-theme-preview-title { font: 600 13px var(--font-body); }
+.x-theme-preview-text { color: var(--x-color-muted); }
+.x-theme-preview-hint { color: var(--text-3); }
+.x-theme-preview-row { display: flex; align-items: center; gap: var(--x-space-2); }
+.x-theme-preview-button {
+  padding: var(--x-space-1) var(--x-space-3);
+  border: 1px solid var(--x-color-line-strong);
+  border-radius: var(--x-radius-sm);
+  background: var(--x-color-surface-2);
+  color: var(--x-color-ink);
+  font: 600 12px var(--font-body);
+}

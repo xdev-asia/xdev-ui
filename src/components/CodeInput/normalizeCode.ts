@@ -27,3 +27,8 @@ export function groupCode(value: string, size: number): string[] {
   for (let i = 0; i < chars.length; i += n) out.push(chars.slice(i, i + n));
   return out;
 }
+
+/** Writes a code in groups of `group` characters joined by `sep` (`7K4QM2XD9P` becomes `7K4QM-2XD9P`). */
+export function formatCode(code: string, group = 5, sep = "-"): string {
+  return groupCode(code, group).join(sep);
+}

@@ -86,13 +86,13 @@ The library targets WCAG 2.2 level AA on macOS, Windows and Linux. The `xdev-ui-
 | group | components |
 |---|---|
 | Actions | Button, IconButton, ActionTile, ZoomBar |
-| Inputs | Segmented, SwatchGroup, CodeInput, ThemeSwitch, Select, FontField, Field, Switch, Checkbox, RadioGroup, Textarea, SearchInput, SearchPicker, FilterChip |
-| Display | Kbd, PairingCode, Avatar, Badge, Tag, AgentChip, DiffStat, Comment, ReactionBar, ListRow, Card, EmptyState, SettingRow, CodeBlock, Heatmap, CommitGraph, PanZoom |
+| Inputs | Segmented, ColorField, SwatchGroup, CodeInput, ThemeSwitch, Select, FontField, Field, Switch, Checkbox, RadioGroup, Textarea, SearchInput, SearchPicker, FilterChip |
+| Display | Kbd, PairingCode, ThemePreview, Avatar, Badge, Tag, AgentChip, DiffStat, Comment, ReactionBar, ListRow, Card, EmptyState, SettingRow, CodeBlock, Heatmap, CommitGraph, PanZoom |
 | Status | StatusDot, Meter, Banner, Toast, Spinner, FieldMessage, StepDots |
 | Navigation | TabStrip, ActivityBar, StatusBar, Tabs, NavList, Breadcrumb, TreeView, Disclosure, SplitHandle, Toolbar |
 | Overlays | Menu, Dialog, CommandPalette, Popover, Tooltip, Coachmark |
 | Brand | BrandMark, Icon, FileIcon |
-| Layout | AppShell, PageHeader, FormSection, Board, BoardColumn, BoardCard |
+| Layout | AppShell, PageHeader, FormSection, ThemeEditor, Board, BoardColumn, BoardCard |
 | Data | DescriptionList, StatTile, DataTable, Pagination |
 
 Each component folder has its rules in `README.md`; props are the exported `*Props` types.
