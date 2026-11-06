@@ -2,8 +2,6 @@ import { useEffect, useId, useState, type HTMLAttributes, type JSX } from "react
 import { cx } from "../../internal/cx";
 import { IconButton } from "../IconButton/IconButton";
 
-/** Neutral value for the native picker while `value` is not a colour (it rejects anything but `#rrggbb`). */
-const BLACK = `#${"0".repeat(6)}`;
 const HEX = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i;
 
 /** Reads `#rgb` or `#rrggbb` (with or without `#`, any case) and returns lower-case `#rrggbb`, or null. */
@@ -63,7 +61,8 @@ export function ColorField({ label, value, overridden, onChange, onReset, labels
         type="color"
         className="x-colour-field-swatch"
         aria-label={labels.picker}
-        value={normalizeHex(value) ?? BLACK}
+        // An empty value is sanitised by the browser to its default colour.
+        value={normalizeHex(value) ?? ""}
         onChange={(e) => onChange(e.target.value)}
       />
       <input
@@ -86,7 +85,7 @@ export function ColorField({ label, value, overridden, onChange, onReset, labels
       />
       <IconButton className="x-colour-field-reset" icon="undo" label={labels.reset} disabled={!overridden} onClick={onReset} />
       {bad ? (
-        <small className="x-colour-field-error" id={`${fieldId}-error`} role="alert">
+        <small className="x-colour-field-error" id={`${fieldId}-error`}>
           {labels.invalid}
         </small>
       ) : null}
