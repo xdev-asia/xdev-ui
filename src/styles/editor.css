@@ -1,0 +1,99 @@
+/* RichTextEditor (@xdev-asia/ui/editor): frame, toolbar, image bar and ProseMirror content. */
+.x-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--x-space-1);
+  min-width: 0;
+  color: var(--text-1);
+}
+.x-editor-label { font: var(--type-label); color: var(--text-1); }
+.x-editor-frame {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-l);
+  background: var(--bg-0);
+}
+.x-editor-frame:focus-within { border-color: var(--x-color-signal); }
+.x-editor[data-invalid] .x-editor-frame { border-color: var(--danger); }
+.x-editor[data-disabled] .x-editor-frame { opacity: 0.6; }
+.x-editor-error { font: var(--type-status); color: var(--danger); }
+
+/* Toolbar and image bar stay visible while the text scrolls past them. */
+.x-editor-bars {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  border-bottom: 1px solid var(--line);
+  border-radius: var(--radius-l) var(--radius-l) 0 0;
+  background: var(--bg-1);
+}
+.x-editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  padding: var(--x-space-1);
+}
+.x-editor-slot { display: inline-flex; }
+.x-editor-group { margin-left: var(--x-space-1); padding-left: var(--x-space-1); border-left: 1px solid var(--line); }
+.x-editor-tool { width: 30px; height: 30px; }
+.x-editor-tool[aria-pressed="true"] { background: var(--x-color-accent-soft); color: var(--x-color-ink); }
+.x-editor-tool:disabled { opacity: 0.4; cursor: default; }
+.x-editor-tool:disabled:hover { background: transparent; color: var(--text-2); }
+
+.x-editor-link { display: flex; flex-direction: column; gap: var(--x-space-3); width: 280px; max-width: 100%; }
+.x-editor-link .dialog-actions { display: flex; justify-content: flex-end; gap: var(--x-space-2); }
+.x-editor-link .ws-field input:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: 2px; }
+
+.x-editor-imagebar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--x-space-2);
+  padding: var(--x-space-2) var(--x-space-3);
+  border-top: 1px solid var(--line);
+  background: var(--bg-2);
+}
+.x-editor-imagebar .ws-field { flex: 1; min-width: 180px; }
+
+/* Content */
+.x-editor-content {
+  min-height: var(--editor-min-height, 240px);
+  padding: var(--x-space-4);
+  font: var(--type-body);
+  color: var(--text-1);
+  overflow-wrap: anywhere;
+  outline: none;
+}
+.x-editor-content:focus-visible { outline: none; }
+.x-editor-content > * + * { margin-top: var(--x-space-3); }
+.x-editor-content p { margin: 0; }
+.x-editor-content h2 { margin: var(--x-space-6) 0 0; font: var(--type-page-title); }
+.x-editor-content h3 { margin: var(--x-space-4) 0 0; font: var(--type-dialog-title); }
+.x-editor-content > :first-child { margin-top: 0; }
+.x-editor-content ul, .x-editor-content ol { margin-bottom: 0; padding-left: var(--x-space-6); }
+.x-editor-content ul { list-style: disc; }
+.x-editor-content ol { list-style: decimal; }
+.x-editor-content li > p { margin: 0; }
+.x-editor-content blockquote {
+  margin: 0;
+  padding: var(--x-space-2) var(--x-space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  background: var(--bg-1);
+  color: var(--text-2);
+}
+.x-editor-content a { color: var(--x-color-accent); text-decoration: underline; }
+.x-editor-content strong { font-weight: 700; }
+.x-editor-content p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  color: var(--text-3);
+  pointer-events: none;
+}
+.x-editor-image { position: relative; width: fit-content; max-width: 100%; border-radius: var(--radius-l); }
+.x-editor-image img { display: block; max-width: 100%; height: auto; border-radius: var(--radius-l); }
+.x-editor-image.ProseMirror-selectednode { outline: 2px solid var(--x-color-signal); outline-offset: 2px; }
+.x-editor-image[data-uploading] img { opacity: 0.5; }
+.x-editor-image .x-spinner { position: absolute; inset: 0; justify-content: center; }
+.x-editor-content .ProseMirror-gapcursor:after { border-top-color: var(--text-1); }
