@@ -19,3 +19,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 export const WithAction: Story = { args: { action: <Button variant="secondary">Restart</Button> } };
+export const Info: Story = { args: { tone: "info", title: "Exports run overnight.", children: "The file is ready by 7:00." } };
+export const Ok: Story = { args: { tone: "ok", title: "All payments are reconciled." } };
+export const Danger: Story = { args: { tone: "danger", title: "Payment provider is down.", children: "New orders fail until it is back." } };

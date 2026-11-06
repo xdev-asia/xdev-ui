@@ -10,6 +10,8 @@ Small tinted label for a file or kit item's sync status.
 | `unchanged` | `--x-color-surface-2` | `--x-color-muted` | identical |
 | `foreign` | `--x-color-warn-soft` | `--x-color-warn` | owned by something else; will not be touched |
 
+`tone="danger"` (`data-tone="danger"`, `--x-color-danger-soft` ground, `--x-color-danger` text) marks a failed or blocked state ("failed", "banned"). `className` goes on the `span`.
+
 ## Rules
 - Lowercase, one word. The colour repeats the word; it never replaces it.
 - Tint + text only: no border, no left stripe.

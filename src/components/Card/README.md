@@ -11,3 +11,4 @@ Flat bordered surface that groups one topic, with an optional head of title, sub
 - `monoSubtitle` for paths, file names and branches.
 - `flush` for content that draws its own rows, like a diff or a `ListRow` list.
 - Actions are secondary buttons or IconButtons; at most two.
+- `headingLevel` (2 to 6, default 3) sets the title's heading element so the card fits the page outline; the look does not change.

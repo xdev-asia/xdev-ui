@@ -11,4 +11,8 @@ describe("Badge", () => {
     expect(html).toContain('class="badge"');
     expect(html).not.toContain("data-status");
   });
+  it("tone danger sets data-tone; className passes through", () => {
+    const html = renderToStaticMarkup(<Badge tone="danger" className="extra">failed</Badge>);
+    expect(html).toBe('<span class="badge extra" data-tone="danger">failed</span>');
+  });
 });

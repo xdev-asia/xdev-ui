@@ -14,3 +14,10 @@ it("renders a status banner with title, text and action", () => {
   expect(html).toContain("Waiting");
   expect(html).toContain("Retry");
 });
+
+it("defaults to warn and supports info, ok and danger tones", () => {
+  expect(renderToStaticMarkup(<Banner title="x" />)).toContain('class="banner banner-warn"');
+  expect(renderToStaticMarkup(<Banner title="x" tone="info" />)).toContain('class="banner banner-info" role="status"');
+  expect(renderToStaticMarkup(<Banner title="x" tone="ok" />)).toContain('class="banner banner-ok" role="status"');
+  expect(renderToStaticMarkup(<Banner title="x" tone="danger" />)).toContain('class="banner banner-danger" role="alert"');
+});

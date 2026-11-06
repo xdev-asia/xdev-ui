@@ -14,20 +14,23 @@ export interface CardProps {
   flush?: boolean;
   children?: ReactNode;
   className?: string;
+  /** Heading element of the title, to fit the page outline. Default 3 (h3). */
+  headingLevel?: 2 | 3 | 4 | 5 | 6;
 }
 
-export function Card({ title, subtitle, monoSubtitle = false, actions, flush = false, children, className }: CardProps): JSX.Element {
+export function Card({ title, subtitle, monoSubtitle = false, actions, flush = false, children, className, headingLevel = 3 }: CardProps): JSX.Element {
   const titleId = `x-card-${useId()}`;
   const head = title || subtitle || actions;
+  const Heading = `h${headingLevel}` as "h2" | "h3" | "h4" | "h5" | "h6";
   return (
     <section className={cx("x-card", className)} aria-labelledby={title ? titleId : undefined}>
       {head ? (
         <div className="x-card-head">
           <div className="x-card-heading">
             {title ? (
-              <h3 className="x-card-title" id={titleId}>
+              <Heading className="x-card-title" id={titleId}>
                 {title}
-              </h3>
+              </Heading>
             ) : null}
             {subtitle ? <p className={cx("x-card-sub", monoSubtitle && "ws-mono")}>{subtitle}</p> : null}
           </div>

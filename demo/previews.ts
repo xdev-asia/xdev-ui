@@ -71,6 +71,7 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.Badge, { status: "changed" }, "changed"),
       h(X.Badge, { status: "unchanged" }, "unchanged"),
       h(X.Badge, { status: "foreign" }, "foreign"),
+      h(X.Badge, { tone: "danger" }, "failed"),
       h(X.Badge, null, "neutral"));
     return el;
     },
@@ -81,7 +82,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     var el;
     el = h(React.Fragment, null,
       h(X.Banner, { title: "3 files are owned by another kit.", action: h(X.Button, { variant: "secondary" }, "Review") }, "They will be skipped when you sync."),
-      h(X.Banner, { title: "Agent CLI not found on PATH." }));
+      h(X.Banner, { title: "Agent CLI not found on PATH." }),
+      h(X.Banner, { tone: "info", title: "Exports run overnight." }),
+      h(X.Banner, { tone: "ok", title: "All payments are reconciled." }),
+      h(X.Banner, { tone: "danger", title: "Payment provider is down." }, "New orders fail until it is back."));
     return el;
     },
   },
