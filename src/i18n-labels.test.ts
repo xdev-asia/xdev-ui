@@ -23,6 +23,11 @@ import {
   Toolbar,
   TreeView,
   FontField,
+  Drawer,
+  FileDrop,
+  FormDialog,
+  SaveBar,
+  Skeleton,
 } from "./index";
 
 const S = (k: string) => `§${k}§`;
@@ -206,5 +211,39 @@ describe("labels override every default English string", () => {
     const html = renderToStaticMarkup(h(Pagination, { page: 1, pageSize: 10, total: 25, onPageChange() {}, pageSizeOptions: [10], labels }));
     for (const v of [S("nv"), S("pv"), S("nx"), `${S("r")}1-10-25`, S("ps")]) expect(html).toContain(v);
     expectNoEnglish(html, ["Pagination", "Previous page", "Next page", "of", "Rows per page"]);
+  });
+
+  it("Skeleton", () => {
+    const html = renderToStaticMarkup(h(Skeleton, { announce: true, labels: { loading: S("l") } }));
+    expect(html).toContain(S("l"));
+    expectNoEnglish(html, ["Loading"]);
+  });
+
+  it("Drawer", () => {
+    const html = renderToStaticMarkup(h(Drawer, { title: "T", modal: false, onClose() {}, labels: { close: S("c") } }));
+    expect(html).toContain(S("c"));
+    expectNoEnglish(html, ["Close"]);
+  });
+
+  it("FormDialog", () => {
+    const labels = { submit: S("s"), cancel: S("c"), saving: S("v") };
+    const html = renderToStaticMarkup(h(FormDialog, { title: "T", modal: false, onSubmit() {}, onCancel() {}, labels }));
+    for (const v of [S("s"), S("c")]) expect(html).toContain(v);
+    expectNoEnglish(html, ["Save", "Cancel"]);
+    expect(renderToStaticMarkup(h(FormDialog, { title: "T", modal: false, busy: true, onSubmit() {}, onCancel() {}, labels }))).toContain(S("v"));
+  });
+
+  it("SaveBar", () => {
+    const labels = { unsaved: S("u"), save: S("s"), discard: S("d"), saving: S("v") };
+    const html = renderToStaticMarkup(h(SaveBar, { dirty: true, onSave() {}, onDiscard() {}, labels }));
+    for (const v of [S("u"), S("s"), S("d")]) expect(html).toContain(v);
+    expectNoEnglish(html, ["unsaved", "Save", "Discard"]);
+  });
+
+  it("FileDrop", () => {
+    const labels = { drop: S("d"), browse: S("b"), limits: () => S("l"), rejected: () => S("r"), remove: (n: string) => `${S("x")}${n}`, uploading: () => S("u") };
+    const html = renderToStaticMarkup(h(FileDrop, { label: "F", maxSize: 10, onFiles() {}, onRemove() {}, items: [{ id: "1", name: "a", progress: 5 }], labels }));
+    for (const v of [S("d"), S("b"), S("l"), `${S("x")}a`, S("u")]) expect(html).toContain(v);
+    expectNoEnglish(html, ["Drop", "browse", "Remove", "Uploading", "Accepted"]);
   });
 });

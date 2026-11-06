@@ -263,3 +263,39 @@
 }
 .font-field-reset:hover { color: var(--x-color-ink); background: var(--x-color-surface-2); }
 .font-field-reset:focus-visible { outline: 2px solid var(--x-color-focus); outline-offset: 1px; }
+
+/* FileDrop (.x-filedrop) */
+.x-filedrop { display: grid; gap: var(--x-space-2); }
+.x-filedrop-zone {
+  display: grid;
+  justify-items: center;
+  gap: var(--x-space-1);
+  padding: var(--x-space-6) var(--x-space-4);
+  border: 1px dashed var(--x-color-line);
+  border-radius: var(--x-radius-md);
+  background: var(--x-color-surface);
+  color: var(--x-color-muted);
+  text-align: center;
+  cursor: pointer;
+}
+.x-filedrop-zone:hover, .x-filedrop-zone[data-over] { border-color: var(--x-color-accent); background: var(--x-color-accent-soft); color: var(--x-color-ink); }
+.x-filedrop-zone:focus-within { outline: 2px solid var(--x-color-focus); outline-offset: 2px; }
+.x-filedrop-zone[data-disabled] { opacity: 0.5; cursor: not-allowed; }
+.x-filedrop-zone small { font-size: 12px; }
+.x-filedrop-browse { color: var(--x-color-accent); font-weight: 600; text-decoration: underline; }
+.x-filedrop-errors { margin: 0; padding: 0; list-style: none; color: var(--x-color-danger); font-size: 13px; }
+.x-filedrop-list { display: grid; gap: var(--x-space-1); margin: 0; padding: 0; list-style: none; }
+.x-filedrop-item {
+  display: flex;
+  align-items: center;
+  gap: var(--x-space-2);
+  padding: var(--x-space-1) var(--x-space-2);
+  border: 1px solid var(--x-color-line);
+  border-radius: var(--x-radius-sm);
+  background: var(--x-color-panel);
+}
+.x-filedrop-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.x-filedrop-size { color: var(--x-color-muted); font-size: 12px; }
+.x-filedrop-progress { width: 80px; accent-color: var(--x-color-accent); }
+.x-filedrop-error { color: var(--x-color-danger); font-size: 12px; }
+.x-filedrop-item[data-error] { border-color: var(--x-color-danger); }

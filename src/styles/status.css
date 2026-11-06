@@ -89,3 +89,21 @@
 @media (prefers-reduced-motion: reduce) {
   .x-spinner-ring { animation: ws-pulse 1.4s ease-in-out infinite; }
 }
+
+/* Skeleton (.x-skeleton) */
+.x-skeleton { display: flex; flex-direction: column; gap: var(--x-space-2); width: 100%; }
+.x-skeleton[data-shape="circle"] { width: auto; }
+.x-skeleton-bar {
+  display: block;
+  height: 0.9em;
+  width: 100%;
+  border-radius: var(--x-radius-sm);
+  background: linear-gradient(90deg, var(--x-color-surface-2) 25%, var(--x-color-line) 50%, var(--x-color-surface-2) 75%);
+  background-size: 200% 100%;
+  animation: x-shimmer 1.4s ease-in-out infinite;
+}
+.x-skeleton-bar[data-last] { width: 60%; }
+.x-skeleton[data-shape="block"] .x-skeleton-bar { height: 96px; border-radius: var(--x-radius-md); }
+.x-skeleton[data-shape="circle"] .x-skeleton-bar { height: 32px; aspect-ratio: 1; width: auto; border-radius: 50%; }
+@keyframes x-shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+@media (prefers-reduced-motion: reduce) { .x-skeleton-bar { animation: none; } }

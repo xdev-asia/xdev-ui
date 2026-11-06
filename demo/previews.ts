@@ -142,6 +142,30 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     return el;
     },
   },
+  "Drawer": {
+    style: {"padding": "0", "position": "relative", "height": "280px"},
+    render: (X, h) => h(X.Drawer, { title: "Edit banner", description: "Shown at the top of the home page", modal: false, onClose: function () {},
+      footer: h(React.Fragment, null, h(X.Button, { variant: "secondary" }, "Cancel"), h(X.Button, null, "Save")) },
+      h(X.Field, { label: "Title", defaultValue: "Autumn sale" })),
+  },
+  "FileDrop": {
+    style: {"padding": "16px", "width": "360px"},
+    render: (X, h) => h(X.FileDrop, { label: "Attachments", accept: "image/*,.pdf", maxSize: 5242880, multiple: true, onFiles: function () {}, onRemove: function () {},
+      items: [{ id: "1", name: "contract.pdf", size: 820000 }, { id: "2", name: "banner.png", size: 1400000, progress: 45 }] }),
+  },
+  "FormDialog": {
+    style: {"padding": "0", "position": "relative", "height": "300px"},
+    render: (X, h) => h("div", { style: { position: "absolute", inset: 0 } }, h(X.FormDialog, { title: "New user", description: "They receive an email to set a password.",
+      submitLabel: "Create user", modal: false, onSubmit: function () {}, onCancel: function () {} }, h(X.Field, { label: "Email", type: "email" }))),
+  },
+  "SaveBar": {
+    style: {"padding": "16px", "width": "520px"},
+    render: (X, h) => h(X.SaveBar, { dirty: true, onSave: function () {}, onDiscard: function () {} }),
+  },
+  "Skeleton": {
+    style: {"display": "grid", "gap": "16px", "padding": "16px", "width": "320px"},
+    render: (X, h) => h(React.Fragment, null, h(X.Skeleton, { shape: "circle", height: "32px" }), h(X.Skeleton, { lines: 3, announce: true }), h(X.Skeleton, { shape: "block" })),
+  },
   "DiffStat": {
     style: {"display": "flex", "gap": "12px", "flexWrap": "wrap", "alignItems": "center", "padding": "16px"},
     render: (X, h) => {
