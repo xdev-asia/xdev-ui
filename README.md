@@ -35,7 +35,7 @@ import { Button, TabStrip, BrandMark } from "@xdev-asia/ui";
 
 | export | content |
 |---|---|
-| `@xdev-asia/ui` | 65 components, `ICONS`, `ICON_NAMES`, prop types |
+| `@xdev-asia/ui` | 68 components, `ICONS`, `ICON_NAMES`, prop types |
 | `@xdev-asia/ui/styles.css` | tokens + component CSS |
 | `@xdev-asia/ui/tokens.css` | tokens only (CSS custom properties, dark + light) |
 | `@xdev-asia/ui/tokens.json` | token source |
@@ -67,7 +67,7 @@ claude mcp add xdev-ui -- npx -y --package=@xdev-asia/ui xdev-ui-mcp
 
 | tool | returns |
 |---|---|
-| `xdevui_list_components` | 65 components by group, with summary |
+| `xdevui_list_components` | 68 components by group, with summary |
 | `xdevui_get_component` | README rules, exported prop types, CSS classes, import line |
 | `xdevui_search_tokens` | tokens by name, usage or category, with dark/light values |
 | `xdevui_get_guidelines` | setup, voice, visual foundations, iconography, layout, data and forms, agent skills, brand |
