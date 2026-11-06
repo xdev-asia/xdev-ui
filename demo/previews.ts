@@ -485,6 +485,19 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       rows: [{ id: "1", name: "Ada Lovelace", email: "ada@example.com" }, { id: "2", name: "Grace Hopper", email: "grace@example.com" }],
       columns: [{ key: "name", header: "Name", sortable: true, cell: (r) => r.name }, { key: "email", header: "Email", mono: true, hideNarrow: true, cell: (r) => r.email }] }),
   },
+  "FacetFilter": {
+    style: {"padding": "16px", "minHeight": "300px", "width": "420px", "maxWidth": "100%"},
+    render: (X, h) => h("div", { style: { display: "flex", gap: "8px" } },
+      h(X.FacetFilter, { label: "Status", defaultOpen: true, searchable: true, selected: ["invited"], onChange() {},
+        options: [{ value: "active", label: "Active", count: 40 }, { value: "invited", label: "Invited", count: 9 }, { value: "suspended", label: "Suspended", count: 8 }] }),
+      h(X.FacetFilter, { label: "Role", selected: [], onChange() {}, options: [{ value: "admin", label: "Admin" }, { value: "viewer", label: "Viewer" }] })),
+  },
+  "BulkBar": {
+    style: {"padding": "16px", "width": "520px", "maxWidth": "100%"},
+    render: (X, h) => h(X.BulkBar, { count: 3, onClear() {} },
+      h(X.Button, { variant: "secondary" }, "Suspend"),
+      h(X.Button, { variant: "secondary", icon: "trash" }, "Delete")),
+  },
   "Pagination": {
     style: {"padding": "16px", "width": "420px", "maxWidth": "100%"},
     render: (X, h) => h(X.Pagination, { page: 2, pageSize: 20, total: 57, onPageChange() {}, pageSizeOptions: [10, 20, 50], onPageSizeChange() {} }),
