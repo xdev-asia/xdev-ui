@@ -36,6 +36,8 @@ export * from "./components/RadioGroup/RadioGroup";
 export * from "./components/Textarea/Textarea";
 export * from "./components/SearchInput/SearchInput";
 export * from "./components/SearchPicker/SearchPicker";
+export * from "./components/DatePicker/DatePicker";
+export * from "./components/DateRangePicker/DateRangePicker";
 export * from "./components/FilterChip/FilterChip";
 export * from "./components/ActionTile/ActionTile";
 export * from "./components/ListRow/ListRow";
