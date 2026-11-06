@@ -10,6 +10,8 @@ import {
   Combobox,
   CommandPalette,
   DataTable,
+  DatePicker,
+  DateRangePicker,
   DiffStat,
   FacetFilter,
   Dialog,
@@ -285,5 +287,21 @@ describe("labels override every default English string", () => {
     const html = renderToStaticMarkup(h(BulkBar, { count: 2, onClear() {}, labels }));
     for (const v of [S("rg"), `${S("sl")}2`, S("cl")]) expect(html).toContain(v);
     expectNoEnglish(html, ["Bulk actions", "selected", "Clear selection"]);
+  });
+
+  it("DatePicker", () => {
+    const labels = { openCalendar: S("oc"), calendar: S("cal"), previousMonth: S("pm"), nextMonth: S("nm"), today: S("td"), clear: S("cl"), invalid: S("inv") };
+    const html = renderToStaticMarkup(h(DatePicker, { label: "L", value: "2026-11-06", onChange() {}, today: "2026-11-06", defaultOpen: true, labels }));
+    for (const k of ["oc", "cal", "pm", "nm", "td", "cl"]) expect(html).toContain(S(k));
+    expectNoEnglish(html, ["Open calendar", "Choose date", "Previous month", "Next month", "Today", "Clear"]);
+  });
+
+  it("DateRangePicker", () => {
+    const labels = { openCalendar: S("oc"), calendar: S("cal"), previousMonth: S("pm"), nextMonth: S("nm"), today: S("td"), clear: S("cl"), start: S("st"), end: S("en"), presets: S("pr"), invalid: S("inv") };
+    const html = renderToStaticMarkup(
+      h(DateRangePicker, { label: "L", value: { start: "2026-11-02", end: "2026-11-06" }, onChange() {}, today: "2026-11-06", defaultOpen: true, presets: [{ label: "P", range: { start: null, end: null } }], labels }),
+    );
+    for (const k of ["oc", "cal", "pm", "nm", "td", "cl", "st", "en", "pr"]) expect(html).toContain(S(k));
+    expectNoEnglish(html, ["Open calendar", "Choose dates", "Previous month", "Next month", "Today", "Clear", "Start date", "End date", "Presets"]);
   });
 });

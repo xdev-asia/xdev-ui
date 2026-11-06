@@ -40,6 +40,8 @@ const cases = {
   RadioGroup: [{ name: "shell", value: "bash", onChange() {}, options: [{ value: "bash", label: "bash" }, { value: "pwsh", label: "PowerShell" }] }],
   Textarea: [{ label: "Commit message", mono: true }],
   SearchInput: [{ value: "auth", onChange() {}, onClear() {}, count: 4 }],
+  DatePicker: [{ label: "Due date", value: "2026-11-06", onChange() {}, today: "2026-11-06" }],
+  DateRangePicker: [{ label: "Period", value: { start: "2026-11-02", end: "2026-11-12" }, onChange() {}, today: "2026-11-06", presets: [{ label: "This month", range: { start: "2026-11-01", end: "2026-11-30" } }], defaultOpen: true }],
   SearchPicker: [{ label: "Find work", value: "da", onValueChange() {}, onPick() {}, items: [{ id: "1", title: "Dark theme", meta: "#1" }], status: "1 match" }],
   Combobox: [{ label: "Cities", multiple: true, defaultOpen: true, value: ["hn"], onChange() {}, options: [{ value: "hn", label: "Hà Nội" }, { value: "dn", label: "Đà Nẵng" }] }],
   ActionTile: [{ icon: "swap", title: "Hand off a task", description: "Move ownership.", onClick() {} }],
