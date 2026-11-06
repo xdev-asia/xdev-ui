@@ -15,6 +15,7 @@ if (process.argv.includes("--demo")) {
 }
 
 copy("src/styles/tokens.css", "dist");
+copy("src/styles/tailwind.css", "dist");
 copy("src/styles/fonts.css", "dist");
 copy("tokens/tokens.json", "dist");
 for (const f of ai) copy(`generated/${f}`, "dist");
@@ -23,7 +24,7 @@ try {
 } catch {
   // Windows: npm sets the bin mode on install.
 }
-for (const f of ["index.js", "index.d.ts", "editor.js", "editor/index.d.ts", "image.js", "image/index.d.ts", "styles.css", "tokens.css", "fonts.css", "tokens.json", "mcp.js", ...ai]) {
+for (const f of ["index.js", "index.d.ts", "editor.js", "editor/index.d.ts", "image.js", "image/index.d.ts", "styles.css", "tokens.css", "tailwind.css", "fonts.css", "tokens.json", "mcp.js", ...ai]) {
   if (!existsSync(resolve(root, "dist", f))) {
     console.error(`missing dist/${f}`);
     process.exit(1);

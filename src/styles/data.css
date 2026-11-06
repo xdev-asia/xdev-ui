@@ -75,7 +75,7 @@
 .x-bulk-bar {
   position: sticky;
   bottom: 0;
-  z-index: 5;
+  z-index: var(--x-z-sticky);
   display: flex;
   flex-wrap: wrap;
   align-items: center;

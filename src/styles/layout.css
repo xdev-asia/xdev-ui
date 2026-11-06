@@ -14,7 +14,7 @@
   position: fixed;
   top: var(--x-space-2);
   left: var(--x-space-2);
-  z-index: 60;
+  z-index: var(--x-z-skip);
   padding: var(--x-space-2) var(--x-space-3);
   border: 1px solid var(--line);
   border-radius: var(--radius-m);
@@ -42,16 +42,16 @@
 .x-shell-main:focus:not(:focus-visible) { outline: none; }
 .x-shell-menu { display: none; }
 .x-shell-backdrop { display: none; }
-.x-shell-toasts { position: fixed; right: var(--x-space-4); bottom: var(--x-space-4); z-index: 50; }
+.x-shell-toasts { position: fixed; right: var(--x-space-4); bottom: var(--x-space-4); z-index: var(--x-z-toast); }
 
-@media (max-width: 767px) {
+@media (max-width: 767.98px) /* below --x-bp-md */ {
   .x-shell { grid-template-columns: minmax(0, 1fr); }
   .x-shell-menu { display: inline-flex; }
   .x-shell-side {
     position: fixed;
     inset-block: 0;
     left: 0;
-    z-index: 30;
+    z-index: var(--x-z-nav);
     width: min(var(--w-side), 85vw);
     transform: translateX(-100%);
     visibility: hidden;
@@ -62,7 +62,7 @@
     display: block;
     position: fixed;
     inset: 0;
-    z-index: 29;
+    z-index: calc(var(--x-z-nav) - 1);
     border: 0;
     padding: 0;
     background: color-mix(in srgb, var(--bg-0) 70%, transparent);
@@ -101,7 +101,7 @@
 .x-savebar {
   position: sticky;
   bottom: 0;
-  z-index: 5;
+  z-index: var(--x-z-sticky);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -116,3 +116,4 @@
 .x-savebar-msg { margin: 0; font-weight: 600; }
 .x-savebar[data-error] .x-savebar-msg { color: var(--x-color-danger); }
 .x-savebar-actions { display: flex; gap: var(--x-space-2); flex-shrink: 0; }
+

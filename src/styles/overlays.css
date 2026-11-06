@@ -43,7 +43,7 @@
   background: color-mix(in srgb, var(--x-color-bg) 70%, transparent);
   backdrop-filter: blur(2px);
 }
-.dialog-backdrop[data-modal] { position: fixed; inset: 0; z-index: 40; }
+.dialog-backdrop[data-modal] { position: fixed; inset: 0; z-index: var(--x-z-modal); }
 .dialog:focus { outline: none; }
 .dialog {
   max-width: 440px;
@@ -108,11 +108,11 @@
 .pal-foot { display: flex; gap: 14px; padding: 8px 14px; border-top: 1px solid var(--line); font-size: 11px; color: var(--text-3); }
 
 /* Popover (.x-popover) */
-.ws-menu-backdrop { position: fixed; inset: 0; z-index: 20; }
+.ws-menu-backdrop { position: fixed; inset: 0; z-index: calc(var(--x-z-dropdown) - 1); }
 .x-popover-anchor { position: relative; display: inline-flex; }
 .x-popover {
   position: absolute;
-  z-index: 21;
+  z-index: var(--x-z-dropdown);
   min-width: 220px;
   padding: var(--x-space-3);
   border: 1px solid var(--line);
@@ -133,7 +133,7 @@
 .x-tooltip {
   position: absolute;
   left: 50%;
-  z-index: 30;
+  z-index: var(--x-z-nav);
   width: max-content;
   max-width: 240px;
   padding: var(--x-space-1) var(--x-space-2);
@@ -160,7 +160,7 @@
 
 /* Drawer (.x-drawer) */
 .x-drawer-root { position: relative; display: flex; min-height: 240px; }
-.x-drawer-root[data-modal] { position: fixed; inset: 0; z-index: 40; }
+.x-drawer-root[data-modal] { position: fixed; inset: 0; z-index: var(--x-z-modal); }
 .x-drawer-backdrop { position: absolute; inset: 0; background: color-mix(in srgb, var(--x-color-bg) 70%, transparent); }
 .x-drawer {
   position: relative;

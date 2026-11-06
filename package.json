@@ -46,6 +46,10 @@
       "xdev-source": "./src/styles/tokens.css",
       "default": "./dist/tokens.css"
     },
+    "./tailwind.css": {
+      "xdev-source": "./src/styles/tailwind.css",
+      "default": "./dist/tailwind.css"
+    },
     "./fonts.css": {
       "xdev-source": "./src/styles/fonts.css",
       "default": "./dist/fonts.css"

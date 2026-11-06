@@ -221,7 +221,7 @@
   top: 100%;
   right: 0;
   left: 0;
-  z-index: 21;
+  z-index: var(--x-z-dropdown);
   display: flex;
   flex-direction: column;
   max-height: 240px;
@@ -433,7 +433,7 @@
 .x-calendar-preset:hover { background: var(--x-color-surface-2); }
 .x-calendar-preset[aria-pressed="true"] { border-color: var(--x-color-accent); background: var(--x-color-accent-soft); }
 .x-calendar-preset:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: 2px; }
-@media (max-width: 640px) {
+@media (max-width: 639.98px) /* below --x-bp-sm */ {
   .x-date-range-body { flex-direction: column; }
   .x-calendar-presets { flex-direction: row; flex-wrap: wrap; }
 }

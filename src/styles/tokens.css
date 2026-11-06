@@ -57,6 +57,23 @@
   --avatar-sm: 20px;
   --avatar-md: 32px;
   --avatar-lg: 48px;
+  --x-container-sm: 640px;
+  --x-container-md: 768px;
+  --x-container-lg: 1024px;
+  --x-container-xl: 1280px;
+  --x-container-2xl: 1536px;
+  --x-z-raised: 1;
+  --x-z-sticky: 5;
+  --x-z-dropdown: 21;
+  --x-z-nav: 30;
+  --x-z-modal: 40;
+  --x-z-toast: 50;
+  --x-z-skip: 60;
+  --x-bp-sm: 640px;
+  --x-bp-md: 768px;
+  --x-bp-lg: 1024px;
+  --x-bp-xl: 1280px;
+  --x-bp-2xl: 1536px;
 }
 :root,
 [data-theme="dark"] {
