@@ -205,7 +205,7 @@ describe("audit: token contrast", () => {
     const css = readFileSync(resolve(here, "../src/styles/tokens.css"), "utf8");
     const tokens = JSON.parse(readFileSync(resolve(here, "../tokens/tokens.json"), "utf8"));
     const line = tokens.color.tokens.find((t: { name: string }) => t.name === "line");
-    expect(line.value).toEqual({ dark: "#232329", light: "#dedee3" });
+    expect(line.value).toEqual({ dark: "#2a2b31", light: "#dcdfe5" });
     const more = css.slice(css.indexOf("@media (prefers-contrast: more)"));
     expect(more).toContain("--line: var(--line-strong)");
     expect(more).toContain("--x-color-line: var(--x-color-line-strong)");

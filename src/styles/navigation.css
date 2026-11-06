@@ -1,5 +1,5 @@
 /* ---------- Navigation ---------- */
-.ws-tabstrip { display: flex; height: 34px; border-bottom: 1px solid var(--line); background: var(--bg-1); }
+.ws-tabstrip { display: flex; height: var(--h-tab); border-bottom: 1px solid var(--line); background: var(--bg-1); }
 .ws-tabstrip-list { display: contents; }
 .ws-tab {
   --ws-tab-color: transparent;
@@ -9,18 +9,20 @@
   color: var(--text-2);
 }
 .ws-tab[data-color] { box-shadow: inset 0 -3px 0 var(--ws-tab-color); }
-.ws-tab[data-selected] { background: var(--term); color: var(--text-1); box-shadow: inset 0 2px 0 var(--accent); }
-.ws-tab[data-selected][data-color] { box-shadow: inset 0 2px 0 var(--accent), inset 0 -3px 0 var(--ws-tab-color); }
+.ws-tab:hover { background: color-mix(in srgb, var(--text-1) 4%, transparent); color: var(--text-1); }
+/* Selected: data-selected present, unless an app writes data-selected="false". */
+.ws-tab[data-selected]:not([data-selected="false"]) { background: var(--term); color: var(--text-1); box-shadow: inset 0 2px 0 var(--accent); }
+.ws-tab[data-selected]:not([data-selected="false"])[data-color] { box-shadow: inset 0 2px 0 var(--accent), inset 0 -3px 0 var(--ws-tab-color); }
 .ws-tab-main {
   display: flex;
   align-items: center;
   gap: 8px;
   height: 100%;
-  padding: 0 4px 0 12px;
+  padding: 0 var(--x-space-1) 0 var(--x-space-3);
   border: 0;
   background: transparent;
   color: inherit;
-  font: 12px var(--font-body);
+  font: var(--type-tab);
   cursor: pointer;
 }
 .ws-tab-name { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -39,7 +41,9 @@
   font-size: 14px;
   cursor: pointer;
 }
-.ws-tab-close:hover { background: var(--bg-3); color: var(--text-1); }
+.ws-tab-close { opacity: 0.6; }
+.ws-tab:hover .ws-tab-close, .ws-tab[data-selected]:not([data-selected="false"]) .ws-tab-close, .ws-tab-close:focus-visible { opacity: 1; }
+.ws-tab-close:hover { background: var(--bg-3); color: var(--text-1); opacity: 1; }
 .ws-tab-dirty { width: 7px; height: 7px; margin-right: 6px; border-radius: 50%; background: var(--text-2); }
 .ws-tab-skip {
   display: inline-flex;
@@ -108,7 +112,7 @@
   padding: 0 12px;
   border-top: 1px solid var(--line);
   background: var(--bg-1);
-  font-size: 11.5px;
+  font: var(--type-status);
   color: var(--text-2);
 }
 .ws-footer-item { display: inline-flex; align-items: center; gap: 6px; }
@@ -248,13 +252,13 @@ button.ws-crumb:hover, a.ws-crumb:hover { color: var(--text-1); text-decoration:
   --tree-indent: 14px;
   display: flex;
   flex-direction: column;
-  font-size: 12px;
+  font: var(--type-tab);
 }
 .ws-tree-row {
   display: flex;
   align-items: center;
   gap: calc(var(--x-space-1) * 1.5);
-  height: 24px;
+  height: var(--h-row);
   padding: 0 var(--x-space-2) 0 calc(var(--tree-indent) * var(--tree-depth, 0) + var(--tree-pad));
   border: 0;
   border-radius: var(--radius-s);
@@ -354,6 +358,6 @@ button.ws-crumb:hover, a.ws-crumb:hover { color: var(--text-1); text-decoration:
 
 /* Forced colours drop box-shadow and background colours: draw the selected tab and the focused splitter with outline and system colours. */
 @media (forced-colors: active) {
-  .ws-tab[data-selected] { outline: 0.125rem solid Highlight; outline-offset: -0.125rem; }
+  .ws-tab[data-selected]:not([data-selected="false"]) { outline: 0.125rem solid Highlight; outline-offset: -0.125rem; }
   .x-split-handle:focus-visible::after { background: Highlight; }
 }

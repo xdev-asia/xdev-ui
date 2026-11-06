@@ -27,8 +27,9 @@
   --type-control: 600 13px var(--font-body);
   --type-menu: 400 13px var(--font-body);
   --type-label: 600 12px var(--font-body);
-  --type-tab: 400 12px var(--font-body);
-  --type-status: 400 11.5px var(--font-body);
+  --type-tab: 400 13px var(--font-body);
+  --type-status: 400 12px var(--font-body);
+  --type-section: 600 11px/1.4 var(--font-body);
   --type-badge: 600 11px/1.5 var(--font-body);
   --type-tag: 400 10px var(--font-body);
   --type-avatar-sm: 600 8px/1 var(--font-body);
@@ -52,6 +53,9 @@
   --radius-l: 8px;
   --h-header: 38px;
   --h-footer: 26px;
+  --h-tab: 32px;
+  --h-row: 28px;
+  --h-toolbar: 28px;
   --w-side: 296px;
   --w-panel: 300px;
   --avatar-sm: 20px;
@@ -61,17 +65,17 @@
 :root,
 [data-theme="dark"] {
   color-scheme: dark;
-  --bg-0: #0b0b0d;
-  --bg-1: #101013;
-  --bg-2: #16161a;
-  --bg-3: #1e1e23;
-  --line: #232329;
+  --bg-0: #0d0e11;
+  --bg-1: #15161a;
+  --bg-2: #1c1d22;
+  --bg-3: #25262c;
+  --line: #2a2b31;
   --line-strong: var(--x-color-line-strong);
-  --text-1: #e8e8ec;
-  --text-2: #8e8e98;
-  --text-3: #868691;
-  --side-tint: #131724;
-  --term: #09090b;
+  --text-1: #e6e7eb;
+  --text-2: #a3a4ae;
+  --text-3: #8f909b;
+  --side-tint: #161a26;
+  --term: #111215;
   --accent: #2f62e6;
   --signal: #5bd8ff;
   --signal-bg: rgba(91, 216, 255, 0.12);
@@ -115,25 +119,25 @@
 }
 [data-theme="light"] {
   color-scheme: light;
-  --bg-0: #f4f4f6;
-  --bg-1: #ffffff;
+  --bg-0: #eceef2;
+  --bg-1: #f6f7f9;
   --bg-2: #ffffff;
-  --bg-3: #ededf0;
-  --line: #dedee3;
+  --bg-3: #e8eaee;
+  --line: #dcdfe5;
   --line-strong: var(--x-color-line-strong);
-  --text-1: #111114;
-  --text-2: #5c5c66;
-  --text-3: #6a6a74;
-  --side-tint: #f2f5fd;
-  --term: #fafafb;
+  --text-1: #16171c;
+  --text-2: #555864;
+  --text-3: #666974;
+  --side-tint: #f1f4fb;
+  --term: #ffffff;
   --accent: #2453d6;
-  --signal: #0670a0;
+  --signal: #06699a;
   --signal-bg: rgba(6, 112, 160, 0.1);
   --warn: #8a5200;
   --warn-bg: rgba(138, 82, 0, 0.1);
   --violet: #5b3cc4;
   --violet-bg: rgba(91, 60, 196, 0.1);
-  --ok: #0f7a4a;
+  --ok: #0e7446;
   --ok-bg: rgba(15, 122, 74, 0.1);
   --danger: #b42318;
   --danger-bg: rgba(180, 35, 24, 0.1);
@@ -149,7 +153,7 @@
   --x-color-ink: #0e1530;
   --x-color-muted: #4f5b78;
   --x-color-line: #d6deed;
-  --x-color-line-strong: #7b88a2;
+  --x-color-line-strong: #76839d;
   --x-color-accent: #2453d6;
   --x-color-on-accent: #ffffff;
   --x-color-accent-soft: #e1e9fb;
