@@ -47,6 +47,24 @@ Inside a workspace surface, `.x-ws` remaps the semantic layer onto graphite, so 
 - **`FormSection` groups fields.** A heading, an optional description, fields in one column (two above 480px with `columns={2}`) and the Save and Cancel actions at the end.
 - **Design for 360px.** No horizontal page scroll. Widths come from `%`, `ch`, `rem` and the space tokens; rows of controls use `flex-wrap`. A `DataTable` scrolls inside its own wrapper and drops its `hideNarrow` columns.
 - **Hairlines divide regions.** Cards and rows are separated by 1px `--line`, not by shadows or coloured edges.
+- **Page layout.** `Container` caps the width (`size` sm 640 to 2xl 1536, default xl) with a 16px gutter. `Stack` spaces children on one axis with a space step (`gap` 1, 2, 3, 4, 6, 8). `Grid` sets columns per breakpoint (`columns={{ base: 1, md: 2, xl: 4 }}`) or fits cells of `minItemWidth`; `responsive="container"` measures the grid's own width, for grids inside a panel or a `Drawer`.
+- **Breakpoints.** sm 640, md 768, lg 1024, xl 1280, 2xl 1536 (`--x-bp-*`, `BREAKPOINTS`), the same as Tailwind. Mobile first: a value applies from its breakpoint up. Lay out with CSS; `useBreakpoint()` is for behaviour CSS cannot express and renders "base" on the server.
+- **Stacking.** z-index comes from `--x-z-*`: raised 1, sticky 5, dropdown 21, nav 30, modal 40, toast 50, skip 60. Never write a number.
+
+### Layout with Tailwind
+
+An app that already uses Tailwind v4 imports the generated theme, so utilities speak the xdev tokens:
+
+```css
+@import "tailwindcss";
+@import "@xdev-asia/ui/styles.css";
+@import "@xdev-asia/ui/tailwind.css";
+```
+
+- Colours: `bg-panel`, `text-ink`, `text-muted`, `border-line`, `bg-accent text-on-accent`, `bg-danger-soft`. They follow the theme because they point at `--x-color-*`.
+- Radii `rounded-sm|md|lg`, fonts `font-sans|mono`, breakpoints `sm:` to `2xl:` match the tokens. Tailwind's spacing step is 4px, the same as `--x-space-1`, so `p-4` is 16px.
+- Shadows and z-index have no utility names: use `shadow-(--shadow-menu)` and `z-(--x-z-modal)`.
+- Use the components for anything they cover; utilities are for page glue (spacing, a flex row, a one-off grid).
 
 ## Data and forms
 
@@ -80,7 +98,7 @@ Install them with `npx xdev-ui-skills install` (`--codex`, `--cursor`, `--user`,
 | Navigation | TabStrip, ActivityBar, StatusBar, Tabs, NavList, Breadcrumb, TreeView, Disclosure, SplitHandle, Toolbar |
 | Overlays | Menu, Dialog, FormDialog, Drawer, CommandPalette, Popover, Tooltip |
 | Brand | BrandMark, Icon, FileIcon |
-| Layout | AppShell, PageHeader, FormSection, SaveBar |
+| Layout | AppShell, PageHeader, FormSection, SaveBar, Container, Stack, Grid |
 | Data | DescriptionList, StatTile, DataTable, Pagination, FacetFilter, BulkBar |
 
 Each component folder has its rules in `README.md`; props are the exported `*Props` types.

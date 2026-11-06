@@ -162,6 +162,21 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     style: {"padding": "16px", "width": "520px"},
     render: (X, h) => h(X.SaveBar, { dirty: true, onSave: function () {}, onDiscard: function () {} }),
   },
+  "Container": {
+    style: {"padding": "16px 0", "width": "520px", "background": "var(--bg-2)"},
+    render: (X, h) => h(X.Container, { size: "sm" }, h("div", { style: { padding: 12, background: "var(--bg-0)", borderRadius: 6 } }, "Container size sm: max 640px, 16px gutter")),
+  },
+  "Stack": {
+    style: {"padding": "16px", "width": "420px"},
+    render: (X, h) => h(X.Stack, { gap: 4 }, h(X.Field, { label: "Name" }), h(X.Field, { label: "Email", type: "email" }),
+      h(X.Stack, { direction: "row", gap: 2, justify: "end" }, h(X.Button, { variant: "secondary" }, "Cancel"), h(X.Button, { variant: "primary" }, "Save"))),
+  },
+  "Grid": {
+    style: {"padding": "16px", "width": "560px"},
+    render: (X, h) => h(X.Grid, { columns: { base: 1, sm: 3 }, gap: 3, responsive: "container" },
+      h(X.StatTile, { label: "Users", value: "1,284" }), h(X.StatTile, { label: "Orders", value: "312" }), h(X.StatTile, { label: "Revenue", value: "48.2M" }),
+      h(X.GridItem, { span: "full" }, h(X.Banner, { tone: "info" }, "GridItem span=\"full\" takes the whole row."))),
+  },
   "Skeleton": {
     style: {"display": "grid", "gap": "16px", "padding": "16px", "width": "320px"},
     render: (X, h) => h(React.Fragment, null, h(X.Skeleton, { shape: "circle", height: "32px" }), h(X.Skeleton, { lines: 3, announce: true }), h(X.Skeleton, { shape: "block" })),
