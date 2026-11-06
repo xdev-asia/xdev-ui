@@ -17,4 +17,10 @@ describe("Select", () => {
     expect(html).toContain('<option value="vi">');
     expect(html).toContain('aria-label="Language"');
   });
+  it("passes ref to the native select", () => {
+    const ref = { current: null };
+    const tree = Select({ options: [], ref });
+    expect(tree.type).toBe("select");
+    expect(tree.props.ref).toBe(ref);
+  });
 });
