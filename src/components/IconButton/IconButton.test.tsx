@@ -15,4 +15,13 @@ describe("IconButton", () => {
     IconButton({ icon: "search", label: "x", onClick }).props.onClick();
     expect(onClick).toHaveBeenCalledOnce();
   });
+  it("size sets data-size; md (default) sets nothing", () => {
+    expect(renderToStaticMarkup(<IconButton icon="search" label="S" size="lg" />)).toContain('data-size="lg"');
+    expect(renderToStaticMarkup(<IconButton icon="search" label="S" size="sm" />)).toContain('data-size="sm"');
+    expect(renderToStaticMarkup(<IconButton icon="search" label="S" />)).not.toContain("data-size");
+  });
+  it("passes ref through", () => {
+    const ref = { current: null };
+    expect(IconButton({ icon: "search", label: "x", ref }).props.ref).toBe(ref);
+  });
 });

@@ -47,10 +47,28 @@ Inside a workspace surface, `.x-ws` remaps the semantic layer onto graphite, so 
 - **`FormSection` groups fields.** A heading, an optional description, fields in one column (two above 480px with `columns={2}`) and the Save and Cancel actions at the end.
 - **Design for 360px.** No horizontal page scroll. Widths come from `%`, `ch`, `rem` and the space tokens; rows of controls use `flex-wrap`. A `DataTable` scrolls inside its own wrapper and drops its `hideNarrow` columns.
 - **Hairlines divide regions.** Cards and rows are separated by 1px `--line`, not by shadows or coloured edges.
+- **Page layout.** `Container` caps the width (`size` sm 640 to 2xl 1536, default xl) with a 16px gutter. `Stack` spaces children on one axis with a space step (`gap` 1, 2, 3, 4, 6, 8). `Grid` sets columns per breakpoint (`columns={{ base: 1, md: 2, xl: 4 }}`) or fits cells of `minItemWidth`; `responsive="container"` measures the grid's own width, for grids inside a panel or a `Drawer`.
+- **Breakpoints.** sm 640, md 768, lg 1024, xl 1280, 2xl 1536 (`--x-bp-*`, `BREAKPOINTS`), the same as Tailwind. Mobile first: a value applies from its breakpoint up. Lay out with CSS; `useBreakpoint()` is for behaviour CSS cannot express and renders "base" on the server.
+- **Stacking.** z-index comes from `--x-z-*`: raised 1, sticky 5, dropdown 21, nav 30, modal 40, toast 50, skip 60. Never write a number.
+
+### Layout with Tailwind
+
+An app that already uses Tailwind v4 imports the generated theme, so utilities speak the xdev tokens:
+
+```css
+@import "tailwindcss";
+@import "@xdev-asia/ui/styles.css";
+@import "@xdev-asia/ui/tailwind.css";
+```
+
+- Colours: `bg-panel`, `text-ink`, `text-muted`, `border-line`, `bg-accent text-on-accent`, `bg-danger-soft`. They follow the theme because they point at `--x-color-*`.
+- Radii `rounded-sm|md|lg`, fonts `font-sans|mono`, breakpoints `sm:` to `2xl:` match the tokens. Tailwind's spacing step is 4px, the same as `--x-space-1`, so `p-4` is 16px.
+- Shadows and z-index have no utility names: use `shadow-(--shadow-menu)` and `z-(--x-z-modal)`.
+- Use the components for anything they cover; utilities are for page glue (spacing, a flex row, a one-off grid).
 
 ## Data and forms
 
-- **Lists.** A `DataTable` has a `caption`, sortable columns, optional row selection and a `labels` object for each language. Pair it with `SearchInput`, `FilterChip` (with counts) and `Pagination`; reset to page 1 when a filter changes. Put filtering, sorting and paging in pure functions (`sortTableRows`, `paginateRows`) and test them.
+- **Lists.** A `DataTable` has a `caption`, sortable columns, optional row selection and a `labels` object for each language. Pair it with `SearchInput`, `FilterChip` (with counts) and `Pagination`; reset to page 1 when a filter changes. Put filtering, sorting and paging in pure functions (`sortTableRows`, `paginateRows`) and test them. A facet with many values (status, role, tag) is a `FacetFilter`; actions on the selected rows go in a `BulkBar` that appears while rows are selected. `reorderable` adds drag handles for lists with a manual order; it is off while a sort is active.
 - **Summaries.** `StatTile` shows one number with an optional delta; the caller decides whether up is good (`deltaTone`). Use `Meter` for a share of a limit and `DescriptionList` for the facts of one record.
 - **Forms.** Validate in a pure function and show the message through `Field` `error`, which replaces the hint. Save stays disabled until the form changes and while it saves; Cancel is secondary and comes first. A `Switch` applies at once and does not belong in a form with Save.
 - **Destructive actions.** A modal `Dialog` with `alert` names the thing removed and has the primary confirm button last.
@@ -64,7 +82,7 @@ The package ships four skills in `skills/`, in the open Agent Skills format (a `
 | skill | use it to |
 |---|---|
 | `xdev-ui-build-app` | start an app: shell, theme, i18n, routing, states; template `templates/app` |
-| `xdev-ui-admin` | build console screens: dashboard, lists, detail, forms, roles, settings, audit log; template `templates/admin` |
+| `xdev-ui-admin` | design and build console screens: UX principles, layout (Container, Stack, Grid, Tailwind theme), dashboard, lists, forms, rich content, states, navigation, roles, settings, audit log, review checklist; template `templates/admin` |
 | `xdev-ui-review` | audit a UI with `scripts/audit.mjs` (tokens, stripes, primary buttons, en and vi parity, focus, names, target size, motion, contrast) and a manual checklist |
 | `xdev-ui-ux-standards` | design and review against WCAG 2.2 AA, the APG patterns, the macOS, Windows and GNOME guidelines and the ten usability heuristics |
 
@@ -86,13 +104,23 @@ The library targets WCAG 2.2 level AA on macOS, Windows and Linux. The `xdev-ui-
 | group | components |
 |---|---|
 | Actions | Button, IconButton, ActionTile, ZoomBar |
-| Inputs | Segmented, ColorField, SwatchGroup, CodeInput, ThemeSwitch, Select, FontField, Field, Switch, Checkbox, RadioGroup, Textarea, SearchInput, SearchPicker, FilterChip |
+| Inputs | Segmented, ColorField, SwatchGroup, CodeInput, ThemeSwitch, Select, FontField, Field, Switch, Checkbox, RadioGroup, Textarea, SearchInput, SearchPicker, FilterChip, FileDrop, Combobox, DatePicker, DateRangePicker |
 | Display | Kbd, PairingCode, ThemePreview, Avatar, Badge, Tag, AgentChip, DiffStat, Comment, ReactionBar, ListRow, Card, EmptyState, SettingRow, CodeBlock, Heatmap, CommitGraph, PanZoom |
-| Status | StatusDot, Meter, Banner, Toast, Spinner, FieldMessage, StepDots |
+| Status | StatusDot, Meter, Banner, Toast, Spinner, FieldMessage, StepDots, Toaster, Skeleton |
 | Navigation | TabStrip, ActivityBar, StatusBar, Tabs, NavList, Breadcrumb, TreeView, Disclosure, SplitHandle, Toolbar |
-| Overlays | Menu, Dialog, CommandPalette, Popover, Tooltip, Coachmark |
+| Overlays | Menu, Dialog, CommandPalette, Popover, Tooltip, Coachmark, MenuButton, FormDialog, Drawer |
 | Brand | BrandMark, Icon, FileIcon |
-| Layout | AppShell, PageHeader, FormSection, ThemeEditor, Board, BoardColumn, BoardCard |
-| Data | DescriptionList, StatTile, DataTable, Pagination |
+| Layout | AppShell, PageHeader, FormSection, ThemeEditor, Board, BoardColumn, BoardCard, SaveBar, Container, Stack, Grid |
+| Data | DescriptionList, StatTile, DataTable, Pagination, FacetFilter, BulkBar, SortableList |
+| Image (`@xdev-asia/ui/image`, peer `react-easy-crop`) | ImageCropper, ImageField |
 
 Each component folder has its rules in `README.md`; props are the exported `*Props` types.
+
+### Subpaths
+
+| entry | content | peers |
+|---|---|---|
+| `@xdev-asia/ui/editor` | RichTextEditor (Markdown by default, or HTML) | `@tiptap/*` (core, react, pm, starter-kit, extension-image, extension-link, extensions, markdown) |
+| `@xdev-asia/ui/image` | ImageCropper, ImageField, crop helpers (`cropToBlob`, `resizeToBlob`, `sameAspect`) | `react-easy-crop` |
+
+Subpath components keep their rules in `src/<entry>/<Name>/README.md`; their CSS ships in `styles.css`. The core entry never loads a peer.

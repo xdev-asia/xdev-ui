@@ -23,4 +23,8 @@ describe("Card", () => {
     expect(html).not.toContain("aria-labelledby");
     expect(html).toContain('data-flush=""');
   });
+  it("headingLevel picks the heading element; default h3", () => {
+    expect(renderToStaticMarkup(<Card title="Users" headingLevel={2} />)).toContain('<h2 class="x-card-title" id="x-card-:c1:">Users</h2>');
+    expect(renderToStaticMarkup(<Card title="Users" headingLevel={6} />)).toContain("<h6 ");
+  });
 });

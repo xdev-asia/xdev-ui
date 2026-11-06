@@ -23,3 +23,15 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
+
+export const Links: Story = {
+  args: {
+    label: "Account",
+    items: [
+      { label: "Profile", href: "#profile" },
+      { label: "Settings", href: "#settings" },
+      { type: "separator" },
+      { label: "Sign out", danger: true },
+    ],
+  },
+};

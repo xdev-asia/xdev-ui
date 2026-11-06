@@ -23,3 +23,4 @@ export const All: Story = {
     </div>
   ),
 };
+export const Danger: Story = { args: { tone: "danger", status: undefined, children: "failed" } };

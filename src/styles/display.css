@@ -20,6 +20,7 @@
 .badge[data-status="changed"] { color: var(--x-color-signal); background: var(--x-color-signal-soft); }
 .badge[data-status="unchanged"] { color: var(--x-color-muted); background: transparent; box-shadow: inset 0 0 0 1px var(--x-color-line); }
 .badge[data-status="foreign"] { color: var(--x-color-warn); background: var(--x-color-warn-soft); }
+.badge[data-tone="danger"] { color: var(--x-color-danger); background: var(--x-color-danger-soft); box-shadow: none; }
 
 .ws-tag {
   display: inline-block;

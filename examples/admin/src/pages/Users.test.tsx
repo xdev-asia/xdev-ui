@@ -3,11 +3,11 @@ import { describe, expect, it } from "vitest";
 import { seedRoles, seedUsers } from "../data/seed";
 import type { Load } from "../data/useLoad";
 import { I18nProvider, type Locale } from "../i18n";
-import { filterUsers, statusCounts, UsersView, type UserFilters, type UsersViewProps } from "./Users";
+import { filterUsers, roleCounts, statusCounts, UsersView, type UserFilters, type UsersViewProps } from "./Users";
 
 const users = seedUsers();
 const roles = seedRoles();
-const none: UserFilters = { query: "", statuses: new Set(), role: "" };
+const none: UserFilters = { query: "", statuses: new Set(), roles: new Set() };
 const noop = () => {};
 
 function props(over: Partial<UsersViewProps> = {}): UsersViewProps {
@@ -45,12 +45,20 @@ describe("filterUsers", () => {
     expect(filterUsers(users, { ...none, query: "grace hopper" }).length).toBeGreaterThan(0);
   });
   it("combines status and role", () => {
-    const r = filterUsers(users, { ...none, statuses: new Set(["invited"]), role: "viewer" });
+    const r = filterUsers(users, { ...none, statuses: new Set(["invited"]), roles: new Set(["viewer"]) });
     expect(r.length).toBeGreaterThan(0);
     expect(r.every((u) => u.status === "invited" && u.role === "viewer")).toBe(true);
+    const two = filterUsers(users, { ...none, roles: new Set(["owner", "admin"]) });
+    expect(new Set(two.map((u) => u.role))).toEqual(new Set(["owner", "admin"]));
+  });
+  it("counts roles with the other filters applied", () => {
+    const all = roleCounts(users, { ...none, roles: new Set(["owner"]) });
+    expect(all.owner + all.admin + all.editor + all.viewer).toBe(57);
+    const invited = roleCounts(users, { ...none, statuses: new Set(["invited"]) });
+    expect(invited.owner).toBe(0);
   });
   it("counts statuses with the other filters applied", () => {
-    const c = statusCounts(users, { ...none, role: "owner" });
+    const c = statusCounts(users, { ...none, roles: new Set(["owner"]) });
     expect(c).toEqual({ active: 1, invited: 0, suspended: 0 });
     expect(statusCounts(users, none).active + statusCounts(users, none).invited + statusCounts(users, none).suspended).toBe(57);
   });
@@ -83,19 +91,24 @@ describe("UsersView", () => {
     expect(html).toContain("No users yet");
     expect(html.match(/class="btn"/g)).toHaveLength(2); // header action and the empty state's action
   });
-  it("the bulk bar shows the selection count and enables its actions", () => {
+  it("the bulk bar appears with the selection count and its actions", () => {
     const html = render("en", props({ selected: new Set(["u3", "u4", "u5"]) }));
+    expect(html).toContain('role="region" aria-label="Bulk actions"');
     expect(html).toContain("3 selected");
-    expect(html).toContain('data-variant="bulk"');
-    expect(html).not.toMatch(/<button[^>]*disabled[^>]*>(Suspend|Delete)/);
-    const idle = render("en", props());
-    expect(idle).toContain("0 selected");
-    expect(idle).toMatch(/<button[^>]*disabled=""[^>]*>Suspend/);
+    expect(html).toMatch(/<button[^>]*>Suspend<\/button>/);
+    expect(html).toContain("Clear selection");
+    expect(render("vi", props({ selected: new Set(["u3"]) }))).toContain("Đã chọn 1");
+    expect(render("en", props())).not.toContain("x-bulk-bar");
+  });
+  it("filters by role through a facet with counts", () => {
+    const html = render("en", props({ filters: { ...none, roles: new Set(["admin"]) } }));
+    expect(html).toContain("x-facet-trigger");
+    expect(html).toMatch(/>Role<.*task-chip-count[^>]*>1</);
   });
   it("a viewer sees no create, no bulk bar and no checkboxes", () => {
     const html = render("en", props({ viewer: { role: "viewer" } }));
     expect(html).not.toContain("Create user");
-    expect(html).not.toContain("data-variant=\"bulk\"");
+    expect(html).not.toContain("x-bulk-bar");
     expect(html).not.toContain('type="checkbox"');
     expect(html).toContain("Ada Lovelace");
   });

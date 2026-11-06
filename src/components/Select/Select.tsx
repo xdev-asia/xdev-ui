@@ -1,8 +1,9 @@
-import type { JSX, SelectHTMLAttributes } from "react";
+import type { JSX, Ref, SelectHTMLAttributes } from "react";
 import { cx } from "../../internal/cx";
 
 export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   options: { value: string; label: string }[];
+  ref?: Ref<HTMLSelectElement>;
 }
 
 export function Select({ options, className, ...rest }: SelectProps): JSX.Element {

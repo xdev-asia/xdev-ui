@@ -1,0 +1,60 @@
+/* @xdev-asia/ui/image: ImageCropper (.x-image-cropper) and ImageField (.x-image-field). */
+
+/* ImageCropper */
+.dialog.x-image-cropper { max-width: min(96vw, 640px); }
+.x-image-cropper-desc { margin: 0 0 var(--x-space-4); color: var(--x-color-muted); font-size: 13px; line-height: 1.5; }
+.x-image-cropper-stage {
+  position: relative;
+  height: min(56vh, 380px);
+  margin: 0 0 var(--x-space-4);
+  overflow: hidden;
+  border-radius: var(--x-radius-md);
+  background: var(--x-color-surface-2);
+}
+.x-image-cropper-stage .reactEasyCrop_CropArea:focus-visible { outline: 2px solid var(--x-color-focus); outline-offset: 2px; }
+.x-image-cropper-tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--x-space-2); margin: 0 0 var(--x-space-6); }
+.x-image-cropper-zoom { display: flex; flex: 1 1 200px; align-items: center; gap: var(--x-space-2); font-size: 13px; color: var(--x-color-muted); }
+.x-image-cropper-zoom input { flex: 1; min-width: 0; accent-color: var(--x-color-accent); }
+.x-image-cropper-zoom output { min-width: 3ch; font-variant-numeric: tabular-nums; color: var(--x-color-ink); }
+.x-image-cropper .btn, .x-image-cropper .btn-secondary { display: inline-flex; align-items: center; gap: var(--x-space-2); }
+
+/* ImageField */
+.x-image-field { display: grid; gap: var(--x-space-2); max-width: 576px; }
+.x-image-field-label { font: 600 12px var(--font-body); color: var(--x-color-ink); }
+.x-image-field-required { margin-left: 2px; color: var(--x-color-danger); }
+.x-image-field-hint { font-size: 12px; color: var(--x-color-muted); }
+.x-image-field-zone {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--x-space-1);
+  /* Empty, it only needs room for its text: the ratio shows the crop shape, the cap keeps a tall one small. */
+  max-height: 176px;
+  padding: var(--x-space-4);
+  border: 1px dashed var(--x-color-line);
+  border-radius: var(--x-radius-md);
+  background: var(--x-color-surface);
+  color: var(--x-color-muted);
+  text-align: center;
+  cursor: pointer;
+}
+.x-image-field-zone:hover, .x-image-field[data-over] .x-image-field-zone { border-color: var(--x-color-accent); background: var(--x-color-accent-soft); color: var(--x-color-ink); }
+.x-image-field:has(input:focus-visible) .x-image-field-zone { outline: 2px solid var(--x-color-focus); outline-offset: 2px; }
+.x-image-field[data-disabled] .x-image-field-zone { opacity: 0.5; cursor: not-allowed; }
+.x-image-field[data-invalid] .x-image-field-zone { border-color: var(--x-color-danger); }
+.x-image-field-zone small { font-size: 12px; }
+.x-image-field-browse { color: var(--x-color-accent); font-weight: 600; text-decoration: underline; }
+.x-image-field-preview {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--x-color-line);
+  border-radius: var(--x-radius-md);
+  background: var(--x-color-surface-2);
+}
+.x-image-field[data-over] .x-image-field-preview { outline: 2px dashed var(--x-color-accent); outline-offset: 2px; }
+.x-image-field-preview img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.x-image-field-preview[data-busy] img { opacity: 0.5; }
+.x-image-field-spinner { position: absolute; inset: 0; justify-content: center; }
+.x-image-field-actions { display: flex; flex-wrap: wrap; gap: var(--x-space-2); }
+.x-image-field-actions .btn, .x-image-field-actions .btn-secondary { display: inline-flex; align-items: center; gap: var(--x-space-2); }
+.x-image-field-error { margin: 0; color: var(--x-color-danger); font-size: 13px; }

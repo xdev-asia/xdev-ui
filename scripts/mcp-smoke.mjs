@@ -24,7 +24,7 @@ assert.deepEqual(tools.map((t) => t.name).sort(), [
 for (const t of tools) assert.equal(t.annotations?.readOnlyHint, true, `${t.name} should be read-only`);
 
 const list = await call("xdevui_list_components", { response_format: "json" });
-assert.equal(list.structuredContent.count, 74);
+assert.equal(list.structuredContent.count, 88);
 
 const button = await call("xdevui_get_component", { name: "button" });
 assert.ok(!button.isError && button.body.includes("export interface ButtonProps"), "Button props missing");
@@ -42,7 +42,7 @@ const setup = await call("xdevui_get_guidelines", { topic: "setup" });
 assert.ok(setup.body.includes("styles.css"));
 const icons = await call("xdevui_list_icons");
 assert.ok(icons.structuredContent.icons.includes("terminal"));
-const docs = await call("xdevui_search_docs", { query: "stripe" });
+const docs = await call("xdevui_search_docs", { query: "stripe", limit: 50 });
 assert.ok(docs.body.includes("guideline:"));
 const skillDocs = await call("xdevui_search_docs", { query: "skill" });
 assert.ok(skillDocs.body.includes("guideline:agent-skills"), "agent-skills guideline missing from search");

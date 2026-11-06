@@ -71,6 +71,7 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.Badge, { status: "changed" }, "changed"),
       h(X.Badge, { status: "unchanged" }, "unchanged"),
       h(X.Badge, { status: "foreign" }, "foreign"),
+      h(X.Badge, { tone: "danger" }, "failed"),
       h(X.Badge, null, "neutral"));
     return el;
     },
@@ -81,7 +82,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     var el;
     el = h(React.Fragment, null,
       h(X.Banner, { title: "3 files are owned by another kit.", action: h(X.Button, { variant: "secondary" }, "Review") }, "They will be skipped when you sync."),
-      h(X.Banner, { title: "Agent CLI not found on PATH." }));
+      h(X.Banner, { title: "Agent CLI not found on PATH." }),
+      h(X.Banner, { tone: "info", title: "Exports run overnight." }),
+      h(X.Banner, { tone: "ok", title: "All payments are reconciled." }),
+      h(X.Banner, { tone: "danger", title: "Payment provider is down." }, "New orders fail until it is back."));
     return el;
     },
   },
@@ -104,6 +108,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.Button, null, "Create session"),
       h(X.Button, { icon: "plus" }, "New tab"),
       h(X.Button, { variant: "secondary" }, "Cancel"),
+      h(X.Button, { variant: "danger" }, "Delete"),
+      h(X.Button, { variant: "ghost" }, "Show more"),
+      h(X.Button, { variant: "link", href: "#" }, "Read the docs"),
+      h(X.Button, { size: "sm", variant: "secondary" }, "Small"),
       h(X.Button, { disabled: true }, "Disabled"));
     return el;
     },
@@ -141,6 +149,45 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     }, "The agent stops at once. Uncommitted changes stay in the worktree."));
     return el;
     },
+  },
+  "Drawer": {
+    style: {"padding": "0", "position": "relative", "height": "280px"},
+    render: (X, h) => h(X.Drawer, { title: "Edit banner", description: "Shown at the top of the home page", modal: false, onClose: function () {},
+      footer: h(React.Fragment, null, h(X.Button, { variant: "secondary" }, "Cancel"), h(X.Button, null, "Save")) },
+      h(X.Field, { label: "Title", defaultValue: "Autumn sale" })),
+  },
+  "FileDrop": {
+    style: {"padding": "16px", "width": "360px"},
+    render: (X, h) => h(X.FileDrop, { label: "Attachments", accept: "image/*,.pdf", maxSize: 5242880, multiple: true, onFiles: function () {}, onRemove: function () {},
+      items: [{ id: "1", name: "contract.pdf", size: 820000 }, { id: "2", name: "banner.png", size: 1400000, progress: 45 }] }),
+  },
+  "FormDialog": {
+    style: {"padding": "0", "position": "relative", "height": "300px"},
+    render: (X, h) => h("div", { style: { position: "absolute", inset: 0 } }, h(X.FormDialog, { title: "New user", description: "They receive an email to set a password.",
+      submitLabel: "Create user", modal: false, onSubmit: function () {}, onCancel: function () {} }, h(X.Field, { label: "Email", type: "email" }))),
+  },
+  "SaveBar": {
+    style: {"padding": "16px", "width": "520px"},
+    render: (X, h) => h(X.SaveBar, { dirty: true, onSave: function () {}, onDiscard: function () {} }),
+  },
+  "Container": {
+    style: {"padding": "16px 0", "width": "520px", "background": "var(--bg-2)"},
+    render: (X, h) => h(X.Container, { size: "sm" }, h("div", { style: { padding: 12, background: "var(--bg-0)", borderRadius: 6 } }, "Container size sm: max 640px, 16px gutter")),
+  },
+  "Stack": {
+    style: {"padding": "16px", "width": "420px"},
+    render: (X, h) => h(X.Stack, { gap: 4 }, h(X.Field, { label: "Name" }), h(X.Field, { label: "Email", type: "email" }),
+      h(X.Stack, { direction: "row", gap: 2, justify: "end" }, h(X.Button, { variant: "secondary" }, "Cancel"), h(X.Button, { variant: "primary" }, "Save"))),
+  },
+  "Grid": {
+    style: {"padding": "16px", "width": "560px"},
+    render: (X, h) => h(X.Grid, { columns: { base: 1, sm: 3 }, gap: 3, responsive: "container" },
+      h(X.StatTile, { label: "Users", value: "1,284" }), h(X.StatTile, { label: "Orders", value: "312" }), h(X.StatTile, { label: "Revenue", value: "48.2M" }),
+      h(X.GridItem, { span: "full" }, h(X.Banner, { tone: "info" }, "GridItem span=\"full\" takes the whole row."))),
+  },
+  "Skeleton": {
+    style: {"display": "grid", "gap": "16px", "padding": "16px", "width": "320px"},
+    render: (X, h) => h(React.Fragment, null, h(X.Skeleton, { shape: "circle", height: "32px" }), h(X.Skeleton, { lines: 3, announce: true }), h(X.Skeleton, { shape: "block" })),
   },
   "DiffStat": {
     style: {"display": "flex", "gap": "12px", "flexWrap": "wrap", "alignItems": "center", "padding": "16px"},
@@ -183,7 +230,8 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.IconButton, { icon: "plus", label: "New terminal" }),
       h(X.IconButton, { icon: "search", label: "Search" }),
       h(X.IconButton, { icon: "more", label: "More actions" }),
-      h(X.IconButton, { icon: "close", label: "Close panel" }));
+      h(X.IconButton, { icon: "close", label: "Close panel" }),
+      h(X.IconButton, { icon: "plus", label: "Add (touch size)", size: "lg" }));
     return el;
     },
   },
@@ -214,7 +262,9 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       { type: "separator" },
       { label: "Kill session", danger: true, chord: "Ctrl+W" }
     ] });
-    return el;
+    return h("div", { style: { display: "flex", flexDirection: "column", gap: 12, alignItems: "flex-start" } },
+      h(X.MenuButton, { label: "Row actions", items: [{ label: "Edit" }, { label: "Open profile", href: "#profile" }, { type: "separator" }, { label: "Delete", danger: true }] }),
+      el);
     },
   },
   "Meter": {
@@ -340,7 +390,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     var el;
     el = h(React.Fragment, null,
       h(X.Toast, { actionLabel: "Undo", onAction: function () {}, onDismiss: function () {} }, "Session archived."),
-      h(X.Toast, { onDismiss: function () {} }, "Copied branch name."));
+      h(X.Toast, { onDismiss: function () {} }, "Copied branch name."),
+      h(X.Toast, { tone: "danger", description: "The remote rejected the push.", onDismiss: function () {} }, "Push failed."),
+      h(X.Button, { onClick: function () { X.toast("Settings saved.", { tone: "ok" }); } }, "toast()"),
+      h(X.Toaster, null));
     return el;
     },
   },
@@ -406,7 +459,9 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
   },
   "NavList": {
     style: {"padding": "16px", "width": "240px"},
-    render: (X, h) => h(X.NavList, { title: "Settings", value: "general", items: [{ id: "general", label: "General" }, { id: "agents", label: "Agents", count: 3 }, { id: "keys", label: "Keyboard" }] }),
+    render: (X, h) => h(React.Fragment, null,
+      h(X.NavList, { title: "Settings", value: "general", items: [{ id: "general", label: "General" }, { id: "agents", label: "Agents", count: 3 }, { id: "keys", label: "Keyboard" }] }),
+      h(X.NavList, { title: "Content", collapsible: true, items: [{ id: "posts", label: "Posts", href: "#posts" }, { id: "pages", label: "Pages", href: "#pages" }] })),
   },
   "Popover": {
     style: {"padding": "16px", "height": "200px"},
@@ -455,6 +510,18 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
   "SearchPicker": {
     style: {"padding": "16px", "width": "360px"},
     render: (X, h) => h(X.SearchPicker, { label: "Find an issue", placeholder: "Search issues", value: "da", onValueChange: () => {}, onPick: () => {}, items: [{ id: "15", title: "Add a dark theme", meta: "#15 · open" }, { id: "18", title: "Dark mode contrast", meta: "#18 · closed", disabled: true }] }),
+  },
+  "Combobox": {
+    style: {"padding": "16px", "width": "360px", "minHeight": "220px"},
+    render: (X, h) => h(X.Combobox, { label: "Cities", multiple: true, defaultOpen: true, placeholder: "Add cities", value: ["hn"], onChange: () => {}, options: [{ value: "hn", label: "Hà Nội", meta: "Capital" }, { value: "dn", label: "Đà Nẵng" }, { value: "hp", label: "Hải Phòng", disabled: true }, { value: "ct", label: "Cần Thơ" }] }),
+  },
+  "DatePicker": {
+    style: {"padding": "16px", "width": "280px", "minHeight": "400px"},
+    render: (X, h) => h(X.DatePicker, { label: "Due date", value: "2026-11-12", onChange: () => {}, today: "2026-11-06", min: "2026-11-03", defaultOpen: true }),
+  },
+  "DateRangePicker": {
+    style: {"padding": "16px", "width": "420px", "minHeight": "420px", "display": "flex", "justifyContent": "flex-end"},
+    render: (X, h) => h(X.DateRangePicker, { label: "Period", value: { start: "2026-11-02", end: "2026-11-12" }, onChange: () => {}, today: "2026-11-06", defaultOpen: true, presets: [{ label: "Last 7 days", range: { start: "2026-10-31", end: "2026-11-06" } }, { label: "This month", range: { start: "2026-11-01", end: "2026-11-30" } }] }),
   },
   "SettingRow": {
     style: {"padding": "16px", "width": "420px"},
@@ -546,11 +613,37 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       rows: [{ id: "1", name: "Ada Lovelace", email: "ada@example.com" }, { id: "2", name: "Grace Hopper", email: "grace@example.com" }],
       columns: [{ key: "name", header: "Name", sortable: true, cell: (r) => r.name }, { key: "email", header: "Email", mono: true, hideNarrow: true, cell: (r) => r.email }] }),
   },
+  "FacetFilter": {
+    style: {"padding": "16px", "minHeight": "300px", "width": "420px", "maxWidth": "100%"},
+    render: (X, h) => h("div", { style: { display: "flex", gap: "8px" } },
+      h(X.FacetFilter, { label: "Status", defaultOpen: true, searchable: true, selected: ["invited"], onChange() {},
+        options: [{ value: "active", label: "Active", count: 40 }, { value: "invited", label: "Invited", count: 9 }, { value: "suspended", label: "Suspended", count: 8 }] }),
+      h(X.FacetFilter, { label: "Role", selected: [], onChange() {}, options: [{ value: "admin", label: "Admin" }, { value: "viewer", label: "Viewer" }] })),
+  },
+  "BulkBar": {
+    style: {"padding": "16px", "width": "520px", "maxWidth": "100%"},
+    render: (X, h) => h(X.BulkBar, { count: 3, onClear() {} },
+      h(X.Button, { variant: "secondary" }, "Suspend"),
+      h(X.Button, { variant: "secondary", icon: "trash" }, "Delete")),
+  },
+  "SortableList": {
+    style: {"padding": "16px", "width": "360px", "maxWidth": "100%"},
+    render: (X, h) => h(SortableListDemo, { X: X }),
+  },
   "Pagination": {
     style: {"padding": "16px", "width": "420px", "maxWidth": "100%"},
     render: (X, h) => h(X.Pagination, { page: 2, pageSize: 20, total: 57, onPageChange() {}, pageSizeOptions: [10, 20, 50], onPageSizeChange() {} }),
   },
 };
+
+function SortableListDemo({ X }) {
+  const [items, setItems] = React.useState(["Install the app", "Create an account", "Pick a plan", "Invite the team"]);
+  return React.createElement(X.SortableList, {
+    items: items, label: "Onboarding steps", getKey: function (s) { return s; },
+    onReorder: function (from, to) { setItems(X.moveItem(items, from, to)); },
+    renderItem: function (s, i, handle) { return React.createElement(React.Fragment, null, handle, React.createElement("span", null, (i + 1) + ". " + s)); },
+  });
+}
 
 function PopoverDemo({ X }) {
   const [open, setOpen] = React.useState(true);

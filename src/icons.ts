@@ -110,6 +110,7 @@ export const ICONS = {
   layers: [["path", { d: "M12 3 3 7.5l9 4.5 9-4.5zM3 12l9 4.5 9-4.5M3 16.5 12 21l9-4.5" }]],
   grid: [["rect", { x: 4, y: 4, width: 6, height: 6, rx: 1 }], ["rect", { x: 14, y: 4, width: 6, height: 6, rx: 1 }], ["rect", { x: 4, y: 14, width: 6, height: 6, rx: 1 }], ["rect", { x: 14, y: 14, width: 6, height: 6, rx: 1 }]],
   list: [["path", { d: "M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" }]],
+  grip: [["path", { d: "M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01" }]],
   tag: [["path", { d: "M4 4h7l9 9-7 7-9-9zM8 8h.01" }]],
   archive: [["rect", { x: 3, y: 4, width: 18, height: 5, rx: 1 }], ["path", { d: "M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4" }]],
   inbox: [["path", { d: "M3 13h5l1.5 3h5l1.5-3h5M5.5 5h13L21 13v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-6z" }]],

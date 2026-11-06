@@ -184,6 +184,62 @@
 .x-search-picker-option[data-disabled] { cursor: default; }
 .x-search-picker-status { min-height: 0; font-size: 12px; color: var(--text-2); }
 .x-search-picker-status:empty { display: none; }
+
+/* Combobox (.x-combobox): a text box with chips (multiple) over a popup listbox drawn like ListRow */
+.x-combobox { position: relative; display: flex; flex-direction: column; gap: var(--x-space-1); min-width: 0; }
+.x-combobox-label { font: 600 12px var(--font-body); color: var(--x-color-ink); }
+.x-combobox-box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--x-space-1);
+  min-height: 34px;
+  padding: var(--x-space-1) var(--x-space-1) var(--x-space-1) var(--x-space-2);
+  border: 1px solid var(--x-color-line);
+  border-radius: 10px;
+  background: var(--x-color-surface);
+  cursor: text;
+}
+.x-combobox-box:focus-within { outline: 2px solid var(--x-color-signal); outline-offset: 2px; }
+.x-combobox[data-invalid] .x-combobox-box { border-color: var(--danger); }
+.x-combobox[data-disabled] .x-combobox-box { opacity: 0.6; cursor: default; }
+.x-combobox-input {
+  flex: 1 1 var(--x-space-8);
+  min-width: var(--x-space-8);
+  height: 24px;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--x-color-ink);
+  font: 400 13px var(--font-body);
+}
+.x-combobox-input::placeholder { color: var(--x-color-muted); }
+.x-combobox-clear { flex: none; width: 22px; height: 22px; }
+.x-combobox-list {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  z-index: var(--x-z-dropdown);
+  display: flex;
+  flex-direction: column;
+  max-height: 240px;
+  margin-top: var(--x-space-1);
+  overflow-y: auto;
+  padding: var(--x-space-1);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  background: var(--bg-2);
+  box-shadow: var(--shadow-menu);
+}
+.x-combobox-list[hidden] { display: none; }
+.x-combobox-option { cursor: pointer; }
+.x-combobox-option[data-disabled] { cursor: default; }
+.x-combobox-check { width: 14px; }
+.x-combobox-check svg { width: 14px; height: 14px; }
+.x-combobox-status { font-size: 12px; color: var(--text-2); }
+.x-combobox-status:empty { display: none; }
 .search-count {
   position: absolute;
   right: calc(var(--x-space-8) - var(--x-space-1));
@@ -360,8 +416,126 @@
 .x-colour-field-hex:focus-visible { outline: 2px solid var(--x-color-focus); outline-offset: 2px; }
 .x-colour-field-reset:disabled { opacity: 0.4; cursor: default; }
 .x-colour-field-error { grid-column: 1 / -1; font-size: 11.5px; color: var(--x-color-danger); }
-@media (max-width: 420px) {
+@media (max-width: 639.98px) /* below --x-bp-sm */ {
   .x-colour-field { grid-template-columns: minmax(0, 1fr) 32px 32px; }
   .x-colour-field-hex { grid-column: 1 / 3; grid-row: 2; }
   .x-colour-field-reset { grid-column: 3; grid-row: 2; }
+}
+
+/* FileDrop (.x-filedrop) */
+.x-filedrop { display: grid; gap: var(--x-space-2); }
+.x-filedrop-zone {
+  display: grid;
+  justify-items: center;
+  gap: var(--x-space-1);
+  padding: var(--x-space-6) var(--x-space-4);
+  border: 1px dashed var(--x-color-line);
+  border-radius: var(--x-radius-md);
+  background: var(--x-color-surface);
+  color: var(--x-color-muted);
+  text-align: center;
+  cursor: pointer;
+}
+.x-filedrop-zone:hover, .x-filedrop-zone[data-over] { border-color: var(--x-color-accent); background: var(--x-color-accent-soft); color: var(--x-color-ink); }
+.x-filedrop-zone:focus-within { outline: 2px solid var(--x-color-focus); outline-offset: 2px; }
+.x-filedrop-zone[data-disabled] { opacity: 0.5; cursor: not-allowed; }
+.x-filedrop-zone small { font-size: 12px; }
+.x-filedrop-browse { color: var(--x-color-accent); font-weight: 600; text-decoration: underline; }
+.x-filedrop-errors { margin: 0; padding: 0; list-style: none; color: var(--x-color-danger); font-size: 13px; }
+.x-filedrop-list { display: grid; gap: var(--x-space-1); margin: 0; padding: 0; list-style: none; }
+.x-filedrop-item {
+  display: flex;
+  align-items: center;
+  gap: var(--x-space-2);
+  padding: var(--x-space-1) var(--x-space-2);
+  border: 1px solid var(--x-color-line);
+  border-radius: var(--x-radius-sm);
+  background: var(--x-color-panel);
+}
+.x-filedrop-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.x-filedrop-size { color: var(--x-color-muted); font-size: 12px; }
+.x-filedrop-progress { width: 80px; accent-color: var(--x-color-accent); }
+.x-filedrop-error { color: var(--x-color-danger); font-size: 12px; }
+.x-filedrop-item[data-error] { border-color: var(--x-color-danger); }
+/* DatePicker, DateRangePicker (.x-date-picker); the popover panel is .x-popover.x-date-popover */
+.x-date-control { display: flex; align-items: center; gap: var(--x-space-1); }
+.x-date-control input { flex: 1 1 auto; min-width: 0; width: 11ch; font-variant-numeric: tabular-nums; }
+.x-date-range-sep { color: var(--x-color-muted); font-weight: 400; }
+.x-date-picker[data-disabled] { opacity: 0.6; }
+.x-date-popover { padding: var(--x-space-3); font-weight: 400; }
+.x-date-range-body { display: flex; gap: var(--x-space-3); align-items: flex-start; }
+.x-calendar { position: relative; }
+.x-calendar-nav {
+  position: absolute;
+  inset: 0 0 auto 0;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+.x-calendar-nav > * { pointer-events: auto; }
+.x-calendar-nav .ws-icon-btn:disabled { opacity: 0.4; cursor: default; }
+.x-calendar-months { display: flex; flex-wrap: wrap; gap: var(--x-space-4); }
+.x-calendar-title {
+  margin: 0 0 var(--x-space-2);
+  line-height: 28px;
+  text-align: center;
+  font: 600 13px var(--font-body);
+  color: var(--x-color-ink);
+}
+.x-calendar-grid { border-collapse: separate; border-spacing: 0 2px; }
+.x-calendar-grid th {
+  width: 32px;
+  padding: 0 0 var(--x-space-1);
+  font: 600 11px var(--font-body);
+  color: var(--x-color-muted);
+  text-align: center;
+}
+.x-calendar-day {
+  width: 32px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--x-radius-sm);
+  text-align: center;
+  font: 400 13px var(--font-body);
+  font-variant-numeric: tabular-nums;
+  color: var(--x-color-ink);
+  cursor: pointer;
+}
+.x-calendar-day[data-outside] { cursor: default; }
+.x-calendar-day:not([data-outside]):not([aria-disabled]):hover { background: var(--x-color-surface-2); }
+.x-calendar-day[aria-current="date"] { border-color: var(--x-color-line); font-weight: 600; }
+.x-calendar-day[aria-selected="true"] { background: var(--x-color-accent); color: var(--x-color-on-accent); }
+.x-calendar-day[aria-selected="true"]:hover { background: var(--x-color-accent); }
+.x-calendar-day[data-range="middle"],
+.x-calendar-day[data-range="middle"]:hover { background: var(--x-color-accent-soft); color: var(--x-color-ink); border-radius: 0; }
+.x-calendar-day[data-range="start"] { border-start-end-radius: 0; border-end-end-radius: 0; }
+.x-calendar-day[data-range="end"] { border-start-start-radius: 0; border-end-start-radius: 0; }
+.x-calendar-day[aria-disabled] { color: var(--x-color-muted); opacity: 0.5; text-decoration: line-through; cursor: default; }
+.x-calendar-day:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: -2px; }
+.x-calendar-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--x-space-2);
+  margin-top: var(--x-space-3);
+  padding-top: var(--x-space-3);
+  border-top: 1px solid var(--x-color-line);
+}
+.x-calendar-presets { display: flex; flex-direction: column; gap: 2px; min-width: 128px; }
+.x-calendar-preset {
+  padding: var(--x-space-1) var(--x-space-2);
+  border: 1px solid transparent;
+  border-radius: var(--x-radius-sm);
+  background: transparent;
+  color: var(--x-color-ink);
+  font: 400 13px var(--font-body);
+  text-align: start;
+  cursor: pointer;
+}
+.x-calendar-preset:hover { background: var(--x-color-surface-2); }
+.x-calendar-preset[aria-pressed="true"] { border-color: var(--x-color-accent); background: var(--x-color-accent-soft); }
+.x-calendar-preset:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: 2px; }
+@media (max-width: 639.98px) /* below --x-bp-sm */ {
+  .x-date-range-body { flex-direction: column; }
+  .x-calendar-presets { flex-direction: row; flex-wrap: wrap; }
 }

@@ -36,7 +36,7 @@ body {
   background: var(--bg-0);
 }
 
-:where(.btn, .btn-secondary, .ws-icon-btn, .segmented button, .lang-select, .ws-field input, .dialog-input, .agent-switch, .activity, .ws-tab-main, .ws-tab-close, .ws-tab-add, .x-menu-item, .ws-toast button, .pal-chip):focus-visible {
+:where(.btn, .btn-secondary, .btn-danger, .btn-ghost, .btn-link, .ws-icon-btn, .segmented button, .lang-select, .ws-field input, .dialog-input, .agent-switch, .activity, .ws-tab-main, .ws-tab-close, .ws-tab-add, .x-menu-item, .ws-toast button, .pal-chip):focus-visible {
   outline: 2px solid var(--x-color-signal);
   outline-offset: 2px;
 }

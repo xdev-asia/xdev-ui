@@ -5,6 +5,7 @@ import { EmptyState } from "../EmptyState/EmptyState";
 import { StatusDot } from "../StatusDot/StatusDot";
 import { DataTable, type DataTableColumn, type TableSort } from "./DataTable";
 import { sortTableRows } from "./table-helpers";
+import { moveItem } from "./table-reorder";
 
 interface Row { id: string; name: string; email: string; status: "ok" | "warn" }
 const data: Row[] = [
@@ -37,3 +38,22 @@ export const Interactive: Story = {
 };
 export const Loading: Story = { args: { rows: [], loading: true } };
 export const Empty: Story = { args: { rows: [], empty: <EmptyState icon="accounts" title="No users yet" hint="Create the first user to get started." /> } };
+/** Drag a handle, or focus it and press Space, the arrow keys, then Space again. Sorting turns reorder off. */
+export const Reorderable: Story = {
+  render: (args) => {
+    const [rows, setRows] = useState(data);
+    const [sort, setSort] = useState<TableSort | null>(null);
+    const shown = sortTableRows(rows, sort, (r, k) => (k === "name" ? r.name : r.email));
+    return (
+      <DataTable
+        {...args}
+        rows={shown}
+        sort={sort}
+        onSortChange={setSort}
+        rowLabel={(r) => r.name}
+        reorderable
+        onReorder={(from, to) => setRows((prev) => moveItem(prev, from, to))}
+      />
+    );
+  },
+};

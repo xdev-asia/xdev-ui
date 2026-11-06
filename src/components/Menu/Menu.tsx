@@ -1,4 +1,4 @@
-import type { JSX, KeyboardEvent } from "react";
+import { Fragment, type JSX, type KeyboardEvent, type KeyboardEventHandler, type MouseEvent, type ReactNode, type Ref } from "react";
 import { rovingIndex } from "../../internal/keys";
 import type { TabColor } from "../../types";
 
@@ -27,8 +27,22 @@ export type MenuEntry =
       active?: boolean;
       submenu?: boolean;
       swatch?: TabColor;
+      /** Renders the item as `<a role="menuitem">`, so middle-click and Cmd/Ctrl-click open a new tab. */
+      href?: string;
       onSelect?: () => void;
     };
+
+/** Props `renderLink` must spread on its link (a Next.js `Link`, a router link). */
+export interface MenuLinkProps {
+  href: string;
+  className: string;
+  role: "menuitem";
+  tabIndex?: number;
+  "data-active"?: "";
+  "data-danger"?: "";
+  onClick: (e: MouseEvent<HTMLAnchorElement>) => void;
+  children: ReactNode;
+}
 
 export interface MenuProps {
   items: MenuEntry[];
@@ -37,28 +51,46 @@ export interface MenuProps {
   initialFocus?: "first" | "last" | false;
   /** Called after Esc, Tab, or choosing a plain item. Esc and selection return focus to the trigger first. */
   onClose?: () => void;
+  /** Renders `href` items through the app's link component. Default: a plain `<a>`. */
+  renderLink?: (props: MenuLinkProps) => ReactNode;
+  /** The owner (MenuButton) handles the keyboard and focus; the menu does not move focus itself. */
+  roving?: boolean;
+  /** Runs after any enabled item is chosen, e.g. to close the menu. */
+  onAction?: () => void;
+  id?: string;
+  onKeyDown?: KeyboardEventHandler<HTMLDivElement>;
+  ref?: Ref<HTMLDivElement>;
 }
 
-export function Menu({ items, label, initialFocus = "first", onClose }: MenuProps): JSX.Element {
+const setRef = <T,>(r: Ref<T> | undefined, el: T | null): void => {
+  if (typeof r === "function") r(el);
+  else if (r) (r as { current: T | null }).current = el;
+};
+
+export function Menu({ items, label, initialFocus = "first", onClose, renderLink, roving, onAction, id, onKeyDown, ref }: MenuProps): JSX.Element {
+  // Items stay out of the Tab order; focus moves between them with the arrow keys.
+  const tabIndex = -1;
   const focusTrigger = (el: HTMLElement): void => {
     const t = triggers.get(el);
     (t as HTMLElement | null | undefined)?.focus?.();
   };
-  const select = (btn: HTMLElement, it: { onSelect?: () => void }, isCheck: boolean): void => {
-    it.onSelect?.();
-    if (isCheck) return;
-    const menu = btn.closest<HTMLElement>('[role="menu"]');
+  /** After a plain (not checkable) item is chosen in a standalone menu: focus back to the trigger, then close. */
+  const closeFrom = (target: EventTarget | null | undefined): void => {
+    const menu = (target as HTMLElement | null | undefined)?.closest?.<HTMLElement>('[role="menu"]');
     if (menu) focusTrigger(menu);
     onClose?.();
   };
-  const ref = (el: HTMLDivElement | null): void => {
+  const ownRef = (el: HTMLDivElement | null): void => {
+    setRef(ref, el);
     if (!el || triggers.has(el)) return;
     triggers.set(el, document.activeElement);
     if (initialFocus === false) return;
     const list = Array.from(el.querySelectorAll<HTMLElement>(ITEMS));
     (initialFocus === "last" ? list[list.length - 1] : list[0])?.focus();
   };
-  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>): void => {
+  const ownKeyDown = (e: KeyboardEvent<HTMLDivElement>): void => {
+    onKeyDown?.(e);
+    if (e.defaultPrevented) return;
     const el = e.currentTarget;
     if (e.key === "Escape") {
       e.preventDefault();
@@ -94,7 +126,7 @@ export function Menu({ items, label, initialFocus = "first", onClose }: MenuProp
     }
   };
   return (
-    <div className="x-menu" role="menu" aria-label={label} ref={ref} onKeyDown={onKeyDown}>
+    <div className="x-menu" role="menu" aria-label={label} id={id} ref={roving ? ref : ownRef} onKeyDown={roving ? onKeyDown : ownKeyDown}>
       {items.map((it, i) => {
         if (it.type === "separator") return <div key={i} className="x-menu-sep" role="separator" />;
         if (it.type === "group")
@@ -104,6 +136,45 @@ export function Menu({ items, label, initialFocus = "first", onClose }: MenuProp
             </div>
           );
         const isCheck = it.checked != null;
+        const choose = it.disabled
+          ? undefined
+          : (e?: MouseEvent<HTMLElement>): void => {
+              it.onSelect?.();
+              onAction?.();
+              if (!roving && !isCheck) closeFrom(e?.currentTarget);
+            };
+        const content = (
+          <>
+            {it.swatch ? <span className="x-menu-swatch" style={{ background: `var(--x-tab-color-${it.swatch})` }} /> : null}
+            <span className="x-menu-label">{it.label}</span>
+            {it.chord ? <span className="x-menu-chord">{it.chord}</span> : null}
+          </>
+        );
+        if (it.href != null) {
+          if (it.disabled)
+            return (
+              <a key={i} className="x-menu-item" role="menuitem" aria-disabled="true" tabIndex={tabIndex} data-danger={it.danger ? "" : undefined}>
+                {content}
+              </a>
+            );
+          const linkProps: MenuLinkProps = {
+            href: it.href,
+            className: "x-menu-item",
+            role: "menuitem",
+            tabIndex,
+            "data-active": it.active ? "" : undefined,
+            "data-danger": it.danger ? "" : undefined,
+            onClick: (e) => choose?.(e),
+            children: content,
+          };
+          if (renderLink) return <Fragment key={i}>{renderLink(linkProps)}</Fragment>;
+          const { children, ...rest } = linkProps;
+          return (
+            <a key={i} {...rest}>
+              {children}
+            </a>
+          );
+        }
         return (
           <button
             key={i}
@@ -112,19 +183,17 @@ export function Menu({ items, label, initialFocus = "first", onClose }: MenuProp
             role={isCheck ? "menuitemcheckbox" : "menuitem"}
             aria-checked={isCheck ? Boolean(it.checked) : undefined}
             aria-disabled={it.disabled ? true : undefined}
+            tabIndex={tabIndex}
             data-active={it.active ? "" : undefined}
             data-danger={it.danger ? "" : undefined}
-            tabIndex={-1}
-            onClick={it.disabled ? undefined : (e) => select(e.currentTarget, it, isCheck)}
+            onClick={choose}
           >
             {isCheck ? (
               <span className="x-menu-check" aria-hidden="true">
                 {it.checked ? "✓" : ""}
               </span>
             ) : null}
-            {it.swatch ? <span className="x-menu-swatch" style={{ background: `var(--x-tab-color-${it.swatch})` }} /> : null}
-            <span className="x-menu-label">{it.label}</span>
-            {it.chord ? <span className="x-menu-chord">{it.chord}</span> : null}
+            {content}
             {it.submenu ? (
               <span className="x-menu-arrow" aria-hidden="true">
                 ›

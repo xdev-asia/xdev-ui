@@ -24,6 +24,9 @@ describe("tokens.json", () => {
   });
 });
 
+/** Custom properties that components set in an inline style, not in tokens.css. */
+const INLINE = /^--x-(grid-cols|grid-min|span)(-|$)/;
+
 describe("tokens.css", () => {
   const defined = new Set([...tokensCss.matchAll(/^\s*(--[a-z0-9-]+):/gim)].map((m) => m[1]));
 
@@ -42,7 +45,7 @@ describe("tokens.css", () => {
       const css = readFileSync(file, "utf8");
       const local = new Set([...css.matchAll(/(--[a-z0-9-]+)\s*:/gi)].map((m) => m[1]));
       for (const m of css.matchAll(/var\(\s*(--x[a-z0-9-]*)/gi)) {
-        if (!defined.has(m[1]) && !local.has(m[1])) missing.push(`${file}: ${m[1]}`);
+        if (!defined.has(m[1]) && !local.has(m[1]) && !INLINE.test(m[1])) missing.push(`${file}: ${m[1]}`);
       }
     }
     expect(missing).toEqual([]);
@@ -76,5 +79,55 @@ describe("type tokens", () => {
       const t = manifest.tokens.find((x: { name: string }) => x.name === `type-${s.name}`);
       expect(t.css).toBe(`font: var(--type-${s.name})`);
     }
+  });
+});
+
+describe("tailwind.css", () => {
+  const tw = readFileSync(resolve(src, "styles/tailwind.css"), "utf8");
+  const decls = [...tw.matchAll(/^\s*(--[a-z0-9-]+):\s*([^;]+);/gim)].map((m) => [m[1], m[2]] as const);
+
+  it("maps every x-color token to a Tailwind colour", () => {
+    for (const t of tokens.color.tokens as { name: string }[]) {
+      if (!t.name.startsWith("x-color-")) continue;
+      expect(tw, t.name).toContain(`--color-${t.name.slice("x-color-".length)}: var(--${t.name});`);
+    }
+  });
+  it("has no declaration that points at itself", () => {
+    expect(decls.filter(([name, value]) => value.includes(`var(${name})`))).toEqual([]);
+  });
+  it("only points at tokens that exist", () => {
+    const defined = new Set([...tokensCss.matchAll(/^\s*(--[a-z0-9-]+):/gim)].map((m) => m[1]));
+    const used = decls.flatMap(([, v]) => [...v.matchAll(/var\((--[a-z0-9-]+)/g)].map((m) => m[1]));
+    expect(used.filter((u) => !defined.has(u))).toEqual([]);
+  });
+  it("uses the breakpoint tokens, in rem", () => {
+    for (const t of tokens.breakpoint.tokens as { name: string; value: string }[]) {
+      expect(tw).toContain(`--breakpoint-${t.name.slice("x-bp-".length)}: ${parseFloat(t.value) / 16}rem;`);
+    }
+  });
+});
+
+describe("layout css", () => {
+  it("media queries use only the breakpoint tokens (component @container thresholds are free)", () => {
+    const rems = new Set((tokens.breakpoint.tokens as { value: string }[]).map((t) => `${parseFloat(t.value) / 16}rem`));
+    const pxBelow = new Set((tokens.breakpoint.tokens as { value: string }[]).map((t) => `${parseFloat(t.value) - 0.02}px`));
+    const bad: string[] = [];
+    for (const file of cssFiles(resolve(src, "styles"))) {
+      const css = readFileSync(file, "utf8");
+      for (const m of css.matchAll(/@media[^{]*?\((min|max)-width:\s*([0-9.]+(?:rem|px))\)/g)) {
+        if (m[1] === "min" ? !rems.has(m[2]) : !pxBelow.has(m[2])) bad.push(`${file}: ${m[0]}`);
+      }
+    }
+    expect(bad).toEqual([]);
+  });
+  it("z-index comes from the --x-z tokens", () => {
+    const bad: string[] = [];
+    for (const file of cssFiles(resolve(src, "styles"))) {
+      if (file.endsWith("tokens.css")) continue;
+      for (const m of readFileSync(file, "utf8").matchAll(/z-index:\s*([^;]+);/g)) {
+        if (!/var\(--x-z-/.test(m[1]) && m[1].trim() !== "0" && m[1].trim() !== "auto") bad.push(`${file}: ${m[0]}`);
+      }
+    }
+    expect(bad).toEqual([]);
   });
 });

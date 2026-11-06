@@ -31,3 +31,12 @@ export const Interactive: Story = {
     return <NavList {...args} value={v} onSelect={setV} />;
   },
 };
+/** The title is a Disclosure head that shows and hides the items. */
+export const Collapsible: Story = { args: { title: "Content", collapsible: true, defaultOpen: true } };
+/** `renderLink` hands each href item to a router link (here a plain anchor marked data-router). */
+export const CustomLink: Story = {
+  args: {
+    items: items.map((it) => ({ ...it, href: `#${it.id}` })),
+    renderLink: ({ item: _item, ...p }) => <a data-router="" {...p} />,
+  },
+};

@@ -4,12 +4,17 @@ import { describe, expect, it } from "vitest";
 import {
   ActivityBar,
   AppShell,
+  BulkBar,
   Breadcrumb,
   Coachmark,
   CodeBlock,
+  Combobox,
   CommandPalette,
   DataTable,
+  DatePicker,
+  DateRangePicker,
   DiffStat,
+  FacetFilter,
   Dialog,
   NavList,
   Pagination,
@@ -22,9 +27,16 @@ import {
   TabStrip,
   ThemeSwitch,
   Toast,
+  Toaster,
   Toolbar,
   TreeView,
   FontField,
+  Drawer,
+  FileDrop,
+  FormDialog,
+  SaveBar,
+  Skeleton,
+  SortableList,
 } from "./index";
 
 const S = (k: string) => `§${k}§`;
@@ -60,6 +72,12 @@ describe("labels override every default English string", () => {
     const html = renderToStaticMarkup(h(Toast, { onDismiss() {}, labels: { dismiss: S("d") }, children: "msg" }));
     expect(html).toContain(S("d"));
     expectNoEnglish(html, ["Dismiss"]);
+  });
+
+  it("Toaster", () => {
+    const html = renderToStaticMarkup(h(Toaster, { labels: { region: S("r"), dismiss: S("d") } }));
+    expect(html).toContain(S("r"));
+    expectNoEnglish(html, ["Notifications"]);
   });
 
   it("TabStrip", () => {
@@ -122,6 +140,17 @@ describe("labels override every default English string", () => {
     const html = renderToStaticMarkup(h(SearchPicker, { label: S("l"), value: "a", onValueChange: () => {}, items: [], onPick: () => {}, labels: { clear: S("c") } }));
     expect(html).toContain(S("c"));
     expectNoEnglish(html, ["Clear search"]);
+  });
+
+  it("Combobox", () => {
+    const labels = { noResults: S("n"), create: (t: string) => S(`c${t}`), remove: (t: string) => S(`r${t}`), clear: S("x") };
+    const chips = renderToStaticMarkup(h(Combobox, { label: S("l"), multiple: true, options: [{ value: "a", label: "A" }], value: ["a"], onChange() {}, onCreate() {}, labels }));
+    expect(chips).toContain(S("rA"));
+    expect(chips).toContain(S("x"));
+    expectNoEnglish(chips, ["Remove", "Clear", "Create", "No results"]);
+    const empty = renderToStaticMarkup(h(Combobox, { label: S("l"), options: [], value: null, onChange() {}, defaultOpen: true, labels }));
+    expect(empty).toContain(S("n"));
+    expectNoEnglish(empty, ["No results"]);
   });
 
   it("Breadcrumb", () => {
@@ -222,5 +251,88 @@ describe("labels override every default English string", () => {
     const html = renderToStaticMarkup(h(Pagination, { page: 1, pageSize: 10, total: 25, onPageChange() {}, pageSizeOptions: [10], labels }));
     for (const v of [S("nv"), S("pv"), S("nx"), `${S("r")}1-10-25`, S("ps")]) expect(html).toContain(v);
     expectNoEnglish(html, ["Pagination", "Previous page", "Next page", "of", "Rows per page"]);
+  });
+
+  it("Skeleton", () => {
+    const html = renderToStaticMarkup(h(Skeleton, { announce: true, labels: { loading: S("l") } }));
+    expect(html).toContain(S("l"));
+    expectNoEnglish(html, ["Loading"]);
+  });
+
+  it("Drawer", () => {
+    const html = renderToStaticMarkup(h(Drawer, { title: "T", modal: false, onClose() {}, labels: { close: S("c") } }));
+    expect(html).toContain(S("c"));
+    expectNoEnglish(html, ["Close"]);
+  });
+
+  it("FormDialog", () => {
+    const labels = { submit: S("s"), cancel: S("c"), saving: S("v") };
+    const html = renderToStaticMarkup(h(FormDialog, { title: "T", modal: false, onSubmit() {}, onCancel() {}, labels }));
+    for (const v of [S("s"), S("c")]) expect(html).toContain(v);
+    expectNoEnglish(html, ["Save", "Cancel"]);
+    expect(renderToStaticMarkup(h(FormDialog, { title: "T", modal: false, busy: true, onSubmit() {}, onCancel() {}, labels }))).toContain(S("v"));
+  });
+
+  it("SaveBar", () => {
+    const labels = { unsaved: S("u"), save: S("s"), discard: S("d"), saving: S("v") };
+    const html = renderToStaticMarkup(h(SaveBar, { dirty: true, onSave() {}, onDiscard() {}, labels }));
+    for (const v of [S("u"), S("s"), S("d")]) expect(html).toContain(v);
+    expectNoEnglish(html, ["unsaved", "Save", "Discard"]);
+  });
+
+  it("FileDrop", () => {
+    const labels = { drop: S("d"), browse: S("b"), limits: () => S("l"), rejected: () => S("r"), remove: (n: string) => `${S("x")}${n}`, uploading: () => S("u") };
+    const html = renderToStaticMarkup(h(FileDrop, { label: "F", maxSize: 10, onFiles() {}, onRemove() {}, items: [{ id: "1", name: "a", progress: 5 }], labels }));
+    for (const v of [S("d"), S("b"), S("l"), `${S("x")}a`, S("u")]) expect(html).toContain(v);
+    expectNoEnglish(html, ["Drop", "browse", "Remove", "Uploading", "Accepted"]);
+  });
+
+  it("DataTable reorder", () => {
+    const DT = DataTable as unknown as (p: Record<string, unknown>) => ReturnType<typeof DataTable>;
+    const labels = { reorderColumn: S("oc"), reorderHandle: (n: string) => `${S("rh")}${n}`, lifted: (n: string) => S(`lf${n}`), moved: (a: number, b: number) => S(`mv${a}${b}`), dropped: (a: number, b: number) => S(`dr${a}${b}`), cancelled: S("cc") };
+    const html = renderToStaticMarkup(h(DT, { caption: "c", rowKey: (r: { id: string }) => r.id, columns: [{ key: "a", header: "A", cell: (r: { id: string }) => r.id }], rows: [{ id: "x" }, { id: "y" }], reorderable: true, labels }));
+    for (const v of [S("oc"), `${S("rh")}x`, `${S("rh")}y`]) expect(html).toContain(v);
+    expectNoEnglish(html, ["Order", "Reorder"]);
+  });
+
+  it("FacetFilter", () => {
+    const labels = { search: S("se"), clearSearch: S("cs"), clear: S("cl"), noResults: S("nr"), selected: (n: number) => `${S("sl")}${n}` };
+    const options = [{ value: "a", label: "A" }];
+    const html = renderToStaticMarkup(h(FacetFilter, { label: "L", options, selected: ["a"], onChange() {}, searchable: true, defaultOpen: true, labels }));
+    for (const v of [S("se"), S("cl"), `${S("sl")}1`]) expect(html).toContain(v);
+    expectNoEnglish(html, ["Search options", "Clear", "selected"]);
+    const none = renderToStaticMarkup(h(FacetFilter, { label: "L", options: [], selected: [], onChange() {}, searchable: true, defaultOpen: true, labels }));
+    expect(none).toContain(S("nr"));
+    expectNoEnglish(none, ["No options match"]);
+  });
+
+  it("SortableList", () => {
+    const labels = { handle: (n: string) => `${S("h")}${n}`, lifted: S, moved: () => S("m"), dropped: () => S("d"), cancelled: S("c") };
+    const html = renderToStaticMarkup(h(SortableList<string>, { items: ["x", "y"], getKey: (k: string) => k, renderItem: (_k: string, _i: number, hd: unknown) => hd as never, labels }));
+    expect(html).toContain(`${S("h")}x`);
+    expectNoEnglish(html, ["Drag to reorder"]);
+  });
+
+  it("BulkBar", () => {
+    const labels = { region: S("rg"), selected: (n: number) => `${S("sl")}${n}`, clear: S("cl") };
+    const html = renderToStaticMarkup(h(BulkBar, { count: 2, onClear() {}, labels }));
+    for (const v of [S("rg"), `${S("sl")}2`, S("cl")]) expect(html).toContain(v);
+    expectNoEnglish(html, ["Bulk actions", "selected", "Clear selection"]);
+  });
+
+  it("DatePicker", () => {
+    const labels = { openCalendar: S("oc"), calendar: S("cal"), previousMonth: S("pm"), nextMonth: S("nm"), today: S("td"), clear: S("cl"), invalid: S("inv") };
+    const html = renderToStaticMarkup(h(DatePicker, { label: "L", value: "2026-11-06", onChange() {}, today: "2026-11-06", defaultOpen: true, labels }));
+    for (const k of ["oc", "cal", "pm", "nm", "td", "cl"]) expect(html).toContain(S(k));
+    expectNoEnglish(html, ["Open calendar", "Choose date", "Previous month", "Next month", "Today", "Clear"]);
+  });
+
+  it("DateRangePicker", () => {
+    const labels = { openCalendar: S("oc"), calendar: S("cal"), previousMonth: S("pm"), nextMonth: S("nm"), today: S("td"), clear: S("cl"), start: S("st"), end: S("en"), presets: S("pr"), invalid: S("inv") };
+    const html = renderToStaticMarkup(
+      h(DateRangePicker, { label: "L", value: { start: "2026-11-02", end: "2026-11-06" }, onChange() {}, today: "2026-11-06", defaultOpen: true, presets: [{ label: "P", range: { start: null, end: null } }], labels }),
+    );
+    for (const k of ["oc", "cal", "pm", "nm", "td", "cl", "st", "en", "pr"]) expect(html).toContain(S(k));
+    expectNoEnglish(html, ["Open calendar", "Choose dates", "Previous month", "Next month", "Today", "Clear", "Start date", "End date", "Presets"]);
   });
 });

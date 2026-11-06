@@ -28,13 +28,31 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./editor": {
+      "xdev-source": "./src/editor/index.ts",
+      "types": "./dist/editor/index.d.ts",
+      "import": "./dist/editor.js"
+    },
+    "./image": {
+      "xdev-source": "./src/image/index.ts",
+      "types": "./dist/image/index.d.ts",
+      "import": "./dist/image.js"
+    },
     "./styles.css": {
       "xdev-source": "./src/styles/index.css",
       "default": "./dist/styles.css"
     },
+    "./styles.layered.css": {
+      "xdev-source": "./src/styles/layered.css",
+      "default": "./dist/styles.layered.css"
+    },
     "./tokens.css": {
       "xdev-source": "./src/styles/tokens.css",
       "default": "./dist/tokens.css"
+    },
+    "./tailwind.css": {
+      "xdev-source": "./src/styles/tailwind.css",
+      "default": "./dist/tailwind.css"
     },
     "./fonts.css": {
       "xdev-source": "./src/styles/fonts.css",
@@ -65,12 +83,50 @@
     "test": "node scripts/build-tokens.mjs && node scripts/build-ai.mjs && vitest run",
     "example:admin": "node scripts/build-tokens.mjs && vite --config examples/admin/vite.config.ts",
     "build:example:admin": "node scripts/build-tokens.mjs && vite build --config examples/admin/vite.config.ts",
-    "test:dist": "node scripts/smoke.mjs && node scripts/mcp-smoke.mjs",
+    "test:dist": "node scripts/smoke.mjs && node scripts/mcp-smoke.mjs && node scripts/peer-check.mjs",
     "storybook": "node scripts/build-tokens.mjs && storybook dev -p 6006 --no-open"
   },
   "peerDependencies": {
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "@tiptap/core": "^3.32.0",
+    "@tiptap/react": "^3.32.0",
+    "@tiptap/pm": "^3.32.0",
+    "@tiptap/starter-kit": "^3.32.0",
+    "@tiptap/extension-image": "^3.32.0",
+    "@tiptap/extension-link": "^3.32.0",
+    "@tiptap/extensions": "^3.32.0",
+    "@tiptap/markdown": "^3.32.0",
+    "react-easy-crop": "^6.2.4"
+  },
+  "peerDependenciesMeta": {
+    "@tiptap/core": {
+      "optional": true
+    },
+    "@tiptap/react": {
+      "optional": true
+    },
+    "@tiptap/pm": {
+      "optional": true
+    },
+    "@tiptap/starter-kit": {
+      "optional": true
+    },
+    "@tiptap/extension-image": {
+      "optional": true
+    },
+    "@tiptap/extension-link": {
+      "optional": true
+    },
+    "@tiptap/extensions": {
+      "optional": true
+    },
+    "@tiptap/markdown": {
+      "optional": true
+    },
+    "react-easy-crop": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@modelcontextprotocol/client": "^2.4.0",
@@ -79,12 +135,21 @@
     "@storybook/addon-docs": "^10.6.5",
     "@storybook/addon-themes": "^10.6.5",
     "@storybook/react-vite": "^10.6.5",
+    "@tiptap/core": "^3.32.2",
+    "@tiptap/extension-image": "^3.32.2",
+    "@tiptap/extension-link": "^3.32.2",
+    "@tiptap/extensions": "^3.32.2",
+    "@tiptap/markdown": "^3.32.2",
+    "@tiptap/pm": "^3.32.2",
+    "@tiptap/react": "^3.32.2",
+    "@tiptap/starter-kit": "^3.32.2",
     "@types/node": "^24.19.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.2.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
+    "react-easy-crop": "^6.2.4",
     "storybook": "^10.6.5",
     "typescript": "^7.0.2",
     "vite": "^8.3.5",

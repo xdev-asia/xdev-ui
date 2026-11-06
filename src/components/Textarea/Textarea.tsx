@@ -1,4 +1,4 @@
-import { useId, type JSX, type ReactNode, type TextareaHTMLAttributes } from "react";
+import { useId, type JSX, type ReactNode, type Ref, type TextareaHTMLAttributes } from "react";
 import { cx } from "../../internal/cx";
 
 export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -10,6 +10,7 @@ export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElemen
   mono?: boolean;
   /** Default "vertical". */
   resize?: "vertical" | "none" | "both";
+  ref?: Ref<HTMLTextAreaElement>;
 }
 
 export function Textarea({ label, hint, error, mono, resize = "vertical", id, className, rows = 4, ...rest }: TextareaProps): JSX.Element {
@@ -18,8 +19,8 @@ export function Textarea({ label, hint, error, mono, resize = "vertical", id, cl
   const note = error ?? hint;
   const hintId = note ? `${inputId}-hint` : undefined;
   return (
-    <label className={cx("ws-field", className)} htmlFor={inputId} data-invalid={error ? "" : undefined}>
-      {label}
+    <div className={cx("ws-field", className)} data-invalid={error ? "" : undefined}>
+      <label htmlFor={inputId}>{label}</label>
       <textarea
         id={inputId}
         rows={rows}
@@ -30,6 +31,6 @@ export function Textarea({ label, hint, error, mono, resize = "vertical", id, cl
         {...rest}
       />
       {note ? <small id={hintId}>{note}</small> : null}
-    </label>
+    </div>
   );
 }

@@ -1,0 +1,2 @@
+/* Source entry of @xdev-asia/ui/styles.layered.css: the whole stylesheet in the `xdev` cascade layer. */
+@import "./index.css" layer(xdev);
