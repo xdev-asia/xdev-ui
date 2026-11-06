@@ -36,14 +36,16 @@ import { Button, TabStrip, BrandMark } from "@xdev-asia/ui";
 | export | content |
 |---|---|
 | `@xdev-asia/ui` | 76 components, `ICONS`, `ICON_NAMES`, prop types |
+| `@xdev-asia/ui/image` | `ImageCropper`, `ImageField` and crop helpers; needs the optional peer `react-easy-crop` |
 | `@xdev-asia/ui/styles.css` | tokens + component CSS |
+| `@xdev-asia/ui/tailwind.css` | Tailwind v4 theme: colours, radii, fonts and breakpoints from the tokens |
 | `@xdev-asia/ui/tokens.css` | tokens only (CSS custom properties, dark + light) |
 | `@xdev-asia/ui/tokens.json` | token source |
 | `@xdev-asia/ui/brand/*` | logo v9 SVG/PNG, mobile icons |
 | `@xdev-asia/ui/ai-manifest.json` | components, props, classes, tokens, icons, guidelines as JSON |
 | `@xdev-asia/ui/llms.txt`, `llms-full.txt` | the same for LLMs ([llmstxt.org](https://llmstxt.org)) |
 
-Components: ActionTile, ActivityBar, AgentChip, AppShell, Avatar, Badge, Banner, BrandMark, Breadcrumb, Button, Card, Checkbox, CodeBlock, CommandPalette, Comment, CommitGraph, DataTable, DescriptionList, Dialog, DiffStat, Disclosure, EmptyState, Field, FieldMessage, FileIcon, FilterChip, FontField, FormSection, Heatmap, Icon, IconButton, Kbd, ListRow, Menu, Meter, NavList, PageHeader, Pagination, PanZoom, Popover, RadioGroup, ReactionBar, SearchInput, SearchPicker, Segmented, Select, SettingRow, Spinner, SplitHandle, StatTile, StatusBar, StatusDot, Switch, Tabs, TabStrip, Tag, Textarea, ThemeSwitch, Toast, Toolbar, Tooltip, TreeView, ZoomBar. Rules per component: `src/components/<Name>/README.md`. Brand book: [docs/brand.md](docs/brand.md). Foundations: [docs/design-system.md](docs/design-system.md).
+Components: ActionTile, ActivityBar, AgentChip, AppShell, Avatar, Badge, Banner, BrandMark, Breadcrumb, Button, Card, Checkbox, CodeBlock, CommandPalette, Comment, CommitGraph, DataTable, DescriptionList, Dialog, DiffStat, Disclosure, EmptyState, Field, FieldMessage, FileIcon, FilterChip, FontField, FormSection, Heatmap, Icon, IconButton, Kbd, ListRow, Menu, Meter, NavList, PageHeader, Pagination, PanZoom, Popover, RadioGroup, ReactionBar, SearchInput, SearchPicker, Segmented, Select, SettingRow, Spinner, SplitHandle, StatTile, StatusBar, StatusDot, Switch, Tabs, TabStrip, Tag, Textarea, ThemeSwitch, Toast, Toolbar, Tooltip, TreeView, ZoomBar. Rules per component: `src/components/<Name>/README.md`. Image components (`@xdev-asia/ui/image`, `pnpm add react-easy-crop`): `src/image/<Name>/README.md`; their CSS is in `styles.css`. Brand book: [docs/brand.md](docs/brand.md). Foundations: [docs/design-system.md](docs/design-system.md).
 
 ## AI agents (MCP)
 
