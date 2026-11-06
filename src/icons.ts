@@ -149,7 +149,11 @@ export const ICONS = {
   "file-zip": [["path", { d: "M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5" }], ["path", { d: "M10 6.5V8M10 10v1.5" }], ["rect", { x: 8.5, y: 13, width: 3, height: 4, rx: 1 }]],
   "file-check": [["path", { d: "M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5" }], ["path", { d: "m9 15 2 2 4-4" }]],
   "file-diff": [["path", { d: "M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5" }], ["path", { d: "M12 10.5v5M9.5 13h5M9.5 18h5" }]],
-  "file-plus": [["path", { d: "M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5" }], ["path", { d: "M12 11v6M9 14h6" }]]
+  "file-plus": [["path", { d: "M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5" }], ["path", { d: "M12 11v6M9 14h6" }]],
+  "arrow-up-right": [["path", { d: "M7 17 17 7M8 7h9v9" }]],
+  square: [["rect", { x: 4, y: 4, width: 16, height: 16, rx: 2 }]],
+  type: [["path", { d: "M5 7V5h14v2M12 5v14M9 19h6" }]],
+  droplet: [["path", { d: "M12 3.5C9 7 6 10.2 6 14a6 6 0 0 0 12 0c0-3.8-3-7-6-10.5z" }]]
 } as const satisfies Record<string, readonly Part[]>;
 
 export type IconName = keyof typeof ICONS;

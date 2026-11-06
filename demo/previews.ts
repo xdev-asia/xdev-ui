@@ -232,6 +232,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     style: {"display": "flex", "flexDirection": "column", "gap": "12px", "alignItems": "flex-start", "padding": "16px"},
     render: (X, h) => h(X.ThemeSwitch, { value: "system", onChange: () => {} }),
   },
+  "SwatchGroup": {
+    style: {"padding": "16px"},
+    render: (X, h) => h(X.SwatchGroup, { "aria-label": "Colour", value: "red", onChange: function () {}, options: [{ value: "red", label: "Red", tone: "danger" }, { value: "amber", label: "Amber", tone: "warning" }, { value: "blue", label: "Blue", tone: "accent" }, { value: "white", label: "White", tone: "neutral" }] }),
+  },
   "Segmented": {
     style: {"display": "flex", "flexDirection": "column", "gap": "12px", "alignItems": "flex-start", "padding": "16px"},
     render: (X, h) => {

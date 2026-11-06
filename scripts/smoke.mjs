@@ -7,6 +7,7 @@ const cases = {
   Button: [{}, "Create session"],
   IconButton: [{ icon: "search", label: "Search" }],
   Segmented: [{ options: [{ value: "a", label: "A" }, { value: "b", label: "B" }] }],
+  SwatchGroup: [{ "aria-label": "Colour", value: "red", onChange() {}, options: [{ value: "red", label: "Red", tone: "danger" }, { value: "blue", label: "Blue", tone: "accent" }] }],
   ThemeSwitch: [{ value: "system", onChange() {} }],
   Select: [{ options: [{ value: "en", label: "English" }] }],
   FontField: [{ value: "Inter", onChange() {} }],
