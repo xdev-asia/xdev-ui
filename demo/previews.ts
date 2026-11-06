@@ -476,6 +476,15 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.Field, { label: "Full name", defaultValue: "Ada Lovelace" }),
       h(X.Field, { label: "Email", type: "email", defaultValue: "ada@example.com" })),
   },
+  "Board": {
+    style: {"padding": "16px", "width": "720px", "maxWidth": "100%", "height": "260px"},
+    render: (X, h) => h(X.Board, { "aria-label": "Tasks" },
+      ["Backlog", "To do", "In progress", "In review", "Done"].map(function (name, i) {
+        return h(X.BoardColumn, { key: name, title: name, count: i === 2 ? 2 : 1, dropTarget: i === 3 },
+          h(X.BoardCard, { title: "Login retry", meta: "Claude", status: i === 2 ? "running" : undefined, selected: i === 1 }),
+          i === 2 ? h(X.BoardCard, { title: "Fix CI cache", meta: "Codex", status: "waiting", dragging: true }) : null);
+      })),
+  },
   "DescriptionList": {
     style: {"padding": "16px", "width": "420px", "maxWidth": "100%"},
     render: (X, h) => h(X.DescriptionList, { items: [{ term: "Email", value: "ada@example.com", mono: true }, { term: "Role", value: "Owner" }, { term: "Created", value: "4 Nov 2026" }] }),

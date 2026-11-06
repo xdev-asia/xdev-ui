@@ -92,7 +92,7 @@ The library targets WCAG 2.2 level AA on macOS, Windows and Linux. The `xdev-ui-
 | Navigation | TabStrip, ActivityBar, StatusBar, Tabs, NavList, Breadcrumb, TreeView, Disclosure, SplitHandle, Toolbar |
 | Overlays | Menu, Dialog, CommandPalette, Popover, Tooltip, Coachmark |
 | Brand | BrandMark, Icon, FileIcon |
-| Layout | AppShell, PageHeader, FormSection |
+| Layout | AppShell, PageHeader, FormSection, Board, BoardColumn, BoardCard |
 | Data | DescriptionList, StatTile, DataTable, Pagination |
 
 Each component folder has its rules in `README.md`; props are the exported `*Props` types.

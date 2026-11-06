@@ -24,7 +24,7 @@ assert.deepEqual(tools.map((t) => t.name).sort(), [
 for (const t of tools) assert.equal(t.annotations?.readOnlyHint, true, `${t.name} should be read-only`);
 
 const list = await call("xdevui_list_components", { response_format: "json" });
-assert.equal(list.structuredContent.count, 65);
+assert.equal(list.structuredContent.count, 68);
 
 const button = await call("xdevui_get_component", { name: "button" });
 assert.ok(!button.isError && button.body.includes("export interface ButtonProps"), "Button props missing");
