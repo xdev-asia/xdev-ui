@@ -23,3 +23,9 @@ export const Alert: Story = {
 export const NoCancel: Story = {
   args: { cancelLabel: null, title: "Update ready", confirmLabel: "Restart", children: "xDev installs the update on the next start." },
 };
+export const Danger: Story = {
+  args: { alert: true, tone: "danger", title: "Delete user lan@example.com?", description: "Their sessions end now.", confirmLabel: "Delete user", children: "This cannot be undone." },
+};
+export const Busy: Story = {
+  args: { alert: true, tone: "danger", busy: true, title: "Delete user lan@example.com?", confirmLabel: "Delete user", children: "This cannot be undone." },
+};

@@ -11,3 +11,6 @@ Modal confirmation over a dimmed backdrop, for decisions that cannot be undone.
 - A string child renders in `p.dialog-body`; an element child (a form) renders in `div.dialog-body`.
 - `confirmDisabled` disables the primary button while saving or while the form is invalid.
 - `labels` (`DialogLabels`: `confirm`, `cancel`) overrides the English defaults; pass translated strings from the app.
+- `description` renders one line in `p.dialog-desc` under the title and is linked with `aria-describedby`.
+- `tone="danger"` gives the confirm button the `danger` variant; pair it with `alert` for destructive confirms.
+- `busy` disables both actions, shows a spinner in the confirm button, sets `aria-busy` and ignores Esc until the work ends.

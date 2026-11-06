@@ -29,12 +29,20 @@ export interface DialogProps {
   size?: "default" | "wide";
   /** "plain" wraps children in a div, for block content; "text" wraps them in a p. Default: p for a string or number, div otherwise. */
   body?: "text" | "plain";
+  /** One line under the title, linked with aria-describedby. */
+  description?: ReactNode;
+  /** "danger" gives the confirm button the danger variant (destructive confirms). */
+  tone?: "default" | "danger";
+  /** Working: both actions are disabled, the confirm button shows a spinner and Esc is ignored. */
+  busy?: boolean;
 }
 
-export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, onCancel, alert, modal, confirmDisabled, labels, size = "default", body }: DialogProps): JSX.Element {
+export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, onCancel, alert, modal, confirmDisabled, labels, size = "default", body, description, tone, busy }: DialogProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
   const cancelText = cancelLabel === undefined ? l.cancel : cancelLabel;
-  const titleId = `x-dialog-${useId()}`;
+  const id = useId();
+  const titleId = `x-dialog-${id}`;
+  const descId = `x-dialog-d-${id}`;
   const ref = useRef<HTMLDivElement | null>(null);
   const backdropRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
@@ -51,7 +59,7 @@ export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, 
     ? (e: KeyboardEvent<HTMLDivElement>): void => {
         if (e.key === "Escape") {
           e.stopPropagation();
-          onCancel?.();
+          if (!busy) onCancel?.();
         } else if (e.key === "Tab") {
           const target = trapTarget(focusableIn(ref.current), document.activeElement, e.shiftKey);
           if (target) {
@@ -64,18 +72,28 @@ export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, 
   const asText = body ? body === "text" : typeof children === "string" || typeof children === "number";
   return (
     <div className="dialog-backdrop" ref={backdropRef} data-modal={modal ? "true" : undefined} onKeyDown={onKeyDown}>
-      <div className="dialog" data-size={size} ref={ref} tabIndex={modal ? -1 : undefined} role={alert ? "alertdialog" : "dialog"} aria-modal={modal ? "true" : undefined} aria-labelledby={titleId}>
+      <div className="dialog" data-size={size} ref={ref} tabIndex={modal ? -1 : undefined} role={alert ? "alertdialog" : "dialog"} aria-modal={modal ? "true" : undefined} aria-labelledby={titleId} aria-describedby={description ? descId : undefined} aria-busy={busy ? "true" : undefined}>
         <h2 className="dialog-title" id={titleId}>
           {title}
         </h2>
+        {description ? (
+          <p className="dialog-desc" id={descId}>
+            {description}
+          </p>
+        ) : null}
         {!children ? null : asText ? <p className="dialog-body">{children}</p> : <div className="dialog-body">{children}</div>}
         <div className="dialog-actions">
           {cancelText !== null ? (
-            <Button variant="secondary" onClick={onCancel}>
+            <Button variant="secondary" onClick={onCancel} disabled={busy || undefined}>
               {cancelText}
             </Button>
           ) : null}
-          <Button onClick={onConfirm} disabled={confirmDisabled}>
+          <Button onClick={onConfirm} disabled={confirmDisabled || busy || undefined} variant={tone === "danger" ? "danger" : undefined}>
+            {busy ? (
+              <span className="x-spinner" data-size="sm" aria-hidden="true">
+                <span className="x-spinner-ring" />
+              </span>
+            ) : null}
             {confirmLabel ?? l.confirm}
           </Button>
         </div>

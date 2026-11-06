@@ -80,6 +80,29 @@ describe("Dialog", () => {
     expect(onCancel).toHaveBeenCalledOnce();
   });
 
+  it("description renders under the title and is wired via aria-describedby", () => {
+    const html = renderToStaticMarkup(<Dialog title="Delete user?" description="This cannot be undone.">Body</Dialog>);
+    expect(html).toContain('aria-describedby="x-dialog-d-id"');
+    expect(html).toMatch(/<\/h2><p class="dialog-desc" id="x-dialog-d-id">This cannot be undone.<\/p>/);
+    expect(renderToStaticMarkup(<Dialog title="x" />)).not.toContain("aria-describedby");
+  });
+  it("tone danger gives the confirm button the danger variant", () => {
+    const buttons = findAll(Dialog({ title: "x", tone: "danger" }), (e) => e.type === Button);
+    expect(buttons[1].props.variant).toBe("danger");
+  });
+  it("busy disables both actions, shows a spinner, sets aria-busy and ignores Escape", () => {
+    const onCancel = vi.fn();
+    const tree = Dialog({ title: "x", modal: true, busy: true, onCancel });
+    const buttons = findAll(tree, (e) => e.type === Button);
+    expect(buttons[0].props.disabled).toBe(true);
+    expect(buttons[1].props.disabled).toBe(true);
+    const html = renderToStaticMarkup(<Dialog title="x" busy confirmLabel="Delete" />);
+    expect(html).toContain('aria-busy="true"');
+    expect(html).toMatch(/<span class="x-spinner" data-size="sm" aria-hidden="true"><span class="x-spinner-ring"><\/span><\/span>Delete<\/button>/);
+    tree.props.onKeyDown({ key: "Escape", stopPropagation: vi.fn() });
+    expect(onCancel).not.toHaveBeenCalled();
+  });
+
   describe("modal focus", () => {
     const fake = (name: string, extra: object = {}) => ({ name, focus: vi.fn(), ...extra });
     const setup = () => {
