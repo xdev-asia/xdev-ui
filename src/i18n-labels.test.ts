@@ -6,6 +6,7 @@ import {
   AppShell,
   Breadcrumb,
   CodeBlock,
+  Combobox,
   CommandPalette,
   DataTable,
   DiffStat,
@@ -120,6 +121,17 @@ describe("labels override every default English string", () => {
     const html = renderToStaticMarkup(h(SearchPicker, { label: S("l"), value: "a", onValueChange: () => {}, items: [], onPick: () => {}, labels: { clear: S("c") } }));
     expect(html).toContain(S("c"));
     expectNoEnglish(html, ["Clear search"]);
+  });
+
+  it("Combobox", () => {
+    const labels = { noResults: S("n"), create: (t: string) => S(`c${t}`), remove: (t: string) => S(`r${t}`), clear: S("x") };
+    const chips = renderToStaticMarkup(h(Combobox, { label: S("l"), multiple: true, options: [{ value: "a", label: "A" }], value: ["a"], onChange() {}, onCreate() {}, labels }));
+    expect(chips).toContain(S("rA"));
+    expect(chips).toContain(S("x"));
+    expectNoEnglish(chips, ["Remove", "Clear", "Create", "No results"]);
+    const empty = renderToStaticMarkup(h(Combobox, { label: S("l"), options: [], value: null, onChange() {}, defaultOpen: true, labels }));
+    expect(empty).toContain(S("n"));
+    expectNoEnglish(empty, ["No results"]);
   });
 
   it("Breadcrumb", () => {

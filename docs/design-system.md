@@ -74,7 +74,7 @@ Install them with `npx xdev-ui-skills install` (`--codex`, `--cursor`, `--user`,
 | group | components |
 |---|---|
 | Actions | Button, IconButton, ActionTile, ZoomBar |
-| Inputs | Segmented, ThemeSwitch, Select, FontField, Field, Switch, Checkbox, RadioGroup, Textarea, SearchInput, SearchPicker, FilterChip |
+| Inputs | Segmented, ThemeSwitch, Select, FontField, Field, Switch, Checkbox, RadioGroup, Textarea, SearchInput, SearchPicker, Combobox, FilterChip |
 | Display | Kbd, Avatar, Badge, Tag, AgentChip, DiffStat, Comment, ReactionBar, ListRow, Card, EmptyState, SettingRow, CodeBlock, Heatmap, CommitGraph, PanZoom |
 | Status | StatusDot, Meter, Banner, Toast, Spinner, FieldMessage |
 | Navigation | TabStrip, ActivityBar, StatusBar, Tabs, NavList, Breadcrumb, TreeView, Disclosure, SplitHandle, Toolbar |

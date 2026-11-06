@@ -41,6 +41,7 @@ const cases = {
   Textarea: [{ label: "Commit message", mono: true }],
   SearchInput: [{ value: "auth", onChange() {}, onClear() {}, count: 4 }],
   SearchPicker: [{ label: "Find work", value: "da", onValueChange() {}, onPick() {}, items: [{ id: "1", title: "Dark theme", meta: "#1" }], status: "1 match" }],
+  Combobox: [{ label: "Cities", multiple: true, defaultOpen: true, value: ["hn"], onChange() {}, options: [{ value: "hn", label: "Hà Nội" }, { value: "dn", label: "Đà Nẵng" }] }],
   ActionTile: [{ icon: "swap", title: "Hand off a task", description: "Move ownership.", onClick() {} }],
   FilterChip: [{ pressed: true, count: 3 }, "Failed"],
   Tabs: [{ items: [{ id: "diff", label: "Diff" }, { id: "log", label: "Log", badge: 2 }] }],
