@@ -38,6 +38,7 @@ import { Button, TabStrip, BrandMark } from "@xdev-asia/ui";
 | `@xdev-asia/ui` | 76 components, `ICONS`, `ICON_NAMES`, prop types |
 | `@xdev-asia/ui/image` | `ImageCropper`, `ImageField` and crop helpers; needs the optional peer `react-easy-crop` |
 | `@xdev-asia/ui/styles.css` | tokens + component CSS |
+| `@xdev-asia/ui/styles.layered.css` | the same stylesheet inside `@layer xdev`. With Tailwind v4 import it instead of `styles.css` and declare the order first, `@layer theme, base, xdev, components, utilities;`, so Tailwind utilities win over component classes |
 | `@xdev-asia/ui/tailwind.css` | Tailwind v4 theme: colours, radii, fonts and breakpoints from the tokens |
 | `@xdev-asia/ui/tokens.css` | tokens only (CSS custom properties, dark + light) |
 | `@xdev-asia/ui/tokens.json` | token source |

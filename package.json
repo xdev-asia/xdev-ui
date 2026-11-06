@@ -42,6 +42,10 @@
       "xdev-source": "./src/styles/index.css",
       "default": "./dist/styles.css"
     },
+    "./styles.layered.css": {
+      "xdev-source": "./src/styles/layered.css",
+      "default": "./dist/styles.layered.css"
+    },
     "./tokens.css": {
       "xdev-source": "./src/styles/tokens.css",
       "default": "./dist/tokens.css"

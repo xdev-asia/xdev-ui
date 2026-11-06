@@ -23,7 +23,7 @@
 .x-stat-extra { margin-top: var(--x-space-2); }
 
 /* DataTable (.x-table) */
-.x-table-wrap { container-type: inline-size; max-width: 100%; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-l); background: var(--bg-1); }
+.x-table-wrap { position: relative; container-type: inline-size; max-width: 100%; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-l); background: var(--bg-1); }
 .x-table-wrap[data-loading] .x-table tbody { opacity: 0.6; }
 .x-table { width: 100%; border-collapse: collapse; font: var(--type-body); color: var(--text-1); }
 .x-table th, .x-table td { padding: var(--x-space-2) var(--x-space-3); border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
