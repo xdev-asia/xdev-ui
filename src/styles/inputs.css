@@ -184,6 +184,62 @@
 .x-search-picker-option[data-disabled] { cursor: default; }
 .x-search-picker-status { min-height: 0; font-size: 12px; color: var(--text-2); }
 .x-search-picker-status:empty { display: none; }
+
+/* Combobox (.x-combobox): a text box with chips (multiple) over a popup listbox drawn like ListRow */
+.x-combobox { position: relative; display: flex; flex-direction: column; gap: var(--x-space-1); min-width: 0; }
+.x-combobox-label { font: 600 12px var(--font-body); color: var(--x-color-ink); }
+.x-combobox-box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--x-space-1);
+  min-height: 34px;
+  padding: var(--x-space-1) var(--x-space-1) var(--x-space-1) var(--x-space-2);
+  border: 1px solid var(--x-color-line);
+  border-radius: 10px;
+  background: var(--x-color-surface);
+  cursor: text;
+}
+.x-combobox-box:focus-within { outline: 2px solid var(--x-color-signal); outline-offset: 2px; }
+.x-combobox[data-invalid] .x-combobox-box { border-color: var(--danger); }
+.x-combobox[data-disabled] .x-combobox-box { opacity: 0.6; cursor: default; }
+.x-combobox-input {
+  flex: 1 1 var(--x-space-8);
+  min-width: var(--x-space-8);
+  height: 24px;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--x-color-ink);
+  font: 400 13px var(--font-body);
+}
+.x-combobox-input::placeholder { color: var(--x-color-muted); }
+.x-combobox-clear { flex: none; width: 22px; height: 22px; }
+.x-combobox-list {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  z-index: 21;
+  display: flex;
+  flex-direction: column;
+  max-height: 240px;
+  margin-top: var(--x-space-1);
+  overflow-y: auto;
+  padding: var(--x-space-1);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-m);
+  background: var(--bg-2);
+  box-shadow: var(--shadow-menu);
+}
+.x-combobox-list[hidden] { display: none; }
+.x-combobox-option { cursor: pointer; }
+.x-combobox-option[data-disabled] { cursor: default; }
+.x-combobox-check { width: 14px; }
+.x-combobox-check svg { width: 14px; height: 14px; }
+.x-combobox-status { font-size: 12px; color: var(--text-2); }
+.x-combobox-status:empty { display: none; }
 .search-count {
   position: absolute;
   right: calc(var(--x-space-8) - var(--x-space-1));

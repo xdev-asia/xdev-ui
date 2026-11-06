@@ -436,6 +436,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     style: {"padding": "16px", "width": "360px"},
     render: (X, h) => h(X.SearchPicker, { label: "Find an issue", placeholder: "Search issues", value: "da", onValueChange: () => {}, onPick: () => {}, items: [{ id: "15", title: "Add a dark theme", meta: "#15 · open" }, { id: "18", title: "Dark mode contrast", meta: "#18 · closed", disabled: true }] }),
   },
+  "Combobox": {
+    style: {"padding": "16px", "width": "360px", "minHeight": "220px"},
+    render: (X, h) => h(X.Combobox, { label: "Cities", multiple: true, defaultOpen: true, placeholder: "Add cities", value: ["hn"], onChange: () => {}, options: [{ value: "hn", label: "Hà Nội", meta: "Capital" }, { value: "dn", label: "Đà Nẵng" }, { value: "hp", label: "Hải Phòng", disabled: true }, { value: "ct", label: "Cần Thơ" }] }),
+  },
   "SettingRow": {
     style: {"padding": "16px", "width": "420px"},
     render: (X, h) => h(X.SettingRow, { label: "Restore sessions on launch", description: "Reopen the tabs that were open when xDev closed.", control: h(X.Switch, { label: "Restore sessions", defaultChecked: true }) }),
