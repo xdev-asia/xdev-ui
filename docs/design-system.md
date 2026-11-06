@@ -84,3 +84,9 @@ Install them with `npx xdev-ui-skills install` (`--codex`, `--cursor`, `--user`,
 | Data | DescriptionList, StatTile, DataTable, Pagination, FacetFilter, BulkBar |
 
 Each component folder has its rules in `README.md`; props are the exported `*Props` types.
+
+### Subpaths
+
+| entry | content | peers |
+|---|---|---|
+| `@xdev-asia/ui/editor` | RichTextEditor (Markdown by default, or HTML) | `@tiptap/*` (core, react, pm, starter-kit, extension-image, extension-link, extensions, markdown) |

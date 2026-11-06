@@ -45,6 +45,24 @@ import { Button, TabStrip, BrandMark } from "@xdev-asia/ui";
 
 Components: ActionTile, ActivityBar, AgentChip, AppShell, Avatar, Badge, Banner, BrandMark, Breadcrumb, Button, Card, Checkbox, CodeBlock, CommandPalette, Comment, CommitGraph, DataTable, DescriptionList, Dialog, DiffStat, Disclosure, EmptyState, Field, FieldMessage, FileIcon, FilterChip, FontField, FormSection, Heatmap, Icon, IconButton, Kbd, ListRow, Menu, Meter, NavList, PageHeader, Pagination, PanZoom, Popover, RadioGroup, ReactionBar, SearchInput, SearchPicker, Segmented, Select, SettingRow, Spinner, SplitHandle, StatTile, StatusBar, StatusDot, Switch, Tabs, TabStrip, Tag, Textarea, ThemeSwitch, Toast, Toolbar, Tooltip, TreeView, ZoomBar. Rules per component: `src/components/<Name>/README.md`. Brand book: [docs/brand.md](docs/brand.md). Foundations: [docs/design-system.md](docs/design-system.md).
 
+## Subpath entries
+
+Optional parts live in their own entry points, so the core entry never loads their peers. Install the peers only where you import the subpath.
+
+### `@xdev-asia/ui/editor`
+
+`RichTextEditor`: article editor on Tiptap 3 (headings 2-3, bold, italic, links, lists, quotes, images), controlled, Markdown by default or HTML. Rules: `src/editor/RichTextEditor/README.md`.
+
+```bash
+pnpm add @tiptap/core @tiptap/react @tiptap/pm @tiptap/starter-kit @tiptap/extension-image @tiptap/extension-link @tiptap/extensions @tiptap/markdown
+```
+
+```tsx
+import { RichTextEditor } from "@xdev-asia/ui/editor";
+
+<RichTextEditor label="Body" value={body} onChange={setBody} onUploadImage={uploadImage} />
+```
+
 ## AI agents (MCP)
 
 The package ships a stdio MCP server, `xdev-ui-mcp` (`dist/mcp.js`, no extra dependencies). It gives agents the real props, tokens and rules, so they do not invent them.
