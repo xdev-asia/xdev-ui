@@ -71,6 +71,25 @@
 }
 .ws-toast-text { flex: 1; min-width: 0; }
 .ws-toast .btn-secondary { min-height: 32px; }
+.ws-toast-icon { flex: none; }
+.ws-toast[data-tone="ok"] .ws-toast-icon { color: var(--x-color-ok); }
+.ws-toast[data-tone="warn"] .ws-toast-icon { color: var(--x-color-warn); }
+.ws-toast[data-tone="danger"] { border-color: var(--x-color-danger); }
+.ws-toast[data-tone="danger"] .ws-toast-icon { color: var(--x-color-danger); }
+.ws-toast[data-tone="info"] .ws-toast-icon { color: var(--x-color-signal); }
+.ws-toast-desc { display: block; color: var(--x-color-muted); font-size: 12px; }
+
+/* Toaster (.x-toaster): fixed region for the toast() queue */
+.x-toaster { position: fixed; z-index: var(--x-z-toast); max-width: calc(100vw - 2 * var(--x-space-4)); }
+.x-toaster:empty { pointer-events: none; }
+.x-toaster[data-position^="bottom"] { bottom: var(--x-space-4); }
+.x-toaster[data-position^="top"] { top: var(--x-space-4); }
+.x-toaster[data-position$="-end"] { right: var(--x-space-4); }
+.x-toaster[data-position$="-start"] { left: var(--x-space-4); }
+.x-toaster[data-position$="-center"] { left: 50%; transform: translateX(-50%); }
+.x-toaster .ws-toast { animation: x-toast-in 160ms ease-out; }
+@keyframes x-toast-in { from { opacity: 0; transform: translateY(6px); } }
+@media (prefers-reduced-motion: reduce) { .x-toaster .ws-toast { animation: none; } }
 
 /* Spinner (.x-spinner) */
 .x-spinner { display: inline-flex; align-items: center; color: var(--x-color-signal); }

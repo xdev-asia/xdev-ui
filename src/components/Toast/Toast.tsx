@@ -1,5 +1,8 @@
 import type { JSX, ReactNode } from "react";
+import type { IconName } from "../../icons";
 import { Button } from "../Button/Button";
+import { Icon } from "../Icon/Icon";
+import type { ToastTone } from "./toast-store";
 
 export interface ToastLabels {
   dismiss: string;
@@ -14,13 +17,23 @@ export interface ToastProps {
   onDismiss?: () => void;
   /** Override the English defaults (e.g. for vi). */
   labels?: Partial<ToastLabels>;
+  /** Adds a tone icon and `data-tone`. "danger" is announced with role="alert". Default: none. */
+  tone?: ToastTone;
+  /** A second, quieter line under the message. */
+  description?: ReactNode;
 }
 
-export function Toast({ children, actionLabel, onAction, onDismiss, labels }: ToastProps): JSX.Element {
+const TONE_ICON: Record<ToastTone, IconName> = { ok: "check", warn: "warn", danger: "alert", info: "info" };
+
+export function Toast({ children, actionLabel, onAction, onDismiss, labels, tone, description }: ToastProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
   return (
-    <div className="ws-toast" role="status">
-      <span className="ws-toast-text">{children}</span>
+    <div className="ws-toast" role={tone === "danger" ? "alert" : "status"} data-tone={tone}>
+      {tone ? <Icon name={TONE_ICON[tone]} className="ws-toast-icon" /> : null}
+      <span className="ws-toast-text">
+        {children}
+        {description ? <span className="ws-toast-desc">{description}</span> : null}
+      </span>
       {actionLabel ? (
         <Button variant="secondary" onClick={onAction}>
           {actionLabel}

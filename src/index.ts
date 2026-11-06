@@ -19,6 +19,8 @@ export * from "./components/Meter/Meter";
 export * from "./components/Heatmap/Heatmap";
 export * from "./components/Banner/Banner";
 export * from "./components/Toast/Toast";
+export * from "./components/Toast/Toaster";
+export * from "./components/Toast/toast-store";
 export * from "./components/TabStrip/TabStrip";
 export * from "./components/ActivityBar/ActivityBar";
 export * from "./components/StatusBar/StatusBar";

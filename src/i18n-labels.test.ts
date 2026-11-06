@@ -25,6 +25,7 @@ import {
   TabStrip,
   ThemeSwitch,
   Toast,
+  Toaster,
   Toolbar,
   TreeView,
   FontField,
@@ -68,6 +69,12 @@ describe("labels override every default English string", () => {
     const html = renderToStaticMarkup(h(Toast, { onDismiss() {}, labels: { dismiss: S("d") }, children: "msg" }));
     expect(html).toContain(S("d"));
     expectNoEnglish(html, ["Dismiss"]);
+  });
+
+  it("Toaster", () => {
+    const html = renderToStaticMarkup(h(Toaster, { labels: { region: S("r"), dismiss: S("d") } }));
+    expect(html).toContain(S("r"));
+    expectNoEnglish(html, ["Notifications"]);
   });
 
   it("TabStrip", () => {

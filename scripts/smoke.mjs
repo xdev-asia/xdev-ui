@@ -27,6 +27,7 @@ const cases = {
   Heatmap: [{ cells: [{ key: "a", level: 1, label: "A" }], label: "Tokens per day" }],
   Banner: [{ title: "Agent paused" }, "Waiting for input"],
   Toast: [{ actionLabel: "Undo", onDismiss() {} }, "Session archived"],
+  Toaster: [{}],
   TabStrip: [{ tabs: [{ id: "a", name: "fix-auth", state: "working", profile: "codex", color: 2 }] }],
   ActivityBar: [{ changeCount: 120 }],
   StatusBar: [{ items: ["main", "spacer", "UTF-8"] }],

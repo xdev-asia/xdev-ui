@@ -94,7 +94,7 @@ Install them with `npx xdev-ui-skills install` (`--codex`, `--cursor`, `--user`,
 | Actions | Button, IconButton, ActionTile, ZoomBar |
 | Inputs | Segmented, ThemeSwitch, Select, FontField, Field, Switch, Checkbox, RadioGroup, Textarea, SearchInput, SearchPicker, FilterChip, FileDrop, Combobox, DatePicker, DateRangePicker |
 | Display | Kbd, Avatar, Badge, Tag, AgentChip, DiffStat, Comment, ReactionBar, ListRow, Card, EmptyState, SettingRow, CodeBlock, Heatmap, CommitGraph, PanZoom |
-| Status | StatusDot, Meter, Banner, Toast, Spinner, Skeleton, FieldMessage |
+| Status | StatusDot, Meter, Banner, Toast, Toaster, Spinner, Skeleton, FieldMessage |
 | Navigation | TabStrip, ActivityBar, StatusBar, Tabs, NavList, Breadcrumb, TreeView, Disclosure, SplitHandle, Toolbar |
 | Overlays | Menu, MenuButton, Dialog, FormDialog, Drawer, CommandPalette, Popover, Tooltip |
 | Brand | BrandMark, Icon, FileIcon |

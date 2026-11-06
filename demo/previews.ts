@@ -374,7 +374,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     var el;
     el = h(React.Fragment, null,
       h(X.Toast, { actionLabel: "Undo", onAction: function () {}, onDismiss: function () {} }, "Session archived."),
-      h(X.Toast, { onDismiss: function () {} }, "Copied branch name."));
+      h(X.Toast, { onDismiss: function () {} }, "Copied branch name."),
+      h(X.Toast, { tone: "danger", description: "The remote rejected the push.", onDismiss: function () {} }, "Push failed."),
+      h(X.Button, { onClick: function () { X.toast("Settings saved.", { tone: "ok" }); } }, "toast()"),
+      h(X.Toaster, null));
     return el;
     },
   },
