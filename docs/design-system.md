@@ -30,7 +30,7 @@ Inside a workspace surface, `.x-ws` remaps the semantic layer onto graphite, so 
 - **One accent.** `--accent` / `--x-color-accent` blue marks the current thing: primary button, pressed segment, selected tab, current app. Cyan `--x-color-signal` is the focus ring only.
 - **Motion.** Only the `working` dot pulses (off under `prefers-reduced-motion`). Apart from short positional transitions (0.12s), state changes are instant.
 - **Type.** Be Vietnam Pro for interface text (13px controls and menus, 14px body, 18px dialog titles); JetBrains Mono for code, paths, counts and keys (10â€“12px).
-- **Contrast.** `text-3` is kept at its source value (about 3.2:1 on bg-1 dark). Use it for non-essential hints only.
+- **Contrast.** `text-3` is the quietest text step (timestamps, counts, placeholders, hints). It is still 4.5:1 on every workspace ground in both themes, so it may carry text a user reads. Use `--line-strong` (at least 3:1) for the edge of a control that has no other boundary; `--line` stays a decorative hairline between regions.
 
 ## Iconography
 
@@ -76,7 +76,7 @@ The library targets WCAG 2.2 level AA on macOS, Windows and Linux. The `xdev-ui-
 
 - **Keyboard.** Every component follows its WAI-ARIA Authoring Practices pattern; a composite widget is one Tab stop and arrow keys move inside it. Known gaps: `Menu`, `TabStrip`, `CommandPalette`, `Toolbar` and `ZoomBar`.
 - **Focus.** The ring is `--x-color-focus`, at least 3:1 on every ground. Never remove the outline without a `:focus-visible` replacement.
-- **Contrast.** Body text 4.5:1, UI parts 3:1. `--text-3` and the hairline tokens are below that; use them only for text and boundaries a user does not need. `audit.mjs --contrast` lists every pair.
+- **Contrast.** Body text 4.5:1 (`text-1` to `text-3`), UI parts 3:1 (`--line-strong`, `--x-color-line-strong`, the focus ring). The only pairs below that are the decorative hairlines `--line` and `--x-color-line`; `prefers-contrast: more` swaps them, `--text-2` and `--text-3` for stronger values. `audit.mjs --contrast` lists every pair.
 - **Targets.** Pointer targets are 24 by 24 CSS px, or have 24px of clear space.
 - **Preferences.** Motion stops under `prefers-reduced-motion: reduce`; focus and state stay visible under `forced-colors: active`.
 - **Platforms.** One behaviour on every platform: Cancel before the primary button, sentence case, Cmd or Ctrl plus comma for settings, F6 to the next pane, native window controls.

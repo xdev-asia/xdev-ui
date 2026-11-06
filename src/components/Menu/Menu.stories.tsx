@@ -6,6 +6,7 @@ const meta = {
   component: Menu,
   args: {
     label: "Tab actions",
+    initialFocus: false,
     items: [
       { label: "Rename tab", chord: "F2" },
       { label: "Split right", chord: "Ctrl+Alt+Right", active: true },

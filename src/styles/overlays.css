@@ -82,13 +82,13 @@
   background: transparent;
   color: var(--text-1);
   font: 14px var(--font-body);
-  outline: none;
 }
+.pal-input:focus-visible { outline: 0.125rem solid var(--x-color-focus); outline-offset: -0.125rem; }
 .pal-input::placeholder { color: var(--text-3); }
 .pal-filters { display: flex; gap: 6px; padding: 8px 14px; }
 .pal-chip {
   padding: 2px 8px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-strong);
   border-radius: var(--radius-s);
   background: transparent;
   color: var(--text-2);
@@ -190,4 +190,8 @@
   .x-coachmark { animation: none; }
   .x-popover { animation: none; }
   .x-tooltip { transition: none; }
+}
+
+@media (forced-colors: active) {
+  .pal-input:focus-visible { outline-color: Highlight; }
 }

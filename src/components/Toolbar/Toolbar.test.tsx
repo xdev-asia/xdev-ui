@@ -30,4 +30,22 @@ describe("Toolbar", () => {
     tools.props.onKeyDown({ key: "a", preventDefault, currentTarget: { querySelectorAll: () => [a, b] } });
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
+  it("is a single Tab stop: the container wires the roving handlers", () => {
+    const tools = Toolbar({ title: "Changes", actions: "x" }).props.children[1];
+    expect(typeof tools.props.ref).toBe("function");
+    expect(typeof tools.props.onFocus).toBe("function");
+    const items = [{ tabIndex: 0 }, { tabIndex: 0 }];
+    tools.props.ref({ querySelectorAll: () => items });
+    expect(items.map((i) => i.tabIndex)).toEqual([0, -1]);
+    tools.props.onFocus({ target: items[1], currentTarget: { querySelectorAll: () => items } });
+    expect(items.map((i) => i.tabIndex)).toEqual([-1, 0]);
+  });
+  it("keeps arrow navigation across items that are not the current Tab stop", () => {
+    const a = { focus: vi.fn(), tabIndex: -1 };
+    const b = { focus: vi.fn(), tabIndex: 0 };
+    vi.stubGlobal("document", { activeElement: a });
+    const tools = Toolbar({ title: "Changes", actions: "x" }).props.children[1];
+    tools.props.onKeyDown({ key: "ArrowRight", preventDefault: vi.fn(), currentTarget: { querySelectorAll: () => [a, b] } });
+    expect(b.focus).toHaveBeenCalled();
+  });
 });

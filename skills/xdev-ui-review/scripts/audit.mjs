@@ -213,12 +213,11 @@ export function contrastRatio(fg, bg, base = [255, 255, 255, 1]) {
 }
 
 // Token pairs the design system documents as used together (token usage notes). kind text needs 4.5:1 (SC 1.4.3),
-// kind ui needs 3:1 (SC 1.4.11). level warn: text-3 (documented as non-essential hints) and hairlines (a failure only
+// kind ui needs 3:1 (SC 1.4.11). level warn: decorative hairlines (a failure only
 // when the hairline is the only thing that identifies a control).
 const TEXT_GROUNDS = ["bg-0", "bg-1", "bg-2", "bg-3", "side-tint", "term"];
 export const CONTRAST_PAIRS = [
-  ...["text-1", "text-2"].flatMap((fg) => TEXT_GROUNDS.map((bg) => ({ fg, bg, kind: "text" }))),
-  ...["bg-0", "bg-1", "bg-2"].map((bg) => ({ fg: "text-3", bg, kind: "text", level: "warn" })),
+  ...["text-1", "text-2", "text-3"].flatMap((fg) => TEXT_GROUNDS.map((bg) => ({ fg, bg, kind: "text" }))),
   ...["signal", "warn", "violet", "ok", "danger", "orange"].flatMap((fg) => [
     ...["bg-0", "bg-1", "bg-2"].map((bg) => ({ fg, bg, kind: "text" })),
     { fg, bg: `${fg}-bg`, base: "bg-1", kind: "text" },
@@ -234,6 +233,8 @@ export const CONTRAST_PAIRS = [
   ...["x-color-bg", "x-color-panel", "x-color-surface"].map((bg) => ({ fg: "x-color-accent", bg, kind: "ui" })),
   ...["bg-1", "bg-2"].map((bg) => ({ fg: "accent", bg, kind: "ui" })),
   ...["bg-0", "bg-1", "bg-2"].map((bg) => ({ fg: "line", bg, kind: "ui", level: "warn" })),
+  ...TEXT_GROUNDS.map((bg) => ({ fg: "line-strong", bg, kind: "ui" })),
+  ...["x-color-bg", "x-color-panel", "x-color-surface", "x-color-surface-2"].map((bg) => ({ fg: "x-color-line-strong", bg, kind: "ui" })),
   ...["x-color-bg", "x-color-panel", "x-color-surface"].map((bg) => ({ fg: "x-color-line", bg, kind: "ui", level: "warn" })),
 ];
 

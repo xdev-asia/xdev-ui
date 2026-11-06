@@ -37,6 +37,12 @@ css += `:root {\n${shared.join("\n")}\n}\n`;
 css += `:root,\n[data-theme="${first}"] {\n  color-scheme: ${first};\n${out[first].join("\n")}\n}\n`;
 for (const id of rest) css += `[data-theme="${id}"] {\n  color-scheme: ${id};\n${out[id].join("\n")}\n}\n`;
 
+// prefers-contrast: more strengthens hairlines and secondary text. Values reference tokens only; :root[data-theme] outranks the theme blocks above.
+if (t.color.contrastMore?.length) {
+  const decls = t.color.contrastMore.map((x) => `    --${x.name}: ${ref(x.value)};`).join("\n");
+  css += `@media (prefers-contrast: more) {\n  :root,\n  :root[data-theme] {\n${decls}\n  }\n}\n`;
+}
+
 const dest = resolve(root, "src/styles/tokens.css");
 mkdirSync(dirname(dest), { recursive: true });
 writeFileSync(dest, css);

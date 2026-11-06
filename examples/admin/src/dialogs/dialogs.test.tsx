@@ -43,7 +43,7 @@ describe("DeleteUsersDialog", () => {
     expect(html).toContain('role="alertdialog"');
     expect(html).toContain("Delete user Ada Lovelace?");
     expect(html).toContain(">Delete user</button>");
-    expect(html).toContain('<p class="dialog-body">');
+    expect(html).toContain('<p class="dialog-body"');
   });
   it("counts users when there are several, in both languages", () => {
     const users = [{ id: "a", name: "A" }, { id: "b", name: "B" }, { id: "c", name: "C" }];

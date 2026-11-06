@@ -1,6 +1,6 @@
-import type { JSX, KeyboardEvent } from "react";
+import type { JSX } from "react";
 import { cx } from "../../internal/cx";
-import { rovingIndex } from "../../internal/keys";
+import { rovingFocus, rovingKeyDown, rovingRef } from "../../internal/roving";
 import { IconButton } from "../IconButton/IconButton";
 
 export interface ZoomBarLabels {
@@ -33,21 +33,10 @@ export interface ZoomBarProps {
   className?: string;
 }
 
-const FOCUSABLE = "button:not(:disabled)";
-
 export function ZoomBar({ zoom, onZoomOut, onFit, onZoomIn, onActual, labels, className }: ZoomBarProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
-  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>): void => {
-    const items = Array.from(e.currentTarget.querySelectorAll<HTMLElement>(FOCUSABLE));
-    const index = items.indexOf(document.activeElement as HTMLElement);
-    if (index < 0) return;
-    const next = rovingIndex(e.key, index, items.length);
-    if (next == null) return;
-    e.preventDefault();
-    items[next].focus();
-  };
   return (
-    <div className={cx("x-zoombar", className)} role="toolbar" aria-label={l.group} onKeyDown={onKeyDown}>
+    <div className={cx("x-zoombar", className)} role="toolbar" aria-label={l.group} ref={rovingRef} onFocus={rovingFocus} onKeyDown={rovingKeyDown}>
       <IconButton icon="minus" label={l.zoomOut} onClick={onZoomOut} />
       <IconButton icon="maximize" label={l.fit} onClick={onFit} />
       <IconButton icon="plus" label={l.zoomIn} onClick={onZoomIn} />

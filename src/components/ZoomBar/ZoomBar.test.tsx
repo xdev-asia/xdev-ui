@@ -33,4 +33,17 @@ describe("ZoomBar", () => {
     findAll(tree, (e) => e.type === "button")[0].props.onClick();
     expect([out, fit, inn, actual].map((f) => f.mock.calls.length)).toEqual([1, 1, 1, 1]);
   });
+  it("is a single Tab stop with arrow navigation", () => {
+    const tree = ZoomBar({ zoom: 100, onZoomOut: noop, onFit: noop, onZoomIn: noop, onActual: noop });
+    const items = [{ tabIndex: 0, focus: vi.fn() }, { tabIndex: 0, focus: vi.fn() }, { tabIndex: 0, focus: vi.fn() }];
+    const ring = { querySelectorAll: () => items };
+    tree.props.ref(ring);
+    expect(items.map((i) => i.tabIndex)).toEqual([0, -1, -1]);
+    tree.props.onFocus({ target: items[1], currentTarget: ring });
+    expect(items.map((i) => i.tabIndex)).toEqual([-1, 0, -1]);
+    vi.stubGlobal("document", { activeElement: items[2] });
+    tree.props.onKeyDown({ key: "ArrowRight", preventDefault: vi.fn(), currentTarget: ring });
+    vi.unstubAllGlobals();
+    expect(items[0].focus).toHaveBeenCalled();
+  });
 });
