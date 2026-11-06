@@ -104,6 +104,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.Button, null, "Create session"),
       h(X.Button, { icon: "plus" }, "New tab"),
       h(X.Button, { variant: "secondary" }, "Cancel"),
+      h(X.Button, { variant: "danger" }, "Delete"),
+      h(X.Button, { variant: "ghost" }, "Show more"),
+      h(X.Button, { variant: "link", href: "#" }, "Read the docs"),
+      h(X.Button, { size: "sm", variant: "secondary" }, "Small"),
       h(X.Button, { disabled: true }, "Disabled"));
     return el;
     },
@@ -222,7 +226,8 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.IconButton, { icon: "plus", label: "New terminal" }),
       h(X.IconButton, { icon: "search", label: "Search" }),
       h(X.IconButton, { icon: "more", label: "More actions" }),
-      h(X.IconButton, { icon: "close", label: "Close panel" }));
+      h(X.IconButton, { icon: "close", label: "Close panel" }),
+      h(X.IconButton, { icon: "plus", label: "Add (touch size)", size: "lg" }));
     return el;
     },
   },

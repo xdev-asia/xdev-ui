@@ -13,6 +13,11 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {};
 export const Secondary: Story = { args: { variant: "secondary", children: "Open in editor" } };
+export const Danger: Story = { args: { variant: "danger", children: "Delete user" } };
+export const Ghost: Story = { args: { variant: "ghost", children: "Show more" } };
+export const Link: Story = { args: { variant: "link", children: "Read the docs" } };
+export const Small: Story = { args: { size: "sm", variant: "secondary", children: "Edit" } };
+export const AsAnchor: Story = { args: { href: "#docs", variant: "secondary", children: "Open docs" } };
 export const WithIcon: Story = { args: { icon: "plus", children: "New session" } };
 export const Disabled: Story = { args: { disabled: true } };
 /** One primary per surface; the rest are secondary. */

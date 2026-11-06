@@ -23,3 +23,13 @@ export const Toolbar: Story = {
     </div>
   ),
 };
+/** `size="lg"` is the 44px touch target. */
+export const Sizes: Story = {
+  render: () => (
+    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+      <IconButton icon="plus" label="Add" size="sm" />
+      <IconButton icon="plus" label="Add" />
+      <IconButton icon="plus" label="Add" size="lg" />
+    </div>
+  ),
+};
