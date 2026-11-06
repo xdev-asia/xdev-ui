@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, type JSX, type KeyboardEvent, type ReactNode } from "react";
 import { focusFirst, focusableIn, inertOutside, restoreFocus, trapTarget } from "../../internal/focus";
+import { usePortal } from "../../internal/portal";
 import { Button } from "../Button/Button";
 
 export interface DialogLabels {
@@ -35,9 +36,11 @@ export interface DialogProps {
   tone?: "default" | "danger";
   /** Working: both actions are disabled, the confirm button shows a spinner and Esc is ignored. */
   busy?: boolean;
+  /** With `modal`, render into `document.body` once mounted, so no parent's overflow, transform or z-index clips it. Default true. */
+  portal?: boolean;
 }
 
-export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, onCancel, alert, modal, confirmDisabled, labels, size = "default", body, description, tone, busy }: DialogProps): JSX.Element {
+export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, onCancel, alert, modal, confirmDisabled, labels, size = "default", body, description, tone, busy, portal = true }: DialogProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
   const cancelText = cancelLabel === undefined ? l.cancel : cancelLabel;
   const id = useId();
@@ -45,6 +48,7 @@ export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, 
   const descId = `x-dialog-d-${id}`;
   const ref = useRef<HTMLDivElement | null>(null);
   const backdropRef = useRef<HTMLDivElement | null>(null);
+  const inPortal = usePortal(Boolean(modal) && portal);
   useEffect(() => {
     if (!modal) return;
     const trigger = document.activeElement as HTMLElement | null;
@@ -54,7 +58,7 @@ export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, 
       release();
       restoreFocus(trigger);
     };
-  }, [modal]);
+  }, [modal, inPortal.active]);
   const onKeyDown = modal
     ? (e: KeyboardEvent<HTMLDivElement>): void => {
         if (e.key === "Escape") {
@@ -70,7 +74,7 @@ export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, 
       }
     : undefined;
   const asText = body ? body === "text" : typeof children === "string" || typeof children === "number";
-  return (
+  return inPortal(
     <div className="dialog-backdrop" ref={backdropRef} data-modal={modal ? "true" : undefined} onKeyDown={onKeyDown}>
       <div className="dialog" data-size={size} ref={ref} tabIndex={modal ? -1 : undefined} role={alert ? "alertdialog" : "dialog"} aria-modal={modal ? "true" : undefined} aria-labelledby={titleId} aria-describedby={description ? descId : undefined} aria-busy={busy ? "true" : undefined}>
         <h2 className="dialog-title" id={titleId}>
@@ -98,6 +102,6 @@ export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, 
           </Button>
         </div>
       </div>
-    </div>
-  );
+    </div>,
+  ) as JSX.Element;
 }

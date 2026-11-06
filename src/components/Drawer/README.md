@@ -12,3 +12,4 @@ Panel that slides in from the side of the window over a dimmed page, for quick e
 - Footer: secondary Cancel, then one primary Button, right-aligned.
 - If the form has unsaved changes, ask before closing (`useUnsavedGuard` covers leaving the page, not closing the drawer).
 - `labels.close` translates the close button.
+- A modal drawer renders into `document.body` once mounted, so no parent clips it; `portal={false}` keeps it in place. The server render and `modal={false}` previews are always inline.

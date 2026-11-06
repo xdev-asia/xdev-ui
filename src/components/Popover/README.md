@@ -11,4 +11,5 @@ Small non-modal panel anchored to a button, such as the notification bell or a q
 - Pass `trigger` as a function and spread its props on the button, so it gets `aria-expanded`, `aria-controls` and `aria-haspopup`.
 - Focus moves into the panel on open and returns to the trigger on close.
 - Name the panel with `label` ("Notifications").
+- The panel renders into `document.body` once mounted (`position: fixed`, placed from the anchor box, flips above when there is no room below), so a scrolling table or a clipped card cannot cut it off. `portal={false}` keeps it inside the anchor; the server render is always inline.
 - `--bg-2` surface, 1px `--line` border, `--shadow-menu`; it enters with opacity and a 4px transform, none under reduced motion.

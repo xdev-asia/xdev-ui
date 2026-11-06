@@ -127,6 +127,8 @@
 .x-popover[data-placement="bottom-start"] { top: calc(100% + var(--x-space-1)); left: 0; }
 .x-popover[data-placement="bottom-end"] { top: calc(100% + var(--x-space-1)); right: 0; }
 .x-popover[data-placement="top-start"] { bottom: calc(100% + var(--x-space-1)); left: 0; }
+/* Portalled to <body>: top and left come from the anchor's box (placeFloating). */
+.x-popover[data-portal] { position: fixed; top: 0; left: 0; right: auto; bottom: auto; }
 @keyframes x-pop-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
 
 /* Tooltip (.x-tooltip) */

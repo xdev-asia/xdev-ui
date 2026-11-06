@@ -1,15 +1,18 @@
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it, vi } from "vitest";
+import { createElement } from "react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { findAll } from "../../test-utils";
 import { IconButton } from "../IconButton/IconButton";
 
-const h = vi.hoisted(() => ({ effects: [] as Array<() => void | (() => void)> }));
+const h = vi.hoisted(() => ({ client: false, effects: [] as Array<() => void | (() => void)> }));
 vi.mock("react", async (orig) => ({
   ...(await orig<typeof import("react")>()),
   useId: () => "id",
+  useSyncExternalStore: (_s: unknown, client: () => boolean, server: () => boolean) => (h.client ? client() : server()),
   useEffect: (fn: () => void | (() => void)) => void h.effects.push(fn),
   useRef: (v: unknown) => ({ current: v }),
 }));
+vi.mock("react-dom", () => ({ createPortal: (node: unknown, target: unknown) => createElement("x-portal", { target }, node as never) }));
 const { Drawer } = await import("./Drawer");
 
 describe("Drawer", () => {
@@ -44,5 +47,35 @@ describe("Drawer", () => {
   });
   it("takes translated labels", () => {
     expect(renderToStaticMarkup(<Drawer title="x" onClose={() => {}} labels={{ close: "Đóng" }} />)).toContain('aria-label="Đóng"');
+  });
+  describe("portal", () => {
+    afterEach(() => {
+      h.client = false;
+      vi.unstubAllGlobals();
+    });
+    const mounted = () => {
+      h.client = true;
+      const body = { tag: "body" };
+      vi.stubGlobal("document", { body });
+      return body;
+    };
+    it("renders into document.body once mounted", () => {
+      const body = mounted();
+      const tree = Drawer({ title: "x", onClose() {} }) as any;
+      expect(tree.type).toBe("x-portal");
+      expect(tree.props.target).toBe(body);
+      expect(tree.props.children.props.className).toBe("x-drawer-root");
+    });
+    it("portal={false} renders in place", () => {
+      mounted();
+      expect((Drawer({ title: "x", onClose() {}, portal: false }) as any).props.className).toBe("x-drawer-root");
+    });
+    it("renders in place on the server", () => {
+      expect(renderToStaticMarkup(<Drawer title="x" onClose={() => {}} />)).toContain('class="x-drawer-root"');
+    });
+    it("never portals a non-modal preview", () => {
+      mounted();
+      expect((Drawer({ title: "x", onClose() {}, modal: false }) as any).props.className).toBe("x-drawer-root");
+    });
   });
 });

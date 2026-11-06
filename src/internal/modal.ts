@@ -4,13 +4,15 @@ import { focusFirst, focusableIn, inertOutside, restoreFocus, trapTarget } from 
 /**
  * Modal behaviour shared by Drawer and FormDialog (Dialog keeps its own copy): on mount the page outside `root`
  * becomes inert and focus moves into `panel`; on unmount both are undone. The returned handler, put on `root`,
- * calls `onEscape` on Esc and keeps Tab inside `panel`.
+ * calls `onEscape` on Esc and keeps Tab inside `panel`. A change of `remount` (the root moved into a portal) runs the
+ * effect again on the new nodes.
  */
 export function useModal(
   active: boolean,
   root: RefObject<HTMLElement | null>,
   panel: RefObject<HTMLElement | null>,
   onEscape: () => void,
+  remount?: unknown,
 ): ((e: KeyboardEvent<HTMLElement>) => void) | undefined {
   useEffect(() => {
     if (!active) return;
@@ -21,7 +23,7 @@ export function useModal(
       release();
       restoreFocus(trigger);
     };
-  }, [active]); // eslint-disable-line react-hooks/exhaustive-deps -- refs are stable
+  }, [active, remount]); // eslint-disable-line react-hooks/exhaustive-deps -- refs are stable
   if (!active) return undefined;
   return (e) => {
     if (e.key === "Escape") {

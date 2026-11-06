@@ -1,6 +1,7 @@
 import { useId, useRef, type JSX, type ReactNode } from "react";
 import { cx } from "../../internal/cx";
 import { useModal } from "../../internal/modal";
+import { usePortal } from "../../internal/portal";
 import { IconButton } from "../IconButton/IconButton";
 
 export interface DrawerLabels {
@@ -27,10 +28,12 @@ export interface DrawerProps {
   /** false renders the markup only (previews); default true traps focus and makes the page inert. */
   modal?: boolean;
   labels?: Partial<DrawerLabels>;
+  /** With `modal`, render into `document.body` once mounted, so no parent's overflow, transform or z-index clips it. Default true. */
+  portal?: boolean;
   className?: string;
 }
 
-export function Drawer({ title, description, children, footer, onClose, busy, size = "default", side = "end", modal = true, labels, className }: DrawerProps): JSX.Element {
+export function Drawer({ title, description, children, footer, onClose, busy, size = "default", side = "end", modal = true, labels, portal = true, className }: DrawerProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
   const id = useId();
   const titleId = `x-drawer-${id}`;
@@ -40,8 +43,9 @@ export function Drawer({ title, description, children, footer, onClose, busy, si
   const close = (): void => {
     if (!busy) onClose();
   };
-  const onKeyDown = useModal(modal, root, panel, close);
-  return (
+  const inPortal = usePortal(modal && portal);
+  const onKeyDown = useModal(modal, root, panel, close, inPortal.active);
+  return inPortal(
     <div className="x-drawer-root" ref={root} data-modal={modal ? "true" : undefined} onKeyDown={onKeyDown}>
       <div className="x-drawer-backdrop" aria-hidden="true" onClick={close} />
       <div
@@ -72,6 +76,6 @@ export function Drawer({ title, description, children, footer, onClose, busy, si
         <div className="x-drawer-body">{children}</div>
         {footer ? <footer className="x-drawer-foot">{footer}</footer> : null}
       </div>
-    </div>
-  );
+    </div>,
+  ) as JSX.Element;
 }
