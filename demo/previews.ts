@@ -420,6 +420,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     style: {"display": "flex", "gap": "16px", "alignItems": "center", "padding": "16px"},
     render: (X, h) => h(React.Fragment, null, h(X.Spinner, { size: "sm", label: "Loading usage" }), h(X.Spinner, { size: "md", label: "Loading sessions" })),
   },
+  "StepDots": {
+    style: {"padding": "16px"},
+    render: (X, h) => h(X.StepDots, { total: 3, current: 2 }),
+  },
   "SplitHandle": {
     style: {"padding": "16px", "height": "160px"},
     render: (X, h) => h(SplitDemo, { X: X }),
@@ -439,6 +443,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     render: (X, h) => h(React.Fragment, null,
       h(X.Toolbar, { title: "Changes", count: 4, actions: h(React.Fragment, null, h(X.IconButton, { icon: "plus", label: "Stage all" }), h(X.IconButton, { icon: "more", label: "More" })) }),
       h(X.Toolbar, { variant: "bulk", title: "3 selected", actions: h(X.Button, { variant: "secondary" }, "Discard") })),
+  },
+  "Coachmark": {
+    style: {"position": "relative", "height": "240px", "transform": "translateZ(0)"},
+    render: (X, h) => h(X.Coachmark, { anchor: { top: 16, left: 16, width: 120, height: 28 }, placement: "bottom", title: "Start an agent", step: 2, total: 3, onBack() {}, onNext() {}, onSkip() {} }, "Each agent works in its own worktree, so tasks never collide."),
   },
   "Tooltip": {
     style: {"padding": "48px 16px 16px"},

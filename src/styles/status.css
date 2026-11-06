@@ -86,6 +86,11 @@
 .x-field-msg[data-tone="warn"] { color: var(--x-color-warn); }
 .x-field-msg[data-tone="info"] { color: var(--x-color-muted); }
 
+/* StepDots (.x-step-dots) */
+.x-step-dots { display: inline-flex; align-items: center; gap: var(--x-space-1); }
+.x-step-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--x-color-line); }
+.x-step-dot[data-current] { background: var(--x-color-accent); }
+
 @media (prefers-reduced-motion: reduce) {
   .x-spinner-ring { animation: ws-pulse 1.4s ease-in-out infinite; }
 }
