@@ -82,5 +82,8 @@ Install them with `npx xdev-ui-skills install` (`--codex`, `--cursor`, `--user`,
 | Brand | BrandMark, Icon, FileIcon |
 | Layout | AppShell, PageHeader, FormSection, SaveBar |
 | Data | DescriptionList, StatTile, DataTable, Pagination, FacetFilter, BulkBar |
+| Image (`@xdev-asia/ui/image`, peer `react-easy-crop`) | ImageCropper, ImageField |
 
 Each component folder has its rules in `README.md`; props are the exported `*Props` types.
+
+The image components live in the subpath `@xdev-asia/ui/image` so the core entry never loads `react-easy-crop`; their rules are in `src/image/<Name>/README.md` and their CSS (`src/styles/image.css`) ships in `styles.css`.
