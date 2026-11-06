@@ -65,7 +65,6 @@ export const vi: Dict = {
     searchPlaceholder: "Tìm theo tên hoặc email",
     filterStatus: "Trạng thái",
     filterRole: "Vai trò",
-    allRoles: "Tất cả vai trò",
     status: {
       active: "Đang hoạt động",
       invited: "Đã mời",

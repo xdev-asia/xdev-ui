@@ -25,6 +25,8 @@ export const uiLabels = {
     breadcrumb: { breadcrumb: "Breadcrumb" },
     navList: { nav: "Sections" },
     toolbar: { actions: "Actions" },
+    facetFilter: { search: "Search options", clearSearch: "Clear search", clear: "Clear", noResults: "No options match", selected: (n: number) => `${n} selected` },
+    bulkBar: { region: "Bulk actions", selected: (n: number) => `${n} selected`, clear: "Clear selection" },
   },
   vi: {
     appShell: { openNav: "Mở điều hướng", closeNav: "Đóng điều hướng", skipToContent: "Chuyển đến nội dung", nav: "Điều hướng" },
@@ -51,5 +53,7 @@ export const uiLabels = {
     breadcrumb: { breadcrumb: "Đường dẫn" },
     navList: { nav: "Mục" },
     toolbar: { actions: "Thao tác" },
+    facetFilter: { search: "Tìm tùy chọn", clearSearch: "Xóa nội dung tìm", clear: "Bỏ chọn", noResults: "Không có tùy chọn khớp", selected: (n: number) => `đã chọn ${n}` },
+    bulkBar: { region: "Thao tác hàng loạt", selected: (n: number) => `Đã chọn ${n}`, clear: "Bỏ chọn" },
   },
 };
