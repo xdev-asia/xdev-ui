@@ -48,6 +48,7 @@ export const ICONS = {
   external: [["path", { d: "M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" }]],
   menu: [["path", { d: "M4 6h16M4 12h16M4 18h16" }]],
   sidebar: [["rect", { x: 3, y: 4, width: 18, height: 16, rx: 2 }], ["path", { d: "M9 4v16" }]],
+  "panel-right": [["rect", { x: 3, y: 4, width: 18, height: 16, rx: 2 }], ["path", { d: "M15 4v16" }]],
   split: [["rect", { x: 3, y: 4, width: 18, height: 16, rx: 2 }], ["path", { d: "M12 4v16" }]],
   maximize: [["path", { d: "M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" }]],
   minimize: [["path", { d: "M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" }]],
@@ -154,6 +155,8 @@ export const ICONS = {
   "arrow-up-right": [["path", { d: "M7 17 17 7M8 7h9v9" }]],
   square: [["rect", { x: 4, y: 4, width: 16, height: 16, rx: 2 }]],
   type: [["path", { d: "M5 7V5h14v2M12 5v14M9 19h6" }]],
+  board: [["rect", { x: 3, y: 4, width: 18, height: 16, rx: 2 }], ["path", { d: "M9 4v16M15 4v16M6 8h0M12 8h0M18 8h0" }]],
+  automation: [["path", { d: "M20 12a8 8 0 1 1-2.3-5.6L20 8M20 3v5h-5" }], ["path", { d: "M10 9.5v5l4-2.5z" }]],
   droplet: [["path", { d: "M12 3.5C9 7 6 10.2 6 14a6 6 0 0 0 12 0c0-3.8-3-7-6-10.5z" }]]
 } as const satisfies Record<string, readonly Part[]>;
 

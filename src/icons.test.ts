@@ -12,3 +12,16 @@ describe("annotation icons", () => {
     }
   });
 });
+
+describe("shell icons", () => {
+  const names = ["board", "automation", "inbox", "panel-right", "split", "zap"] as const;
+  it("registers the names a workspace shell needs", () => {
+    for (const name of names) expect(ICON_NAMES, name).toContain(name);
+  });
+  it("draws them as strokes only", () => {
+    for (const name of names) {
+      expect(ICONS[name].length, name).toBeGreaterThan(0);
+      for (const [, attrs] of ICONS[name]) expect(attrs, name).not.toHaveProperty("fill");
+    }
+  });
+});
