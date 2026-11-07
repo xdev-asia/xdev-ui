@@ -34,7 +34,9 @@ export interface ReviewCommentProps {
   /** The time as text, already formatted. */
   time?: string;
   /** The comment text. Render user text through a sanitizing renderer, never as raw HTML. */
-  body: ReactNode;
+  body?: ReactNode;
+  /** The comment text as children, the same as `body` (both given: body first). */
+  children?: ReactNode;
   /** Replacement code the author proposes. Shown as plain text in a code block. */
   suggestion?: string;
   /** The thread is resolved: faded body and a badge. */
@@ -50,7 +52,7 @@ export interface ReviewCommentProps {
   className?: string;
 }
 
-export function ReviewComment({ line, file, author, time, body, suggestion, resolved = false, onResolve, onReopen, footer, labels, className }: ReviewCommentProps): JSX.Element {
+export function ReviewComment({ line, file, author, time, body, children, suggestion, resolved = false, onResolve, onReopen, footer, labels, className }: ReviewCommentProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
   const toggle = resolved ? onReopen : onResolve;
   const toggleLabel = resolved ? l.reopen : l.resolve;
@@ -73,6 +75,7 @@ export function ReviewComment({ line, file, author, time, body, suggestion, reso
       footer={footer}
     >
       {body}
+      {children}
       {suggestion != null ? (
         <figure className="x-review-suggestion">
           <figcaption className="x-review-suggestion-title">{l.suggestion}</figcaption>

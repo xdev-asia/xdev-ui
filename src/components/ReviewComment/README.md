@@ -10,3 +10,4 @@ An inline comment on a line of a diff: author, time, the file and line it is abo
 - `body` is the text: render user text through a sanitizing renderer, never raw HTML.
 - State is a tint, never a coloured stripe.
 - The suggestion block scrolls sideways inside the card, so the part works at 360px.
+- `children` is the same as `body`, for callers that nest content (a mention renderer, a button in the text). Both may be given; `body` renders first. `body` keeps working unchanged.

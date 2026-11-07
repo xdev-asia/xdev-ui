@@ -1,5 +1,6 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import { findAll } from "../../test-utils";
 import { ReviewComment } from "./ReviewComment";
 
 describe("ReviewComment", () => {
@@ -62,5 +63,17 @@ describe("ReviewComment", () => {
 
   it("uses no inline colour", () => {
     expect(renderToStaticMarkup(<ReviewComment line={1} author="m" body="x" suggestion="y" onResolve={() => {}} />)).not.toMatch(/style=|#[0-9a-f]{3,8}\b|rgb\(/i);
+  });
+
+  it("accepts children as the body, and both together", () => {
+    const html = renderToStaticMarkup(<ReviewComment line={1} author="m"><b>nested</b></ReviewComment>);
+    expect(html).toContain("<b>nested</b>");
+    const both = renderToStaticMarkup(<ReviewComment line={1} author="m" body="first"><i>second</i></ReviewComment>);
+    expect(both.indexOf("first")).toBeLessThan(both.indexOf("<i>second</i>"));
+  });
+
+  it("exposes nested children to a shallow tree walk", () => {
+    const tree = ReviewComment({ line: 1, author: "m", children: <button type="button">Open</button> });
+    expect(findAll(tree, (e) => e.type === "button").length).toBe(1);
   });
 });
