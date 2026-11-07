@@ -22,4 +22,25 @@ describe("ActivityBar", () => {
     findAll(ActivityBar({ onSelect }), (e) => e.type === "button")[0].props.onClick();
     expect(onSelect).toHaveBeenCalledWith("docs");
   });
+  it("adds extra and bottom items with active state, badges and onSelect", () => {
+    const extraItems = [{ id: "board", icon: "split" as const, label: "Board", badge: 3 }, { id: "inbox", icon: "inbox" as const, label: "Inbox", badge: true }];
+    const bottomItems = [{ id: "settings", icon: "settings" as const, label: "Settings", badge: 0 }];
+    const html = renderToStaticMarkup(<ActivityBar active="board" extraItems={extraItems} bottomItems={bottomItems} />);
+    expect(html).toContain(`aria-label="Board"`);
+    expect(html).toContain("activity-end");
+    expect(html).toContain("data-dot");
+    expect(html.match(/aria-current="page"/g)).toHaveLength(1);
+    expect(html.match(/activity-badge/g)).toHaveLength(2);
+    const onSelect = vi.fn();
+    const buttons = findAll(ActivityBar({ extraItems, bottomItems, onSelect }), (e) => e.type === "button");
+    expect(buttons).toHaveLength(8 + 2 + 1);
+    buttons[8].props.onClick();
+    buttons[10].props.onClick();
+    expect(onSelect).toHaveBeenNthCalledWith(1, "board");
+    expect(onSelect).toHaveBeenNthCalledWith(2, "settings");
+    expect(setInner).toHaveBeenCalledWith("settings");
+  });
+  it("renders no end group without bottomItems", () => {
+    expect(renderToStaticMarkup(<ActivityBar />)).not.toContain("activity-end");
+  });
 });

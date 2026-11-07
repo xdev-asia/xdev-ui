@@ -419,3 +419,5 @@ button.ws-crumb:hover, a.ws-crumb:hover { color: var(--text-1); text-decoration:
 .x-bottom-nav-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--x-space-1); }
 .x-bottom-nav-list .x-bottom-nav-item { flex-direction: row; justify-content: flex-start; gap: var(--x-space-3); width: 100%; padding: 0 var(--x-space-3); font: var(--type-body); }
 @media (min-width: 48rem) { .x-bottom-nav { display: none; } }
+.activity-badge[data-dot] { top: 8px; right: 8px; min-width: 0; width: 8px; height: 8px; padding: 0; }
+.activity-end { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-top: auto; }

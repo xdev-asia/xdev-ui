@@ -9,3 +9,4 @@ Vertical app switcher at the left edge of the desktop window.
 - The count badge shows on Changes only, caps at "99+", and hides at zero.
 - Icons are 22px from the `Icon` set.
 - `labels` (`ActivityBarLabels`) takes a name per app plus `nav` (landmark name) and `count(base, n)` (label with pending count).
+- `extraItems` (`{ id, icon, label, badge? }[]`) adds items after the built-in apps; `bottomItems` pins a group to the bottom of the bar (settings). Both share the active state (`active` takes any item `id`) and `onSelect(id)` with the apps. `badge` is a number (caps at "99+", hidden at 0) or `true` for a dot. Without them the bar is unchanged.
