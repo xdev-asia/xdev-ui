@@ -171,6 +171,8 @@
   box-sizing: border-box;
 }
 .kit-tab-badge[data-tone="danger"] { background: var(--danger); }
+.kit-tabs[data-size="sm"] .kit-tab { padding: var(--x-space-1) var(--x-space-2); font: 600 11px var(--font-body); }
+.kit-tabs[data-size="sm"] .kit-tab-badge { min-width: 14px; font-size: 9px; }
 .kit-tabs[data-variant="pill"] {
   gap: 2px;
   width: max-content;

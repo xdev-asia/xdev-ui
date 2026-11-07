@@ -21,6 +21,8 @@ export interface TabsProps {
   onChange?: (id: string) => void;
   /** "underline" (panel and page tabs, default) or "pill" (compact switch inside a card). */
   variant?: "underline" | "pill";
+  /** "md" (default) or "sm": a compact row for panel tabs beside a terminal (smaller type, tighter padding). */
+  size?: "sm" | "md";
   /** aria-label of the tablist. */
   label?: string;
   /** When set, tab ids are `${idPrefix}-tab-${id}` and aria-controls points at `${idPrefix}-panel-${id}`. */
@@ -28,7 +30,7 @@ export interface TabsProps {
   className?: string;
 }
 
-export function Tabs({ items, value, defaultValue, onChange, variant = "underline", label, idPrefix, className }: TabsProps): JSX.Element {
+export function Tabs({ items, value, defaultValue, onChange, variant = "underline", size = "md", label, idPrefix, className }: TabsProps): JSX.Element {
   const [inner, setInner] = useState(defaultValue ?? items.find((t) => !t.disabled)?.id);
   const current = value ?? inner;
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -46,7 +48,7 @@ export function Tabs({ items, value, defaultValue, onChange, variant = "underlin
     select(items[next].id);
   };
   return (
-    <div className={cx("kit-tabs", className)} role="tablist" aria-label={label} data-variant={variant} onKeyDown={onKeyDown}>
+    <div className={cx("kit-tabs", className)} role="tablist" aria-label={label} data-variant={variant} data-size={size === "sm" ? "sm" : undefined} onKeyDown={onKeyDown}>
       {items.map((t, i) => {
         const isSel = i === currentIndex;
         return (

@@ -18,6 +18,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Underline: Story = {};
+export const Small: Story = { args: { size: "sm" } };
 export const Pill: Story = {
   args: {
     variant: "pill",

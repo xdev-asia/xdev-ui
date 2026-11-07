@@ -29,6 +29,10 @@ describe("Tabs", () => {
     expect(html).toMatch(/aria-selected="true" tabindex="0"[^>]*>Changes/);
     expect(html).toContain('data-variant="pill"');
   });
+  it("size sm sets data-size; md leaves it off", () => {
+    expect(renderToStaticMarkup(<Tabs items={items} size="sm" />)).toContain('data-size="sm"');
+    expect(renderToStaticMarkup(<Tabs items={items} />)).not.toContain("data-size");
+  });
   it("wires click", () => {
     const onChange = vi.fn();
     findAll(Tabs({ items, onChange }), (e) => e.type === "button")[1].props.onClick();
