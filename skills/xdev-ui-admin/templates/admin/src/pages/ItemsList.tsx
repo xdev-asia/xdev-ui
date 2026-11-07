@@ -69,7 +69,7 @@ export function ItemsView(p: ItemsViewProps): JSX.Element {
   );
   return (
     <>
-      <PageHeader title={t("items.title")} description={t("items.description")} actions={p.canCreate ? <Button icon="plus" onClick={p.onCreate}>{t("items.create")}</Button> : undefined} />
+      <PageHeader title={t("items.title")} description={t("items.description")} actions={p.canCreate ? <Button variant="primary" icon="plus" onClick={p.onCreate}>{t("items.create")}</Button> : undefined} />
       {p.state.status === "error" ? (
         <Banner title={t("app.loadFailed")} action={<Button variant="secondary" onClick={p.onRetry}>{t("app.retry")}</Button>}>
           {t("app.loadFailedHint")}

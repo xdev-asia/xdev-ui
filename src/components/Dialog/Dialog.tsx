@@ -93,7 +93,7 @@ export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, 
               {cancelText}
             </Button>
           ) : null}
-          <Button onClick={onConfirm} disabled={confirmDisabled || busy || undefined} variant={tone === "danger" ? "danger" : undefined}>
+          <Button onClick={onConfirm} disabled={confirmDisabled || busy || undefined} variant={tone === "danger" ? "danger" : "primary"}>
             {busy ? (
               <span className="x-spinner" data-size="sm" aria-hidden="true">
                 <span className="x-spinner-ring" />

@@ -17,7 +17,7 @@ export const Center: Story = {
     icon: "branch",
     title: "No worktrees yet",
     hint: "Create one per task so agents never share a checkout.",
-    actions: <Button icon="plus">New worktree</Button>,
+    actions: <Button variant="primary" icon="plus">New worktree</Button>,
   },
 };
 export const NoResults: Story = {

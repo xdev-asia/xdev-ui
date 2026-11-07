@@ -5,7 +5,7 @@ export function Page() {
     <section style={{ padding: "var(--x-space-4)", font: "var(--type-body)" }}>
       <p>Create a session</p>
       <a href="#main">Skip</a>
-      <Button>Create session</Button>
+      <Button variant="primary">Create session</Button>
       <Button variant="secondary">Cancel</Button>
       <Button
         variant="secondary"

@@ -126,7 +126,7 @@ export function UsersView(p: UsersViewProps): JSX.Element {
       icon="accounts"
       title={t("users.emptyTitle")}
       hint={t("users.emptyHint")}
-      actions={canCreate ? <Button onClick={p.onCreate}>{t("users.create")}</Button> : undefined}
+      actions={canCreate ? <Button variant="primary" onClick={p.onCreate}>{t("users.create")}</Button> : undefined}
     />
   );
 
@@ -135,7 +135,7 @@ export function UsersView(p: UsersViewProps): JSX.Element {
       <PageHeader
         title={t("users.title")}
         description={t("users.description")}
-        actions={canCreate ? <Button icon="plus" onClick={p.onCreate}>{t("users.create")}</Button> : undefined}
+        actions={canCreate ? <Button variant="primary" icon="plus" onClick={p.onCreate}>{t("users.create")}</Button> : undefined}
       />
       {p.state.status === "error" ? (
         <Banner title={t("app.loadFailed")} action={<Button variant="secondary" onClick={p.onRetry}>{t("app.retry")}</Button>}>

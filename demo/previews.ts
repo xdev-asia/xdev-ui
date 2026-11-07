@@ -105,14 +105,14 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     render: (X, h) => {
     var el;
     el = h(React.Fragment, null,
-      h(X.Button, null, "Create session"),
-      h(X.Button, { icon: "plus" }, "New tab"),
+      h(X.Button, { variant: "primary" }, "Create session"),
+      h(X.Button, { variant: "secondary", icon: "plus" }, "New tab"),
       h(X.Button, { variant: "secondary" }, "Cancel"),
       h(X.Button, { variant: "danger" }, "Delete"),
       h(X.Button, { variant: "ghost" }, "Show more"),
       h(X.Button, { variant: "link", href: "#" }, "Read the docs"),
       h(X.Button, { size: "sm", variant: "secondary" }, "Small"),
-      h(X.Button, { disabled: true }, "Disabled"));
+      h(X.Button, { variant: "secondary", disabled: true }, "Disabled"));
     return el;
     },
   },
@@ -392,7 +392,7 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.Toast, { actionLabel: "Undo", onAction: function () {}, onDismiss: function () {} }, "Session archived."),
       h(X.Toast, { onDismiss: function () {} }, "Copied branch name."),
       h(X.Toast, { tone: "danger", description: "The remote rejected the push.", onDismiss: function () {} }, "Push failed."),
-      h(X.Button, { onClick: function () { X.toast("Settings saved.", { tone: "ok" }); } }, "toast()"),
+      h(X.Button, { variant: "secondary", onClick: function () { X.toast("Settings saved.", { tone: "ok" }); } }, "toast()"),
       h(X.Toaster, null));
     return el;
     },
@@ -429,7 +429,7 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
   },
   "EmptyState": {
     style: {"padding": "16px", "width": "360px"},
-    render: (X, h) => h(X.EmptyState, { size: "center", icon: "branch", title: "No worktrees yet", hint: "Create one to give an agent its own branch.", actions: h(X.Button, { icon: "plus" }, "New worktree") }),
+    render: (X, h) => h(X.EmptyState, { size: "center", icon: "branch", title: "No worktrees yet", hint: "Create one to give an agent its own branch.", actions: h(X.Button, { variant: "primary", icon: "plus" }, "New worktree") }),
   },
   "FieldMessage": {
     style: {"display": "flex", "flexDirection": "column", "gap": "10px", "padding": "16px"},

@@ -62,7 +62,7 @@ export function SettingsView(p: SettingsViewProps): JSX.Element {
           {p.section === "general" ? (
             <FormSection
               title={t("settings.sections.general")}
-              actions={p.canEdit ? <Button onClick={p.onSaveOrg}>{t("settings.save")}</Button> : undefined}
+              actions={p.canEdit ? <Button variant="primary" onClick={p.onSaveOrg}>{t("settings.save")}</Button> : undefined}
             >
               <Field
                 label={t("settings.orgName")}

@@ -6,7 +6,7 @@ import { Icon } from "../Icon/Icon";
 export type ButtonVariant = "primary" | "secondary" | "danger" | "ghost" | "link";
 
 export interface ButtonCommon {
-  /** Default "primary". One primary per surface. */
+  /** Default "secondary". Pass `variant="primary"` for the one main action of a surface. */
   variant?: ButtonVariant;
   /** Default "md" (current size). "sm" is a compact button for tables and toolbars. */
   size?: "sm" | "md";
@@ -39,8 +39,8 @@ const CLASS: Record<ButtonVariant, string> = {
 };
 
 export function Button(props: ButtonProps | ButtonLinkProps): JSX.Element {
-  const { variant = "primary", size = "md", icon, children, className } = props;
-  const cls = cx(CLASS[variant] ?? "btn", className);
+  const { variant = "secondary", size = "md", icon, children, className } = props;
+  const cls = cx(CLASS[variant] ?? "btn-secondary", className);
   const dataSize = size === "sm" ? "sm" : undefined;
   const content = (
     <>

@@ -11,7 +11,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = { args: { actions: <Button>Create user</Button> } };
+export const Default: Story = { args: { actions: <Button variant="primary">Create user</Button> } };
 export const WithMeta: Story = {
   args: {
     title: "Ada Lovelace",
@@ -19,7 +19,7 @@ export const WithMeta: Story = {
     actions: (
       <>
         <Button variant="secondary">Suspend</Button>
-        <Button>Edit user</Button>
+        <Button variant="primary">Edit user</Button>
       </>
     ),
   },

@@ -479,8 +479,8 @@ export function audit(dir, opts = {}) {
     if (parsed.has(file)) cssChecks(file, parsed.get(file), text);
     if (file.endsWith(".tsx")) iconButtonChecks(file, text);
     if (file.endsWith(".tsx")) {
-      const tags = openingTags(text, "Button").filter((t) => !/variant\s*=\s*["{]\s*["']?(secondary|ghost)/.test(t.text));
-      if (tags.length > 1) add(file, tags[1].line, "primary-count", "warn", `${tags.length} primary Buttons in one file; one primary per surface, the rest variant="secondary".`);
+      const tags = openingTags(text, "Button").filter((t) => /variant\s*=\s*["{]\s*["']?primary/.test(t.text));
+      if (tags.length > 1) add(file, tags[1].line, "primary-count", "warn", `${tags.length} primary Buttons in one file; one primary per surface, the rest secondary (the default).`);
     }
   }
 

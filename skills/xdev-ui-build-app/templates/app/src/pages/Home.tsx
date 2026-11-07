@@ -15,7 +15,7 @@ export function HomePage(): JSX.Element {
         icon="plus"
         title={t("home.emptyTitle")}
         hint={t("home.emptyHint")}
-        actions={<Button onClick={() => notify(t("home.created"))}>{t("home.create")}</Button>}
+        actions={<Button variant="primary" onClick={() => notify(t("home.created"))}>{t("home.create")}</Button>}
       />
     </>
   );

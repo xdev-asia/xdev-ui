@@ -38,7 +38,7 @@ export function SaveBar({ dirty, onSave, onDiscard, busy, error, saveDisabled, l
         <Button variant="secondary" onClick={onDiscard} disabled={busy}>
           {l.discard}
         </Button>
-        <Button onClick={onSave} disabled={busy || saveDisabled}>
+        <Button variant="primary" onClick={onSave} disabled={busy || saveDisabled}>
           {busy ? l.saving : l.save}
         </Button>
       </div>

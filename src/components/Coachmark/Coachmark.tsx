@@ -106,7 +106,7 @@ export function Coachmark({ anchor, placement = "bottom", title, children, step,
               {l.back}
             </Button>
           ) : null}
-          <Button className="x-coachmark-next" onClick={onNext}>
+          <Button variant="primary" className="x-coachmark-next" onClick={onNext}>
             {last ? l.done : l.next}
           </Button>
         </div>

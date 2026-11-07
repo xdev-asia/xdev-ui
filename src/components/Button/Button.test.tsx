@@ -3,10 +3,13 @@ import { describe, expect, it, vi } from "vitest";
 import { Button } from "./Button";
 
 describe("Button", () => {
-  it("defaults to type=button and class btn", () => {
+  it("defaults to type=button and the secondary variant", () => {
     const html = renderToStaticMarkup(<Button>Go</Button>);
     expect(html).toContain('type="button"');
-    expect(html).toContain('class="btn"');
+    expect(html).toContain('class="btn-secondary"');
+  });
+  it("primary variant uses btn", () => {
+    expect(renderToStaticMarkup(<Button variant="primary">Go</Button>)).toContain('class="btn"');
   });
   it("secondary variant uses btn-secondary", () => {
     expect(renderToStaticMarkup(<Button variant="secondary">Go</Button>)).toContain("btn-secondary");

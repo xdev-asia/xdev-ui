@@ -18,7 +18,7 @@ const meta = {
     actions: (
       <>
         <Button variant="secondary">Cancel</Button>
-        <Button>Save changes</Button>
+        <Button variant="primary">Save changes</Button>
       </>
     ),
   },

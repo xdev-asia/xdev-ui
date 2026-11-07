@@ -85,7 +85,7 @@ export function SignInPage({ onSignedIn, theme, onThemeChange, initial }: SignIn
               }}
               error={errors.password ? t(errors.password) : undefined}
             />
-            <Button type="submit">{t("signIn.submit")}</Button>
+            <Button variant="primary" type="submit">{t("signIn.submit")}</Button>
             <p className="app-muted">{t("signIn.demo")}</p>
           </form>
         </Card>

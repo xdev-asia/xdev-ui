@@ -30,7 +30,7 @@ import "@xdev-asia/ui/fonts.css";       // optional: Be Vietnam Pro + JetBrains 
 import { Button, TabStrip, BrandMark } from "@xdev-asia/ui";
 
 <html data-theme="dark">                // or "light"
-<Button icon="plus">Create session</Button>
+<Button variant="primary" icon="plus">Create session</Button>
 ```
 
 | export | content |

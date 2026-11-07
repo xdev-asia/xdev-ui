@@ -10,7 +10,7 @@
   items={[{ id: "profile", label: t("user.profile") }, { id: "activity", label: t("user.activity") }]}
 />
 <DescriptionList items={[{ term: t("user.email"), value: user.email, mono: true }]} />
-<FormSection title={t("user.profile")} actions={<Button type="submit" disabled={!dirty || saving}>{t("user.save")}</Button>}>
+<FormSection title={t("user.profile")} actions={<Button variant="primary" type="submit" disabled={!dirty || saving}>{t("user.save")}</Button>}>
   <Field label={t("user.name")} value={values.name} error={errors.name ? t(errors.name) : undefined} onChange={(e) => change({ name: e.target.value })} />
 </FormSection>
 ```

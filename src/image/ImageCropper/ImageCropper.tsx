@@ -151,7 +151,7 @@ export function ImageCropper({ src, aspect, onCancel, onConfirm, title, busy, mo
           <Button variant="secondary" onClick={cancel} disabled={busy}>
             {l.cancel}
           </Button>
-          <Button onClick={confirm} disabled={!area || busy}>
+          <Button variant="primary" onClick={confirm} disabled={!area || busy}>
             {busy ? (
               <span className="x-spinner" data-size="sm" aria-hidden="true">
                 <span className="x-spinner-ring" />

@@ -88,7 +88,7 @@ export function FormDialog({ title, description, children, onSubmit, formId, onC
           <Button variant="secondary" onClick={cancel} disabled={busy}>
             {l.cancel}
           </Button>
-          <Button type="submit" form={formId} disabled={submitDisabled || busy}>
+          <Button variant="primary" type="submit" form={formId} disabled={submitDisabled || busy}>
             {busy ? (
               <span className="x-spinner" data-size="sm" aria-hidden="true">
                 <span className="x-spinner-ring" />

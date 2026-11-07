@@ -85,9 +85,19 @@
 }
 .activity:hover { color: var(--x-color-ink); background: var(--x-color-surface-2); }
 .activity[aria-current="page"] {
-  color: var(--x-color-on-accent);
+  color: var(--x-color-ink);
+  background: var(--x-color-surface-2);
+}
+.activity[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--x-space-2) * -1);
+  top: 50%;
+  width: 2px;
+  height: 20px;
+  transform: translateY(-50%);
+  border-radius: var(--x-radius-sm);
   background: var(--x-color-accent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--x-color-signal) 35%, transparent), 0 0 18px color-mix(in srgb, var(--x-color-accent) 45%, transparent);
 }
 .activity svg { width: 22px; height: 22px; }
 .activity-badge {
