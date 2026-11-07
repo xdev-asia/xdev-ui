@@ -108,3 +108,8 @@ export * from "./components/SessionBar/SessionBar";
 export * from "./components/WorktreeRow/WorktreeRow";
 export * from "./components/LaunchCard/LaunchCard";
 export * from "./components/UsageMeterRow/UsageMeterRow";
+export * from "./components/RunTimeline/RunTimeline";
+export * from "./components/ReviewComment/ReviewComment";
+export * from "./components/SettingsShell/SettingsShell";
+export * from "./components/AgentRow/AgentRow";
+export * from "./components/BottomNav/BottomNav";

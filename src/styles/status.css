@@ -137,3 +137,13 @@
 .x-skeleton[data-shape="circle"] .x-skeleton-bar { height: 32px; aspect-ratio: 1; width: auto; border-radius: 50%; }
 @keyframes x-shimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
 @media (prefers-reduced-motion: reduce) { .x-skeleton-bar { animation: none; } }
+
+/* RunTimeline (.x-run-timeline) */
+.x-run-timeline { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.x-run-step { position: relative; display: grid; grid-template-columns: 16px minmax(0, 1fr) auto auto; align-items: center; column-gap: var(--x-space-3); min-height: 32px; font: var(--type-body); color: var(--text-1); }
+.x-run-step:not(:last-child)::after { content: ""; position: absolute; left: 7.5px; top: calc(50% + 8px); bottom: calc(-50% + 8px); width: 1px; background: var(--line); }
+.x-run-step-mark { display: inline-flex; align-items: center; justify-content: center; }
+.x-run-step-label { min-width: 0; overflow-wrap: anywhere; }
+.x-run-step[data-status="pending"] .x-run-step-label, .x-run-step[data-status="skipped"] .x-run-step-label { color: var(--text-2); }
+.x-run-step[data-status="failed"] .x-run-step-label { color: var(--danger); }
+.x-run-step-at, .x-run-step-dur { font: var(--type-status); color: var(--text-2); font-variant-numeric: tabular-nums; white-space: nowrap; }

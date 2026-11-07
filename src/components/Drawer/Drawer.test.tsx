@@ -25,6 +25,9 @@ describe("Drawer", () => {
     expect(html).toContain('aria-label="Close"');
     expect(html).toContain('data-side="end"');
   });
+  it("side=bottom is a sheet", () => {
+    expect(renderToStaticMarkup(<Drawer title="x" side="bottom" onClose={() => {}} />)).toContain('data-side="bottom"');
+  });
   it("renders the footer only when given", () => {
     expect(renderToStaticMarkup(<Drawer title="x" onClose={() => {}} />)).not.toContain("x-drawer-foot");
     expect(renderToStaticMarkup(<Drawer title="x" onClose={() => {}} footer={<b>f</b>} />)).toContain('<footer class="x-drawer-foot"><b>f</b></footer>');

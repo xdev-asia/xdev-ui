@@ -1,6 +1,6 @@
 {
   "name": "@xdev-asia/ui",
-  "version": "2.5.0",
+  "version": "0.0.0-development",
   "description": "xdev-ui: design tokens and React components for the xDev agent workspace.",
   "license": "Apache-2.0",
   "repository": {

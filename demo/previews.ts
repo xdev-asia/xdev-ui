@@ -32,6 +32,30 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     return el;
     },
   },
+  "RunTimeline": {
+    style: {"padding": "16px", "maxWidth": "360px"},
+    render: (X, h) => h(X.RunTimeline, { steps: [
+      { id: "1", label: "Check out branch", status: "done", at: "14:02", durationMs: 1200 },
+      { id: "2", label: "Run tests", status: "failed", at: "14:05", durationMs: 42000 },
+      { id: "3", label: "Open pull request", status: "skipped" }] }),
+  },
+  "ReviewComment": {
+    style: {"padding": "16px", "maxWidth": "420px"},
+    render: (X, h) => h(X.ReviewComment, { file: "src/session.ts", line: 42, author: "Maya Chen", time: "2h ago", body: "This retry never gives up. Cap it.", suggestion: "for (let i = 0; i < MAX_RETRIES; i++) {", onResolve: function () {} }),
+  },
+  "SettingsShell": {
+    style: {"padding": "16px", "height": "320px", "maxWidth": "720px"},
+    render: (X, h) => h(X.SettingsShell, {
+      groups: [{ id: "g", label: "General", items: [{ id: "appearance", label: "Appearance", keywords: ["theme"] }, { id: "language", label: "Language" }] }],
+      value: "appearance", onChange: function () {}, query: "", onQuery: function () {},
+    }, h(X.SettingRow, { id: "appearance", label: "Appearance", description: "Dark or light" })),
+  },
+  "AgentRow": {
+    style: {"display": "flex", "flexDirection": "column", "gap": "8px", "padding": "16px", "maxWidth": "480px"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.AgentRow, { name: "Claude", cli: "claude", summary: "Sonnet 5.5 · work account", expanded: true, onToggle: function () {} }, "Profile form goes here."),
+      h(X.AgentRow, { name: "Codex", cli: "codex", summary: "Default model", expanded: false, onToggle: function () {} })),
+  },
   "ReactionBar": {
     style: {"display": "flex", "gap": "12px", "padding": "16px"},
     render: (X, h) => {
@@ -457,6 +481,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.ListRow, { title: "login-retry", meta: "feat/login-retry · 2m", leading: h(X.StatusDot, { state: "working", label: "working" }), selected: true, onClick: function () {} }),
       h(X.ListRow, { title: "fix-ci-cache", meta: "fix/ci-cache · 9m", leading: h(X.StatusDot, { state: "waiting", label: "waiting" }), onClick: function () {} })),
   },
+  "BottomNav": {
+    style: {"padding": "16px", "width": "360px"},
+    render: (X, h) => h(X.BottomNav, { value: "home", onChange: function () {}, items: [{ id: "home", label: "Home", icon: "home" }, { id: "sessions", label: "Sessions", icon: "terminal", badge: 3 }, { id: "board", label: "Board", icon: "tasks" }, { id: "files", label: "Files", icon: "folder" }], more: { label: "More", icon: "more", items: [{ id: "settings", label: "Settings", icon: "settings" }] } }),
+  },
   "NavList": {
     style: {"padding": "16px", "width": "240px"},
     render: (X, h) => h(React.Fragment, null,
@@ -591,9 +619,9 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     style: {"padding": "16px", "width": "720px", "maxWidth": "100%", "height": "260px"},
     render: (X, h) => h(X.Board, { "aria-label": "Tasks" },
       ["Backlog", "To do", "In progress", "In review", "Done"].map(function (name, i) {
-        return h(X.BoardColumn, { key: name, title: name, count: i === 2 ? 2 : 1, dropTarget: i === 3 },
+        return h(X.BoardColumn, { key: name, title: name, onAdd: i === 0 ? function () {} : undefined, count: i === 2 ? 2 : 1, dropTarget: i === 3 },
           h(X.BoardCard, { title: "Login retry", meta: "Claude", status: i === 2 ? "running" : undefined, selected: i === 1 }),
-          i === 2 ? h(X.BoardCard, { title: "Fix CI cache", meta: "Codex", status: "waiting", dragging: true }) : null);
+          i === 2 ? h(X.BoardCard, { title: "Fix CI cache", meta: "Codex", status: "waiting", tone: "need", dragging: true }) : null);
       })),
   },
   "DescriptionList": {
