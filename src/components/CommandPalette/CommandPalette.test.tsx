@@ -192,6 +192,23 @@ describe("CommandPalette", () => {
     it("filter: false with no rows left still shows the empty state", () => {
       expect(renderToStaticMarkup(<CommandPalette sections={[]} filter={false} />)).toContain("pal-empty");
     });
+    it("renders label instead of title, with leading before the icon and meta after the hint", () => {
+      const rows = [{ id: "x", title: "plain", label: <b className="fz">pl</b>, leading: <i className="lead" />, meta: <u className="mt" />, hint: "H", icon: "docs" as const }];
+      const html = renderToStaticMarkup(<CommandPalette sections={[{ title: "S", rows }]} defaultQuery="pl" />);
+      expect(html).toContain('<b class="fz">pl</b>');
+      expect(html).not.toContain("plain");
+      expect(html).not.toContain("pal-hit");
+      expect(html.indexOf("pal-leading")).toBeLessThan(html.indexOf("pal-icon"));
+      expect(html.indexOf("pal-hint")).toBeLessThan(html.indexOf("pal-meta"));
+      const bare = renderToStaticMarkup(<CommandPalette sections={[{ title: "S", rows: [{ title: "plain" }] }]} />);
+      expect(bare).not.toContain("pal-leading");
+      expect(bare).not.toContain("pal-meta");
+    });
+    it("the default filter still tests title when a label is set", () => {
+      const rows = [{ title: "plain", label: <b>other</b> }];
+      expect(renderToStaticMarkup(<CommandPalette sections={[{ title: "S", rows }]} query="plain" />)).toContain("<b>other</b>");
+      expect(renderToStaticMarkup(<CommandPalette sections={[{ title: "S", rows }]} query="other" />)).toContain("pal-empty");
+    });
     it("shows emptyText and footer when given", () => {
       const html = renderToStaticMarkup(<CommandPalette sections={two} defaultQuery="zzz" emptyText="Nothing here" footer={<b>Tip</b>} />);
       expect(html).toContain("Nothing here");

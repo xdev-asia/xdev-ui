@@ -10,12 +10,19 @@ import { StatusDot } from "../StatusDot/StatusDot";
 export interface PaletteRow {
   /** Stable id of the row; used as the React key and as `data-row-id`. */
   id?: string;
+  /** Plain text of the row: the default filter, the match highlight and the accessible name. */
   title: string;
+  /** Rendered instead of `title` when present (for example the title with fuzzy hits wrapped). `title` stays the string. */
+  label?: ReactNode;
   detail?: string;
   state?: SessionState;
   icon?: IconName;
   /** Shortcut text on the right, after the detail. */
   hint?: string;
+  /** Slot before the icon or status dot (for example a kind badge). */
+  leading?: ReactNode;
+  /** Slot on the right, after `hint` (for example a count or a digit key). */
+  meta?: ReactNode;
   /** Row is shown but skipped by the arrow keys and cannot be selected. */
   disabled?: boolean;
 }
@@ -237,10 +244,12 @@ export function CommandPalette({
                     onMouseDown={(e) => e.preventDefault()}
                     onClick={() => select(r)}
                   >
+                    {r.leading ? <span className="pal-leading">{r.leading}</span> : null}
                     {r.state ? <StatusDot state={r.state} /> : <Icon name={r.icon ?? "terminal"} className="pal-icon" />}
-                    <span className="pal-title-text">{highlight(r.title, q)}</span>
+                    <span className="pal-title-text">{r.label ?? highlight(r.title, q)}</span>
                     {r.detail ? <span className="pal-detail">{r.detail}</span> : null}
                     {r.hint ? <span className="pal-hint">{r.hint}</span> : null}
+                    {r.meta ? <span className="pal-meta">{r.meta}</span> : null}
                   </div>
                 );
               })}
