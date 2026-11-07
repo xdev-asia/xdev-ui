@@ -92,6 +92,12 @@ export interface CommandPaletteProps {
   filter?: boolean | ((row: PaletteRow, query: string) => boolean);
   /** Control rendered next to the input, on its right (for example a scope menu button). */
   inputAddon?: ReactNode;
+  /**
+   * Called first for every key pressed in the input. If it calls `e.preventDefault()` the palette skips its own handling
+   * (arrows, Home/End, Enter). While an IME composes (`e.nativeEvent.isComposing`) the palette never handles keys,
+   * so Enter never selects a row.
+   */
+  onInputKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
 }
 
 function highlight(text: string, query: string): ReactNode {
@@ -131,6 +137,7 @@ export function CommandPalette({
   footer,
   filter: rowFilter = true,
   inputAddon,
+  onInputKeyDown,
 }: CommandPaletteProps): JSX.Element | null {
   const l = { ...DEFAULT_LABELS, ...labels };
   const [inner, setQ] = useState(defaultQuery);
@@ -159,6 +166,9 @@ export function CommandPalette({
     if (row && !row.disabled) onSelect?.(row);
   };
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>): void => {
+    onInputKeyDown?.(e);
+    if (e.defaultPrevented) return;
+    if (e.nativeEvent?.isComposing || e.keyCode === 229) return;
     if (e.key === "Enter") {
       if (!onSelect || active < 0) return;
       e.preventDefault();

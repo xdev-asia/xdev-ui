@@ -218,6 +218,38 @@ describe("CommandPalette", () => {
       expect(bare).not.toContain("pal-input-row");
       expect(bare).not.toContain("pal-input-addon");
     });
+    it("onInputKeyDown runs first and a preventDefault skips the palette's own handling", () => {
+      const onSelect = vi.fn();
+      const onInputKeyDown = vi.fn();
+      const el = CommandPalette({ sections: two, onSelect, onInputKeyDown })!;
+      const ev = { ...key("ArrowDown"), defaultPrevented: false };
+      input(el).props.onKeyDown(ev);
+      expect(onInputKeyDown).toHaveBeenCalledWith(ev);
+      expect(setAt).toHaveBeenLastCalledWith(2);
+      setAt.mockClear();
+      const claim = vi.fn((e: { preventDefault: () => void; defaultPrevented: boolean }) => {
+        e.preventDefault();
+        e.defaultPrevented = true;
+      });
+      const el2 = CommandPalette({ sections: two, onSelect, onInputKeyDown: claim as never })!;
+      for (const k of ["ArrowDown", "Enter", "Home"]) input(el2).props.onKeyDown({ ...key(k), defaultPrevented: false });
+      expect(setAt).not.toHaveBeenCalled();
+      expect(onSelect).not.toHaveBeenCalled();
+    });
+    it("never selects on Enter while an IME composes, and still selects after", () => {
+      const onSelect = vi.fn();
+      const el = CommandPalette({ sections: two, onSelect })!;
+      const composing = { ...key("Enter"), nativeEvent: { isComposing: true } };
+      input(el).props.onKeyDown(composing);
+      expect(onSelect).not.toHaveBeenCalled();
+      expect(composing.preventDefault).not.toHaveBeenCalled();
+      input(el).props.onKeyDown({ ...key("ArrowDown"), nativeEvent: { isComposing: true } });
+      expect(setAt).not.toHaveBeenCalled();
+      input(el).props.onKeyDown({ ...key("Enter"), keyCode: 229 });
+      expect(onSelect).not.toHaveBeenCalled();
+      input(el).props.onKeyDown({ ...key("Enter"), nativeEvent: { isComposing: false } });
+      expect(onSelect).toHaveBeenCalledTimes(1);
+    });
     it("shows emptyText and footer when given", () => {
       const html = renderToStaticMarkup(<CommandPalette sections={two} defaultQuery="zzz" emptyText="Nothing here" footer={<b>Tip</b>} />);
       expect(html).toContain("Nothing here");
