@@ -106,3 +106,4 @@ export * from "./components/AttentionInbox/AttentionInbox";
 export * from "./components/ApprovalBar/ApprovalBar";
 export * from "./components/SessionBar/SessionBar";
 export * from "./components/WorktreeRow/WorktreeRow";
+export * from "./components/LaunchCard/LaunchCard";

@@ -110,7 +110,7 @@ The library targets WCAG 2.2 level AA on macOS, Windows and Linux. The `xdev-ui-
 | Navigation | TabStrip, ActivityBar, StatusBar, Tabs, NavList, Breadcrumb, TreeView, Disclosure, SplitHandle, Toolbar |
 | Overlays | Menu, Dialog, CommandPalette, Popover, Tooltip, Coachmark, MenuButton, FormDialog, Drawer, AttentionInbox |
 | Brand | BrandMark, Icon, FileIcon |
-| Layout | AppShell, PageHeader, FormSection, ThemeEditor, Board, BoardColumn, BoardCard, SaveBar, Container, Stack, Grid, SessionBar, ApprovalBar, Composer |
+| Layout | AppShell, PageHeader, FormSection, ThemeEditor, Board, BoardColumn, BoardCard, SaveBar, Container, Stack, Grid, SessionBar, ApprovalBar, Composer, LaunchCard |
 | Data | DescriptionList, StatTile, DataTable, Pagination, FacetFilter, BulkBar, SortableList |
 | Image (`@xdev-asia/ui/image`, peer `react-easy-crop`) | ImageCropper, ImageField |
 

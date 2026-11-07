@@ -311,3 +311,18 @@
 .x-composer-input { width: 100%; box-sizing: border-box; }
 .x-composer-bar { display: flex; align-items: center; gap: var(--x-space-2); }
 .x-composer-send { margin-left: auto; }
+
+/* LaunchCard (.x-launch) */
+.x-launch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--x-space-4);
+  padding: var(--x-space-4);
+  border: 1px solid var(--x-color-line);
+  border-radius: var(--x-radius-lg);
+  background: var(--x-color-panel);
+  box-sizing: border-box;
+}
+.x-launch-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: var(--x-space-3); }
+.x-launch-chips { display: flex; flex-wrap: wrap; gap: var(--x-space-2); }
+.x-launch-foot { display: flex; justify-content: flex-end; }
