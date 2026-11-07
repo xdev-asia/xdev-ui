@@ -102,3 +102,4 @@ export * from "./components/Stack/Stack";
 export * from "./components/Grid/Grid";
 export * from "./components/Grid/breakpoints";
 export * from "./components/RunTimeline/RunTimeline";
+export * from "./components/ReviewComment/ReviewComment";
