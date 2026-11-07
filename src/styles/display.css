@@ -340,3 +340,21 @@ button.x-list-row-main:disabled { cursor: default; }
 /* WorktreeRow (.x-worktree-row), built on ListRow */
 .x-worktree-branch { font-family: var(--font-mono); }
 .x-worktree-agents { display: inline-flex; align-items: center; gap: var(--x-space-1); }
+
+/* UsageMeterRow (.x-usage) */
+.x-usage {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--x-space-2) var(--x-space-6);
+  padding: var(--x-space-3) var(--x-space-4);
+  border-bottom: 1px solid var(--x-color-line);
+  font: var(--type-status);
+  color: var(--x-color-muted);
+}
+.x-usage-account { display: flex; flex-direction: column; gap: var(--x-space-1); min-width: 10rem; }
+.x-usage-name { color: var(--x-color-ink); font-weight: 600; }
+.x-usage-windows { display: flex; flex-wrap: wrap; gap: var(--x-space-2) var(--x-space-6); margin: 0; padding: 0; list-style: none; }
+.x-usage-window { display: flex; flex-direction: column; gap: var(--x-space-1); }
+.x-usage-reset { color: var(--x-color-muted); }
+.x-usage-actions { display: inline-flex; align-items: center; gap: var(--x-space-2); margin-left: auto; }
