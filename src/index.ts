@@ -101,3 +101,4 @@ export * from "./components/Container/Container";
 export * from "./components/Stack/Stack";
 export * from "./components/Grid/Grid";
 export * from "./components/Grid/breakpoints";
+export * from "./components/AttentionInbox/AttentionInbox";

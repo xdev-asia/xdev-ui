@@ -108,7 +108,7 @@ The library targets WCAG 2.2 level AA on macOS, Windows and Linux. The `xdev-ui-
 | Display | Kbd, PairingCode, ThemePreview, Avatar, Badge, Tag, AgentChip, DiffStat, Comment, ReactionBar, ListRow, Card, EmptyState, SettingRow, CodeBlock, Heatmap, CommitGraph, PanZoom |
 | Status | StatusDot, Meter, Banner, Toast, Spinner, FieldMessage, StepDots, Toaster, Skeleton |
 | Navigation | TabStrip, ActivityBar, StatusBar, Tabs, NavList, Breadcrumb, TreeView, Disclosure, SplitHandle, Toolbar |
-| Overlays | Menu, Dialog, CommandPalette, Popover, Tooltip, Coachmark, MenuButton, FormDialog, Drawer |
+| Overlays | Menu, Dialog, CommandPalette, Popover, Tooltip, Coachmark, MenuButton, FormDialog, Drawer, AttentionInbox |
 | Brand | BrandMark, Icon, FileIcon |
 | Layout | AppShell, PageHeader, FormSection, ThemeEditor, Board, BoardColumn, BoardCard, SaveBar, Container, Stack, Grid |
 | Data | DescriptionList, StatTile, DataTable, Pagination, FacetFilter, BulkBar, SortableList |

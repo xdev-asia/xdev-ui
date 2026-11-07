@@ -243,3 +243,55 @@ a.x-menu-item { text-decoration: none; }
 .x-form-dialog-fields > * { min-width: 0; }
 .x-form-dialog-error { margin: 0 0 var(--x-space-4); padding: var(--x-space-2) var(--x-space-3); border-radius: var(--x-radius-sm); background: var(--x-color-danger-soft); color: var(--x-color-danger); font-size: 13px; }
 .x-form-dialog .btn { display: inline-flex; align-items: center; gap: var(--x-space-2); }
+
+/* AttentionInbox (.x-attention) */
+.x-attention-btn {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--x-radius-md);
+  background: transparent;
+  color: var(--x-color-muted);
+  cursor: pointer;
+}
+.x-attention-btn:hover { color: var(--x-color-ink); background: var(--x-color-surface-2); }
+.x-attention-btn[data-active] { color: var(--x-color-ink); }
+.x-attention-btn[aria-expanded="true"] { background: var(--x-color-surface-2); border-color: var(--x-color-line); }
+.x-attention-count {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 var(--x-space-1);
+  box-sizing: border-box;
+  border-radius: var(--x-radius-md);
+  background: var(--x-color-warn);
+  color: var(--x-color-bg);
+  font: 700 10px/16px var(--font-body);
+  text-align: center;
+}
+.x-attention-pop { width: min(360px, calc(100vw - var(--x-space-4) * 2)); padding: 0; }
+.x-attention-title { margin: 0; padding: var(--x-space-3) var(--x-space-4); border-bottom: 1px solid var(--x-color-line); font: var(--type-label); color: var(--x-color-ink); }
+.x-attention-empty { margin: 0; padding: var(--x-space-4); color: var(--x-color-muted); }
+.x-attention-list { margin: 0; padding: var(--x-space-1); list-style: none; max-height: 60vh; overflow-y: auto; }
+.x-attention-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--x-space-3);
+  padding: var(--x-space-2) var(--x-space-3);
+  border: 1px solid transparent;
+  border-radius: var(--x-radius-md);
+}
+.x-attention-row:hover { background: var(--x-color-surface-2); }
+.x-attention-row[data-kind="failed"] { background: var(--x-color-danger-soft); }
+.x-attention-text { display: flex; flex: 1; flex-direction: column; gap: 2px; min-width: 0; }
+.x-attention-wt { overflow: hidden; font: var(--type-control); color: var(--x-color-ink); text-overflow: ellipsis; white-space: nowrap; }
+.x-attention-ask { font: var(--type-status); color: var(--x-color-ink); overflow-wrap: anywhere; }
+.x-attention-meta { display: flex; gap: var(--x-space-2); font: var(--type-status); color: var(--x-color-muted); }
+.x-attention-kind { font-weight: 600; }
+.x-attention-row[data-kind="failed"] .x-attention-kind { color: var(--x-color-danger); }
