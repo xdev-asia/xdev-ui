@@ -173,6 +173,25 @@ describe("CommandPalette", () => {
       expect(onScopeChange).toHaveBeenCalledWith("files");
       expect(renderToStaticMarkup(<CommandPalette sections={two} />)).not.toContain("pal-scopes");
     });
+    it("filter: true keeps the substring filter, false shows every row in order, a function replaces the test", () => {
+      const q = (props: object) => renderToStaticMarkup(<CommandPalette sections={two} query="gam" {...props} />);
+      expect(q({})).not.toContain("alpha");
+      expect(q({ filter: true })).not.toContain("alpha");
+      const all = q({ filter: false });
+      const at = (id: string) => all.indexOf(`data-row-id="${id}"`);
+      expect(at("a")).toBeGreaterThan(-1);
+      expect(at("a")).toBeLessThan(at("b"));
+      expect(at("b")).toBeLessThan(at("c"));
+      const fn = vi.fn((r: { title: string }, query: string) => r.title.startsWith("b") && query === "gam");
+      const html = q({ filter: fn });
+      expect(html).toContain("beta");
+      expect(html).not.toContain("alpha");
+      expect(html).not.toContain('data-row-id="c"');
+      expect(fn).toHaveBeenCalledWith(expect.objectContaining({ title: "beta" }), "gam");
+    });
+    it("filter: false with no rows left still shows the empty state", () => {
+      expect(renderToStaticMarkup(<CommandPalette sections={[]} filter={false} />)).toContain("pal-empty");
+    });
     it("shows emptyText and footer when given", () => {
       const html = renderToStaticMarkup(<CommandPalette sections={two} defaultQuery="zzz" emptyText="Nothing here" footer={<b>Tip</b>} />);
       expect(html).toContain("Nothing here");

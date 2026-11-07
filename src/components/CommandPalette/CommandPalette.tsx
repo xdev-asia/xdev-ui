@@ -77,6 +77,12 @@ export interface CommandPaletteProps {
   emptyText?: ReactNode;
   /** Extra content on the right of the key-hint bar. */
   footer?: ReactNode;
+  /**
+   * Row filter. `true` (default): case-insensitive substring match on `title`.
+   * `false`: rows are shown as given, in order (the app filters and ranks).
+   * A function replaces the test; it gets the row and the current query.
+   */
+  filter?: boolean | ((row: PaletteRow, query: string) => boolean);
 }
 
 function highlight(text: string, query: string): ReactNode {
@@ -114,14 +120,20 @@ export function CommandPalette({
   onScopeChange,
   emptyText,
   footer,
+  filter: rowFilter = true,
 }: CommandPaletteProps): JSX.Element | null {
   const l = { ...DEFAULT_LABELS, ...labels };
   const [inner, setQ] = useState(defaultQuery);
   const q = query ?? inner;
   const [filter, setFilter] = useState<string | null>(filters?.[0] ?? null);
   const needle = q.toLowerCase();
+  const keep = (r: PaletteRow): boolean => {
+    if (rowFilter === false) return true;
+    if (typeof rowFilter === "function") return rowFilter(r, q);
+    return !needle || r.title.toLowerCase().includes(needle);
+  };
   const shown = sections
-    .map((s) => ({ title: s.title, rows: s.rows.filter((r) => !needle || r.title.toLowerCase().includes(needle)) }))
+    .map((s) => ({ title: s.title, rows: s.rows.filter(keep) }))
     .filter((s) => s.rows.length > 0);
   const uid = useId();
   const titleId = `${uid}-title`;
