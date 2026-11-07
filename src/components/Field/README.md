@@ -12,3 +12,4 @@ Labelled text input with an optional hint or error line.
 - Placeholder shows an example value, never the label.
 - For the single input inside a `Dialog` use the bare `.dialog-input` class.
 - `ref` is a plain prop (React 19) typed `Ref<HTMLInputElement>`; it reaches the `input`.
+- `hideLabel` keeps the label in the DOM for screen readers and hides it visually (`.x-sr-only`); use it where the surrounding UI already names the input, instead of a bare `aria-label`.

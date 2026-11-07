@@ -32,4 +32,9 @@ describe("Field", () => {
     const input = (tree.props.children as any[]).find((c) => c?.type === "input");
     expect(input.props.ref).toBe(ref);
   });
+  it("hideLabel keeps the label for screen readers only", () => {
+    const html = renderToStaticMarkup(<Field label="Search" hideLabel id="s" />);
+    expect(html).toContain('<label for="s" class="x-sr-only">Search</label>');
+    expect(renderToStaticMarkup(<Field label="Search" id="s" />)).toContain('<label for="s">Search</label>');
+  });
 });
