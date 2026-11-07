@@ -43,6 +43,13 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     style: {"padding": "16px", "maxWidth": "420px"},
     render: (X, h) => h(X.ReviewComment, { file: "src/session.ts", line: 42, author: "Maya Chen", time: "2h ago", body: "This retry never gives up. Cap it.", suggestion: "for (let i = 0; i < MAX_RETRIES; i++) {", onResolve: function () {} }),
   },
+  "SettingsShell": {
+    style: {"padding": "16px", "height": "320px", "maxWidth": "720px"},
+    render: (X, h) => h(X.SettingsShell, {
+      groups: [{ id: "g", label: "General", items: [{ id: "appearance", label: "Appearance", keywords: ["theme"] }, { id: "language", label: "Language" }] }],
+      value: "appearance", onChange: function () {}, query: "", onQuery: function () {},
+    }, h(X.SettingRow, { id: "appearance", label: "Appearance", description: "Dark or light" })),
+  },
   "ReactionBar": {
     style: {"display": "flex", "gap": "12px", "padding": "16px"},
     render: (X, h) => {

@@ -256,3 +256,20 @@
   .x-grid[data-scope] { --_c: var(--x-grid-cols-2xl, var(--x-grid-cols-xl, var(--x-grid-cols-lg, var(--x-grid-cols-md, var(--x-grid-cols-sm, var(--x-grid-cols, 1)))))); }
   .x-grid[data-scope] > .x-grid-item { --_s: var(--x-span-2xl, var(--x-span-xl, var(--x-span-lg, var(--x-span-md, var(--x-span-sm, var(--x-span, 1)))))); }
 }
+
+/* SettingsShell (.x-settings-shell) */
+.x-settings-shell { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-height: 0; height: 100%; }
+.x-settings-shell-side { display: flex; flex-direction: column; gap: var(--x-space-3); min-height: 0; padding: var(--x-space-3); overflow-y: auto; border-right: 1px solid var(--line); background: var(--bg-1); }
+.x-settings-shell-side .settings-nav { width: auto; padding: 0; border-right: 0; background: transparent; }
+.x-settings-shell-main { position: relative; min-width: 0; min-height: 0; overflow-y: auto; }
+.x-settings-shell-content { padding: var(--x-space-6); }
+.x-settings-shell-empty { margin: 0; color: var(--text-2); font: var(--type-body); }
+.x-settings-shell-save { position: sticky; bottom: 0; z-index: var(--x-z-sticky); padding: 0 var(--x-space-6) var(--x-space-4); }
+.x-settings-shell-save:empty { display: none; }
+.x-settings-shell-save .x-savebar { margin-top: 0; }
+@media (max-width: 767.98px) /* below --x-bp-md */ {
+  .x-settings-shell { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+  .x-settings-shell-side { max-height: 40vh; border-right: 0; border-bottom: 1px solid var(--line); }
+  .x-settings-shell-content { padding: var(--x-space-4); }
+  .x-settings-shell-save { padding: 0 var(--x-space-4) var(--x-space-3); }
+}
