@@ -23,8 +23,8 @@ export interface DrawerProps {
   busy?: boolean;
   /** "default" 420px, "wide" 640px; both cap at the viewport. */
   size?: "default" | "wide";
-  /** Which edge it slides from. Default "end" (right in LTR). */
-  side?: "end" | "start";
+  /** Which edge it slides from. Default "end" (right in LTR). "bottom" is a sheet: full width, capped at 85% of the height. */
+  side?: "end" | "start" | "bottom";
   /** false renders the markup only (previews); default true traps focus and makes the page inert. */
   modal?: boolean;
   labels?: Partial<DrawerLabels>;

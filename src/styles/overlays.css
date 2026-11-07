@@ -233,6 +233,10 @@ a.x-menu-item { text-decoration: none; }
 .x-drawer-desc { margin: var(--x-space-1) 0 0; color: var(--x-color-muted); font-size: 13px; }
 .x-drawer-body { flex: 1; overflow: auto; padding: var(--x-space-6); }
 .x-drawer-foot { display: flex; justify-content: flex-end; gap: var(--x-space-2); padding: var(--x-space-4) var(--x-space-6); border-top: 1px solid var(--x-color-line); }
+/* Bottom sheet: pinned to the lower edge, full width. */
+.x-drawer-root:has(> .x-drawer[data-side="bottom"]) { align-items: flex-end; }
+.x-drawer[data-side="bottom"] { width: 100%; height: auto; max-height: 85%; margin: 0; border-left: 0; border-top: 1px solid var(--x-color-line); border-radius: var(--radius-l) var(--radius-l) 0 0; animation-name: x-drawer-in-bottom; }
+@keyframes x-drawer-in-bottom { from { transform: translateY(24px); opacity: 0; } }
 @keyframes x-drawer-in { from { transform: translateX(24px); opacity: 0; } }
 @keyframes x-drawer-in-start { from { transform: translateX(-24px); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .x-drawer { animation: none; } }

@@ -481,6 +481,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.ListRow, { title: "login-retry", meta: "feat/login-retry · 2m", leading: h(X.StatusDot, { state: "working", label: "working" }), selected: true, onClick: function () {} }),
       h(X.ListRow, { title: "fix-ci-cache", meta: "fix/ci-cache · 9m", leading: h(X.StatusDot, { state: "waiting", label: "waiting" }), onClick: function () {} })),
   },
+  "BottomNav": {
+    style: {"padding": "16px", "width": "360px"},
+    render: (X, h) => h(X.BottomNav, { value: "home", onChange: function () {}, items: [{ id: "home", label: "Home", icon: "home" }, { id: "sessions", label: "Sessions", icon: "terminal", badge: 3 }, { id: "board", label: "Board", icon: "tasks" }, { id: "files", label: "Files", icon: "folder" }], more: { label: "More", icon: "more", items: [{ id: "settings", label: "Settings", icon: "settings" }] } }),
+  },
   "NavList": {
     style: {"padding": "16px", "width": "240px"},
     render: (X, h) => h(React.Fragment, null,

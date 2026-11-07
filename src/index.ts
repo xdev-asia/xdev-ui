@@ -105,3 +105,4 @@ export * from "./components/RunTimeline/RunTimeline";
 export * from "./components/ReviewComment/ReviewComment";
 export * from "./components/SettingsShell/SettingsShell";
 export * from "./components/AgentRow/AgentRow";
+export * from "./components/BottomNav/BottomNav";

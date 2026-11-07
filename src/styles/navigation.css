@@ -363,3 +363,47 @@ button.ws-crumb:hover, a.ws-crumb:hover { color: var(--text-1); text-decoration:
   .ws-tab[data-selected]:not([data-selected="false"]) { outline: 0.125rem solid Highlight; outline-offset: -0.125rem; }
   .x-split-handle:focus-visible::after { background: Highlight; }
 }
+
+/* BottomNav (.x-bottom-nav): phone tab bar, hidden from 768px up */
+.x-bottom-nav { display: flex; align-items: stretch; height: 60px; box-sizing: border-box; border-top: 1px solid var(--line); background: var(--bg-1); }
+.x-bottom-nav-item {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--x-space-1);
+  padding: var(--x-space-1);
+  border: 0;
+  border-radius: var(--radius-m);
+  background: transparent;
+  color: var(--text-2);
+  font: var(--type-status);
+  cursor: pointer;
+}
+.x-bottom-nav-item:hover { background: var(--bg-2); color: var(--text-1); }
+.x-bottom-nav-item:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: -2px; }
+.x-bottom-nav-item[aria-current="page"], .x-bottom-nav-item[data-current] { background: var(--bg-3); color: var(--text-1); }
+.x-bottom-nav-icon { position: relative; display: inline-flex; }
+.x-bottom-nav-label { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.x-bottom-nav-badge {
+  position: absolute;
+  top: -6px;
+  left: 100%;
+  margin-left: -6px;
+  min-width: 16px;
+  box-sizing: border-box;
+  padding: 0 var(--x-space-1);
+  border: 1px solid var(--warn);
+  border-radius: var(--radius-l);
+  background: var(--warn-bg);
+  color: var(--text-1);
+  font: var(--type-status);
+  line-height: 14px;
+  text-align: center;
+}
+.x-bottom-nav-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--x-space-1); }
+.x-bottom-nav-list .x-bottom-nav-item { flex-direction: row; justify-content: flex-start; gap: var(--x-space-3); width: 100%; padding: 0 var(--x-space-3); font: var(--type-body); }
+@media (min-width: 48rem) { .x-bottom-nav { display: none; } }
