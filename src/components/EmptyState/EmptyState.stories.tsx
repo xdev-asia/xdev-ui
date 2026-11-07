@@ -29,3 +29,14 @@ export const NoResults: Story = {
     actions: <Button variant="secondary">Clear search</Button>,
   },
 };
+
+export const WithSteps: Story = {
+  args: {
+    size: "center",
+    icon: "folder",
+    title: "Start your first session",
+    hint: "Three steps and an agent is working in its own branch.",
+    steps: [{ label: "Open a project folder", done: true }, { label: "Pick an agent" }, { label: "Start a session" }],
+    actions: <Button variant="primary">Pick an agent</Button>,
+  },
+};

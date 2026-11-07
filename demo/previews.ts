@@ -453,7 +453,7 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
   },
   "EmptyState": {
     style: {"padding": "16px", "width": "360px"},
-    render: (X, h) => h(X.EmptyState, { size: "center", icon: "branch", title: "No worktrees yet", hint: "Create one to give an agent its own branch.", actions: h(X.Button, { icon: "plus" }, "New worktree") }),
+    render: (X, h) => h(X.EmptyState, { size: "center", icon: "branch", title: "No worktrees yet", hint: "Create one to give an agent its own branch.", actions: h(X.Button, { variant: "primary", icon: "plus" }, "New worktree") }),
   },
   "FieldMessage": {
     style: {"display": "flex", "flexDirection": "column", "gap": "10px", "padding": "16px"},

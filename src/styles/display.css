@@ -128,6 +128,13 @@ button.x-list-row-main:disabled { cursor: default; }
 .x-empty-title { margin: 0; font-size: 13px; font-weight: 600; color: var(--x-color-ink); }
 .x-empty[data-size="inline"] .x-empty-title { font-weight: 400; color: var(--x-color-muted); }
 .x-empty-hint { max-width: 360px; margin: 0; font-size: 12px; line-height: 1.5; }
+.x-empty-steps { display: flex; flex-direction: column; gap: var(--x-space-2); width: 100%; max-width: 360px; margin: var(--x-space-2) 0 0; padding: 0; list-style: none; text-align: left; }
+.x-empty-step { display: flex; align-items: center; gap: var(--x-space-3); min-height: 32px; padding: var(--x-space-1) var(--x-space-3); border: 1px solid var(--line); border-radius: var(--radius-m); font-size: 13px; color: var(--x-color-ink); }
+.x-empty-step[aria-current="step"] { border-color: var(--line-strong); background: var(--bg-2); }
+.x-empty-step[data-done] .x-empty-step-label { color: var(--x-color-muted); }
+.x-empty-step-num { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: var(--bg-3); font: var(--type-status); color: var(--text-1); }
+.x-empty-step[data-done] .x-empty-step-num { background: var(--ok-bg); color: var(--ok); }
+.x-empty-step-label { min-width: 0; overflow-wrap: anywhere; }
 .x-empty-actions { display: inline-flex; gap: var(--x-space-2); margin-top: var(--x-space-2); }
 
 /* SettingRow (.settings-item) */
