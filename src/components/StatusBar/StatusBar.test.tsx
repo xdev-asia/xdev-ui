@@ -8,3 +8,8 @@ it("renders items and a spacer", () => {
   expect(html).toContain("ws-footer-spacer");
   expect(html.match(/ws-footer-item/g)).toHaveLength(2);
 });
+
+it("renders nothing when hidden", () => {
+  expect(renderToStaticMarkup(<StatusBar items={["main"]} hidden />)).toBe("");
+  expect(renderToStaticMarkup(<StatusBar items={["main"]} hidden={false} />)).toContain("<footer");
+});
