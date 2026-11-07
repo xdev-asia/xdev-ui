@@ -8,3 +8,4 @@ Two to four mutually exclusive options shown together, such as a diff view mode 
 - More than four options, or options with long labels: use `Select`.
 - Controlled with `value` + `onChange`, or uncontrolled with `defaultValue`.
 - `disabled` greys out every segment (for example while a save is under way).
+- Each option may carry `count`, a small number shown after the label in `.segmented-count` (muted; 0 is shown). It is part of the button's accessible name, so keep the label short.

@@ -3,6 +3,8 @@ import { useState, type JSX } from "react";
 export interface SegmentedOption {
   value: string;
   label: string;
+  /** Small count shown after the label (0 is shown). */
+  count?: number;
 }
 
 export interface SegmentedProps {
@@ -33,6 +35,7 @@ export function Segmented({ options, value, defaultValue, onChange, label, disab
           }}
         >
           {o.label}
+          {o.count != null ? <span className="segmented-count">{o.count}</span> : null}
         </button>
       ))}
     </div>

@@ -31,4 +31,10 @@ describe("Segmented", () => {
     expect(html.match(/disabled=""/g)).toHaveLength(2);
     expect(renderToStaticMarkup(<Segmented options={options} value="a" />)).not.toContain("disabled");
   });
+  it("shows an optional count after the label", () => {
+    const html = renderToStaticMarkup(<Segmented options={[{ value: "a", label: "A", count: 0 }, { value: "b", label: "B", count: 12 }, { value: "c", label: "C" }]} value="a" />);
+    expect(html).toContain('A<span class="segmented-count">0</span>');
+    expect(html).toContain('B<span class="segmented-count">12</span>');
+    expect(html.match(/segmented-count/g)).toHaveLength(2);
+  });
 });
