@@ -5,11 +5,13 @@ import { StatusDot } from "../StatusDot/StatusDot";
 export type BoardCardStatus = "idle" | "running" | "waiting" | "error";
 
 export interface BoardCardLabels {
+  /** Text read after the title when `tone="need"`; the tint alone says nothing to a screen reader. */
+  need: string;
   /** Text read after the title for each status; the dot alone says nothing to a screen reader. */
   status: Record<BoardCardStatus, string>;
 }
 
-const DEFAULT_LABELS: BoardCardLabels = { status: { idle: "Idle", running: "Running", waiting: "Waiting", error: "Error" } };
+const DEFAULT_LABELS: BoardCardLabels = { need: "Needs you", status: { idle: "Idle", running: "Running", waiting: "Waiting", error: "Error" } };
 
 const DOT = { idle: "idle", running: "working", waiting: "waiting", error: "failed" } as const;
 
@@ -23,6 +25,8 @@ export interface BoardCardProps extends Omit<HTMLAttributes<HTMLDivElement>, "ti
   status?: BoardCardStatus;
   /** Tint and 1px accent border. */
   selected?: boolean;
+  /** `"need"` tints the card with the warning colour and a 1px warning border: the card waits for a person. Pair it with `status="waiting"`. */
+  tone?: "need";
   /** Lowered opacity and an elevation shadow while the card is dragged. */
   dragging?: boolean;
   /** Called on click and on Enter. */
@@ -36,7 +40,7 @@ export interface BoardCardProps extends Omit<HTMLAttributes<HTMLDivElement>, "ti
 }
 
 export const BoardCard = forwardRef<HTMLDivElement, BoardCardProps>(function BoardCard(
-  { title, meta, tags, status, selected = false, dragging = false, onOpen, menu, actions, labels, className, onClick, onKeyDown, ...rest },
+  { title, meta, tags, status, tone, selected = false, dragging = false, onOpen, menu, actions, labels, className, onClick, onKeyDown, ...rest },
   ref,
 ) {
   const l = { ...DEFAULT_LABELS, ...labels };
@@ -56,6 +60,7 @@ export const BoardCard = forwardRef<HTMLDivElement, BoardCardProps>(function Boa
       role="listitem"
       tabIndex={0}
       aria-current={selected ? "true" : undefined}
+      data-tone={tone}
       data-selected={selected ? "" : undefined}
       data-dragging={dragging ? "" : undefined}
       onClick={handleClick}
@@ -70,6 +75,7 @@ export const BoardCard = forwardRef<HTMLDivElement, BoardCardProps>(function Boa
           </span>
         ) : null}
         {status ? <span className="x-sr-only">{l.status[status]}</span> : null}
+        {tone === "need" ? <span className="x-sr-only">{l.need}</span> : null}
         {menu ? (
           <span className="x-board-card-menu" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
             {menu}

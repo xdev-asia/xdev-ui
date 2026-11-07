@@ -83,4 +83,13 @@ describe("BoardCard", () => {
     root.props.onClick({});
     expect(calls).toEqual(["click", "open"]);
   });
+  it('tone="need" sets the tint hook and a text for screen readers', () => {
+    const html = renderToStaticMarkup(<BoardCard title="T" tone="need" status="waiting" />);
+    expect(html).toContain('data-tone="need"');
+    expect(html).toContain("Needs you");
+    expect(renderToStaticMarkup(<BoardCard title="T" tone="need" labels={{ need: "Cần bạn" }} />)).toContain("Cần bạn");
+    const plain = renderToStaticMarkup(<BoardCard title="T" />);
+    expect(plain).not.toContain("data-tone");
+    expect(plain).not.toContain("Needs you");
+  });
 });

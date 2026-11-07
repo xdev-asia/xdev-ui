@@ -598,9 +598,9 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     style: {"padding": "16px", "width": "720px", "maxWidth": "100%", "height": "260px"},
     render: (X, h) => h(X.Board, { "aria-label": "Tasks" },
       ["Backlog", "To do", "In progress", "In review", "Done"].map(function (name, i) {
-        return h(X.BoardColumn, { key: name, title: name, count: i === 2 ? 2 : 1, dropTarget: i === 3 },
+        return h(X.BoardColumn, { key: name, title: name, onAdd: i === 0 ? function () {} : undefined, count: i === 2 ? 2 : 1, dropTarget: i === 3 },
           h(X.BoardCard, { title: "Login retry", meta: "Claude", status: i === 2 ? "running" : undefined, selected: i === 1 }),
-          i === 2 ? h(X.BoardCard, { title: "Fix CI cache", meta: "Codex", status: "waiting", dragging: true }) : null);
+          i === 2 ? h(X.BoardCard, { title: "Fix CI cache", meta: "Codex", status: "waiting", tone: "need", dragging: true }) : null);
       })),
   },
   "DescriptionList": {

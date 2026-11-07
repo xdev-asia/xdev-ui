@@ -128,6 +128,7 @@
   cursor: default;
 }
 .x-board-card:hover { background: var(--bg-3); }
+.x-board-card[data-tone="need"] { border-color: var(--warn); background: var(--warn-bg); }
 .x-board-card[data-selected] { border-color: var(--accent); background: var(--bg-3); }
 .x-board-card[data-dragging] { opacity: 0.6; box-shadow: var(--shadow-menu); }
 .x-board-card:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: 2px; }
