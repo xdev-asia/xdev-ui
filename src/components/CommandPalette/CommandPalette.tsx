@@ -4,13 +4,25 @@ import type { SessionState } from "../../types";
 import { rovingIndex } from "../../internal/keys";
 import { Icon } from "../Icon/Icon";
 import { Kbd } from "../Kbd/Kbd";
+import { Segmented } from "../Segmented/Segmented";
 import { StatusDot } from "../StatusDot/StatusDot";
 
 export interface PaletteRow {
+  /** Stable id of the row; used as the React key and as `data-row-id`. */
+  id?: string;
   title: string;
   detail?: string;
   state?: SessionState;
   icon?: IconName;
+  /** Shortcut text on the right, after the detail. */
+  hint?: string;
+  /** Row is shown but skipped by the arrow keys and cannot be selected. */
+  disabled?: boolean;
+}
+
+export interface PaletteScope {
+  value: string;
+  label: string;
 }
 
 export interface CommandPaletteLabels {
@@ -24,6 +36,8 @@ export interface CommandPaletteLabels {
   move: string;
   open: string;
   close: string;
+  /** aria-label of the scope row (only used with `scopes`). */
+  scopes?: string;
 }
 
 const DEFAULT_LABELS: CommandPaletteLabels = {
@@ -34,6 +48,7 @@ const DEFAULT_LABELS: CommandPaletteLabels = {
   move: "move",
   open: "open",
   close: "close",
+  scopes: "Scope",
 };
 
 export interface CommandPaletteProps {
@@ -44,6 +59,24 @@ export interface CommandPaletteProps {
   sections: { title: string; rows: PaletteRow[] }[];
   /** Override the English defaults (e.g. for vi). */
   labels?: Partial<CommandPaletteLabels>;
+  /** Controlled visibility: `false` renders nothing, and a backdrop wraps the dialog. Absent: always rendered inline. */
+  open?: boolean;
+  /** Called on Escape and on a backdrop click. */
+  onClose?: () => void;
+  /** Called with the row on click or Enter on the active row. */
+  onSelect?: (row: PaletteRow) => void;
+  /** Controlled query; pair with `onQueryChange`. `defaultQuery` seeds the uncontrolled one. */
+  query?: string;
+  onQueryChange?: (query: string) => void;
+  /** Scope row under the input (for example all, files, commands). The app filters `sections` itself. */
+  scopes?: PaletteScope[];
+  /** Controlled scope value; the first scope when absent. */
+  scope?: string;
+  onScopeChange?: (scope: string) => void;
+  /** Replaces the "No matches" text. */
+  emptyText?: ReactNode;
+  /** Extra content on the right of the key-hint bar. */
+  footer?: ReactNode;
 }
 
 function highlight(text: string, query: string): ReactNode {
@@ -59,9 +92,32 @@ function highlight(text: string, query: string): ReactNode {
   );
 }
 
-export function CommandPalette({ title, placeholder, defaultQuery = "", filters, sections, labels }: CommandPaletteProps): JSX.Element {
+/** Ref callback of the active row. Stable, so it fires only when the active row changes and keeps it inside the scrolled list. */
+function reveal(el: HTMLElement | null): void {
+  el?.scrollIntoView?.({ block: "nearest" });
+}
+
+export function CommandPalette({
+  title,
+  placeholder,
+  defaultQuery = "",
+  filters,
+  sections,
+  labels,
+  open,
+  onClose,
+  onSelect,
+  query,
+  onQueryChange,
+  scopes,
+  scope,
+  onScopeChange,
+  emptyText,
+  footer,
+}: CommandPaletteProps): JSX.Element | null {
   const l = { ...DEFAULT_LABELS, ...labels };
-  const [q, setQ] = useState(defaultQuery);
+  const [inner, setQ] = useState(defaultQuery);
+  const q = query ?? inner;
   const [filter, setFilter] = useState<string | null>(filters?.[0] ?? null);
   const needle = q.toLowerCase();
   const shown = sections
@@ -71,18 +127,43 @@ export function CommandPalette({ title, placeholder, defaultQuery = "", filters,
   const titleId = `${uid}-title`;
   const listId = `${uid}-list`;
   const optionId = (n: number): string => `${uid}-opt-${n}`;
-  const count = shown.reduce((n, s) => n + s.rows.length, 0);
+  const flat = shown.flatMap((s) => s.rows);
+  const count = flat.length;
   const [at, setAt] = useState(0);
-  const active = count ? Math.min(at, count - 1) : -1;
+  const [innerScope, setInnerScope] = useState(scopes?.[0]?.value);
+  const clamped = count ? Math.min(at, count - 1) : -1;
+  const active = clamped >= 0 && flat[clamped]?.disabled ? flat.findIndex((r) => !r.disabled) : clamped;
+  const select = (row: PaletteRow | undefined): void => {
+    if (row && !row.disabled) onSelect?.(row);
+  };
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>): void => {
-    const next = rovingIndex(e.key, active, count, "vertical");
+    if (e.key === "Enter") {
+      if (!onSelect || active < 0) return;
+      e.preventDefault();
+      select(flat[active]);
+      return;
+    }
+    const next = rovingIndex(e.key, active, count, "vertical", (i) => !!flat[i]?.disabled);
     if (next == null) return;
     e.preventDefault();
     setAt(next);
   };
+  if (open === false) return null;
+  const framed = open !== undefined || onClose !== undefined;
   let n = 0;
-  return (
-    <div className="palette" role="dialog" aria-label={title ?? l.dialog}>
+  const dialog = (
+    <div
+      className="palette"
+      role="dialog"
+      aria-modal={framed ? true : undefined}
+      aria-label={title ?? l.dialog}
+      onKeyDown={(e) => {
+        if (e.key === "Escape" && onClose) {
+          e.preventDefault();
+          onClose();
+        }
+      }}
+    >
       {title ? <div className="pal-title" id={titleId}>{title}</div> : null}
       <input
         className="pal-input"
@@ -90,6 +171,7 @@ export function CommandPalette({ title, placeholder, defaultQuery = "", filters,
         value={q}
         onChange={(e) => {
           setQ(e.target.value);
+          onQueryChange?.(e.target.value);
           setAt(0);
         }}
         onKeyDown={onKeyDown}
@@ -101,6 +183,19 @@ export function CommandPalette({ title, placeholder, defaultQuery = "", filters,
         aria-labelledby={title ? titleId : undefined}
         aria-label={title ? undefined : l.search}
       />
+      {scopes ? (
+        <div className="pal-scopes">
+          <Segmented
+            options={scopes}
+            label={l.scopes}
+            value={scope ?? innerScope}
+            onChange={(v) => {
+              setInnerScope(v);
+              onScopeChange?.(v);
+            }}
+          />
+        </div>
+      ) : null}
       {filters ? (
         <div className="pal-filters">
           {filters.map((f) => (
@@ -118,17 +213,29 @@ export function CommandPalette({ title, placeholder, defaultQuery = "", filters,
               {s.rows.map((r, i) => {
                 const idx = n++;
                 return (
-                  <div key={i} id={optionId(idx)} className="pal-row" role="option" aria-selected={idx === active}>
+                  <div
+                    key={r.id ?? i}
+                    id={optionId(idx)}
+                    ref={idx === active ? reveal : undefined}
+                    className="pal-row"
+                    role="option"
+                    aria-selected={idx === active}
+                    aria-disabled={r.disabled ? true : undefined}
+                    data-row-id={r.id}
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => select(r)}
+                  >
                     {r.state ? <StatusDot state={r.state} /> : <Icon name={r.icon ?? "terminal"} className="pal-icon" />}
                     <span className="pal-title-text">{highlight(r.title, q)}</span>
                     {r.detail ? <span className="pal-detail">{r.detail}</span> : null}
+                    {r.hint ? <span className="pal-hint">{r.hint}</span> : null}
                   </div>
                 );
               })}
             </div>
           ))
         ) : (
-          <div className="pal-empty">{l.noMatches}</div>
+          <div className="pal-empty">{emptyText ?? l.noMatches}</div>
         )}
       </div>
       <div className="pal-foot">
@@ -141,7 +248,19 @@ export function CommandPalette({ title, placeholder, defaultQuery = "", filters,
         <span>
           <Kbd>Esc</Kbd> {l.close}
         </span>
+        {footer ? <span className="pal-foot-extra">{footer}</span> : null}
       </div>
+    </div>
+  );
+  if (!framed) return dialog;
+  return (
+    <div
+      className="pal-backdrop"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose?.();
+      }}
+    >
+      {dialog}
     </div>
   );
 }
