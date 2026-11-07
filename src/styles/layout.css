@@ -255,3 +255,21 @@
   .x-grid[data-scope] { --_c: var(--x-grid-cols-2xl, var(--x-grid-cols-xl, var(--x-grid-cols-lg, var(--x-grid-cols-md, var(--x-grid-cols-sm, var(--x-grid-cols, 1)))))); }
   .x-grid[data-scope] > .x-grid-item { --_s: var(--x-span-2xl, var(--x-span-xl, var(--x-span-lg, var(--x-span-md, var(--x-span-sm, var(--x-span, 1)))))); }
 }
+
+/* SessionBar (.x-sessionbar) */
+.x-sessionbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--x-space-2) var(--x-space-4);
+  min-height: var(--h-toolbar);
+  padding: var(--x-space-1) var(--x-space-4);
+  border-bottom: 1px solid var(--x-color-line);
+  background: var(--x-color-panel);
+  box-sizing: border-box;
+  font: var(--type-status);
+  color: var(--x-color-muted);
+}
+.x-sessionbar-status { color: var(--x-color-ink); font-weight: 600; }
+.x-sessionbar-model { font-family: var(--font-mono); }
+.x-sessionbar-actions { display: inline-flex; align-items: center; gap: var(--x-space-2); margin-left: auto; }
