@@ -90,6 +90,8 @@ export interface CommandPaletteProps {
    * A function replaces the test; it gets the row and the current query.
    */
   filter?: boolean | ((row: PaletteRow, query: string) => boolean);
+  /** Control rendered next to the input, on its right (for example a scope menu button). */
+  inputAddon?: ReactNode;
 }
 
 function highlight(text: string, query: string): ReactNode {
@@ -128,6 +130,7 @@ export function CommandPalette({
   emptyText,
   footer,
   filter: rowFilter = true,
+  inputAddon,
 }: CommandPaletteProps): JSX.Element | null {
   const l = { ...DEFAULT_LABELS, ...labels };
   const [inner, setQ] = useState(defaultQuery);
@@ -170,6 +173,26 @@ export function CommandPalette({
   if (open === false) return null;
   const framed = open !== undefined || onClose !== undefined;
   let n = 0;
+  const input = (
+    <input
+      className="pal-input"
+      placeholder={placeholder ?? l.placeholder}
+      value={q}
+      onChange={(e) => {
+        setQ(e.target.value);
+        onQueryChange?.(e.target.value);
+        setAt(0);
+      }}
+      onKeyDown={onKeyDown}
+      role="combobox"
+      aria-expanded={count > 0}
+      aria-controls={listId}
+      aria-autocomplete="list"
+      aria-activedescendant={active >= 0 ? optionId(active) : undefined}
+      aria-labelledby={title ? titleId : undefined}
+      aria-label={title ? undefined : l.search}
+    />
+  );
   const dialog = (
     <div
       className="palette"
@@ -184,24 +207,14 @@ export function CommandPalette({
       }}
     >
       {title ? <div className="pal-title" id={titleId}>{title}</div> : null}
-      <input
-        className="pal-input"
-        placeholder={placeholder ?? l.placeholder}
-        value={q}
-        onChange={(e) => {
-          setQ(e.target.value);
-          onQueryChange?.(e.target.value);
-          setAt(0);
-        }}
-        onKeyDown={onKeyDown}
-        role="combobox"
-        aria-expanded={count > 0}
-        aria-controls={listId}
-        aria-autocomplete="list"
-        aria-activedescendant={active >= 0 ? optionId(active) : undefined}
-        aria-labelledby={title ? titleId : undefined}
-        aria-label={title ? undefined : l.search}
-      />
+      {inputAddon ? (
+        <div className="pal-input-row">
+          {input}
+          <div className="pal-input-addon">{inputAddon}</div>
+        </div>
+      ) : (
+        input
+      )}
       {scopes ? (
         <div className="pal-scopes">
           <Segmented

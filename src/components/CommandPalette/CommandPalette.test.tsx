@@ -209,6 +209,15 @@ describe("CommandPalette", () => {
       expect(renderToStaticMarkup(<CommandPalette sections={[{ title: "S", rows }]} query="plain" />)).toContain("<b>other</b>");
       expect(renderToStaticMarkup(<CommandPalette sections={[{ title: "S", rows }]} query="other" />)).toContain("pal-empty");
     });
+    it("renders inputAddon next to the input and nothing extra without it", () => {
+      const html = renderToStaticMarkup(<CommandPalette sections={two} inputAddon={<button type="button" className="sc">Scope</button>} />);
+      expect(html).toContain("pal-input-row");
+      expect(html.indexOf("pal-input ")).toBeLessThan(html.indexOf("pal-input-addon"));
+      expect(html).toContain('<button type="button" class="sc">Scope</button>');
+      const bare = renderToStaticMarkup(<CommandPalette sections={two} />);
+      expect(bare).not.toContain("pal-input-row");
+      expect(bare).not.toContain("pal-input-addon");
+    });
     it("shows emptyText and footer when given", () => {
       const html = renderToStaticMarkup(<CommandPalette sections={two} defaultQuery="zzz" emptyText="Nothing here" footer={<b>Tip</b>} />);
       expect(html).toContain("Nothing here");

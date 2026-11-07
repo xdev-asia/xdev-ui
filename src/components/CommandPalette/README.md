@@ -16,4 +16,5 @@ Keyboard-first search across sessions, files and commands (Ctrl+K).
 - `emptyText` replaces "No matches"; `footer` adds content on the right of the key-hint bar.
 - `filter` (`boolean | (row, query) => boolean`, default `true`): `true` keeps the case-insensitive substring test on `title`; `false` shows `sections` as given, in order, so the app can filter and rank itself (fuzzy, multi-token, accent-folded); a function replaces the test.
 - Row slots: `label` (`ReactNode`) renders instead of `title`, for example to wrap fuzzy hits in `.pal-hit`; `title` stays the string for the default filter and the accessible text. `leading` renders before the icon or status dot, `meta` on the right after `hint`. All three are optional.
+- `inputAddon` (`ReactNode`) renders on the right of the input, inside the same bordered row (for example a scope menu button). Without it the input renders alone. The addon owns its own keyboard and `aria` (the palette does not manage its popup).
 - Pattern: `role="dialog"`, input `role="combobox"` with `aria-activedescendant`, list `role="listbox"` of `role="option"` rows.
