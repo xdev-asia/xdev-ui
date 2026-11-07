@@ -250,6 +250,41 @@ describe("CommandPalette", () => {
       input(el).props.onKeyDown({ ...key("Enter"), nativeEvent: { isComposing: false } });
       expect(onSelect).toHaveBeenCalledTimes(1);
     });
+    it("activeId drives aria-selected and the active descendant", () => {
+      const html = renderToStaticMarkup(<CommandPalette sections={two} activeId="c" />);
+      expect(html).toContain('aria-activedescendant="p-opt-2"');
+      expect(html.match(/aria-selected="true"/g)).toHaveLength(1);
+      expect(html).toMatch(/id="p-opt-2"[^>]*aria-selected="true"/);
+      const unknown = renderToStaticMarkup(<CommandPalette sections={two} activeId="nope" />);
+      expect(unknown).toContain('aria-activedescendant="p-opt-0"');
+      const none = renderToStaticMarkup(<CommandPalette sections={two} activeId="c" defaultQuery="zzz" />);
+      expect(none).not.toContain("aria-activedescendant");
+    });
+    it("a controlled activeId pointing at a disabled row falls back to the first enabled row", () => {
+      expect(renderToStaticMarkup(<CommandPalette sections={two} activeId="b" />)).toContain('aria-activedescendant="p-opt-0"');
+    });
+    it("onActiveChange reports the id the keys move to, and moves from activeId", () => {
+      const onActiveChange = vi.fn();
+      const el = CommandPalette({ sections: two, onActiveChange })!;
+      input(el).props.onKeyDown(key("ArrowDown"));
+      expect(onActiveChange).toHaveBeenLastCalledWith("c");
+      input(el).props.onKeyDown(key("Home"));
+      expect(onActiveChange).toHaveBeenLastCalledWith("a");
+      const ctl = CommandPalette({ sections: two, activeId: "c", onActiveChange })!;
+      input(ctl).props.onKeyDown(key("ArrowDown"));
+      expect(onActiveChange).toHaveBeenLastCalledWith("a");
+      onActiveChange.mockClear();
+      input(el).props.onKeyDown(key("a"));
+      expect(onActiveChange).not.toHaveBeenCalled();
+    });
+    it("Enter selects the controlled active row", () => {
+      const onSelect = vi.fn();
+      input(CommandPalette({ sections: two, activeId: "c", onSelect })!).props.onKeyDown(key("Enter"));
+      expect(onSelect).toHaveBeenLastCalledWith(rows[2]);
+    });
+    it("stays uncontrolled without activeId", () => {
+      expect(renderToStaticMarkup(<CommandPalette sections={two} />)).toContain('aria-activedescendant="p-opt-0"');
+    });
     it("shows emptyText and footer when given", () => {
       const html = renderToStaticMarkup(<CommandPalette sections={two} defaultQuery="zzz" emptyText="Nothing here" footer={<b>Tip</b>} />);
       expect(html).toContain("Nothing here");

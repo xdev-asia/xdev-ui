@@ -98,6 +98,13 @@ export interface CommandPaletteProps {
    * so Enter never selects a row.
    */
   onInputKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
+  /**
+   * Controlled active row, matched against `PaletteRow.id`. Absent: the palette tracks it (first row, arrows move it).
+   * An id that matches no enabled row falls back to the first enabled row. Pair with `onActiveChange`.
+   */
+  activeId?: string;
+  /** Called with the id of the row an arrow, Home or End key made active. Rows without an `id` are not reported. */
+  onActiveChange?: (id: string) => void;
 }
 
 function highlight(text: string, query: string): ReactNode {
@@ -138,6 +145,8 @@ export function CommandPalette({
   filter: rowFilter = true,
   inputAddon,
   onInputKeyDown,
+  activeId,
+  onActiveChange,
 }: CommandPaletteProps): JSX.Element | null {
   const l = { ...DEFAULT_LABELS, ...labels };
   const [inner, setQ] = useState(defaultQuery);
@@ -160,7 +169,8 @@ export function CommandPalette({
   const count = flat.length;
   const [at, setAt] = useState(0);
   const [innerScope, setInnerScope] = useState(scopes?.[0]?.value);
-  const clamped = count ? Math.min(at, count - 1) : -1;
+  const byId = activeId === undefined ? -1 : flat.findIndex((r) => r.id === activeId);
+  const clamped = activeId !== undefined ? (byId >= 0 ? byId : count ? 0 : -1) : count ? Math.min(at, count - 1) : -1;
   const active = clamped >= 0 && flat[clamped]?.disabled ? flat.findIndex((r) => !r.disabled) : clamped;
   const select = (row: PaletteRow | undefined): void => {
     if (row && !row.disabled) onSelect?.(row);
@@ -179,6 +189,8 @@ export function CommandPalette({
     if (next == null) return;
     e.preventDefault();
     setAt(next);
+    const id = flat[next]?.id;
+    if (id !== undefined) onActiveChange?.(id);
   };
   if (open === false) return null;
   const framed = open !== undefined || onClose !== undefined;
