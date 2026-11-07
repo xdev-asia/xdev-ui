@@ -342,3 +342,35 @@ button.x-list-row-main:disabled { cursor: default; }
 .x-review-suggestion-title { font: var(--type-status); color: var(--text-2); }
 .x-review-suggestion-code { margin: 0; padding: var(--x-space-2) var(--x-space-3); overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-m); background: var(--x-color-code-bg); font: var(--type-mono); color: var(--text-1); }
 .x-review-comment .x-comment-head { flex-wrap: wrap; }
+
+/* AgentRow (.x-agent-row) */
+.x-agent-row { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--radius-l); background: var(--bg-1); }
+.x-agent-row[data-expanded] { border-color: var(--line-strong); background: var(--bg-2); }
+.x-agent-row-head { display: flex; align-items: center; gap: var(--x-space-2); min-width: 0; padding-right: var(--x-space-2); }
+.x-agent-row-toggle {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--x-space-1) var(--x-space-3);
+  min-width: 0;
+  min-height: 44px;
+  padding: var(--x-space-2) var(--x-space-3);
+  border: 0;
+  border-radius: var(--radius-l);
+  background: transparent;
+  color: var(--text-1);
+  font: var(--type-body);
+  text-align: left;
+  cursor: pointer;
+}
+.x-agent-row-toggle:hover { background: var(--bg-2); }
+.x-agent-row-chevron { flex: none; color: var(--text-2); transition: transform 0.12s ease; }
+.x-agent-row-toggle[aria-expanded="false"] .x-agent-row-chevron { transform: rotate(-90deg); }
+.x-agent-row-name { font-weight: 600; overflow-wrap: anywhere; }
+.x-agent-row-cli { padding: 1px var(--x-space-2); border: 1px solid var(--line); border-radius: var(--radius-s); background: var(--x-color-code-bg); font: var(--type-mono); color: var(--text-2); overflow-wrap: anywhere; }
+.x-agent-row-summary { flex: 1 1 12ch; min-width: 0; color: var(--text-2); font: var(--type-status); overflow-wrap: anywhere; }
+.x-agent-row-actions { display: inline-flex; flex: none; align-items: center; gap: var(--x-space-1); }
+.x-agent-row-body { padding: var(--x-space-3) var(--x-space-4) var(--x-space-4); border-top: 1px solid var(--line); }
+.x-agent-row-body[hidden] { display: none; }
+@media (prefers-reduced-motion: reduce) { .x-agent-row-chevron { transition: none; } }

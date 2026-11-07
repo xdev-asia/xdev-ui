@@ -50,6 +50,12 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       value: "appearance", onChange: function () {}, query: "", onQuery: function () {},
     }, h(X.SettingRow, { id: "appearance", label: "Appearance", description: "Dark or light" })),
   },
+  "AgentRow": {
+    style: {"display": "flex", "flexDirection": "column", "gap": "8px", "padding": "16px", "maxWidth": "480px"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.AgentRow, { name: "Claude", cli: "claude", summary: "Sonnet 5.5 · work account", expanded: true, onToggle: function () {} }, "Profile form goes here."),
+      h(X.AgentRow, { name: "Codex", cli: "codex", summary: "Default model", expanded: false, onToggle: function () {} })),
+  },
   "ReactionBar": {
     style: {"display": "flex", "gap": "12px", "padding": "16px"},
     render: (X, h) => {

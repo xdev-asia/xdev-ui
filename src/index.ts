@@ -104,3 +104,4 @@ export * from "./components/Grid/breakpoints";
 export * from "./components/RunTimeline/RunTimeline";
 export * from "./components/ReviewComment/ReviewComment";
 export * from "./components/SettingsShell/SettingsShell";
+export * from "./components/AgentRow/AgentRow";
