@@ -87,7 +87,7 @@ export function LinkForm({ editor, labels, onDone }: LinkFormProps): JSX.Element
             {labels.linkRemove}
           </Button>
         ) : null}
-        <Button type="submit">{labels.linkApply}</Button>
+        <Button variant="primary" type="submit">{labels.linkApply}</Button>
       </div>
     </form>
   );

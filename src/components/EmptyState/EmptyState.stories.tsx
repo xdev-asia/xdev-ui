@@ -17,7 +17,7 @@ export const Center: Story = {
     icon: "branch",
     title: "No worktrees yet",
     hint: "Create one per task so agents never share a checkout.",
-    actions: <Button icon="plus">New worktree</Button>,
+    actions: <Button variant="primary" icon="plus">New worktree</Button>,
   },
 };
 export const NoResults: Story = {
@@ -27,5 +27,16 @@ export const NoResults: Story = {
     title: "No settings match “proxy”",
     hint: "Try a shorter word, or browse the sections on the left.",
     actions: <Button variant="secondary">Clear search</Button>,
+  },
+};
+
+export const WithSteps: Story = {
+  args: {
+    size: "center",
+    icon: "folder",
+    title: "Start your first session",
+    hint: "Three steps and an agent is working in its own branch.",
+    steps: [{ label: "Open a project folder", done: true }, { label: "Pick an agent" }, { label: "Start a session" }],
+    actions: <Button variant="primary">Pick an agent</Button>,
   },
 };

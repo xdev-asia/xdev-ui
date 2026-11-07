@@ -92,7 +92,7 @@ export function RolesView(p: RolesViewProps): JSX.Element {
                 editable ? (
                   <>
                     <Button variant="secondary" disabled={!p.dirty || p.saving} onClick={p.onDiscard}>{t("roles.discard")}</Button>
-                    <Button disabled={!p.dirty || p.saving} onClick={p.onSave}>{t("roles.save")}</Button>
+                    <Button variant="primary" disabled={!p.dirty || p.saving} onClick={p.onSave}>{t("roles.save")}</Button>
                   </>
                 ) : undefined
               }

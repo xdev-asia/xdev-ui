@@ -31,7 +31,7 @@ node <skill-dir>/scripts/audit.mjs src --i18n src/i18n
 | `positive-tabindex` | error | `tabIndex` or `tabindex` above 0 |
 | `icon-button-name` | error | a `button` whose only content is an unnamed icon, or a self-closing `Button` with `icon` and no name |
 | `i18n-parity` | error | `en` and `vi` differ in keys, or a value is empty |
-| `primary-count` | warn | more than one primary `Button` in one file |
+| `primary-count` | warn | more than one `Button variant="primary"` in one file |
 | `label-voice` | warn | `!`, emoji, or Title Case Of Three Words in UI text |
 | `target-size` | warn | a width or height under 24px on a control selector, with no 24px minimum |
 | `reduced-motion` | warn | an animation whose keyframes move content, in a file with no `prefers-reduced-motion` query and no app-wide `*` guard |

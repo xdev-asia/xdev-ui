@@ -63,7 +63,7 @@ describe("Dialog", () => {
     expect(onCancel).toHaveBeenCalledOnce();
     expect(onConfirm).toHaveBeenCalledOnce();
     expect(buttons[0].props.variant).toBe("secondary");
-    expect(buttons[1].props.variant).toBeUndefined();
+    expect(buttons[1].props.variant).toBe("primary");
   });
   it("modal sets data-modal on the backdrop", () => {
     expect(renderToStaticMarkup(<Dialog title="x" modal />)).toContain('class="dialog-backdrop" data-modal="true"');

@@ -30,4 +30,16 @@ describe("BoardColumn", () => {
     expect(renderToStaticMarkup(<BoardColumn title="T" dropTarget>x</BoardColumn>)).toContain('data-drop-target=""');
     expect(renderToStaticMarkup(<BoardColumn title="T">x</BoardColumn>)).not.toContain("data-drop-target");
   });
+  it("onAdd shows a named plus button after the actions", () => {
+    const onAdd = vi.fn();
+    const html = renderToStaticMarkup(<BoardColumn title="T" onAdd={onAdd} actions={<span>a</span>}>x</BoardColumn>);
+    expect(html).toContain('aria-label="Add card"');
+    expect(html.indexOf("<span>a</span>")).toBeLessThan(html.indexOf("Add card"));
+    expect(renderToStaticMarkup(<BoardColumn title="T" onAdd={onAdd} labels={{ add: "Thêm thẻ" }}>x</BoardColumn>)).toContain('aria-label="Thêm thẻ"');
+  });
+  it("renders no add button and no actions wrapper without onAdd or actions", () => {
+    const html = renderToStaticMarkup(<BoardColumn title="T">x</BoardColumn>);
+    expect(html).not.toContain("x-board-col-actions");
+    expect(html).not.toContain("Add card");
+  });
 });

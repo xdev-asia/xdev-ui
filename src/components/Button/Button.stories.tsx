@@ -24,7 +24,7 @@ export const Disabled: Story = { args: { disabled: true } };
 export const Pair: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-      <Button>Commit and push</Button>
+      <Button variant="primary">Commit and push</Button>
       <Button variant="secondary">Discard</Button>
     </div>
   ),

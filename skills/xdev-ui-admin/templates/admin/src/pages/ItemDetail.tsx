@@ -39,7 +39,7 @@ export function ItemDetailView(p: ItemDetailViewProps): JSX.Element {
             { term: t("item.updated"), value: date(item.updated, true) },
           ]}
         />
-        <FormSection title={t("item.edit")} actions={p.canEdit ? <Button onClick={p.onSave}>{t("item.save")}</Button> : undefined}>
+        <FormSection title={t("item.edit")} actions={p.canEdit ? <Button variant="primary" onClick={p.onSave}>{t("item.save")}</Button> : undefined}>
           <Field label={t("item.name")} value={p.name} disabled={!p.canEdit} error={p.nameError ? t("item.nameRequired") : undefined} onChange={(e) => p.onNameChange(e.target.value)} />
         </FormSection>
       </div>

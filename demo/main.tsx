@@ -398,7 +398,7 @@ export function SessionHead() {
     <div className="session-head">
       <StatusDot state="working" label="2 running" pulse />
       <Switch label="Notify when done" defaultChecked />
-      <Button icon="terminal">New session</Button>
+      <Button variant="primary" icon="terminal">New session</Button>
     </div>
   );
 }`;

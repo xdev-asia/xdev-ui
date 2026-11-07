@@ -11,7 +11,7 @@ export function NotFoundPage(): JSX.Element {
       icon="search"
       title={t("app.notFoundTitle")}
       hint={t("app.notFoundHint")}
-      actions={<Button onClick={() => navigate(href.home)}>{t("app.goHome")}</Button>}
+      actions={<Button variant="primary" onClick={() => navigate(href.home)}>{t("app.goHome")}</Button>}
     />
   );
 }

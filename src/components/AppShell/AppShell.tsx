@@ -24,6 +24,8 @@ export interface AppShellProps {
   crumbs?: ReactNode;
   /** End of the top bar: search, notifications Popover, account Menu. */
   actions?: ReactNode;
+  /** Phone tab bar, usually a `BottomNav`. Shown under `main` below 768px only; the sidebar covers wider screens. */
+  bottomNav?: ReactNode;
   children: ReactNode;
   /** Toast elements, stacked bottom-right in a fixed .ws-toasts region. */
   toasts?: ReactNode;
@@ -37,7 +39,7 @@ export interface AppShellProps {
   className?: string;
 }
 
-export function AppShell({ brand, nav, navFooter, crumbs, actions, children, toasts, navOpen = false, onNavOpenChange, mainId = "main", labels, className }: AppShellProps): JSX.Element {
+export function AppShell({ brand, nav, navFooter, crumbs, actions, bottomNav, children, toasts, navOpen = false, onNavOpenChange, mainId = "main", labels, className }: AppShellProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
   const sideId = `x-shell-side-${useId()}`;
   const menuRef = useRef<HTMLButtonElement | null>(null);
@@ -73,7 +75,7 @@ export function AppShell({ brand, nav, navFooter, crumbs, actions, children, toa
     };
   }, [navOpen]);
   return (
-    <div className={cx("x-shell x-ws", className)} data-nav-open={navOpen ? "true" : undefined}>
+    <div className={cx("x-shell x-ws", className)} data-nav-open={navOpen ? "true" : undefined} data-bottom-nav={bottomNav ? "" : undefined}>
       <a
         className="x-skip-link"
         href={`#${mainId}`}
@@ -108,6 +110,7 @@ export function AppShell({ brand, nav, navFooter, crumbs, actions, children, toa
         <main className="x-shell-main" id={mainId} tabIndex={-1}>
           {children}
         </main>
+        {bottomNav ? <div className="x-shell-bottom">{bottomNav}</div> : null}
       </div>
       {toasts ? <div className="x-shell-toasts ws-toasts">{toasts}</div> : null}
     </div>

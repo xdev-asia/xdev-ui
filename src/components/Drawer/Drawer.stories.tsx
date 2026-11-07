@@ -15,7 +15,7 @@ const meta = {
     footer: (
       <>
         <Button variant="secondary">Cancel</Button>
-        <Button>Save</Button>
+        <Button variant="primary">Save</Button>
       </>
     ),
   },

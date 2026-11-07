@@ -143,7 +143,7 @@ export function UserDetailView({ user, activity, viewer, roles, onSave, onToggle
                     <Button variant="secondary" disabled={!dirty || saving} onClick={() => { setValues(base); setErrors({}); setSaveFailed(false); }}>
                       {t("user.cancel")}
                     </Button>
-                    <Button type="submit" disabled={!dirty || saving}>
+                    <Button variant="primary" type="submit" disabled={!dirty || saving}>
                       {t("user.save")}
                     </Button>
                   </>
@@ -257,7 +257,7 @@ export function UserNotFound(): JSX.Element {
       icon="accounts"
       title={t("user.notFoundTitle")}
       hint={t("user.notFoundHint")}
-      actions={<Button onClick={() => navigate(hrefFor.users())}>{t("user.backToUsers")}</Button>}
+      actions={<Button variant="primary" onClick={() => navigate(hrefFor.users())}>{t("user.backToUsers")}</Button>}
     />
   );
 }
