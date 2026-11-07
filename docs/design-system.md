@@ -93,7 +93,7 @@ Install them with `npx xdev-ui-skills install` (`--codex`, `--cursor`, `--user`,
 
 The library targets WCAG 2.2 level AA on macOS, Windows and Linux. The `xdev-ui-ux-standards` skill holds each rule with the page it came from.
 
-- **Keyboard.** Every component follows its WAI-ARIA Authoring Practices pattern; a composite widget is one Tab stop and arrow keys move inside it. Known gaps: `Menu`, `TabStrip`, `CommandPalette`, `Toolbar` and `ZoomBar`.
+- **Keyboard.** Every component follows its WAI-ARIA Authoring Practices pattern; a composite widget is one Tab stop and arrow keys move inside it. Known gaps: `Menu`, `TabStrip`, `Toolbar` and `ZoomBar`.
 - **Focus.** The ring is `--x-color-focus`, at least 3:1 on every ground. Never remove the outline without a `:focus-visible` replacement.
 - **Contrast.** Body text 4.5:1 (`text-1` to `text-3`), UI parts 3:1 (`--line-strong`, `--x-color-line-strong`, the focus ring). The only pairs below that are the decorative hairlines `--line` and `--x-color-line`; `prefers-contrast: more` swaps them, `--text-2` and `--text-3` for stronger values. `audit.mjs --contrast` lists every pair.
 - **Targets.** Pointer targets are 24 by 24 CSS px, or have 24px of clear space.
