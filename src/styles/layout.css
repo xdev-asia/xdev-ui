@@ -273,3 +273,27 @@
 .x-sessionbar-status { color: var(--x-color-ink); font-weight: 600; }
 .x-sessionbar-model { font-family: var(--font-mono); }
 .x-sessionbar-actions { display: inline-flex; align-items: center; gap: var(--x-space-2); margin-left: auto; }
+
+/* ApprovalBar (.x-approval) */
+.x-approval {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--x-space-2) var(--x-space-4);
+  padding: var(--x-space-2) var(--x-space-4);
+  border-top: 1px solid var(--x-color-line);
+  background: var(--x-color-surface-2);
+  box-sizing: border-box;
+  font: var(--type-status);
+  color: var(--x-color-ink);
+}
+.x-approval:focus-visible { outline: 2px solid var(--x-color-accent); outline-offset: -2px; }
+.x-approval-text { display: flex; flex-direction: column; gap: var(--x-space-1); min-width: 0; flex: 1 1 16rem; }
+.x-approval-title { font-weight: 600; }
+.x-approval-command {
+  font-family: var(--font-mono);
+  color: var(--x-color-muted);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.x-approval-actions { display: inline-flex; align-items: center; gap: var(--x-space-2); margin-left: auto; }
