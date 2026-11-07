@@ -32,6 +32,13 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     return el;
     },
   },
+  "RunTimeline": {
+    style: {"padding": "16px", "maxWidth": "360px"},
+    render: (X, h) => h(X.RunTimeline, { steps: [
+      { id: "1", label: "Check out branch", status: "done", at: "14:02", durationMs: 1200 },
+      { id: "2", label: "Run tests", status: "failed", at: "14:05", durationMs: 42000 },
+      { id: "3", label: "Open pull request", status: "skipped" }] }),
+  },
   "ReactionBar": {
     style: {"display": "flex", "gap": "12px", "padding": "16px"},
     render: (X, h) => {
