@@ -50,6 +50,14 @@ describe("AppShell", () => {
     findAll(tree, (e) => e.props.className === "x-shell-backdrop")[0].props.onClick();
     expect(onNavOpenChange).toHaveBeenCalledTimes(2);
   });
+  it("bottomNav renders under main inside the page column, and only when given", () => {
+    const html = renderToStaticMarkup(<AppShell {...base} bottomNav={<nav aria-label="Tabs">tabs</nav>} />);
+    expect(html).toContain('data-bottom-nav=""');
+    expect(html.indexOf("</main>")).toBeLessThan(html.indexOf("x-shell-bottom"));
+    const none = renderToStaticMarkup(<AppShell {...base} />);
+    expect(none).not.toContain("x-shell-bottom");
+    expect(none).not.toContain("data-bottom-nav");
+  });
   it("renders toasts in the fixed region", () => {
     const html = renderToStaticMarkup(<AppShell {...base} toasts={<span>Saved</span>} />);
     expect(html).toContain('class="x-shell-toasts ws-toasts"');

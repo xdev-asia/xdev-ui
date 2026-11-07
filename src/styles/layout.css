@@ -42,6 +42,7 @@
 .x-shell-main:focus:not(:focus-visible) { outline: none; }
 .x-shell-menu { display: none; }
 .x-shell-backdrop { display: none; }
+.x-shell-bottom { display: none; }
 .x-shell-toasts { position: fixed; right: var(--x-space-4); bottom: var(--x-space-4); z-index: var(--x-z-toast); }
 
 @media (max-width: 767.98px) /* below --x-bp-md */ {
@@ -68,6 +69,8 @@
     background: color-mix(in srgb, var(--bg-0) 70%, transparent);
   }
   .x-shell-main { padding: var(--x-space-4); }
+  .x-shell-bottom { display: block; flex: none; }
+  .x-shell[data-bottom-nav] .x-shell-toasts { bottom: calc(60px + var(--x-space-4)); }
   .x-shell-toasts { left: var(--x-space-4); }
   .x-shell-toasts.ws-toasts { width: auto; }
 }
