@@ -48,7 +48,7 @@ Inside a workspace surface, `.x-ws` remaps the semantic layer onto graphite, so 
 - **`FormSection` groups fields.** A heading, an optional description, fields in one column (two above 480px with `columns={2}`) and the Save and Cancel actions at the end.
 - **Design for 360px.** No horizontal page scroll. Widths come from `%`, `ch`, `rem` and the space tokens; rows of controls use `flex-wrap`. A `DataTable` scrolls inside its own wrapper and drops its `hideNarrow` columns.
 - **Hairlines divide regions.** Cards and rows are separated by 1px `--line`, not by shadows or coloured edges.
-- **Page layout.** `Container` caps the width (`size` sm 640 to 2xl 1536, default xl) with a 16px gutter. `Stack` spaces children on one axis with a space step (`gap` 1, 2, 3, 4, 6, 8). `Grid` sets columns per breakpoint (`columns={{ base: 1, md: 2, xl: 4 }}`) or fits cells of `minItemWidth`; `responsive="container"` measures the grid's own width, for grids inside a panel or a `Drawer`.
+- **Page layout.** Public web pages (sign-in, account portal, legal) sit in `SiteShell`; the desktop app uses `AppShell`. `Container` caps the width (`size` sm 640 to 2xl 1536, default xl) with a 16px gutter. `Stack` spaces children on one axis with a space step (`gap` 1, 2, 3, 4, 6, 8). `Grid` sets columns per breakpoint (`columns={{ base: 1, md: 2, xl: 4 }}`) or fits cells of `minItemWidth`; `responsive="container"` measures the grid's own width, for grids inside a panel or a `Drawer`.
 - **Breakpoints.** sm 640, md 768, lg 1024, xl 1280, 2xl 1536 (`--x-bp-*`, `BREAKPOINTS`), the same as Tailwind. Mobile first: a value applies from its breakpoint up. Lay out with CSS; `useBreakpoint()` is for behaviour CSS cannot express and renders "base" on the server.
 - **Stacking.** z-index comes from `--x-z-*`: raised 1, sticky 5, dropdown 21, nav 30, modal 40, toast 50, skip 60. Never write a number.
 
@@ -106,12 +106,12 @@ The library targets WCAG 2.2 level AA on macOS, Windows and Linux. The `xdev-ui-
 |---|---|
 | Actions | Button, IconButton, ActionTile, ZoomBar |
 | Inputs | Segmented, ColorField, SwatchGroup, CodeInput, ThemeSwitch, Select, FontField, Field, Switch, Checkbox, RadioGroup, Textarea, SearchInput, SearchPicker, FilterChip, FileDrop, Combobox, DatePicker, DateRangePicker |
-| Display | Kbd, PairingCode, ThemePreview, Avatar, Badge, Tag, AgentChip, DiffStat, Comment, ReactionBar, ListRow, Card, EmptyState, SettingRow, CodeBlock, Heatmap, CommitGraph, PanZoom, WorktreeRow, UsageMeterRow, ReviewComment, AgentRow |
+| Display | Kbd, PairingCode, ThemePreview, Avatar, Identity, List, Prose, Badge, Tag, AgentChip, DiffStat, Comment, ReactionBar, ListRow, Card, EmptyState, SettingRow, CodeBlock, Heatmap, CommitGraph, PanZoom, WorktreeRow, UsageMeterRow, ReviewComment, AgentRow |
 | Status | StatusDot, Meter, Banner, Toast, Spinner, FieldMessage, StepDots, Toaster, Skeleton, RunTimeline |
 | Navigation | TabStrip, ActivityBar, StatusBar, Tabs, NavList, Breadcrumb, TreeView, Disclosure, SplitHandle, Toolbar, BottomNav |
 | Overlays | Menu, Dialog, CommandPalette, Popover, Tooltip, Coachmark, MenuButton, FormDialog, Drawer, AttentionInbox |
 | Brand | BrandMark, Icon, FileIcon |
-| Layout | AppShell, PageHeader, FormSection, ThemeEditor, Board, BoardColumn, BoardCard, SaveBar, Container, Stack, Grid, SessionBar, ApprovalBar, Composer, LaunchCard, SettingsShell |
+| Layout | AppShell, SiteShell, PageHeader, FormSection, ThemeEditor, Board, BoardColumn, BoardCard, SaveBar, Container, Stack, Grid, SessionBar, ApprovalBar, Composer, LaunchCard, SettingsShell |
 | Data | DescriptionList, StatTile, DataTable, Pagination, FacetFilter, BulkBar, SortableList |
 | Image (`@xdev-asia/ui/image`, peer `react-easy-crop`) | ImageCropper, ImageField |
 
