@@ -23,4 +23,9 @@ describe("Select", () => {
     expect(tree.type).toBe("select");
     expect(tree.props.ref).toBe(ref);
   });
+  it("draws a leading icon and keeps the class on the select", () => {
+    const html = renderToStaticMarkup(<Select icon="globe" className="c" aria-label="Language" options={[{ value: "en", label: "English" }]} />);
+    expect(html).toMatch(/^<span class="x-select-wrap"><svg class="x-icon x-select-icon"[^>]*aria-hidden="true"/);
+    expect(html).toContain('<select class="lang-select c" data-icon="" aria-label="Language">');
+  });
 });

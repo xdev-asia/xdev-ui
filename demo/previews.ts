@@ -194,6 +194,26 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     style: {"padding": "16px", "width": "520px"},
     render: (X, h) => h(X.SaveBar, { dirty: true, onSave: function () {}, onDiscard: function () {} }),
   },
+  "SiteShell": {
+    style: {"width": "520px", "height": "260px", "overflow": "hidden"},
+    render: (X, h) => h(X.SiteShell, { brand: h("a", { href: "#" }, h(X.BrandMark, { variant: "mark", size: 20 }), h("span", null, "xDev account")),
+      actions: h(X.Select, { icon: "globe", "aria-label": "Language", options: [{ value: "en", label: "English" }, { value: "vi", label: "Tiếng Việt" }] }),
+      links: [{ href: "#", label: "Privacy" }, { href: "#", label: "Terms" }], linksLabel: "Legal" }, h(X.PageHeader, { title: "Your account" })),
+  },
+  "Identity": {
+    style: {"display": "grid", "gap": "16px", "padding": "16px", "width": "320px"},
+    render: (X, h) => h(React.Fragment, null, h(X.Identity, { name: "Trần Đức Duy", detail: "duy@example.com" }), h(X.Identity, { name: "Ada Lovelace", detail: "ada@example.com", size: "md" })),
+  },
+  "List": {
+    style: {"padding": "16px", "width": "380px"},
+    render: (X, h) => h(X.List, { "aria-label": "Sessions" }, h(X.ListRow, { as: "li", title: "Chrome on macOS", meta: "Last active today", trailing: h(X.Tag, null, "This device") }),
+      h(X.ListRow, { as: "li", title: "xDev desktop · MacBook", meta: "Last active yesterday" })),
+  },
+  "Prose": {
+    style: {"padding": "16px", "width": "420px"},
+    render: (X, h) => h(X.Prose, null, h("h1", null, "Privacy"), h("p", null, "xDev operates this sign-in service. This page says what it stores and why."),
+      h("h2", null, "What we store"), h("ul", null, h("li", null, "Your name"), h("li", null, "Your email address"))),
+  },
   "Container": {
     style: {"padding": "16px 0", "width": "520px", "background": "var(--bg-2)"},
     render: (X, h) => h(X.Container, { size: "sm" }, h("div", { style: { padding: 12, background: "var(--bg-0)", borderRadius: 6 } }, "Container size sm: max 640px, 16px gutter")),
