@@ -75,6 +75,7 @@
   "scripts": {
     "tokens": "node scripts/build-tokens.mjs",
     "ai": "node scripts/build-ai.mjs",
+    "brand": "node scripts/build-brand.mjs",
     "typecheck": "node scripts/build-tokens.mjs && node scripts/build-ai.mjs && tsc -p tsconfig.json --noEmit",
     "build": "node scripts/build-tokens.mjs && node scripts/build-ai.mjs && vite build && vite build --config vite.mcp.config.ts && tsc -p tsconfig.build.json && node scripts/postbuild.mjs",
     "dev": "node scripts/build-tokens.mjs && vite --config vite.demo.config.ts",

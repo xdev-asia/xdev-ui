@@ -199,7 +199,7 @@ Topics: ${TOPICS.join(", ")}.
   - setup: install, CSS imports, theme attribute, shared types (SessionState, PrState, ...)
   - content-fundamentals: voice, labels, bilingual en/vi rules
   - visual-foundations: token layers, spacing, radius, accent, motion, type rules
-  - iconography, brand: icon grid and logo v9 rules
+  - iconography, brand: icon grid and logo v12 rules
 Use topic="all" only when you need everything at once.`,
       inputSchema: z.strictObject({
         topic: z.enum(["all", ...TOPICS] as [string, ...string[]]).describe("Which section to return"),
