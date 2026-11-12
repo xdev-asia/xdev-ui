@@ -501,6 +501,14 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.ListRow, { title: "login-retry", meta: "feat/login-retry · 2m", leading: h(X.StatusDot, { state: "working", label: "working" }), selected: true, onClick: function () {} }),
       h(X.ListRow, { title: "fix-ci-cache", meta: "fix/ci-cache · 9m", leading: h(X.StatusDot, { state: "waiting", label: "waiting" }), onClick: function () {} })),
   },
+  "Emblem": {
+    style: {"display": "flex", "gap": "12px", "alignItems": "center", "padding": "16px"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.Emblem, { name: "Anthropic", text: "AN", color: "coral", size: "sm" }),
+      h(X.Emblem, { name: "OpenAI", text: "OA", color: "seagreen" }),
+      h(X.Emblem, { name: "Mistral", text: "MI", color: "darkorange", size: "lg" }),
+      h(X.Emblem, { name: "Usage", icon: "activity" })),
+  },
   "ResourceCard": {
     style: {"display": "grid", "gridTemplateColumns": "repeat(2, 1fr)", "gap": "12px", "padding": "16px", "width": "460px"},
     render: (X, h) => h(React.Fragment, null,

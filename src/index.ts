@@ -58,6 +58,7 @@ export * from "./components/FilterChip/FilterChip";
 export * from "./components/ActionTile/ActionTile";
 export * from "./components/ListRow/ListRow";
 export * from "./components/ResourceCard/ResourceCard";
+export * from "./components/Emblem/Emblem";
 export * from "./components/Card/Card";
 export * from "./components/EmptyState/EmptyState";
 export * from "./components/SettingRow/SettingRow";

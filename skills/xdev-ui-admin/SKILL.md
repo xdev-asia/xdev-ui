@@ -28,12 +28,14 @@ Existing app on Tailwind v4: import `@xdev-asia/ui/styles.css`, then `@xdev-asia
 5. **Write the four states** of every data region: loading, error, empty, success ([states](references/states-feedback.md)).
 6. **Wire navigation and permissions**: URL holds the view state, roles hide or disable ([navigation](references/navigation.md), [permissions](references/permissions.md)).
 7. **Test and review**: pure functions and views tested, then [the checklist](references/review-checklist.md) and the `xdev-ui-review` skill.
+8. **Look at it**: screenshots in dark and light, wide and narrow, with real data ([visual identity](references/visual-identity.md)). The audit does not see a flat or unfinished screen.
 
 ## Page patterns
 
 | page | parts | reference |
 |---|---|---|
 | Dashboard | `Grid` of `StatTile`, `Meter`, `Card` with `ListRow` | [dashboard](references/dashboard.md) |
+| Grid of things to connect or open (providers, integrations, tools) | `SearchInput`, `Grid` of `ResourceCard` with `Emblem`, `StatusDot`, `Switch` | [visual identity](references/visual-identity.md) |
 | Resource list | `SearchInput`, `FilterChip` / `FacetFilter`, `DataTable` (select, sort, reorder), `BulkBar`, `Pagination`, `EmptyState` | [resource list](references/resource-list.md) |
 | Detail and edit | `PageHeader`, `Tabs`, `DescriptionList`, `FormSection`, `SaveBar` | [detail and forms](references/detail-and-forms.md) |
 | Quick create, row edit, delete | `FormDialog`, `Drawer`, `Dialog alert`, `Toast` | [dialogs](references/dialogs.md) |
