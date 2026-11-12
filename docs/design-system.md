@@ -108,12 +108,13 @@ Media queries cannot read `var()`, so the CSS writes 639.98px and 767.98px; `tes
 
 ## Agent skills
 
-The package ships four skills in `skills/`, in the open Agent Skills format (a `SKILL.md` with `name`, `description` and `license`, plus `references/` and `templates/`):
+The package ships five skills in `skills/`, in the open Agent Skills format (a `SKILL.md` with `name`, `description` and `license`, plus `references/` and `templates/`):
 
 | skill | use it to |
 |---|---|
 | `xdev-ui-build-app` | start an app: shell, theme, i18n, routing, states; template `templates/app` |
 | `xdev-ui-admin` | design and build console screens: UX principles, layout (Container, Stack, Grid, Tailwind theme), dashboard, lists, forms, rich content, states, navigation, roles, settings, audit log, review checklist; template `templates/admin` |
+| `xdev-ui-design` | decide the look of a screen: rules by priority with IDs, tokens by role (dark and light), logo v9, screen recipes, porting another product's UI, anti-patterns, pre-delivery checklist |
 | `xdev-ui-review` | audit a UI with `scripts/audit.mjs` (tokens, stripes, primary buttons, en and vi parity, focus, names, target size, motion, contrast) and a manual checklist |
 | `xdev-ui-ux-standards` | design and review against WCAG 2.2 AA, the APG patterns, the macOS, Windows and GNOME guidelines and the ten usability heuristics |
 

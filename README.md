@@ -100,7 +100,7 @@ Resources: `xdev-ui://components/{name}`, `xdev-ui://guidelines/{topic}`, `xdev-
 
 ## Agent skills
 
-Four skills teach a coding agent to build with the library: `xdev-ui-build-app` (app shell, theme, i18n, routing, states), `xdev-ui-admin` (dashboards, lists, forms, roles, settings, audit log), `xdev-ui-review` (rules audit) and `xdev-ui-ux-standards` (WCAG 2.2 AA, APG patterns, platform guidelines, usability heuristics). They live in `skills/` and ship in the package.
+Five skills teach a coding agent to build with the library: `xdev-ui-build-app` (app shell, theme, i18n, routing, states), `xdev-ui-admin` (dashboards, lists, forms, roles, settings, audit log), `xdev-ui-design` (design rules by priority, tokens by role, logo, screen recipes, porting, pre-delivery checklist), `xdev-ui-review` (rules audit) and `xdev-ui-ux-standards` (WCAG 2.2 AA, APG patterns, platform guidelines, usability heuristics). They live in `skills/` and ship in the package.
 
 ```bash
 npx xdev-ui-skills install                 # .claude/skills in this project
