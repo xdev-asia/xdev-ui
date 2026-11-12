@@ -42,7 +42,7 @@ import { Button, TabStrip, BrandMark } from "@xdev-asia/ui";
 | `@xdev-asia/ui/tailwind.css` | Tailwind v4 theme: colours, radii, fonts and breakpoints from the tokens |
 | `@xdev-asia/ui/tokens.css` | tokens only (CSS custom properties, dark + light) |
 | `@xdev-asia/ui/tokens.json` | token source |
-| `@xdev-asia/ui/brand/*` | logo v9 SVG/PNG, mobile icons |
+| `@xdev-asia/ui/brand/*` | logo v12 SVG/PNG for xDev and its sub-systems, mobile icons |
 | `@xdev-asia/ui/ai-manifest.json` | components, props, classes, tokens, icons, guidelines as JSON |
 | `@xdev-asia/ui/llms.txt`, `llms-full.txt` | the same for LLMs ([llmstxt.org](https://llmstxt.org)) |
 
