@@ -38,7 +38,7 @@ Prompt `xdevui_build_ui` runs those steps in order; `xdevui_build_app` and `xdev
 - One primary `Button` per surface, last in `.dialog-actions`. Cyan `--x-color-signal` is the focus ring only.
 - State is a tint, a 1px border or a `StatusDot`. **Never** a coloured left stripe on a rounded card or row.
 - Labels: sentence case verbs ("Create session"), no emoji, no exclamation marks; ship `en` and `vi`.
-- Brand mark: use `BrandMark` or `@xdev-asia/ui/brand/*`; never recolour the orange cursor `#ff7a3d`.
+- Brand mark: use `BrandMark` or `@xdev-asia/ui/brand/*`; never recolour the orange agent side `#ff7a3d`. A sub-system passes `system` (`cleaner`, `ui`).
 
 ## Changing this repo
 

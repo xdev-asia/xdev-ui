@@ -38,7 +38,7 @@ Inside a workspace surface, `.x-ws` remaps the semantic layer onto graphite, so 
 - 16px in controls, 20px in banners, 22px in the activity bar.
 - The set: `docs changes tasks squads agents kit accounts terminal` (from ActivityBar.tsx) plus `warn close plus search more branch chevron-left chevron-right magnifier prompt folder file check alert warn-dash restore history bot download copy plug lock swap list-checks workflow`.
 - Shell icons: `board` (kanban columns), `automation` (loop with a play mark), `panel-right` (right-docked panel), `split` (two panes), `inbox`, and `zap` (the bolt) for quick actions.
-- The brand mark (logo v9) is a round-capped `Ã—` plus the agent cursor in `--brand-agent` `#ff7a3d`: a prompt waiting for input. The `Ã—` follows the surface colour; the cursor is always orange.
+- The brand mark (logo v12) is two folded blades that cross into an `x`. Your blade follows the surface colour; the agent side is always `--brand-agent` `#ff7a3d`; the core where they overlap is white. Sub-systems keep your blade and swap the agent side for their own shape (`BrandMark system="cleaner"`).
 
 ## Layout
 
