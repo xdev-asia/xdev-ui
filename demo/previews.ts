@@ -501,6 +501,12 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.ListRow, { title: "login-retry", meta: "feat/login-retry · 2m", leading: h(X.StatusDot, { state: "working", label: "working" }), selected: true, onClick: function () {} }),
       h(X.ListRow, { title: "fix-ci-cache", meta: "fix/ci-cache · 9m", leading: h(X.StatusDot, { state: "waiting", label: "waiting" }), onClick: function () {} })),
   },
+  "ResourceCard": {
+    style: {"display": "grid", "gridTemplateColumns": "repeat(2, 1fr)", "gap": "12px", "padding": "16px", "width": "460px"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.ResourceCard, { href: "#", title: "OpenAI", leading: h(X.Avatar, { name: "OpenAI" }), status: h(X.StatusDot, { tone: "ok", label: "2 connected" }), trailing: h(X.Switch, { "aria-label": "Use OpenAI", defaultChecked: true }) }),
+      h(X.ResourceCard, { href: "#", title: "Groq", leading: h(X.Avatar, { name: "Groq" }), status: "No connections" })),
+  },
   "BottomNav": {
     style: {"padding": "16px", "width": "360px"},
     render: (X, h) => h(X.BottomNav, { value: "home", onChange: function () {}, items: [{ id: "home", label: "Home", icon: "home" }, { id: "sessions", label: "Sessions", icon: "terminal", badge: 3 }, { id: "board", label: "Board", icon: "tasks" }, { id: "files", label: "Files", icon: "folder" }], more: { label: "More", icon: "more", items: [{ id: "settings", label: "Settings", icon: "settings" }] } }),
