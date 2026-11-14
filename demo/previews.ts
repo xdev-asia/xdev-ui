@@ -84,8 +84,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
   },
   "FlowMap": {
     style: {"display": "flex", "flexDirection": "column", "height": "240px", "width": "420px", "padding": "16px"},
-    render: (X, h) => h(X.FlowMap, { label: "Traffic", hub: { name: "LLM gateway" }, nodes: [
-      { id: "openai", name: "OpenAI", text: "OA", color: "seagreen", detail: "128 requests", active: true },
+    render: (X, h) => h(X.FlowMap, { label: "Traffic", hub: { name: "LLM gateway" }, sources: [
+      { id: "ci", name: "CI bot", text: "CI", color: "slateblue", detail: "128 requests", active: true, weight: 1 },
+    ], nodes: [
+      { id: "openai", name: "OpenAI", text: "OA", color: "seagreen", detail: "128 requests", active: true, weight: 1 },
       { id: "groq", name: "Groq", text: "GQ", color: "tomato" },
     ] }),
   },

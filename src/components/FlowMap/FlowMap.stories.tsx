@@ -25,4 +25,20 @@ export const Several: Story = {
     ],
   },
 };
+export const Routed: Story = {
+  args: {
+    hub: { name: "LLM gateway", detail: "212 requests, 480 ms" },
+    sources: [
+      { id: "ci", name: "CI bot", text: "CI", color: "slateblue", detail: "160 requests", active: true, weight: 1 },
+      { id: "ide", name: "IDE agent", text: "ID", color: "teal", detail: "52 requests", active: true, weight: 0.33 },
+      { id: "cron", name: "Nightly report", text: "NR", color: "gray" },
+    ],
+    nodes: [
+      { id: "openai", name: "OpenAI", text: "OA", color: "seagreen", detail: "128 requests", active: true, weight: 1 },
+      { id: "anthropic", name: "Anthropic", text: "AN", color: "coral", detail: "78 requests, 5 failed", active: true, weight: 0.6, tone: "warn" },
+      { id: "groq", name: "Groq", text: "GQ", color: "tomato", detail: "6 requests, 6 failed", active: true, weight: 0.05, tone: "danger" },
+      { id: "mistral", name: "Mistral", text: "MI", color: "darkorange" },
+    ],
+  },
+};
 export const Empty: Story = { args: { nodes: [] } };

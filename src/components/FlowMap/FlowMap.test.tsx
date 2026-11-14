@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { FLOW_HUB, FLOW_NODE, FlowMap, flowMapLayout } from "./FlowMap";
+import { FLOW_HUB, FLOW_NODE, FlowMap, flowMapLayout, flowMapSides } from "./FlowMap";
 
 const GAP = 16;
 type Box = { x: number; y: number; w: number; h: number };
@@ -26,6 +26,29 @@ describe("flowMapLayout", () => {
   });
 });
 
+describe("flowMapSides", () => {
+  it("puts sources left of the hub and nodes right of it, clear of it and of each other", () => {
+    const hub: Box = { x: 0, y: 0, ...FLOW_HUB };
+    for (const [l, r] of [[1, 1], [3, 7], [12, 2]]) {
+      const { left, right } = flowMapSides(l, r);
+      expect(left).toHaveLength(l);
+      expect(right).toHaveLength(r);
+      expect(left.every((p) => p.x < 0) && right.every((p) => p.x > 0)).toBe(true);
+      const boxes = [...left, ...right].map((p) => ({ ...p, ...FLOW_NODE }));
+      for (const [i, a] of boxes.entries()) {
+        expect(overlap(a, hub)).toBe(false);
+        for (const b of boxes.slice(i + 1)) expect(overlap(a, b)).toBe(false);
+      }
+    }
+  });
+
+  it("centres each column on the hub", () => {
+    const { left, right } = flowMapSides(1, 2);
+    expect(left[0].y).toBeCloseTo(0);
+    expect(right[0].y + right[1].y).toBeCloseTo(0);
+  });
+});
+
 describe("FlowMap", () => {
   const nodes = [
     { id: "openai", name: "OpenAI", color: "seagreen", detail: "12 requests", active: true },
@@ -45,6 +68,26 @@ describe("FlowMap", () => {
   it("draws one edge per node and marks the active one", () => {
     expect(html.match(/class="x-flowmap-edge"/g)).toHaveLength(2);
     expect(html.match(/data-active=""/g)).toHaveLength(2); // the node and its edge
+  });
+
+  it("with sources, reads left to right on curves, coloured by side, sized by weight and toned by failures", () => {
+    const routed = renderToStaticMarkup(
+      <FlowMap
+        label="Traffic"
+        hub={{ name: "Hub", detail: "54 requests" }}
+        sources={[{ id: "ci", name: "CI bot", detail: "50 requests", active: true, weight: 1 }]}
+        nodes={[{ id: "openai", name: "OpenAI", detail: "54 requests, 6 failed", active: true, weight: 0.5, tone: "danger" }, { id: "groq", name: "Groq" }]}
+      />,
+    );
+    expect(routed).toContain("CI bot");
+    expect(routed).toContain("54 requests, 6 failed");
+    expect(routed.match(/class="x-flowmap-edge"/g)).toHaveLength(3);
+    expect(routed.match(/class="x-flowmap-glow"/g)).toHaveLength(2); // the two active edges
+    expect(routed).toContain('<g data-side="in">');
+    expect(routed).toContain('<g data-side="out" data-tone="danger">');
+    expect(routed).toContain('<ul class="x-flowmap-nodes" data-side="in">');
+    expect(routed).toContain("--x-flowmap-weight:0.5");
+    expect(routed).toMatch(/d="M[\d.]+ [\d.]+C/); // curves, not straight lines
   });
 
   it("has zoom in, zoom out and fit controls, translatable", () => {
