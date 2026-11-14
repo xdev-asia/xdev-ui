@@ -22,6 +22,7 @@
   --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
   --x-font-mono: var(--font-mono);
   --type-page-title: 700 20px/1.3 var(--font-body);
+  --type-shell-title: 600 24px/1.33 var(--font-body);
   --type-dialog-title: 700 18px var(--font-body);
   --type-heading: 600 16px/1.4 var(--font-body);
   --type-body: 400 14px/1.6 var(--font-body);
@@ -188,6 +189,31 @@
   --x-color-code-bg: #e9eef8;
   --shadow-menu: 0 8px 24px rgba(17, 17, 20, 0.16);
   --shadow-dialog: 0 24px 64px rgba(17, 17, 20, 0.24);
+}
+[data-ground="navy"] {
+  --bg-0: var(--x-color-bg);
+  --bg-1: var(--x-color-panel);
+  --bg-2: var(--x-color-surface);
+  --bg-3: var(--x-color-surface-2);
+  --line: var(--x-color-line);
+  --text-1: var(--x-color-ink);
+  --text-2: var(--x-color-muted);
+  --text-3: #8a97b5;
+  --side-tint: #121a30;
+  --term: #0c1222;
+}
+[data-theme="light"][data-ground="navy"],
+[data-theme="light"] [data-ground="navy"] {
+  --bg-0: var(--x-color-bg);
+  --bg-1: #f7f9fd;
+  --bg-2: var(--x-color-surface);
+  --bg-3: var(--x-color-surface-2);
+  --line: var(--x-color-line);
+  --text-1: var(--x-color-ink);
+  --text-2: var(--x-color-muted);
+  --text-3: #5f6b86;
+  --side-tint: #eaf0fb;
+  --term: #ffffff;
 }
 @media (prefers-contrast: more) {
   :root,

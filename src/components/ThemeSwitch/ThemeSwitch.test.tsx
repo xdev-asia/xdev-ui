@@ -27,4 +27,18 @@ describe("ThemeSwitch", () => {
   it("passes disabled on to the segments", () => {
     expect(renderToStaticMarkup(<ThemeSwitch value="dark" onChange={() => {}} disabled />).match(/disabled=""/g)).toHaveLength(3);
   });
+  it("icon variant: one button that flips to the other theme", () => {
+    const dark = renderToStaticMarkup(<ThemeSwitch variant="icon" value="dark" onChange={() => {}} />);
+    expect(dark).toContain('aria-label="Switch to light mode"');
+    expect(dark.match(/<button/g)).toHaveLength(1);
+    expect(dark).not.toContain("aria-pressed");
+    const light = renderToStaticMarkup(<ThemeSwitch variant="icon" value="light" onChange={() => {}} labels={{ toDark: "§d§" }} />);
+    expect(light).toContain('aria-label="§d§"');
+  });
+  it("icon variant: on system it flips the resolved theme", () => {
+    const onChange = vi.fn();
+    ThemeSwitch({ variant: "icon", value: "system", resolved: "light", onChange }).props.onClick();
+    ThemeSwitch({ variant: "icon", value: "system", onChange }).props.onClick();
+    expect(onChange.mock.calls).toEqual([["dark"], ["light"]]);
+  });
 });

@@ -13,3 +13,6 @@ Message for a list, pane or view with nothing in it yet, with a hint and an opti
 - `steps` (`{label, done?}[]`) adds `StepDots` and a numbered list under the hint, for a first-run view that teaches a short path (three steps at most). `current` is 1-based and defaults to the first step not done; that step has `aria-current="step"`. A finished step shows a check mark and a hidden "Done" text, so state is never colour alone. The actions still carry the one primary for the current step.
 - `labels` (`done`, `step`, `steps`) translate the step texts; they matter only with `steps`.
 - For "no search results", name the query in the title and offer to clear it.
+
+## Responsive
+- The actions wrap; centred empty states keep them centred.

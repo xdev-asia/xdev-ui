@@ -81,6 +81,51 @@
 .x-emblem-img { width: 100%; height: 100%; object-fit: contain; }
 .x-emblem-text { letter-spacing: 0; }
 
+/* ModelChip (.x-model-chip) */
+.x-model-chip {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--x-space-2);
+  max-width: 100%;
+  min-width: 0;
+  padding: var(--x-space-2) var(--x-space-3);
+  border: 1px solid var(--x-color-line);
+  border-radius: var(--x-radius-md);
+  background: var(--x-color-surface);
+  color: var(--x-color-ink);
+}
+.x-model-chip:hover,
+.x-model-chip:focus-within { border-color: var(--x-color-line-strong); background: var(--x-color-surface-2); }
+.x-model-chip-lead { display: inline-flex; flex: none; align-items: center; height: 22px; color: var(--text-2); }
+.x-model-chip-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.x-model-chip-line { display: flex; align-items: center; gap: var(--x-space-1); min-width: 0; }
+.x-model-chip-code {
+  overflow: hidden;
+  min-width: 0;
+  padding: 1px var(--x-space-2);
+  border-radius: var(--x-radius-sm);
+  background: var(--x-color-surface-2);
+  font: 500 12px var(--font-mono);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.x-model-chip-name { overflow: hidden; font-size: 12px; color: var(--x-color-muted); text-overflow: ellipsis; white-space: nowrap; }
+.x-model-chip-actions { display: inline-flex; flex: none; align-items: center; }
+.x-model-chip[data-dimmed] .x-model-chip-lead,
+.x-model-chip[data-dimmed] .x-model-chip-code,
+.x-model-chip[data-dimmed] .x-model-chip-name { opacity: 0.5; }
+.x-model-chip-add {
+  align-items: center;
+  align-self: stretch;
+  border-style: dashed;
+  background: transparent;
+  color: var(--x-color-muted);
+  font: 500 13px var(--font-body);
+  cursor: pointer;
+}
+.x-model-chip-add:hover,
+.x-model-chip-add:focus-visible { border-color: var(--accent); color: var(--x-color-ink); }
+
 /* ResourceCard (.x-resource-card) */
 .x-resource-card {
   display: flex;
@@ -175,6 +220,7 @@ button.x-list-row-main:disabled { cursor: default; }
   border-bottom: 1px solid var(--x-color-line);
 }
 .x-card-heading { min-width: 0; }
+.x-card-title-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--x-space-2) var(--x-space-3); min-width: 0; }
 .x-card-title { margin: 0; font: 600 14px var(--font-body); color: var(--x-color-ink); }
 .x-card-sub { margin: 2px 0 0; overflow: hidden; font-size: 12px; color: var(--x-color-muted); text-overflow: ellipsis; white-space: nowrap; }
 .x-card-actions { display: inline-flex; flex: none; align-items: center; gap: var(--x-space-2); }
@@ -307,6 +353,52 @@ button.x-list-row-main:disabled { cursor: default; }
 .x-heatmap-legend span:first-child { margin-right: var(--x-space-1); }
 .x-heatmap-legend span:last-child { margin-left: var(--x-space-1); }
 
+/* TimeSeriesChart (.x-tschart): one series, line + area, crosshair and tooltip per bucket */
+.x-tschart { margin: 0; display: grid; gap: var(--x-space-1); min-width: 0; }
+.x-tschart-plot { position: relative; height: calc(var(--x-space-8) * 6); margin-top: var(--x-space-4); }
+.x-tschart-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.x-tschart-grid, .x-tschart-base { fill: none; stroke-width: 1; vector-effect: non-scaling-stroke; }
+.x-tschart-grid { stroke: var(--line); stroke-dasharray: 2 3; }
+.x-tschart-base { stroke: var(--line-strong); }
+.x-tschart-area { fill: color-mix(in srgb, var(--accent) 16%, transparent); stroke: none; }
+.x-tschart-line { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.x-tschart-max, .x-tschart-zero { position: absolute; left: 0; font: var(--type-tag); color: var(--text-3); pointer-events: none; }
+.x-tschart-max { top: 0; transform: translateY(-100%); padding-bottom: var(--x-space-1); }
+.x-tschart-zero { bottom: 0; padding-bottom: var(--x-space-1); }
+.x-tschart-cols { position: absolute; inset: 0; display: flex; }
+.x-tschart-col { position: relative; flex: 1 1 0; min-width: 0; }
+.x-tschart-col:hover::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; border-left: 1px solid var(--line-strong); }
+.x-tschart-dot { position: absolute; left: 50%; width: var(--x-space-2); height: var(--x-space-2); border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 calc(var(--x-space-1) / 2) var(--bg-1); transform: translate(-50%, 50%); opacity: 0; }
+.x-tschart-dot[data-alone], .x-tschart-col:hover .x-tschart-dot { opacity: 1; }
+.x-tschart-tip { position: absolute; top: 0; z-index: var(--x-z-raised); display: none; padding: var(--x-space-1) var(--x-space-2); border: 1px solid var(--line-strong); border-radius: var(--radius-s); background: var(--bg-2); box-shadow: var(--shadow-menu); font: var(--type-status); color: var(--text-1); white-space: nowrap; pointer-events: none; }
+.x-tschart-col[data-side="start"] .x-tschart-tip { left: 50%; margin-left: var(--x-space-2); }
+.x-tschart-col[data-side="end"] .x-tschart-tip { right: 50%; margin-right: var(--x-space-2); }
+.x-tschart-col:hover .x-tschart-tip { display: block; }
+.x-tschart-ticks { position: relative; min-height: var(--x-space-4); font: var(--type-tag); color: var(--text-3); }
+.x-tschart-tick { position: absolute; top: 0; white-space: nowrap; transform: translateX(-50%); }
+.x-tschart-tick[data-align="start"] { transform: none; }
+.x-tschart-tick[data-align="end"] { transform: translateX(-100%); }
+
+/* BarChart (.x-barchart): one measure across categories, value beside each bar */
+.x-barchart { margin: 0; min-width: 0; }
+.x-barchart-list { margin: 0; padding: 0; list-style: none; }
+.x-barchart-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: var(--type-status); color: var(--text-2); }
+.x-barchart-value { font: var(--type-status); color: var(--text-1); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.x-barchart-track { display: flex; min-width: 0; }
+.x-barchart-bar { display: block; background: var(--accent); }
+.x-barchart-item:hover .x-barchart-bar { background: color-mix(in srgb, var(--accent) 80%, var(--text-1)); }
+.x-barchart[data-orientation="horizontal"] .x-barchart-list { display: grid; gap: var(--x-space-2); }
+.x-barchart[data-orientation="horizontal"] .x-barchart-item { display: grid; grid-template-columns: minmax(6ch, 30%) minmax(0, 1fr) minmax(6ch, max-content); align-items: center; gap: var(--x-space-3); }
+.x-barchart[data-orientation="horizontal"] .x-barchart-track { height: var(--x-space-3); }
+.x-barchart[data-orientation="horizontal"] .x-barchart-bar { height: 100%; border-radius: 0 var(--radius-s) var(--radius-s) 0; }
+.x-barchart[data-orientation="horizontal"] .x-barchart-value { text-align: right; }
+.x-barchart[data-orientation="vertical"] .x-barchart-list { display: flex; gap: var(--x-space-2); height: calc(var(--x-space-8) * 5); }
+.x-barchart[data-orientation="vertical"] .x-barchart-item { flex: 1 1 0; min-width: 0; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: var(--x-space-1); text-align: center; }
+.x-barchart[data-orientation="vertical"] .x-barchart-value { grid-row: 1; }
+.x-barchart[data-orientation="vertical"] .x-barchart-track { grid-row: 2; align-items: flex-end; border-bottom: 1px solid var(--line-strong); }
+.x-barchart[data-orientation="vertical"] .x-barchart-bar { width: 100%; border-radius: var(--radius-s) var(--radius-s) 0 0; }
+.x-barchart[data-orientation="vertical"] .x-barchart-label { grid-row: 3; }
+
 /* CommitGraph: one row of lanes and a node */
 .x-commit-graph { display: block; flex: none; overflow: visible; }
 
@@ -324,6 +416,82 @@ button.x-list-row-main:disabled { cursor: default; }
 .x-panzoom-content { transform-origin: 0 0; will-change: transform; }
 .x-zoombar { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--x-space-1); }
 .x-zoombar-pct { min-width: 56px; font-variant-numeric: tabular-nums; }
+
+/* FlowMap (.x-flowmap): a hub and its nodes on a grid that pans and zooms with them (9router's usage topology). */
+.x-flowmap {
+  /* FlowMap sets these inline from its layout and view; the values here are its zoom-1 defaults. */
+  --x-flowmap-node-w: 208px;
+  --x-flowmap-node-h: 56px;
+  --x-flowmap-hub-w: 240px;
+  --x-flowmap-hub-h: 64px;
+  --x-flowmap-grid: 24px;
+  --x-flowmap-grid-x: 0px;
+  --x-flowmap-grid-y: 0px;
+  position: relative;
+  display: flex;
+  height: calc(var(--x-space-8) * 15);
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--x-color-line);
+  border-radius: var(--x-radius-lg);
+  --x-flowmap-rule: color-mix(in oklab, var(--x-color-line) 60%, transparent);
+  background-color: var(--x-color-bg);
+  background-image:
+    linear-gradient(to right, var(--x-flowmap-rule) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--x-flowmap-rule) 1px, transparent 1px);
+  background-size: var(--x-flowmap-grid) var(--x-flowmap-grid);
+  background-position: var(--x-flowmap-grid-x) var(--x-flowmap-grid-y);
+}
+.x-flowmap > .x-panzoom { flex: 1; background: transparent; }
+.x-flowmap:not([data-ready]) .x-panzoom-content { visibility: hidden; }
+.x-flowmap-world { position: relative; }
+.x-flowmap-edges { position: absolute; inset: 0; overflow: visible; }
+.x-flowmap-edge { stroke: var(--x-color-line-strong); stroke-width: 1.5; }
+.x-flowmap-edge[data-active] { stroke: var(--x-color-accent); stroke-width: 2; stroke-dasharray: 6 6; animation: x-flowmap-flow 0.8s linear infinite; }
+@keyframes x-flowmap-flow { to { stroke-dashoffset: -12; } }
+@media (prefers-reduced-motion: reduce) { .x-flowmap-edge[data-active] { animation: none; } }
+.x-flowmap-nodes { margin: 0; padding: 0; list-style: none; }
+.x-flowmap-node {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: var(--x-space-2);
+  box-sizing: border-box;
+  width: var(--x-flowmap-node-w);
+  height: var(--x-flowmap-node-h);
+  padding: 0 var(--x-space-3);
+  translate: -50% -50%;
+  border: 1px solid var(--x-color-line);
+  border-radius: var(--x-radius-md);
+  background: var(--x-color-surface);
+  color: var(--x-color-ink);
+}
+.x-flowmap-node[data-active] { border-color: var(--x-color-accent); }
+.x-flowmap-hub {
+  justify-content: center;
+  width: var(--x-flowmap-hub-w);
+  height: var(--x-flowmap-hub-h);
+  border-color: var(--x-color-accent);
+  background: var(--x-color-accent-soft);
+}
+.x-flowmap-text { display: flex; flex-direction: column; min-width: 0; }
+.x-flowmap-name,
+.x-flowmap-detail { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.x-flowmap-name { font: var(--type-heading); }
+.x-flowmap-detail { font: var(--type-status); color: var(--x-color-muted); }
+.x-flowmap-controls {
+  position: absolute;
+  bottom: var(--x-space-3);
+  left: var(--x-space-3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--x-color-line);
+  border-radius: var(--x-radius-md);
+  background: var(--x-color-surface);
+}
+.x-flowmap-controls .ws-icon-btn { border-radius: 0; }
+.x-flowmap-controls .ws-icon-btn + .ws-icon-btn { border-top: 1px solid var(--x-color-line); }
 
 /* Comment (.x-comment) */
 .x-comment {
@@ -495,3 +663,50 @@ button.x-list-row-main:disabled { cursor: default; }
 .x-prose a { color: var(--x-color-ink); text-underline-offset: 2px; }
 .x-prose strong { color: var(--x-color-ink); }
 .x-prose code { font-family: var(--x-font-mono); font-size: 0.9em; padding: 0 var(--x-space-1); border-radius: var(--x-radius-sm); background: var(--x-color-surface-2); color: var(--x-color-ink); }
+
+/* RouteDiagram (.x-route): in on the left, the hub, out on the right; stacks in a narrow container. */
+.x-route { margin: 0; container-type: inline-size; min-width: 0; }
+.x-route-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--x-space-8) auto var(--x-space-8) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--x-space-2);
+}
+.x-route-side { display: flex; flex-direction: column; gap: var(--x-space-2); margin: 0; padding: 0; list-style: none; min-width: 0; }
+.x-route-node {
+  display: flex;
+  align-items: center;
+  gap: var(--x-space-2);
+  min-width: 0;
+  padding: var(--x-space-2) var(--x-space-3);
+  border: 1px solid var(--x-color-line);
+  border-radius: var(--x-radius-md);
+  background: var(--x-color-surface);
+  font: var(--type-control);
+  font-weight: 500;
+  color: var(--x-color-ink);
+}
+.x-route-icon { color: var(--x-color-muted); }
+.x-route-text { display: flex; flex-direction: column; min-width: 0; }
+.x-route-label { overflow-wrap: anywhere; }
+.x-route-detail { font: var(--type-mono); color: var(--text-3); overflow-wrap: anywhere; }
+.x-route-line { display: block; height: 2px; border-radius: var(--x-radius-sm); background: var(--accent); }
+.x-route-line[data-side="out"] { background: var(--orange); }
+.x-route-hub { display: flex; flex-direction: column; align-items: center; gap: var(--x-space-1); text-align: center; }
+.x-route-hub-mark { line-height: 0; }
+.x-route-hub-name { font: var(--type-label); color: var(--x-color-ink); }
+@container (max-width: 480px) {
+  .x-route-body { grid-template-columns: minmax(0, 1fr); justify-items: stretch; }
+  .x-route-line { justify-self: center; width: 2px; height: var(--x-space-6); }
+}
+
+/* EndpointPanel (.x-endpoint): the base URL, its paths, and an aside (usually a RouteDiagram). */
+.x-endpoint { container-type: inline-size; }
+.x-endpoint-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--x-space-6); }
+.x-endpoint-main { display: flex; flex-direction: column; gap: var(--x-space-3); min-width: 0; }
+.x-endpoint-paths { display: flex; flex-wrap: wrap; gap: var(--x-space-2); margin: 0; padding: 0; list-style: none; }
+.x-endpoint-path { font: var(--type-mono); }
+.x-endpoint-aside { min-width: 0; }
+@container (min-width: 720px) {
+  .x-endpoint-body[data-aside] { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: center; }
+}

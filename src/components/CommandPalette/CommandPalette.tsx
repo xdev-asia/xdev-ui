@@ -206,6 +206,7 @@ export function CommandPalette({
         setAt(0);
       }}
       onKeyDown={onKeyDown}
+      autoFocus={framed}
       role="combobox"
       aria-expanded={count > 0}
       aria-controls={listId}

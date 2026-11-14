@@ -94,4 +94,28 @@ describe("DataTable", () => {
     expect(html).toContain('aria-label="Kéo 1"');
     expect(html).toContain("Thứ tự");
   });
+  it("sticky pins a column with data-sticky", () => {
+    const cols: DataTableColumn<Row>[] = [...columns, { key: "act", header: "Actions", cell: () => "x", sticky: "end" }];
+    const html = renderToStaticMarkup(<DataTable {...base} columns={cols} />);
+    expect(html.match(/data-sticky="end"/g)).toHaveLength(3);
+  });
+  it("without stack there are no explicit roles or data-label", () => {
+    const html = renderToStaticMarkup(<DataTable {...base} />);
+    expect(html).not.toContain("data-stack");
+    expect(html).not.toContain("role=");
+    expect(html).not.toContain("data-label");
+  });
+  it("stack adds data-stack, table roles and a label per cell", () => {
+    const cols: DataTableColumn<Row>[] = [...columns, { key: "act", header: <span>Act</span>, label: "Actions", cell: () => "x" }, { key: "x", header: <span>X</span>, cell: () => "y" }];
+    const html = renderToStaticMarkup(<DataTable {...base} columns={cols} stack selected={new Set()} onSelectedChange={() => {}} />);
+    expect(html).toContain('data-stack=""');
+    expect(html).toContain('<table class="x-table" role="table"');
+    expect(html.match(/role="rowgroup"/g)).toHaveLength(2);
+    expect(html.match(/role="row"/g)).toHaveLength(3);
+    expect(html.match(/role="columnheader"/g)).toHaveLength(5);
+    expect(html.match(/role="cell"/g)).toHaveLength(10);
+    expect(html.match(/data-label="Name"/g)).toHaveLength(2);
+    expect(html.match(/data-label="Actions"/g)).toHaveLength(2);
+    expect(html.match(/data-label=/g)).toHaveLength(6);
+  });
 });

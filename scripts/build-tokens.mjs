@@ -37,6 +37,16 @@ css += `:root {\n${shared.join("\n")}\n}\n`;
 css += `:root,\n[data-theme="${first}"] {\n  color-scheme: ${first};\n${out[first].join("\n")}\n}\n`;
 for (const id of rest) css += `[data-theme="${id}"] {\n  color-scheme: ${id};\n${out[id].join("\n")}\n}\n`;
 
+// Grounds (opt-in, data-ground="<id>" beside data-theme): re-point the workspace greys for one product.
+// Dark values on [data-ground]; light on [data-theme="light"][data-ground] (and a ground set inside a light page).
+// Emitted before prefers-contrast so its :root[data-theme] overrides still win.
+for (const g of t.color.grounds ?? []) {
+  const per = Object.fromEntries(themes.map((id) => [id, []]));
+  for (const tok of g.tokens) for (const id of themes) if (tok.value?.[id] != null) per[id].push(`  --${tok.name}: ${ref(tok.value[id])};`);
+  css += `[data-ground="${g.id}"] {\n${per[first].join("\n")}\n}\n`;
+  for (const id of rest) css += `[data-theme="${id}"][data-ground="${g.id}"],\n[data-theme="${id}"] [data-ground="${g.id}"] {\n${per[id].join("\n")}\n}\n`;
+}
+
 // prefers-contrast: more strengthens hairlines and secondary text. Values reference tokens only; :root[data-theme] outranks the theme blocks above.
 if (t.color.contrastMore?.length) {
   const decls = t.color.contrastMore.map((x) => `    --${x.name}: ${ref(x.value)};`).join("\n");

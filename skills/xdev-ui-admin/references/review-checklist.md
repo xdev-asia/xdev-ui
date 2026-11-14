@@ -12,7 +12,7 @@ Run before calling a screen done, then run the `xdev-ui-review` skill (`scripts/
 
 ## Structure
 - [ ] One `PageHeader`, one `h1`, one primary button per view (page, dialog, drawer).
-- [ ] Works at 360px: no horizontal page scroll, actions wrap, table drops `hideNarrow` columns.
+- [ ] Works at 375, 768 and 1440px (and 320px): no horizontal page scroll, actions wrap, tables scroll inside their wrapper with actions `sticky="end"` or use `stack`; screenshot at 375 too.
 - [ ] Layout uses `Container`, `Stack`, `Grid` or theme utilities; no px, no raw colours, no numeric z-index.
 
 ## States

@@ -11,3 +11,6 @@ Horizontal strip of terminal-session tabs with state, agent, colour and close co
 - `dirty` replaces the close button with a dot, so a click cannot discard work.
 - Names are the session or branch name, never "Terminal 1".
 - `labels` (`TabStripLabels`: `skipped`, `unsaved`, `newTab`, `close(name)`) overrides the English defaults.
+
+## Responsive
+- The strip scrolls sideways inside itself at every width when the tabs do not fit; tabs keep their width.

@@ -80,6 +80,21 @@ describe("AppShell", () => {
     expect(getElementById).toHaveBeenCalledWith("page");
     expect(main.focus).toHaveBeenCalledOnce();
   });
+  it("title renders in the top bar before the crumbs and makes the bar tall", () => {
+    const html = renderToStaticMarkup(<AppShell {...base} title={<h1>Providers</h1>} crumbs="Crumbs" />);
+    expect(html).toContain('<div class="x-shell-heading"><h1>Providers</h1></div>');
+    expect(html.indexOf("x-shell-menu")).toBeLessThan(html.indexOf("x-shell-heading"));
+    expect(html.indexOf("x-shell-heading")).toBeLessThan(html.indexOf("x-shell-crumbs"));
+    expect(html).toContain('data-titled=""');
+    const none = renderToStaticMarkup(<AppShell {...base} />);
+    expect(none).not.toContain("x-shell-heading");
+    expect(none).not.toContain("data-titled");
+  });
+  it("drawerBelow lg turns the sidebar into a drawer below 1024px; md is the default", () => {
+    expect(renderToStaticMarkup(<AppShell {...base} drawerBelow="lg" />)).toContain('data-drawer="lg"');
+    expect(renderToStaticMarkup(<AppShell {...base} />)).not.toContain("data-drawer");
+    expect(renderToStaticMarkup(<AppShell {...base} drawerBelow="md" />)).not.toContain("data-drawer");
+  });
   it("links the menu button to the drawer", () => {
     const html = renderToStaticMarkup(<AppShell {...base} navOpen />);
     const id = /<aside[^>]*id="([^"]+)"/.exec(html)?.[1];

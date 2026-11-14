@@ -166,6 +166,7 @@ const manifest = {
   components,
   tokens: flatTokens,
   themes: tokens.color?.themes?.map((t) => t.id) ?? ["dark", "light"],
+  grounds: (tokens.color?.grounds ?? []).map(({ id, name, usage }) => ({ id, name, usage, attribute: `data-ground="${id}"` })),
   guidelines,
   skills,
 };

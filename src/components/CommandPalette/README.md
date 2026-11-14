@@ -9,7 +9,7 @@ Keyboard-first search across sessions, files and commands (Ctrl+K).
 - Empty result: "No matches", never a blank list.
 - The bundle filters by substring for the preview; the app supplies its own ranking.
 - `labels` (`CommandPaletteLabels`: `dialog`, `placeholder`, `search`, `noMatches`, `move`, `open`, `close`) overrides the English defaults.
-- Host use (all optional, nothing changes without them): `open` (`false` renders nothing; a backdrop wraps the dialog and `aria-modal` is set), `onClose` (Escape or a backdrop click), `onSelect(row)` (click, or Enter on the active row), `query` + `onQueryChange` (controlled query; `defaultQuery` seeds the uncontrolled one).
+- Host use (all optional, nothing changes without them): `open` (`false` renders nothing; a backdrop wraps the dialog and `aria-modal` is set), `onClose` (Escape or a backdrop click; with `open` or `onClose` set the input takes focus when the palette mounts, inline it does not), `onSelect(row)` (click, or Enter on the active row), `query` + `onQueryChange` (controlled query; `defaultQuery` seeds the uncontrolled one).
 - Keyboard: ↑↓ move across sections and wrap, Home/End jump, Enter selects. The active row has `aria-selected`, scrolls into view, and focus stays in the input (rows swallow `mousedown`).
 - Rows take `id` (key and `data-row-id`), `hint` (shortcut text on the right, after the detail) and `disabled` (shown dimmed, skipped by the arrow keys, never selected).
 - `scopes` (`{ value, label }[]`) + `scope` + `onScopeChange` render a `Segmented` row under the input (for example all, files, commands, sessions). The app filters `sections` by scope; the label of the row is `labels.scopes`.

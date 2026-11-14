@@ -38,14 +38,78 @@
 .x-shell-top { display: flex; align-items: center; gap: var(--x-space-3); height: var(--h-header); padding: 0 var(--x-space-4); border-bottom: 1px solid var(--line); background: var(--bg-1); box-sizing: border-box; flex: none; }
 .x-shell-crumbs { flex: 1; min-width: 0; overflow: hidden; }
 .x-shell-actions { display: flex; align-items: center; gap: var(--x-space-2); flex: none; }
+/* 9router's top bar: header controls are 40px icon buttons with a 20px glyph; the theme toggle is round. */
+.x-shell[data-titled] .x-shell-actions .ws-icon-btn { width: calc(var(--x-space-8) + var(--x-space-2)); height: calc(var(--x-space-8) + var(--x-space-2)); border-radius: var(--radius-l); }
+.x-shell[data-titled] .x-shell-actions .ws-icon-btn svg { width: 20px; height: 20px; }
+.x-shell-actions .x-theme-toggle, .x-shell[data-titled] .x-shell-actions .x-theme-toggle { border-radius: 50%; }
 .x-shell-main { flex: 1; min-height: 0; overflow: auto; padding: var(--x-space-6); }
 .x-shell-main:focus:not(:focus-visible) { outline: none; }
 .x-shell-menu { display: none; }
 .x-shell-backdrop { display: none; }
 .x-shell-bottom { display: none; }
 .x-shell-toasts { position: fixed; right: var(--x-space-4); bottom: var(--x-space-4); z-index: var(--x-z-toast); }
+/* Titled top bar: room for a ShellTitle with its description. */
+.x-shell[data-titled] .x-shell-top { height: calc(var(--x-space-8) * 2); padding: 0 var(--x-space-6); }
+.x-shell[data-titled] .x-shell-brand { height: calc(var(--x-space-8) * 2); border-bottom-color: transparent; }
+/* 9router's top bar is part of the page: the page's own surface and no rule under it, so the title and
+   the content read as one. A rule fades in once the page scrolls, so content does not slide under the
+   title unmarked. Without scroll-driven animations the bar simply stays ruleless. */
+.x-shell[data-titled] .x-shell-top { background: var(--bg-0); border-bottom-color: transparent; }
+@supports (animation-timeline: scroll()) {
+  .x-shell[data-titled] .x-shell-col { timeline-scope: --x-shell-scroll; }
+  .x-shell[data-titled] .x-shell-main { scroll-timeline: --x-shell-scroll block; }
+  .x-shell[data-titled] .x-shell-top { animation: x-shell-top-rule linear both; animation-timeline: --x-shell-scroll; animation-range: 0 var(--x-space-6); }
+}
+@keyframes x-shell-top-rule { to { border-bottom-color: var(--line); } }
+.x-shell-heading { flex: 1; min-width: 0; }
+.x-shell[data-titled] .x-shell-crumbs { flex: none; }
+.x-shell[data-titled] .x-shell-crumbs:empty { display: none; }
+
+/* ShellTitle (.x-shell-title) */
+.x-shell-title { display: flex; align-items: center; gap: var(--x-space-3); min-width: 0; }
+/* 9router's top bar: a bare 24px icon beside a 24px title, the description on the line under both. */
+.x-shell-title-body { display: flex; flex-direction: column; min-width: 0; }
+.x-shell-title-row { display: flex; align-items: center; gap: var(--x-space-2); min-width: 0; }
+.x-shell-title-icon { display: inline-grid; place-items: center; flex: none; width: var(--x-space-6); height: var(--x-space-6); color: var(--accent); overflow: hidden; }
+.x-shell-title-icon > img, .x-shell-title-icon > svg:only-child:not(.x-icon) { width: 100%; height: 100%; object-fit: contain; }
+.x-shell-title-text { margin: 0; font: var(--type-shell-title); color: var(--text-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.x-shell-title-desc { display: none; margin: 0; font: var(--type-body); color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.x-shell-title-parent { flex: none; font: var(--type-heading); color: var(--text-2); text-decoration: none; }
+.x-shell-title-parent:hover { color: var(--text-1); }
+.x-shell-title-parent:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: 2px; border-radius: var(--radius-s); }
+.x-shell-title-sep { flex: none; color: var(--text-3); }
+@media (min-width: 64rem) /* --x-bp-lg */ {
+  .x-shell-title-desc { display: block; }
+}
+
+/* drawerBelow="lg": the same drawer as below, from 1024px down. */
+@media (max-width: 1023.98px) /* below --x-bp-lg */ {
+  .x-shell[data-drawer="lg"] { grid-template-columns: minmax(0, 1fr); }
+  .x-shell[data-drawer="lg"] .x-shell-menu { display: inline-flex; }
+  .x-shell[data-drawer="lg"] .x-shell-side {
+    position: fixed;
+    inset-block: 0;
+    left: 0;
+    z-index: var(--x-z-nav);
+    width: min(var(--w-side), 85vw);
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition: transform 0.18s ease, visibility 0s linear 0.18s;
+  }
+  .x-shell[data-drawer="lg"][data-nav-open] .x-shell-side { transform: none; visibility: visible; transition: transform 0.18s ease; }
+  .x-shell[data-drawer="lg"] .x-shell-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: calc(var(--x-z-nav) - 1);
+    border: 0;
+    padding: 0;
+    background: color-mix(in srgb, var(--bg-0) 70%, transparent);
+  }
+}
 
 @media (max-width: 767.98px) /* below --x-bp-md */ {
+  .x-shell[data-titled] .x-shell-top { padding: 0 var(--x-space-4); }
   .x-shell { grid-template-columns: minmax(0, 1fr); }
   .x-shell-menu { display: inline-flex; }
   .x-shell-side {

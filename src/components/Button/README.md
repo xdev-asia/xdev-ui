@@ -31,3 +31,6 @@ h(XDev.Button, { variant: "secondary" }, "Cancel")
 h(XDev.Button, { variant: "danger" }, "Delete user")
 h(XDev.Button, { href: "/docs", variant: "link" }, "Read the docs")
 ```
+
+## Responsive
+- The label stays on one line; the row around the button wraps instead. On a touch screen buttons are at least 44px high.

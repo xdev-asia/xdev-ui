@@ -360,6 +360,21 @@ export function audit(dir, opts = {}) {
           else if (kinds.includes("paint") && !hasForced)
             add(file, d.line, "forced-colors", "warn", "Focus shown only by box-shadow or border colour, which forced colors overrides; keep outline: 2px solid transparent.");
         }
+        // fixed-width: a width or min-width over 320px that is not capped and not behind a min-width query
+        // pushes a phone page sideways.
+        if (/^(width|min-width|inline-size|min-inline-size)$/.test(d.prop)) {
+          const px = pxOf(d.value, sizes);
+          const wide = r.at.some((a) => /min-width|width\s*>=?/.test(a));
+          const capped = r.decls.some((x) => /^max-(width|inline-size)$/.test(x.prop) && /%|vw|vi|cqi|min\(/.test(x.value));
+          if (px !== null && px > 320 && !wide && !capped)
+            add(file, d.line, "fixed-width", "warn", `${d.prop}: ${d.value} is wider than a 320px phone; use max-width, min(…, 100%) or a min-width media query.`);
+        }
+        // nowrap: a container that never wraps and does not scroll or clip pushes the page sideways on a phone.
+        if (d.prop === "white-space" && /^nowrap\b/.test(d.value)) {
+          const handled = r.decls.some((x) => /^(overflow|overflow-x|text-overflow)$/.test(x.prop) && !/^visible\b/.test(x.value));
+          const control = parts.map(subject).some((s) => isControl(s));
+          if (!handled && !control) add(file, d.line, "nowrap", "warn", "white-space: nowrap with no overflow or text-overflow; long text widens the page at 320px.");
+        }
         // target-size: a fixed or max size under 24px on the subject of an interactive selector (SC 2.5.8).
         if (/^(width|height|inline-size|block-size|max-width|max-height|max-inline-size|max-block-size)$/.test(d.prop)) {
           const px = pxOf(d.value, sizes);

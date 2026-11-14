@@ -21,6 +21,13 @@ Design system and React component package (`@xdev-asia/ui`) for xDev: the deskto
 
 Inside a workspace surface, `.x-ws` remaps the semantic layer onto graphite, so one component works in both places.
 
+### Grounds (opt-in)
+A product whose mark sits on another ground sets `data-ground="<id>"` next to `data-theme` on `<html>`. A ground moves only the workspace greys (`bg-0…bg-3`, `line`, `text-1…3`, `side-tint`, `term`) in both themes; accents, status colours and the brand stay as they are. Grounds live in `tokens.json` under `color.grounds`.
+
+| ground | for | values |
+|---|---|---|
+| `navy` | ai-router | greys point at the `x-color-*` navy ramp (`bg-0` = `x-color-bg`, `bg-2` = `x-color-surface`, `line` = `x-color-line`); `text-3` is 4.5:1 or more on every step in both themes |
+
 ### Rules
 - **Dark first.** `dark` is the default theme; `light` mirrors every token. Previews render dark; toggle the theme to check light.
 - **Hairlines, not shadows.** Separation is a 1px `--line`. Shadows (`--shadow-menu`, `--shadow-dialog`) are only for floating layers: menus, dialogs, the palette.
@@ -46,7 +53,7 @@ Inside a workspace surface, `.x-ws` remaps the semantic layer onto graphite, so 
 - **Drawer below 768px.** The sidebar becomes a drawer: control it with `navOpen` and `onNavOpenChange`, close it when an item is chosen, and let Escape close it.
 - **One `PageHeader` per page.** It renders the page's only `h1`; actions sit at the end with the primary one last, and wrap under the title on narrow screens.
 - **`FormSection` groups fields.** A heading, an optional description, fields in one column (two above 480px with `columns={2}`) and the Save and Cancel actions at the end.
-- **Design for 360px.** No horizontal page scroll. Widths come from `%`, `ch`, `rem` and the space tokens; rows of controls use `flex-wrap`. A `DataTable` scrolls inside its own wrapper and drops its `hideNarrow` columns.
+- **Design for 360px.** No horizontal page scroll (see Responsive). Widths come from `%`, `ch`, `rem` and the space tokens; rows of controls use `flex-wrap`. A `DataTable` scrolls inside its own wrapper and drops its `hideNarrow` columns.
 - **Hairlines divide regions.** Cards and rows are separated by 1px `--line`, not by shadows or coloured edges.
 - **Page layout.** Public web pages (sign-in, account portal, legal) sit in `SiteShell`; the desktop app uses `AppShell`. `Container` caps the width (`size` sm 640 to 2xl 1536, default xl) with a 16px gutter. `Stack` spaces children on one axis with a space step (`gap` 1, 2, 3, 4, 6, 8). `Grid` sets columns per breakpoint (`columns={{ base: 1, md: 2, xl: 4 }}`) or fits cells of `minItemWidth`; `responsive="container"` measures the grid's own width, for grids inside a panel or a `Drawer`.
 - **Breakpoints.** sm 640, md 768, lg 1024, xl 1280, 2xl 1536 (`--x-bp-*`, `BREAKPOINTS`), the same as Tailwind. Mobile first: a value applies from its breakpoint up. Lay out with CSS; `useBreakpoint()` is for behaviour CSS cannot express and renders "base" on the server.
@@ -66,6 +73,29 @@ An app that already uses Tailwind v4 imports the generated theme, so utilities s
 - Radii `rounded-sm|md|lg`, fonts `font-sans|mono`, breakpoints `sm:` to `2xl:` match the tokens. Tailwind's spacing step is 4px, the same as `--x-space-1`, so `p-4` is 16px.
 - Shadows and z-index have no utility names: use `shadow-(--shadow-menu)` and `z-(--x-z-modal)`.
 - Use the components for anything they cover; utilities are for page glue (spacing, a flex row, a one-off grid).
+
+## Responsive
+
+A page built from the library has no horizontal page scroll from 320px up, and looks the same at 1440px as before these rules. `src/styles/responsive.css` (imported last by `styles.css`) adds the phone and tablet behaviour; the desktop rules stay in each component's file.
+
+**What the library does**
+
+| width | behaviour |
+|---|---|
+| every width | Toolbar, BulkBar, PageHeader, Card head, SettingRow, SaveBar, Composer, EmptyState, Dialog and Drawer footers wrap. Buttons keep their label on one line. `.ws-mono` text breaks anywhere. Menus and popovers stay inside the window. TabStrip, StatusBar and the `.ws-header` row scroll sideways inside themselves. |
+| every width | `DataTable` scrolls inside `.x-table-wrap`; the select column and `sticky` columns stay pinned. `stack` turns rows into label/value cards below a 480px container. |
+| below 768px (`--x-bp-md`) | The AppShell sidebar is a drawer. `Tabs` and `Segmented` scroll sideways inside themselves. |
+| below 640px (`--x-bp-sm`) | Modal `Dialog` and `FormDialog` open as a bottom sheet with stacked actions, primary on top. `Drawer` takes the full width. Toasts span the width. An empty top-bar `SearchInput` collapses to an icon. |
+| `pointer: coarse` | Buttons, icon buttons, tabs, segments, menu items and inputs get a 44px hit area; inputs use 16px text so iOS does not zoom. |
+
+**What the app must still do**
+
+- No fixed widths over 320px: use `max-width`, `min(30rem, 100%)`, `%`, `ch` or a `Grid` with per-breakpoint `columns` / `minItemWidth`. The audit warns on `fixed-width` and `nowrap`.
+- Give page actions to `PageHeader actions`, not a hand-made flex row; keep at most three icon actions in the AppShell top bar on a phone.
+- Put the row-actions column of a `DataTable` on `sticky="end"`, or pass `stack` for tables people read on a phone.
+- Check every screen at 375, 768 and 1440px (and 320px for overflow), dark and light, and take a screenshot at 375 too.
+
+Media queries cannot read `var()`, so the CSS writes 639.98px and 767.98px; `test/responsive-css.test.ts` checks them against the breakpoint tokens.
 
 ## Data and forms
 
@@ -106,12 +136,12 @@ The library targets WCAG 2.2 level AA on macOS, Windows and Linux. The `xdev-ui-
 |---|---|
 | Actions | Button, IconButton, ActionTile, ZoomBar |
 | Inputs | Segmented, ColorField, SwatchGroup, CodeInput, ThemeSwitch, Select, FontField, Field, Switch, Checkbox, RadioGroup, Textarea, SearchInput, SearchPicker, FilterChip, FileDrop, Combobox, DatePicker, DateRangePicker |
-| Display | Kbd, PairingCode, ThemePreview, Avatar, Emblem, Identity, List, Prose, Badge, Tag, AgentChip, DiffStat, Comment, ReactionBar, ListRow, ResourceCard, Card, EmptyState, SettingRow, CodeBlock, Heatmap, CommitGraph, PanZoom, WorktreeRow, UsageMeterRow, ReviewComment, AgentRow |
-| Status | StatusDot, Meter, Banner, Toast, Spinner, FieldMessage, StepDots, Toaster, Skeleton, RunTimeline |
+| Display | Kbd, PairingCode, ThemePreview, Avatar, Emblem, Identity, List, Prose, Badge, Tag, AgentChip, DiffStat, Comment, ReactionBar, ListRow, ResourceCard, ModelChip, Card, EmptyState, SettingRow, CodeBlock, Heatmap, TimeSeriesChart, BarChart, CommitGraph, PanZoom, FlowMap, RouteDiagram, EndpointPanel, WorktreeRow, UsageMeterRow, ReviewComment, AgentRow |
+| Status | StatusDot, ServiceStatus, Meter, Banner, Toast, Spinner, FieldMessage, StepDots, Toaster, Skeleton, RunTimeline |
 | Navigation | TabStrip, ActivityBar, StatusBar, Tabs, NavList, Breadcrumb, TreeView, Disclosure, SplitHandle, Toolbar, BottomNav |
-| Overlays | Menu, Dialog, CommandPalette, Popover, Tooltip, Coachmark, MenuButton, FormDialog, Drawer, AttentionInbox |
+| Overlays | Menu, Dialog, CommandPalette, PaletteTrigger, Popover, Tooltip, Coachmark, MenuButton, FormDialog, Drawer, AttentionInbox |
 | Brand | BrandMark, Icon, FileIcon |
-| Layout | AppShell, SiteShell, PageHeader, FormSection, ThemeEditor, Board, BoardColumn, BoardCard, SaveBar, Container, Stack, Grid, SessionBar, ApprovalBar, Composer, LaunchCard, SettingsShell |
+| Layout | AppShell, ShellTitle, SiteShell, PageHeader, FormSection, ThemeEditor, Board, BoardColumn, BoardCard, SaveBar, Container, Stack, Grid, SessionBar, ApprovalBar, Composer, LaunchCard, SettingsShell |
 | Data | DescriptionList, StatTile, DataTable, Pagination, FacetFilter, BulkBar, SortableList |
 | Image (`@xdev-asia/ui/image`, peer `react-easy-crop`) | ImageCropper, ImageField |
 
