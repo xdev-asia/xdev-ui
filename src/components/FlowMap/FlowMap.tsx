@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type CSSProperties, type JSX, type ReactNode } from "react";
+import { useCallback, useEffect, useId, useRef, useState, type CSSProperties, type JSX, type ReactNode } from "react";
 import { cx } from "../../internal/cx";
 import { fitScale, stepZoom, zoomAt, type PanZoomState } from "../../panZoom";
 import { Emblem } from "../Emblem/Emblem";
@@ -6,8 +6,8 @@ import { IconButton } from "../IconButton/IconButton";
 import { PanZoom } from "../PanZoom/PanZoom";
 
 /** Size of a node and of the hub in the map, in px at zoom 1. The stylesheet reads them from the root. */
-export const FLOW_NODE = { w: 208, h: 56 } as const;
-export const FLOW_HUB = { w: 240, h: 64 } as const;
+export const FLOW_NODE = { w: 220, h: 64 } as const;
+export const FLOW_HUB = { w: 272, h: 80 } as const;
 const PAD = 48;
 const GRID = 24;
 /** Fit never enlarges past this, so one node does not fill the panel. */
@@ -27,7 +27,7 @@ export interface FlowMapNode {
   detail?: string;
   /** Traffic went through this edge: the edge is drawn in colour and moves. */
   active?: boolean;
-  /** This node's share of the traffic, 0 to 1: its edge grows from 1.5px to 7.5px. */
+  /** This node's share of the traffic, 0 to 1: its edge grows from 1.5px to 5px and carries more, faster packets. */
   weight?: number;
   /** Failures: the node's border and edge turn amber or red. Say the same in `detail` ("3 failed"). */
   tone?: "warn" | "danger";
@@ -74,12 +74,12 @@ export function flowMapLayout(count: number): Array<{ x: number; y: number }> {
 }
 
 /** Room between the hub and a column, for the curves. */
-const SIDE_GAP = 152;
-const ROW_GAP = 16;
+const SIDE_GAP = 120;
+const ROW_GAP = 20;
 
 /**
  * Where `left` sources and `right` nodes sit in the left-to-right map, hub at 0, 0: one column each side, every
- * column centred on the hub, rows 16 px apart.
+ * column centred on the hub, rows 20 px apart.
  */
 export function flowMapSides(left: number, right: number): { left: Array<{ x: number; y: number }>; right: Array<{ x: number; y: number }> } {
   const x = FLOW_HUB.w / 2 + SIDE_GAP + FLOW_NODE.w / 2;
@@ -110,13 +110,35 @@ function bounds(points: Array<{ x: number; y: number }>) {
   return { left: minX - PAD, top: minY - PAD, w: maxX - minX + PAD * 2, h: maxY - minY + PAD * 2 };
 }
 
-/** One edge: a soft track under the line when it carried traffic, the line's width from the node's weight. */
+/** Packets on an edge: one to three by weight, the heavier the faster, spread evenly along it. */
+function packets(weight: number): { dur: number; begins: number[] } {
+  const count = 1 + Math.round(weight * 2);
+  const dur = Math.round((2.6 - weight * 1.2) * 100) / 100;
+  return { dur, begins: Array.from({ length: count }, (_, k) => -Math.round(((dur * k) / count) * 100) / 100) };
+}
+
+/**
+ * One edge: a quiet track always; when it carried traffic, a soft glow, the line in colour (width from the node's
+ * weight) and packets running along it from the sender to the receiver.
+ */
 function Edge({ node, side, d }: { node: FlowMapNode; side?: "in" | "out"; d: string }): JSX.Element {
-  const style = { "--x-flowmap-weight": clamp01(node.weight) } as CSSProperties;
+  const id = `x-flowmap-${useId().replace(/[^\w-]/g, "")}`;
+  const weight = clamp01(node.weight);
+  const style = { "--x-flowmap-weight": weight } as CSSProperties;
+  const run = packets(weight);
   return (
     <g data-side={side} data-tone={node.tone}>
+      <path className="x-flowmap-track" d={d} />
       {node.active && <path className="x-flowmap-glow" d={d} style={style} />}
-      <path className="x-flowmap-edge" data-active={node.active ? "" : undefined} d={d} style={style} />
+      <path id={id} className="x-flowmap-edge" data-active={node.active ? "" : undefined} d={d} style={style} />
+      {node.active &&
+        run.begins.map((begin) => (
+          <circle key={begin} className="x-flowmap-packet" r={2.5 + weight * 1.5}>
+            <animateMotion dur={`${run.dur}s`} begin={`${begin}s`} repeatCount="indefinite" calcMode="linear">
+              <mpath href={`#${id}`} />
+            </animateMotion>
+          </circle>
+        ))}
     </g>
   );
 }
@@ -124,7 +146,7 @@ function Edge({ node, side, d }: { node: FlowMapNode; side?: "in" | "out"; d: st
 function Node({ node: n, style }: { node: FlowMapNode; style: CSSProperties }): JSX.Element {
   return (
     <li className="x-flowmap-node" data-active={n.active ? "" : undefined} data-tone={n.tone} style={style}>
-      <Emblem name={n.name} src={n.src} color={n.color} text={n.text} size="sm" />
+      <Emblem name={n.name} src={n.src} color={n.color} text={n.text} size="md" />
       <span className="x-flowmap-text">
         <span className="x-flowmap-name">{n.name}</span>
         {n.detail && <span className="x-flowmap-detail">{n.detail}</span>}
@@ -233,7 +255,7 @@ export function FlowMap({ hub, nodes, sources = [], label, labels, className }: 
             </ul>
           )}
           <div className="x-flowmap-node x-flowmap-hub" style={centre}>
-            {hub.mark ?? <Emblem name={hub.name} size="sm" />}
+            {hub.mark ?? <Emblem name={hub.name} size="lg" />}
             <span className="x-flowmap-text">
               <span className="x-flowmap-name">{hub.name}</span>
               {hub.detail && <span className="x-flowmap-detail">{hub.detail}</span>}

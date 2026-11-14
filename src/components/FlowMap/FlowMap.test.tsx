@@ -90,6 +90,22 @@ describe("FlowMap", () => {
     expect(routed).toMatch(/d="M[\d.]+ [\d.]+C/); // curves, not straight lines
   });
 
+  it("lays a track under every edge and runs packets only on the ones that carried traffic, more for more weight", () => {
+    const routed = renderToStaticMarkup(
+      <FlowMap
+        label="Traffic"
+        hub={{ name: "Hub" }}
+        sources={[{ id: "ci", name: "CI bot", active: true, weight: 1 }]}
+        nodes={[{ id: "a", name: "A", active: true, weight: 0 }, { id: "b", name: "B", weight: 1 }]}
+      />,
+    );
+    expect(routed.match(/class="x-flowmap-track"/g)).toHaveLength(3);
+    expect(routed.match(/class="x-flowmap-packet"/g)).toHaveLength(4); // three on the heavy edge, one on the light
+    const ids = [...routed.matchAll(/<path id="([^"]+)" class="x-flowmap-edge"/g)].map((m) => m[1]);
+    expect(new Set(ids).size).toBe(3);
+    for (const href of routed.matchAll(/<mpath href="#([^"]+)"/g)) expect(ids).toContain(href[1]);
+  });
+
   it("has zoom in, zoom out and fit controls, translatable", () => {
     expect(html).toContain('aria-label="Zoom in"');
     expect(html).toContain('aria-label="Zoom out"');
