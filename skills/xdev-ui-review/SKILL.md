@@ -38,6 +38,7 @@ node <skill-dir>/scripts/audit.mjs src --i18n src/i18n
 | `fixed-width` | warn | `width` or `min-width` over 320px in CSS, with no `max-width` in `%`/`vw`/`min()` and not inside a `min-width` query |
 | `nowrap` | warn | `white-space: nowrap` on a non-control with no `overflow` or `text-overflow` in the same rule |
 | `forced-colors` | warn | the outline replaced only by `box-shadow` or border colour, with no `forced-colors` rule in the file |
+| `sign-in-shell` | warn | an `AuthShell` with no `headline`, `actions` or `footer`, inline `actions` with no `ThemeSwitch`, a heading as the headline, or more than one `h1` in its file |
 | `contrast` | error or warn | a token pair below 4.5:1 (text) or 3:1 (UI parts); only with `--contrast` |
 
 ## 2. Fix, do not silence

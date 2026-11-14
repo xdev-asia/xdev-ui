@@ -53,10 +53,40 @@ describe("audit: one bad fixture per rule", () => {
     expect(f).toHaveLength(1);
     expect(f[0]).toMatchObject({ rule: "primary-count", level: "warn", line: 5 });
   });
+  it("sign-in-shell warns on a bare AuthShell, actions with no ThemeSwitch and a second h1", () => {
+    const f = run("bad/sign-in-shell");
+    expect(f.every((x) => x.rule === "sign-in-shell" && x.level === "warn"), JSON.stringify(f)).toBe(true);
+    expect(f.map((x) => [x.line, x.message.slice(0, 30)])).toEqual([
+      [3, "AuthShell has no headline, foo"],
+      [3, "AuthShell actions have no Them"],
+      [5, "2 h1 in a sign-in page; the fo"],
+    ]);
+  });
+  it("sign-in-shell accepts a full AuthShell and a spread", () => {
+    const dir = mkdtempSync(join(tmpdir(), "audit-signin-"));
+    try {
+      writeFileSync(
+        join(dir, "SignIn.tsx"),
+        `export const A = () => (\n  <AuthShell brand="b" actions={<><Select options={[]} /><ThemeSwitch value="system" /></>} headline="One account" footer="2026">\n    <h1>Welcome back</h1>\n  </AuthShell>\n);\nexport const B = (p: object) => <AuthShell brand="b" {...p} />;\n`,
+      );
+      expect(audit(dir, {}).findings.filter((x: Finding) => x.rule === "sign-in-shell")).toEqual([]);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
   it("label-voice is a warning", () => {
     const f = run("bad/label-voice");
     expect(f).toHaveLength(1);
     expect(f[0]).toMatchObject({ rule: "label-voice", level: "warn" });
+  });
+  it("label-voice does not count the copyright sign as an emoji", () => {
+    const dir = mkdtempSync(join(tmpdir(), "audit-voice-"));
+    try {
+      writeFileSync(join(dir, "Foot.tsx"), `export const F = () => <footer>© 2026 xDev</footer>;\nexport const G = () => <p>Done 🎉</p>;\n`);
+      expect(audit(dir, {}).findings.filter((x: Finding) => x.rule === "label-voice").map((x: Finding) => x.line)).toEqual([2]);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
   it("skips unknown-token with a note when no manifest exists", () => {
     const r = audit(fx("bad/unknown-token"), { manifest: fx("missing.json") });
