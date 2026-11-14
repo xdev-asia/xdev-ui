@@ -35,7 +35,7 @@ import { Button, TabStrip, BrandMark } from "@xdev-asia/ui";
 
 | export | content |
 |---|---|
-| `@xdev-asia/ui` | 115 components, `ICONS`, `ICON_NAMES`, prop types |
+| `@xdev-asia/ui` | 116 components, `ICONS`, `ICON_NAMES`, prop types |
 | `@xdev-asia/ui/image` | `ImageCropper`, `ImageField` and crop helpers; needs the optional peer `react-easy-crop` |
 | `@xdev-asia/ui/styles.css` | tokens + component CSS |
 | `@xdev-asia/ui/styles.layered.css` | the same stylesheet inside `@layer xdev`. With Tailwind v4 import it instead of `styles.css` and declare the order first, `@layer theme, base, xdev, components, utilities;`, so Tailwind utilities win over component classes |
@@ -88,7 +88,7 @@ claude mcp add xdev-ui -- npx -y --package=@xdev-asia/ui xdev-ui-mcp
 
 | tool | returns |
 |---|---|
-| `xdevui_list_components` | 115 components by group, with summary |
+| `xdevui_list_components` | 116 components by group, with summary |
 | `xdevui_get_component` | README rules, exported prop types, CSS classes, import line |
 | `xdevui_search_tokens` | tokens by name, usage or category, with dark/light values |
 | `xdevui_get_guidelines` | setup, voice, visual foundations, iconography, layout, data and forms, agent skills, brand |

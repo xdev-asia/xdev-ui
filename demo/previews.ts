@@ -228,6 +228,13 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       actions: h(X.Select, { icon: "globe", "aria-label": "Language", options: [{ value: "en", label: "English" }, { value: "vi", label: "Tiếng Việt" }] }),
       links: [{ href: "#", label: "Privacy" }, { href: "#", label: "Terms" }], linksLabel: "Legal" }, h(X.PageHeader, { title: "Your account" })),
   },
+  "AuthShell": {
+    style: {"width": "720px", "height": "420px", "overflow": "hidden"},
+    render: (X, h) => h(X.AuthShell, { brand: h(React.Fragment, null, h(X.BrandMark, { variant: "tile", size: 24 }), h("span", null, "xDev account")),
+      actions: h(X.Select, { icon: "globe", "aria-label": "Language", options: [{ value: "en", label: "English" }, { value: "vi", label: "Tiếng Việt" }] }),
+      headline: "One account for every xDev tool", tagline: "Sign in once; the app, the console and the CLI follow.", footer: "© 2026 xDev" },
+      h(X.Stack, { gap: 3 }, h("h1", null, "Welcome back"), h(X.Field, { label: "Email", type: "email" }), h(X.Button, { variant: "primary" }, "Sign in"))),
+  },
   "Identity": {
     style: {"display": "grid", "gap": "16px", "padding": "16px", "width": "320px"},
     render: (X, h) => h(React.Fragment, null, h(X.Identity, { name: "Trần Đức Duy", detail: "duy@example.com" }), h(X.Identity, { name: "Ada Lovelace", detail: "ada@example.com", size: "md" })),
