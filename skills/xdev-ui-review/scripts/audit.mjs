@@ -24,7 +24,8 @@ function walk(dir) {
 const HEX = /#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})\b/;
 const COLOUR_FN = /\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch)\(/;
 const PX = /(?<![\w.#-])(\d+(?:\.\d+)?)px\b/g;
-const EMOJI = /\p{Extended_Pictographic}/u;
+// Copyright, registered and trademark signs are pictographic in Unicode but are not emoji.
+const EMOJI = /(?![©®™])\p{Extended_Pictographic}/u;
 const TITLE_CASE = /\b(?:[A-Z][a-z]+\s+){2,}[A-Z][a-z]+\b/;
 
 const isComment = (line) => /^\s*(\/\/|\/\*|\*)/.test(line);
@@ -426,6 +427,21 @@ export function audit(dir, opts = {}) {
     }
   }
 
+  // A sign-in frame needs a product line, the language and theme controls, a footer, and one page title.
+  function signInChecks(file, text) {
+    const shells = openingTags(text, "AuthShell");
+    if (!shells.length) return;
+    for (const t of shells) {
+      const spread = /\{\s*\.\.\./.test(t.text);
+      const missing = spread ? [] : ["headline", "actions", "footer"].filter((p) => !new RegExp(`\\s${p}\\s*=`).test(t.text));
+      if (missing.length) add(file, t.line, "sign-in-shell", "warn", `AuthShell has no ${missing.join(", ")}; give it a headline, the language and theme controls and a footer (see xdev-ui-admin references/sign-in.md).`);
+      if (/\sactions\s*=\s*\{\s*</.test(t.text) && !/\bThemeSwitch\b/.test(t.text)) add(file, t.line, "sign-in-shell", "warn", "AuthShell actions have no ThemeSwitch; a person picks the theme before signing in.");
+      if (/\sheadline\s*=\s*\{\s*<h[1-6]\b/.test(t.text)) add(file, t.line, "sign-in-shell", "warn", "The AuthShell headline is a heading; pass text, the form holds the page's only h1.");
+    }
+    const h1 = openingTags(text, "h1");
+    if (h1.length > 1) add(file, h1[1].line, "sign-in-shell", "warn", `${h1.length} h1 in a sign-in page; the form holds one ("Welcome back", "Sign in").`);
+  }
+
   for (const { file, text } of sources) {
     const css = file.endsWith(".css");
     const lines = text.split("\n");
@@ -493,6 +509,7 @@ export function audit(dir, opts = {}) {
     });
     if (parsed.has(file)) cssChecks(file, parsed.get(file), text);
     if (file.endsWith(".tsx")) iconButtonChecks(file, text);
+    if (file.endsWith(".tsx")) signInChecks(file, text);
     if (file.endsWith(".tsx")) {
       const tags = openingTags(text, "Button").filter((t) => /variant\s*=\s*["{]\s*["']?primary/.test(t.text));
       if (tags.length > 1) add(file, tags[1].line, "primary-count", "warn", `${tags.length} primary Buttons in one file; one primary per surface, the rest secondary (the default).`);

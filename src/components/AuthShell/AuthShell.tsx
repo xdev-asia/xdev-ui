@@ -12,7 +12,7 @@ export interface AuthShellProps {
   tagline?: ReactNode;
   /** Picture for the showcase side. Leave it out for the built-in pattern (orbit rings over a dot grid). */
   art?: ReactNode;
-  /** Bottom of the form pane: copyright, links to terms. */
+  /** Copyright and links to terms: at the foot of the showcase from 1024px wide, under the form below that. */
   footer?: ReactNode;
   /** The sign-in form, with the page's `h1`. */
   children?: ReactNode;
@@ -20,8 +20,9 @@ export interface AuthShellProps {
 }
 
 /**
- * Frame for a sign-in, sign-up or reset page: a showcase side (headline, tagline, art) next to a form pane
- * (brand, actions, form, footer). From 1024px wide the two sit side by side; below that only the form pane shows.
+ * Frame for a sign-in, sign-up or reset page: a showcase side (art, then headline and tagline, centred) next to a
+ * form pane (brand, actions, form). From 1024px wide they split the width 5 to 3 and the footer sits at the foot of
+ * the showcase; below that only the form pane shows, with the footer under it.
  */
 export function AuthShell({ brand, actions, headline, tagline, art, footer, children, className }: AuthShellProps): JSX.Element {
   const pitch = headline || tagline;
@@ -52,8 +53,8 @@ export function AuthShell({ brand, actions, headline, tagline, art, footer, chil
         <main className="x-auth-main">
           <div className="x-auth-form">{children}</div>
         </main>
-        {footer ? <footer className="x-auth-footer">{footer}</footer> : null}
       </div>
+      {footer ? <footer className="x-auth-footer">{footer}</footer> : null}
     </div>
   );
 }

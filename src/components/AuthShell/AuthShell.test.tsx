@@ -18,8 +18,7 @@ describe("AuthShell", () => {
     expect(html).toContain('<div class="x-auth"><aside class="x-auth-showcase"><div class="x-auth-art"><div class="x-auth-orbit" aria-hidden="true">');
     expect(html).toContain('<div class="x-auth-pitch"><p class="x-auth-headline">One gateway</p><p class="x-auth-tagline">Every model</p></div>');
     expect(html).toContain('<header class="x-auth-bar"><div class="x-auth-brand"><a href="/">ai-router</a></div><div class="x-auth-actions"><button type="button">Lang</button></div></header>');
-    expect(html).toContain('<main class="x-auth-main"><div class="x-auth-form"><h1>Sign in</h1></div></main>');
-    expect(html).toContain('<footer class="x-auth-footer">© 2026</footer>');
+    expect(html).toContain('<main class="x-auth-main"><div class="x-auth-form"><h1>Sign in</h1></div></main></div><footer class="x-auth-footer">© 2026</footer></div>');
     expect(html.match(/ai-router/g)).toHaveLength(1);
   });
   it("takes its own art and leaves out empty parts", () => {

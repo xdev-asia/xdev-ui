@@ -1,6 +1,8 @@
 # Sign-in
 
-`AuthShell`: a showcase side with the product's headline next to a form pane. Use it for sign-in, sign-up and password reset; the pages after sign-in use `AppShell`.
+`AuthShell`: a showcase side next to a form pane. Use it for sign-in, sign-up and password reset; the pages after sign-in use `AppShell`.
+
+From 1024px the showcase takes five eighths of the width: the art centred, the headline and tagline centred under it, the footer (copyright, two links) at its foot. The form pane takes the rest: brand at the top start, language and theme at the top end, the form centred, at most 26rem wide.
 
 ```tsx
 <AuthShell
@@ -11,7 +13,10 @@
   footer={t("signin.footer")}
 >
   <Stack gap={4}>
-    <h1>{t("signin.title")}</h1>
+    <Stack gap={1}>
+      <h1>{t("signin.welcome")}</h1>
+      <p className="muted">{t("signin.purpose")}</p>
+    </Stack>
     {error ? <Banner tone="danger" title={t("signin.failed")}>{error}</Banner> : null}
     <form onSubmit={onSubmit}>
       <Stack gap={3}>
@@ -24,7 +29,8 @@
 </AuthShell>
 ```
 
-- One `h1` in the form ("Welcome back", "Sign in"); the headline is the product line, not the page title.
+- One `h1` in the form ("Welcome back", "Sign in") with one muted line under it on what the account is for; the headline is the product line, not the page title. No emoji.
+- `actions` holds the language `Select` and the theme `ThemeSwitch` (icon); both, so a person can fix either before signing in.
 - One primary `Button`, full width. A second way in (single sign-on, a token) is a secondary `Button` or a second `Card`, with a short line on when to use it.
 - A wrong password or an expired link shows a `Banner` above the form, in words that say what to do; never clear what the person typed.
 - Disable the submit button while the request runs; focus the first field on load.
