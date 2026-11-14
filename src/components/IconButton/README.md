@@ -9,3 +9,6 @@ Square 16px-glyph button for toolbar and header actions where a label would crow
 - Hover fills with `--hover`; there is no pressed fill. Toggle state belongs to `Segmented`.
 - `size`: `md` (default, 26px), `sm` (22px, dense rows), `lg` (44px, the minimum touch target; use it on touch layouts).
 - `ref` is a plain prop (React 19) typed `Ref<HTMLButtonElement>`.
+
+## Responsive
+- On a touch screen (`pointer: coarse`) every size gets a 44px hit area; a mouse keeps the compact sizes.

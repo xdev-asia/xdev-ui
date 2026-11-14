@@ -35,6 +35,16 @@
 .ws-meter-pct { min-width: 3ch; color: var(--text-1); }
 .ws-meter[data-warn] .ws-meter-fill { background: var(--warn); }
 .ws-meter[data-warn] .ws-meter-pct { color: var(--warn); }
+.ws-meter[data-tone="ok"] .ws-meter-fill { background: var(--ok); }
+.ws-meter[data-tone="warn"] .ws-meter-fill { background: var(--warn); }
+.ws-meter[data-tone="warn"] .ws-meter-pct { color: var(--warn); }
+.ws-meter[data-tone="danger"] .ws-meter-fill { background: var(--danger); }
+.ws-meter[data-tone="danger"] .ws-meter-pct { color: var(--danger); }
+/* fill: the bar grows into the row; label and number keep their width and never wrap mid-word. */
+.ws-meter[data-fill] { display: flex; width: 100%; min-width: 0; }
+.ws-meter[data-fill] .ws-meter-bar { flex: 1 1 auto; width: auto; min-width: 3rem; height: 6px; }
+.ws-meter[data-fill] .ws-meter-label,
+.ws-meter[data-fill] .ws-meter-pct { flex: none; font-variant-numeric: tabular-nums; }
 
 .banner {
   display: flex;
@@ -147,3 +157,7 @@
 .x-run-step[data-status="pending"] .x-run-step-label, .x-run-step[data-status="skipped"] .x-run-step-label { color: var(--text-2); }
 .x-run-step[data-status="failed"] .x-run-step-label { color: var(--danger); }
 .x-run-step-at, .x-run-step-dur { font: var(--type-status); color: var(--text-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ServiceStatus (.x-service-status): the service's state in words, then its version in quiet mono. */
+.x-service-status { display: flex; align-items: center; justify-content: space-between; gap: var(--x-space-2); min-width: 0; }
+.x-service-status-detail { font: var(--type-mono); color: var(--text-3); white-space: nowrap; }

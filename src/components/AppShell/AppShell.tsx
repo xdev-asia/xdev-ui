@@ -20,8 +20,12 @@ export interface AppShellProps {
   nav: ReactNode;
   /** Bottom of the sidebar: account, version. */
   navFooter?: ReactNode;
+  /** Page title at the start of the top bar, usually a `ShellTitle`; the bar grows to fit a description. */
+  title?: ReactNode;
   /** Start of the top bar, usually a Breadcrumb. */
   crumbs?: ReactNode;
+  /** Width below which the sidebar is a drawer: "md" (768px, default) or "lg" (1024px). */
+  drawerBelow?: "md" | "lg";
   /** End of the top bar: search, notifications Popover, account Menu. */
   actions?: ReactNode;
   /** Phone tab bar, usually a `BottomNav`. Shown under `main` below 768px only; the sidebar covers wider screens. */
@@ -39,7 +43,7 @@ export interface AppShellProps {
   className?: string;
 }
 
-export function AppShell({ brand, nav, navFooter, crumbs, actions, bottomNav, children, toasts, navOpen = false, onNavOpenChange, mainId = "main", labels, className }: AppShellProps): JSX.Element {
+export function AppShell({ brand, nav, navFooter, title, crumbs, drawerBelow = "md", actions, bottomNav, children, toasts, navOpen = false, onNavOpenChange, mainId = "main", labels, className }: AppShellProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
   const sideId = `x-shell-side-${useId()}`;
   const menuRef = useRef<HTMLButtonElement | null>(null);
@@ -75,7 +79,7 @@ export function AppShell({ brand, nav, navFooter, crumbs, actions, bottomNav, ch
     };
   }, [navOpen]);
   return (
-    <div className={cx("x-shell x-ws", className)} data-nav-open={navOpen ? "true" : undefined} data-bottom-nav={bottomNav ? "" : undefined}>
+    <div className={cx("x-shell x-ws", className)} data-nav-open={navOpen ? "true" : undefined} data-bottom-nav={bottomNav ? "" : undefined} data-titled={title ? "" : undefined} data-drawer={drawerBelow === "lg" ? "lg" : undefined}>
       <a
         className="x-skip-link"
         href={`#${mainId}`}
@@ -104,6 +108,7 @@ export function AppShell({ brand, nav, navFooter, crumbs, actions, bottomNav, ch
             aria-expanded={navOpen}
             onClick={() => onNavOpenChange?.(!navOpen)}
           />
+          {title ? <div className="x-shell-heading">{title}</div> : null}
           <div className="x-shell-crumbs">{crumbs}</div>
           <div className="x-shell-actions">{actions}</div>
         </header>

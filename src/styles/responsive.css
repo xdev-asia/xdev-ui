@@ -1,0 +1,168 @@
+/* ---------- Responsive ----------
+   Phone and tablet guards, so a page built from xdev-ui has no horizontal page scroll from 320px up.
+   Desktop rules live in the component files. This file only adds wrapping, inner scroll, sheet overlays
+   and touch sizing, so a layout that already fits at 1440px looks the same.
+   Media queries cannot read var(): 639.98px is just below --x-bp-sm (640px) and 767.98px just below
+   --x-bp-md (768px); min-width queries use rem (40rem = 640px). test/responsive-css.test.ts checks these values against tokens.json. */
+
+/* ---- Every width: rows wrap instead of pushing the page wider ---- */
+
+/* Long unbroken mono strings (hashes, keys, URLs, paths) break anywhere. */
+.ws-mono { overflow-wrap: anywhere; }
+/* A button keeps its label on one line; the row around it wraps instead. */
+.btn { white-space: nowrap; }
+.btn, .btn-secondary, .btn-danger, .btn-ghost, .lang-select { max-width: 100%; }
+
+/* Toolbar (.pane-head), Card head, SettingRow, SaveBar, Composer, EmptyState, palette rows, Dialog and Drawer footers. */
+.pane-head { flex-wrap: wrap; row-gap: var(--x-space-1); }
+.pane-tools { flex: 0 1 auto; flex-wrap: wrap; min-width: 0; }
+.x-card-head { flex-wrap: wrap; }
+.x-card-heading { flex: 1 1 12rem; }
+.x-card-actions { flex: 0 1 auto; flex-wrap: wrap; min-width: 0; }
+.settings-item { flex-wrap: wrap; }
+.settings-item-text { flex: 1 1 12rem; }
+.settings-item-control { flex: 0 1 auto; flex-wrap: wrap; min-width: 0; max-width: 100%; }
+.x-savebar { flex-wrap: wrap; row-gap: var(--x-space-2); }
+.x-savebar-actions { flex-wrap: wrap; margin-inline-start: auto; }
+.x-composer-bar { flex-wrap: wrap; }
+.x-empty-actions { flex-wrap: wrap; max-width: 100%; }
+.x-empty[data-size="center"] .x-empty-actions { justify-content: center; }
+.x-theme-preview-row { flex-wrap: wrap; }
+.pal-foot, .pal-filters { flex-wrap: wrap; row-gap: var(--x-space-1); }
+.dialog-actions, .x-drawer-foot { flex-wrap: wrap; }
+
+/* AppShell top bar: the action slot shrinks with the title instead of pushing past the edge. */
+.x-shell-actions { flex: 0 1 auto; min-width: 0; }
+.x-shell-actions > .search { flex: 1 1 auto; min-width: 0; }
+.x-shell-actions > :not(.search) { flex: none; }
+
+/* Fixed-height IDE strips (TabStrip, StatusBar, header): swipe to see the rest instead of widening the page. */
+.ws-tabstrip, .ws-footer, .ws-header { max-width: 100%; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+.ws-tab, .ws-tabstrip > :not(.ws-tabstrip-list), .ws-footer > *, .ws-header > * { flex: none; }
+.ws-footer-spacer { flex: 1 0 var(--x-space-4); }
+.ws-tab-main:focus-visible, .ws-tab-close:focus-visible { outline-offset: -2px; }
+
+/* Floating panels never run past the window. */
+.x-menu, .x-popover { max-width:calc(100vw - 2 * var(--x-space-4)); box-sizing: border-box; }
+.x-date-popover { max-height: calc(100dvh - 2 * var(--x-space-4)); overflow-y: auto; }
+.font-field { min-width: min(200px, 100%); }
+
+/* A scroller must be the containing block of its absolute children (.x-sr-only text), or they sit
+   outside its clip and widen the page. */
+.x-board, .x-board-col-body { position: relative; }
+/* An inline (non-modal) drawer clips its slide-in so the animation does not widen the page. */
+.x-drawer-root:not([data-modal]) { overflow-x: clip; }
+
+/* A tall modal dialog scrolls inside itself instead of running off the screen. */
+.dialog-backdrop[data-modal] { overflow-y: auto; }
+.dialog-backdrop[data-modal] .dialog { max-height: calc(100dvh - 2 * var(--x-space-6)); overflow-y: auto; }
+
+/* DataTable: the table scrolls inside .x-table-wrap. The select column and any `sticky` column stay in
+   view while it scrolls; each needs an opaque background that follows the row's hover and selection. */
+.x-table .x-table-check, .x-table [data-sticky] { position: sticky; z-index: var(--x-z-raised); background: var(--bg-1); }
+.x-table .x-table-check, .x-table [data-sticky="start"] { inset-inline-start: 0; }
+.x-table [data-sticky="end"] { inset-inline-end: 0; box-shadow: inset 1px 0 0 var(--line); }
+.x-table [data-sticky="start"] { box-shadow: inset -1px 0 0 var(--line); }
+.x-table tbody tr:hover > :is(.x-table-check, [data-sticky]) { background: var(--bg-2); }
+.x-table tbody tr:has(.x-table-empty):hover > :is(.x-table-check, [data-sticky]) { background: var(--bg-1); }
+.x-table tbody tr:is([data-selected], [data-lifted], [data-dragging]) > :is(.x-table-check, [data-sticky]) { background: var(--bg-3); }
+
+/* DataTable `stack`: below a 480px container each row reads as a card of "label: value" lines. */
+@container (max-width: 480px) {
+  .x-table-wrap[data-stack] :is(.x-table, tbody, tr, td) { display: block; }
+  .x-table-wrap[data-stack] thead tr { display: flex; align-items: center; gap: var(--x-space-2); }
+  .x-table-wrap[data-stack] thead th { border-bottom: 1px solid var(--line); }
+  .x-table-wrap[data-stack] thead th:not(.x-table-check) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .x-table-wrap[data-stack] thead th.x-table-check { flex: 1; padding: var(--x-space-2) var(--x-space-3); }
+  .x-table-wrap[data-stack] tbody tr { position: relative; padding: var(--x-space-2) var(--x-space-3); border-bottom: 1px solid var(--line); }
+  .x-table-wrap[data-stack] tbody tr:last-child { border-bottom: 0; }
+  .x-table-wrap[data-stack] tbody td { padding: var(--x-space-1) 0; border: 0; text-align: start; overflow-wrap: anywhere; }
+  .x-table-wrap[data-stack] tbody td[data-label] { display: grid; grid-template-columns: minmax(6rem, 35%) minmax(0, 1fr); gap: var(--x-space-3); }
+  .x-table-wrap[data-stack] tbody td[data-label]::before { content: attr(data-label); font: var(--type-label); color: var(--text-2); }
+  .x-table-wrap[data-stack] tbody td[data-width="min"] { width: auto; }
+  .x-table-wrap[data-stack] :is(.x-table-check, [data-sticky]) { position: static; background: transparent; box-shadow: none; }
+  .x-table-wrap[data-stack] tbody tr:hover > :is(.x-table-check, [data-sticky]) { background: transparent; }
+}
+
+/* ---- Below md (767.98px): tab rows and segmented controls scroll inside themselves ---- */
+@media (max-width: 767.98px) /* below --x-bp-md */ {
+  /* Underline tabs: the bottom rule moves to an inset shadow so the row can clip its overflow
+     without cutting the selected tab's underline. */
+  .kit-tabs { max-width: 100%; overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; border-bottom: 0; box-shadow: inset 0 -1px 0 var(--line); }
+  .kit-tabs[data-variant="pill"] { box-shadow: none; border-bottom: 1px solid var(--line); }
+  .kit-tab { flex: none; margin-bottom: 0; }
+  .kit-tab:focus-visible { outline-offset: -2px; }
+  .segmented { max-width: 100%; overflow-x: auto; scrollbar-width: thin; box-sizing: border-box; }
+  .segmented button { flex: none; }
+  .segmented button:focus-visible { outline-offset: -2px; }
+}
+
+/* ---- sm and up: the AppShell title keeps a readable width next to a top-bar search ---- */
+@media (min-width: 40rem) /* --x-bp-sm, 640px */ {
+  .x-shell-heading { min-width: min(12rem, 35%); }
+}
+
+/* ---- Below sm (639.98px): phones ---- */
+@media (max-width: 639.98px) /* below --x-bp-sm */ {
+  /* AppShell top bar: an empty search collapses to its 44px icon and opens while it has focus. */
+  .x-shell-actions > .search:not(:focus-within):has(.search-input:placeholder-shown) { flex: 0 0 calc(var(--x-space-8) + var(--x-space-3)); }
+  .x-shell-actions > .search:not(:focus-within):has(.search-input:placeholder-shown) .search-input { padding-inline-end: 0; cursor: pointer; }
+  .x-shell-actions > .search:not(:focus-within) .search-input::placeholder { color: transparent; }
+
+  /* Dialog and FormDialog (modal) become a bottom sheet; the actions stack, primary on top. */
+  .dialog-backdrop[data-modal] { place-items: end stretch; padding: var(--x-space-6) 0 0; }
+  .dialog-backdrop[data-modal] .dialog,
+  .dialog-backdrop[data-modal] .dialog[data-size="wide"] {
+    max-width: none;
+    max-height: calc(100dvh - var(--x-space-6));
+    padding: var(--x-space-4);
+    padding-bottom: calc(var(--x-space-4) + env(safe-area-inset-bottom, 0px));
+    border-bottom: 0;
+    border-radius: var(--radius-l) var(--radius-l) 0 0;
+  }
+  .dialog-backdrop:not([data-modal]) { padding: var(--x-space-3); }
+  .dialog-actions { flex-direction: column-reverse; align-items: stretch; }
+  .dialog-actions > * { justify-content: center; }
+
+  /* Drawer takes the full width; tighter padding. */
+  .x-drawer, .x-drawer[data-size="wide"] { width: 100%; max-width: 100vw; }
+  .x-drawer-head, .x-drawer-foot { padding-inline: var(--x-space-4); }
+  .x-drawer-body { padding: var(--x-space-4); }
+  .x-drawer-foot { padding-bottom: calc(var(--x-space-4) + env(safe-area-inset-bottom, 0px)); }
+
+  /* Command palette sits near the top so the keyboard does not cover it. */
+  .pal-backdrop { padding-top: var(--x-space-4); }
+
+  /* Toasts span the width. */
+  .x-toaster { left: var(--x-space-4); right: var(--x-space-4); width: auto; transform: none; }
+  .x-toaster .ws-toasts, .x-toaster.ws-toasts { width: auto; }
+
+  .x-flowmap { height: calc(var(--x-space-8) * 11); }
+}
+
+/* ---- Touch: 44px hit areas (WCAG 2.5.5). Pointer-fine desktops keep the compact sizes. ---- */
+@media (pointer: coarse) {
+  .ws-icon-btn, .ws-icon-btn[data-size="sm"], .search-clear, .x-attention-btn, .x-table-handle, .x-sortable-handle, .ws-tab-close {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .btn, .btn-secondary, .btn-danger, .btn-ghost, .lang-select, .segmented button, .kit-tab, .x-menu-item,
+  .settings-nav-item, .task-chip, .x-calendar-preset, .ws-tick, .search-input, .ws-field input, .dialog-input {
+    min-height: 44px;
+  }
+  .btn { box-sizing: border-box; }
+  /* Seven 40px day cells still fit a 320px window inside the popover. */
+  .x-calendar-day { min-width: 40px; min-height: 40px; }
+  .ws-tick { align-items: center; }
+  /* iOS zooms the page when a focused field's text is under 16px. */
+  .search-input, .ws-field input, .lang-select, .kit-textarea, .dialog-input { font-size: 16px; }
+}

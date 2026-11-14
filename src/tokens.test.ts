@@ -53,8 +53,9 @@ describe("tokens.css", () => {
 });
 
 describe("appearance tokens", () => {
-  it("emits the tinted sidebar ground once per theme", () => {
-    expect(tokensCss.match(/--side-tint:/g)).toHaveLength(2);
+  it("emits the tinted sidebar ground once per theme, and once per theme for each opt-in ground", () => {
+    const grounds = (tokens.color.grounds ?? []).filter((g: { tokens: { name: string }[] }) => g.tokens.some((t) => t.name === "side-tint")).length;
+    expect(tokensCss.match(/--side-tint:/g)).toHaveLength(2 + grounds * 2);
   });
   it("emits the body fallback stack the font setting ends with", () => {
     expect(tokensCss).toMatch(/--font-body-fallback:\s*system-ui, sans-serif;/);

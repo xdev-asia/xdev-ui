@@ -35,6 +35,8 @@ node <skill-dir>/scripts/audit.mjs src --i18n src/i18n
 | `label-voice` | warn | `!`, emoji, or Title Case Of Three Words in UI text |
 | `target-size` | warn | a width or height under 24px on a control selector, with no 24px minimum |
 | `reduced-motion` | warn | an animation whose keyframes move content, in a file with no `prefers-reduced-motion` query and no app-wide `*` guard |
+| `fixed-width` | warn | `width` or `min-width` over 320px in CSS, with no `max-width` in `%`/`vw`/`min()` and not inside a `min-width` query |
+| `nowrap` | warn | `white-space: nowrap` on a non-control with no `overflow` or `text-overflow` in the same rule |
 | `forced-colors` | warn | the outline replaced only by `box-shadow` or border colour, with no `forced-colors` rule in the file |
 | `contrast` | error or warn | a token pair below 4.5:1 (text) or 3:1 (UI parts); only with `--contrast` |
 
@@ -46,7 +48,7 @@ node <skill-dir>/scripts/audit.mjs src --i18n src/i18n
 
 ## 3. Check by hand
 
-Work through `references/checklist.md`: 360px width, dark and light, `en` and `vi`, keyboard order, focus ring, empty, loading and error states, destructive actions.
+Work through `references/checklist.md`: 375, 768 and 1440px widths (and 320px for overflow), dark and light, `en` and `vi`, keyboard order, focus ring, empty, loading and error states, destructive actions.
 
 Then check each widget against its APG keyboard and ARIA contract and walk the heuristics checklist from the `xdev-ui-ux-standards` skill. It gives each audit rule its WCAG or platform source.
 

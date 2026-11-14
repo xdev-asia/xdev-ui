@@ -11,3 +11,6 @@ Head of a pane with its title, a count and a group of actions, or the bar shown 
 - Actions are IconButtons (with labels) or small Buttons, at most four; put the rest in a `Menu` behind "More".
 - The actions group has `role="toolbar"`, is named by `label`, a string `title`, or `labels.actions`, and Left/Right move focus inside it.
 - Each action stays in the Tab order too; the group does not manage tabindex.
+
+## Responsive
+- The title and the actions wrap onto two lines when they do not fit; the actions also wrap among themselves. The bulk variant behaves the same.

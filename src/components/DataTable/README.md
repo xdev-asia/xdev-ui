@@ -25,3 +25,9 @@ Controlled table for lists of records: sortable headers, optional row selection,
 - `reorderable` adds a leading drag handle per row, named `labels.reorderHandle(rowLabel)`. Pointer: drag the handle; a 2px accent line shows where the row lands. Keyboard: Space or Enter lifts the row, ArrowUp/ArrowDown (Home/End) move it, Space or Enter drops it, Escape cancels; each step is announced politely. `onReorder(fromIndex, toIndex)` gets indexes into `rows`; apply them with `moveItem` and save the order.
 - Reorder is disabled while a sort is active (`sort` set), while `loading`, and with fewer than two rows: the handles stay in place, disabled. A manual order and a sorted view do not mix; clear the sort to reorder. Reorder the full list, not one page of it, or map the page indexes back yourself.
 - `labels` (`DataTableLabels`: `selectAll`, `selectRow(rowLabel)`, `sortedAsc`, `sortedDesc`, `loading`, `reorderColumn`, `reorderHandle(rowLabel)`, `lifted(rowLabel)`, `moved(pos, total)`, `dropped(pos, total)`, `cancelled`) overrides the English defaults.
+
+## Responsive
+- The table scrolls inside `.x-table-wrap`, never the page. The select column stays pinned at the start while it scrolls.
+- `columns[].sticky` (`"start"` or `"end"`) pins a column the same way; use `sticky="end"` on the row-actions column so the actions stay in view on a phone.
+- `stack` turns each row into a card of "label: value" lines when the table container is under 480px (a container query, so it also works in a narrow panel). Each cell takes its label from `columns[].label`, or from `header` when that is a string. Sort headers are hidden in stack mode, so offer sorting elsewhere (a `Select`) when it matters on a phone.
+- With `stack` the table gets explicit `table`, `rowgroup`, `row`, `columnheader` and `cell` roles, because `display: block` drops the native table semantics in some browsers.

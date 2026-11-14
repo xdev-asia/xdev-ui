@@ -321,3 +321,26 @@ a.x-menu-item { text-decoration: none; }
 .x-attention-meta { display: flex; gap: var(--x-space-2); font: var(--type-status); color: var(--x-color-muted); }
 .x-attention-kind { font-weight: 600; }
 .x-attention-row[data-kind="failed"] .x-attention-kind { color: var(--x-color-danger); }
+
+/* PaletteTrigger (.x-palette-trigger): a search-field look-alike that opens the CommandPalette. */
+.x-palette-trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--x-space-2);
+  width: 100%;
+  min-height: calc(var(--x-space-8) + var(--x-space-1));
+  padding: 0 var(--x-space-2) 0 var(--x-space-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--x-radius-md);
+  background: var(--bg-2);
+  color: var(--text-3);
+  font: var(--type-control);
+  font-weight: 400;
+  text-align: start;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.x-palette-trigger:hover { color: var(--text-2); background: var(--bg-3); }
+.x-palette-trigger:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: 2px; }
+.x-palette-trigger-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.x-palette-trigger-key { flex: none; }

@@ -82,6 +82,24 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     render: (X, h) => h(X.PanZoom, { zoom: 1, x: 0, y: 0, label: "Preview", onZoom() {}, onPan() {} },
       h("div", { style: { width: 240, height: 120, background: "var(--x-color-surface-2)" } })),
   },
+  "FlowMap": {
+    style: {"display": "flex", "flexDirection": "column", "height": "240px", "width": "420px", "padding": "16px"},
+    render: (X, h) => h(X.FlowMap, { label: "Traffic", hub: { name: "LLM gateway" }, nodes: [
+      { id: "openai", name: "OpenAI", text: "OA", color: "seagreen", detail: "128 requests", active: true },
+      { id: "groq", name: "Groq", text: "GQ", color: "tomato" },
+    ] }),
+  },
+  "RouteDiagram": {
+    style: {"display": "flex", "flexDirection": "column", "width": "560px", "padding": "16px"},
+    render: (X, h) => h(X.RouteDiagram, { label: "Request route",
+      inputs: [{ id: "agents", label: "Coding agents", icon: "terminal" }, { id: "apps", label: "Your apps", icon: "code" }],
+      hub: { name: "LLM gateway", mark: h(X.BrandMark, { variant: "tile", size: 40 }) },
+      outputs: [{ id: "subs", label: "Subscriptions", icon: "accounts" }, { id: "keys", label: "API keys", icon: "key", detail: "3 providers" }] }),
+  },
+  "EndpointPanel": {
+    style: {"display": "flex", "flexDirection": "column", "width": "640px", "padding": "16px"},
+    render: (X, h) => h(X.EndpointPanel, { title: "Endpoint", description: "Set this as the base URL in any OpenAI or Anthropic client.", url: "https://gateway.example.dev/v1", urlLabel: "Base URL", paths: ["/v1/chat/completions", "/v1/messages", "/v1/models"] }),
+  },
   "ZoomBar": {
     style: {"display": "flex", "gap": "12px", "alignItems": "center", "padding": "16px"},
     render: (X, h) => h(X.ZoomBar, { zoom: 100, onZoomOut() {}, onFit() {}, onZoomIn() {}, onActual() {} }),
@@ -143,6 +161,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.Button, { variant: "secondary", disabled: true }, "Disabled"));
     return el;
     },
+  },
+  "PaletteTrigger": {
+    style: {"display": "flex", "width": "240px", "padding": "16px"},
+    render: (X, h) => h(X.PaletteTrigger, { onOpen() {}, hotkey: false }),
   },
   "CommandPalette": {
     style: {"padding": "16px"},
@@ -326,9 +348,27 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     return el;
     },
   },
+  "TimeSeriesChart": {
+    style: {"padding": "16px", "width": "560px"},
+    render: (X, h) => {
+    var pts = [3, 5, 4, 8, 6, 9, 12, 10, 7, 11, 14, 13].map(function (v, i) { return { key: "d" + i, value: v * 1000, label: "Day " + (i + 1) + ": " + v + "k tokens" }; });
+    return h(X.TimeSeriesChart, { points: pts, label: "Tokens per day", maxLabel: "14k", zeroLabel: "0", ticks: [0, 4, 8, 11].map(function (i) { return { index: i, label: "Day " + (i + 1) }; }) });
+    },
+  },
+  "BarChart": {
+    style: {"padding": "16px", "width": "420px"},
+    render: (X, h) => {
+    return h(X.BarChart, { label: "Tokens by provider", bars: [
+      { key: "anthropic", label: "Anthropic", value: 1200, valueLabel: "1.2M" },
+      { key: "openai", label: "OpenAI", value: 640, valueLabel: "640k" },
+      { key: "groq", label: "Groq", value: 90, valueLabel: "90k" }] });
+    },
+  },
   "ThemeSwitch": {
     style: {"display": "flex", "flexDirection": "column", "gap": "12px", "alignItems": "flex-start", "padding": "16px"},
-    render: (X, h) => h(X.ThemeSwitch, { value: "system", onChange: () => {} }),
+    render: (X, h) => h(React.Fragment, null,
+      h(X.ThemeSwitch, { value: "system", onChange: () => {} }),
+      h(X.ThemeSwitch, { variant: "icon", value: "dark", onChange: () => {} })),
   },
   "SwatchGroup": {
     style: {"padding": "16px"},
@@ -380,6 +420,12 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     ] }));
     return el;
     },
+  },
+  "ServiceStatus": {
+    style: {"display": "flex", "flexDirection": "column", "gap": "12px", "width": "240px", "padding": "16px"},
+    render: (X, h) => h("div", { style: { display: "flex", flexDirection: "column", gap: 12 } },
+      h(X.ServiceStatus, { key: 1, tone: "ok", label: "Gateway online", detail: "v1.4.0" }),
+      h(X.ServiceStatus, { key: 2, tone: "danger", label: "Gateway unreachable" })),
   },
   "StatusDot": {
     style: {"display": "flex", "flexDirection": "column", "gap": "12px", "alignItems": "flex-start", "padding": "16px"},
@@ -505,6 +551,27 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.ListRow, { title: "login-retry", meta: "feat/login-retry · 2m", leading: h(X.StatusDot, { state: "working", label: "working" }), selected: true, onClick: function () {} }),
       h(X.ListRow, { title: "fix-ci-cache", meta: "fix/ci-cache · 9m", leading: h(X.StatusDot, { state: "waiting", label: "waiting" }), onClick: function () {} })),
   },
+  "Emblem": {
+    style: {"display": "flex", "gap": "12px", "alignItems": "center", "padding": "16px"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.Emblem, { name: "Anthropic", text: "AN", color: "coral", size: "sm" }),
+      h(X.Emblem, { name: "OpenAI", text: "OA", color: "seagreen" }),
+      h(X.Emblem, { name: "Mistral", text: "MI", color: "darkorange", size: "lg" }),
+      h(X.Emblem, { name: "Usage", icon: "activity" })),
+  },
+  "ResourceCard": {
+    style: {"display": "grid", "gridTemplateColumns": "repeat(2, 1fr)", "gap": "12px", "padding": "16px", "width": "460px"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.ResourceCard, { href: "#", title: "OpenAI", leading: h(X.Avatar, { name: "OpenAI" }), status: h(X.StatusDot, { tone: "ok", label: "2 connected" }), trailing: h(X.Switch, { "aria-label": "Use OpenAI", defaultChecked: true }) }),
+      h(X.ResourceCard, { href: "#", title: "Groq", leading: h(X.Avatar, { name: "Groq" }), status: "No connections" })),
+  },
+  "ModelChip": {
+    style: {"display": "flex", "flexWrap": "wrap", "gap": "8px", "padding": "16px", "width": "460px"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.ModelChip, { code: "openai/gpt-5.5", name: "GPT-5.5", codeAction: h(X.IconButton, { size: "sm", icon: "copy", label: "Copy" }), actions: h(React.Fragment, null, h(X.IconButton, { size: "sm", icon: "eye", label: "Hide" }), h(X.IconButton, { size: "sm", icon: "play", label: "Test" })) }),
+      h(X.ModelChip, { code: "openai/gpt-5-mini", name: "GPT-5 mini", dimmed: true, actions: h(X.IconButton, { size: "sm", icon: "eye-off", label: "Show" }) }),
+      h(X.ModelChipAdd, { label: "Add model", onClick: function () {} })),
+  },
   "BottomNav": {
     style: {"padding": "16px", "width": "360px"},
     render: (X, h) => h(X.BottomNav, { value: "home", onChange: function () {}, items: [{ id: "home", label: "Home", icon: "home" }, { id: "sessions", label: "Sessions", icon: "terminal", badge: 3 }, { id: "board", label: "Board", icon: "tasks" }, { id: "files", label: "Files", icon: "folder" }], more: { label: "More", icon: "more", items: [{ id: "settings", label: "Settings", icon: "settings" }] } }),
@@ -512,7 +579,7 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
   "NavList": {
     style: {"padding": "16px", "width": "240px"},
     render: (X, h) => h(React.Fragment, null,
-      h(X.NavList, { title: "Settings", value: "general", items: [{ id: "general", label: "General" }, { id: "agents", label: "Agents", count: 3 }, { id: "keys", label: "Keyboard" }] }),
+      h(X.NavList, { title: "Settings", value: "general", items: [{ id: "general", label: "General" }, { id: "agents", label: "Agents", count: 3 }, { id: "keys", label: "Keyboard", tone: "danger", toneLabel: "1 conflict" }] }),
       h(X.NavList, { title: "Content", collapsible: true, items: [{ id: "posts", label: "Posts", href: "#posts" }, { id: "pages", label: "Pages", href: "#pages" }] })),
   },
   "Popover": {
@@ -628,6 +695,11 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
   "AppShell": {
     style: {"height": "320px", "width": "640px", "maxWidth": "100%", "transform": "translateZ(0)", "overflow": "hidden"},
     render: (X, h) => h(X.AppShell, { brand: h(X.BrandMark, { size: 20 }), nav: h(X.NavList, { items: [{ id: "home", label: "Overview", icon: "home" }, { id: "users", label: "Users", icon: "accounts" }], value: "home" }), crumbs: h(X.Breadcrumb, { items: [{ label: "Overview" }] }) }, h("p", null, "Page content")),
+  },
+  "ShellTitle": {
+    render: (X, h) => h("div", { style: { display: "grid", gap: "16px" } },
+      h(X.ShellTitle, { icon: "plug", title: "Providers", description: "Manage your AI provider connections" }),
+      h(X.ShellTitle, { parent: { label: "Providers", href: "#" }, icon: "server", title: "OpenAI" })),
   },
   "PageHeader": {
     style: {"padding": "16px", "width": "480px", "maxWidth": "100%"},

@@ -23,17 +23,19 @@ Existing app on Tailwind v4: import `@xdev-asia/ui/styles.css`, then `@xdev-asia
 
 1. **Purpose.** One sentence: who uses the page and for which task. That sets the title, the primary action and what the first screen shows. Read [UX principles](references/ux-principles.md) once per project.
 2. **Pick the page pattern** from the table below and read its reference.
-3. **Lay out** with `AppShell` > `Container` > `Stack` / `Grid`, mobile first at 360px ([layout](references/layout.md)).
+3. **Lay out** with `AppShell` > `Container` > `Stack` / `Grid`, mobile first, and check 375, 768 and 1440px ([layout](references/layout.md), [responsive](references/responsive.md)).
 4. **Pick the containers and inputs** for each form ([forms](references/forms.md)).
 5. **Write the four states** of every data region: loading, error, empty, success ([states](references/states-feedback.md)).
 6. **Wire navigation and permissions**: URL holds the view state, roles hide or disable ([navigation](references/navigation.md), [permissions](references/permissions.md)).
 7. **Test and review**: pure functions and views tested, then [the checklist](references/review-checklist.md) and the `xdev-ui-review` skill.
+8. **Look at it**: screenshots in dark and light, at 375 and 1440px, with real data ([visual identity](references/visual-identity.md)). The audit does not see a flat or unfinished screen.
 
 ## Page patterns
 
 | page | parts | reference |
 |---|---|---|
 | Dashboard | `Grid` of `StatTile`, `Meter`, `Card` with `ListRow` | [dashboard](references/dashboard.md) |
+| Grid of things to connect or open (providers, integrations, tools) | `SearchInput`, `Grid` of `ResourceCard` with `Emblem`, `StatusDot`, `Switch` | [visual identity](references/visual-identity.md) |
 | Resource list | `SearchInput`, `FilterChip` / `FacetFilter`, `DataTable` (select, sort, reorder), `BulkBar`, `Pagination`, `EmptyState` | [resource list](references/resource-list.md) |
 | Detail and edit | `PageHeader`, `Tabs`, `DescriptionList`, `FormSection`, `SaveBar` | [detail and forms](references/detail-and-forms.md) |
 | Quick create, row edit, delete | `FormDialog`, `Drawer`, `Dialog alert`, `Toast` | [dialogs](references/dialogs.md) |
@@ -42,6 +44,7 @@ Existing app on Tailwind v4: import `@xdev-asia/ui/styles.css`, then `@xdev-asia
 | Users and roles | `Avatar`, `Tag`, `StatusDot`, `Checkbox` matrix | [users and roles](references/users-roles.md) |
 | Settings | `NavList`, `SettingRow`, `Switch`, `Select`, `ThemeSwitch` | [settings](references/settings.md) |
 | Audit log | `DateRangePicker`, `FacetFilter`, `Disclosure`, `Pagination` | [audit log](references/audit-log.md) |
+| Any page on a phone or tablet | `PageHeader actions`, `Grid columns`, `DataTable sticky` / `stack`, sheet `Dialog` | [responsive](references/responsive.md) |
 
 ## Decisions that come up on every screen
 

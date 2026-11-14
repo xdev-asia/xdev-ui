@@ -12,3 +12,6 @@ One setting on a settings page: name and description on the left, its control on
 - Rows stack in a list with a 1px `--x-color-line` divider between them; do not wrap each in a Card.
 - `flash` highlights the row after a jump from settings search: an overlay fading out by opacity, none under reduced motion.
 - Give every row an `id` so search results can scroll to it.
+
+## Responsive
+- The control moves under the label when the row is narrower than the label needs (about 12rem).

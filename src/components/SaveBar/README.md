@@ -13,3 +13,6 @@ Bar pinned to the bottom of a long edit form that appears when there are unsaved
 - On failure pass `error` (announced as an alert) and keep the changes; never discard them on error.
 - Call `useUnsavedGuard(dirty, message)` in the same page: it covers closing or reloading the tab. Before an in-app navigation or closing a drawer, call `confirmLeave()`.
 - Translate every string with `labels` and the hook's `message`.
+
+## Responsive
+- The message and the actions wrap onto two lines on a narrow screen; the actions stay at the end.

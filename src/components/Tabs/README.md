@@ -12,3 +12,6 @@ Row of tabs that switches between views of one surface, such as the panels of a 
 - `size="sm"` is the compact row for panel tabs next to a terminal (Changes, Checks, Notes). It works with both variants; keep `md` for pages.
 - Badges are counts; `badgeTone="danger"` only for failures. Keep labels to one or two words.
 - With `idPrefix`, render each panel as `role="tabpanel"` with id `<idPrefix>-panel-<id>` and `aria-labelledby` set to `<idPrefix>-tab-<id>`.
+
+## Responsive
+- Below 768px the tab row scrolls sideways inside itself instead of widening the page; the selected underline stays visible.

@@ -12,3 +12,6 @@ Title block at the top of a page: the h1, an optional description, facts beside 
 - `actions`: at most one primary `Button`, last; secondary actions before it. Below 480px the actions wrap under the title.
 - Use `breadcrumb` only when the `AppShell` top bar does not carry the `Breadcrumb`.
 - Description is one sentence, no exclamation marks.
+
+## Responsive
+- The actions wrap under the title when the row is too narrow; buttons keep their labels on one line.

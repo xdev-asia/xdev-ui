@@ -170,6 +170,36 @@ describe("audit: accessibility rules", () => {
   });
 });
 
+describe("audit: responsive rules", () => {
+  it("fixed-width warns on uncapped widths over 320px outside a min-width query", () => {
+    const f = inDir({
+      "a.css": [
+        ".a { width: 30rem; }",
+        ".b { min-width: 400px; }",
+        ".c { width: 30rem; max-width: 100%; }",
+        "@media (min-width: 64rem) { .d { width: 30rem; } }",
+        ".e { width: 20rem; }",
+        ".f { width: min(30rem, 100%); }",
+      ].join("\n") + "\n",
+    }).filter((x) => x.rule === "fixed-width");
+    expect(f.map((x) => [x.level, x.line])).toEqual([
+      ["warn", 1],
+      ["warn", 2],
+    ]);
+  });
+  it("nowrap warns on containers that neither scroll nor clip, not on controls", () => {
+    const f = inDir({
+      "a.css": [
+        ".row { display: flex; white-space: nowrap; }",
+        ".cell { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }",
+        ".tabs { white-space: nowrap; overflow-x: auto; }",
+        ".app-btn { white-space: nowrap; }",
+      ].join("\n") + "\n",
+    }).filter((x) => x.rule === "nowrap");
+    expect(f.map((x) => [x.level, x.line])).toEqual([["warn", 1]]);
+  });
+});
+
 describe("audit: token contrast", () => {
   it("uses the WCAG 2.2 formula", () => {
     expect(contrastRatio([255, 255, 255, 1], [0, 0, 0, 1])).toBeCloseTo(21, 5);

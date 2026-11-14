@@ -26,3 +26,6 @@ Horizontal scroller of `BoardColumn`s, such as the task board with its Backlog t
 
 ## CSS classes
 `.x-board`, `.x-board-col`, `.x-board-col-head`, `.x-board-col-title`, `.x-board-col-actions`, `.x-board-col-body`, `.x-board-card`, `.x-board-card-head`, `.x-board-card-title`, `.x-board-card-menu`, `.x-board-card-meta`, `.x-board-card-tags`. Modifiers are data attributes: `.x-board-col[data-drop-target]`, `.x-board-card[data-selected]`, `.x-board-card[data-dragging]`.
+
+## Responsive
+- The board scrolls sideways inside itself; its hidden live text stays inside the scroller, so it does not widen the page.

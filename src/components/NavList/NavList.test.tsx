@@ -68,5 +68,12 @@ describe("NavList", () => {
   it("collapsible without a title is a plain list", () => {
     expect(findAll(NavList({ items, collapsible: true }), (e) => e.type === Disclosure)).toHaveLength(0);
   });
-});
 
+  it("puts a status dot after the label, with the state in words", () => {
+    const html = renderToStaticMarkup(<NavList items={[{ id: "providers", label: "Providers", tone: "danger", toneLabel: "2 failing" }]} />);
+    expect(html).toContain('<span class="settings-nav-tone" title="2 failing">');
+    expect(html).toContain('data-tone="danger"');
+    expect(html).toContain('<span class="x-sr-only">2 failing</span>');
+    expect(renderToStaticMarkup(<NavList items={items} />)).not.toContain("settings-nav-tone");
+  });
+});

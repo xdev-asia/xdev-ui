@@ -15,3 +15,7 @@ Modal confirmation over a dimmed backdrop, for decisions that cannot be undone.
 - `description` renders one line in `p.dialog-desc` under the title and is linked with `aria-describedby`.
 - `tone="danger"` gives the confirm button the `danger` variant; pair it with `alert` for destructive confirms.
 - `busy` disables both actions, shows a spinner in the confirm button, sets `aria-busy` and ignores Esc until the work ends.
+
+## Responsive
+- Below 640px a modal dialog opens as a bottom sheet: full width, rounded top corners, safe-area padding. The actions stack, primary on top.
+- A tall dialog scrolls inside itself; its height stays under the window.

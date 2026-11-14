@@ -96,6 +96,13 @@ describe("CommandPalette", () => {
       expect(html).toContain(`aria-modal="true"`);
       expect(renderToStaticMarkup(<CommandPalette sections={two} />)).not.toContain("pal-backdrop");
     });
+    it("focuses the input when the host opens it, and leaves focus alone inline", () => {
+      const isInput = (e: { props: { role?: string } }) => e.props.role === "combobox";
+      const [framed] = findAll(CommandPalette({ sections: two, open: true, onClose: vi.fn() })!, isInput);
+      expect(framed.props.autoFocus).toBe(true);
+      const [inline] = findAll(CommandPalette({ sections: two })!, isInput);
+      expect(inline.props.autoFocus).toBe(false);
+    });
     it("calls onClose on Escape and on a backdrop click only", () => {
       const onClose = vi.fn();
       const el = CommandPalette({ sections: two, open: true, onClose })!;

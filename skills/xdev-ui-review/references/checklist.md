@@ -18,11 +18,13 @@ Tick each item in the running app. Items marked (auto) are also covered by `scri
 - Hairlines (1px `--line`) separate regions; shadows only on menus, dialogs and the command palette.
 
 ## Layout at 360px
-- Resize the window to 360px wide: no horizontal scroll on the page.
+- Resize the window to 375, 768 and 1440px wide, then 320px: no horizontal scroll on the page at any of them. Screenshot 375 as well as the desktop size.
+- (auto, partial) `fixed-width` flags uncapped widths over 320px; `nowrap` flags `white-space: nowrap` on containers that neither scroll nor clip.
 - A `DataTable` scrolls inside its own wrapper; `hideNarrow` columns have dropped.
 - The `AppShell` sidebar is a drawer: the menu button opens it, the backdrop and Esc close it, and focus is not trapped behind it.
+- `Dialog` and `FormDialog` (modal) open as a bottom sheet below 640px; a `Drawer` takes the full width.
 - `PageHeader` actions wrap under the title; `FormSection` is one column; `Pagination` fits on one or two lines.
-- Touch targets are at least `--x-space-6` high; nothing overlaps. (auto, partial) Controls under 24px are flagged by `target-size`.
+- Touch targets are at least `--x-space-6` high (44px on a touch screen, which the library sets under `pointer: coarse`); nothing overlaps. (auto, partial) Controls under 24px are flagged by `target-size`.
 
 ## Themes and language
 - Switch `data-theme` between `dark` and `light` on `<html>`: no text loses contrast, no surface turns white or black by accident.

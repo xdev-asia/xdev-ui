@@ -15,4 +15,16 @@ describe("Meter", () => {
     expect(html).toContain('aria-valuenow="100"');
     expect(html).not.toContain("data-warn");
   });
+  it("takes an explicit tone, which wins over warnAt", () => {
+    const html = renderToStaticMarkup(<Meter value={20} warnAt={10} tone="danger" />);
+    expect(html).toContain('data-tone="danger"');
+    expect(html).not.toContain("data-warn");
+  });
+  it("fills its container when asked, and can show its own text instead of the percent", () => {
+    const html = renderToStaticMarkup(<Meter value={40} fill valueText="40 / 100 left" />);
+    expect(html).toContain("data-fill");
+    expect(html).toContain("40 / 100 left");
+    expect(html).toContain('aria-valuetext="40 / 100 left"');
+    expect(html).not.toContain(">40%<");
+  });
 });

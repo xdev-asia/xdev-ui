@@ -24,6 +24,10 @@ export interface DataTableColumn<Row> {
   hideNarrow?: boolean;
   /** "min" shrinks to content (checkbox, row actions). Default "auto". */
   width?: "auto" | "min";
+  /** Pin the column to an edge while the table scrolls sideways. "end" keeps a row-actions column reachable on a phone. */
+  sticky?: "start" | "end";
+  /** Text label of the cell in `stack` mode. Default: `header` when it is a string. */
+  label?: string;
 }
 
 export interface DataTableLabels {
@@ -82,6 +86,8 @@ export interface DataTableProps<Row> {
   onReorder?: (fromIndex: number, toIndex: number) => void;
   /** Override the English defaults (e.g. for vi). */
   labels?: Partial<DataTableLabels>;
+  /** Below a 480px-wide container, show each row as a card of "label: value" lines instead of a sideways-scrolling table. Header cells stay for screen readers; sorting needs its own control there. */
+  stack?: boolean;
   className?: string;
 }
 
@@ -111,6 +117,7 @@ function renderTable<Row>({
   loading,
   empty,
   labels,
+  stack,
   className,
 }: DataTableProps<Row>, reorder?: ReorderParts<Row>): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
@@ -138,20 +145,24 @@ function renderTable<Row>({
     "data-align": c.align === "end" ? "end" : undefined,
     "data-width": c.width === "min" ? "min" : undefined,
     "data-hide-narrow": c.hideNarrow ? "true" : undefined,
+    "data-sticky": c.sticky,
   });
+  // A table whose rows or cells are display:block can lose its table role in some browsers; stack mode states the roles.
+  const role = (r: string): string | undefined => (stack ? r : undefined);
+  const labelOf = (c: DataTableColumn<Row>): string | undefined => (stack ? (c.label ?? (typeof c.header === "string" ? c.header : undefined)) : undefined);
   return (
-    <div className={cx("x-table-wrap", className)} aria-busy={loading ? true : undefined} data-loading={loading && rows.length ? "" : undefined}>
-      <table className="x-table">
+    <div className={cx("x-table-wrap", className)} aria-busy={loading ? true : undefined} data-loading={loading && rows.length ? "" : undefined} data-stack={stack ? "" : undefined}>
+      <table className="x-table" role={role("table")}>
         <caption className="x-sr-only">{caption}</caption>
-        <thead>
-          <tr>
+        <thead role={role("rowgroup")}>
+          <tr role={role("row")}>
             {reorder ? (
-              <th scope="col" className="x-table-handle-cell" data-width="min">
+              <th scope="col" role={role("columnheader")} className="x-table-handle-cell" data-width="min">
                 <span className="x-sr-only">{l.reorderColumn}</span>
               </th>
             ) : null}
             {selectable ? (
-              <th scope="col" className="x-table-check" data-width="min">
+              <th scope="col" role={role("columnheader")} className="x-table-check" data-width="min">
                 <Checkbox aria-label={l.selectAll} checked={all} indeterminate={picked > 0 && !all} onChange={toggleAll} disabled={!rows.length} />
               </th>
             ) : null}
@@ -159,6 +170,7 @@ function renderTable<Row>({
               const dir = sort?.key === c.key ? sort.dir : undefined;
               return (
                 <th
+                  role={role("columnheader")}
                   key={c.key}
                   scope="col"
                   {...cellAttrs(c)}
@@ -178,16 +190,16 @@ function renderTable<Row>({
             })}
           </tr>
         </thead>
-        <tbody>
+        <tbody role={role("rowgroup")}>
           {loading && !rows.length ? (
-            <tr>
-              <td className="x-table-empty" colSpan={colSpan}>
+            <tr role={role("row")}>
+              <td role={role("cell")} className="x-table-empty" colSpan={colSpan}>
                 <Spinner size="md" label={l.loading} />
               </td>
             </tr>
           ) : !rows.length ? (
-            <tr>
-              <td className="x-table-empty" colSpan={colSpan}>
+            <tr role={role("row")}>
+              <td role={role("cell")} className="x-table-empty" colSpan={colSpan}>
                 {empty}
               </td>
             </tr>
@@ -196,19 +208,19 @@ function renderTable<Row>({
               const k = rowKey(row);
               const isSel = selectable ? selected.has(k) : undefined;
               return (
-                <tr key={k} aria-selected={isSel ? true : undefined} data-selected={isSel ? "" : undefined} {...reorder?.rowAttrs(row, index)}>
+                <tr key={k} role={role("row")} aria-selected={isSel ? true : undefined} data-selected={isSel ? "" : undefined} {...reorder?.rowAttrs(row, index)}>
                   {reorder ? (
-                    <td className="x-table-handle-cell" data-width="min">
+                    <td role={role("cell")} className="x-table-handle-cell" data-width="min">
                       {reorder.handle(row, index)}
                     </td>
                   ) : null}
                   {selectable ? (
-                    <td className="x-table-check" data-width="min">
+                    <td role={role("cell")} className="x-table-check" data-width="min">
                       <Checkbox aria-label={l.selectRow(rowLabel ? rowLabel(row) : k)} checked={Boolean(isSel)} onChange={() => toggleRow(k)} />
                     </td>
                   ) : null}
                   {columns.map((c) => (
-                    <td key={c.key} className={cx(c.mono && "ws-mono")} {...cellAttrs(c)}>
+                    <td key={c.key} className={cx(c.mono && "ws-mono")} {...cellAttrs(c)} role={role("cell")} data-label={labelOf(c)}>
                       {c.cell(row)}
                     </td>
                   ))}

@@ -3,6 +3,7 @@ import { cx } from "../../internal/cx";
 import type { IconName } from "../../icons";
 import { Disclosure } from "../Disclosure/Disclosure";
 import { Icon } from "../Icon/Icon";
+import { StatusDot, type StatusTone } from "../StatusDot/StatusDot";
 
 export interface NavListItem {
   id: string;
@@ -13,6 +14,10 @@ export interface NavListItem {
   count?: number;
   /** Renders a link instead of a button. */
   href?: string;
+  /** A dot at the end for the state of what the item leads to (a provider that failed). Needs `toneLabel`. */
+  tone?: StatusTone;
+  /** The state in words, for screen readers and the tooltip ("2 failing"). */
+  toneLabel?: string;
 }
 
 /** Props handed to `renderLink`; spread them on your router's link. */
@@ -61,6 +66,12 @@ export function NavList({ items, value, onSelect, title, renderLink, collapsible
         {it.icon ? <Icon name={it.icon} size={16} className="settings-nav-icon" /> : null}
         <span className="settings-nav-label">{it.label}</span>
         {it.count != null ? <span className="settings-nav-count">{it.count}</span> : null}
+        {it.tone ? (
+          <span className="settings-nav-tone" title={it.toneLabel}>
+            <StatusDot tone={it.tone} />
+            {it.toneLabel ? <span className="x-sr-only">{it.toneLabel}</span> : null}
+          </span>
+        ) : null}
       </>
     );
     if (it.href) {

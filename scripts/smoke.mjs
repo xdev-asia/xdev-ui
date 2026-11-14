@@ -60,6 +60,8 @@ const cases = {
   CommitGraph: [{ row: { input: [], output: [{ id: "b", color: 0 }], lane: 0, color: 0, kind: "commit" } }],
   Disclosure: [{ title: "Staged", count: 2 }, "a.ts"],
   ListRow: [{ title: "fix-auth", meta: "main", selected: true, onClick() {} }],
+  ResourceCard: [{ title: "OpenAI", status: "2 connected", href: "#" }],
+  Emblem: [{ name: "OpenAI", text: "OA", color: "seagreen" }],
   Card: [{ title: "Worktree", subtitle: "~/code/xdev", monoSubtitle: true }, "Clean"],
   EmptyState: [{ icon: "changes", title: "No changes", hint: "Edits in this worktree show up here." }],
   SettingRow: [{ label: "Auto-commit", description: "Commit when an agent finishes.", controlId: "auto-commit" }],

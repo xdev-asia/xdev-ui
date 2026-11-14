@@ -27,4 +27,9 @@ describe("Card", () => {
     expect(renderToStaticMarkup(<Card title="Users" headingLevel={2} />)).toContain('<h2 class="x-card-title" id="x-card-:c1:">Users</h2>');
     expect(renderToStaticMarkup(<Card title="Users" headingLevel={6} />)).toContain("<h6 ");
   });
+  it("titleAside sits after the heading, outside it", () => {
+    const html = renderToStaticMarkup(<Card title="Models" titleAside={<select aria-label="Mode" />} />);
+    expect(html).toContain('<div class="x-card-title-row"><h3 class="x-card-title" id="x-card-:c1:">Models</h3><select aria-label="Mode"></select></div>');
+    expect(renderToStaticMarkup(<Card title="Models" />)).not.toContain("x-card-title-row");
+  });
 });

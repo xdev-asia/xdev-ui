@@ -19,3 +19,12 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 export const Warning: Story = { args: { value: 91 } };
+export const Tones: Story = {
+  render: () => (
+    <div style={{ display: "grid", gap: 8 }}>
+      <Meter value={85} label="Session" tone="ok" fill />
+      <Meter value={45} label="Weekly" tone="warn" fill />
+      <Meter value={12} label="Tokens" tone="danger" fill valueText="720 / 6000 left" />
+    </div>
+  ),
+};

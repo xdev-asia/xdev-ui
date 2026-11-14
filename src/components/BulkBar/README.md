@@ -12,3 +12,6 @@ Bar that appears while rows are selected, with the selection count, the actions 
 - Use it instead of a `Toolbar` with `variant="bulk"` when the actions should only show while something is selected; do not use both for one table.
 - The count is read out politely when it changes; the region is named by `labels.region`.
 - `labels` (`BulkBarLabels`: `region`, `selected(count)`, `clear`) overrides the English defaults.
+
+## Responsive
+- The actions wrap onto the next line on a narrow screen; the count and Clear stay first.

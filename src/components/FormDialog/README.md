@@ -15,3 +15,6 @@ Modal dialog that holds a short form (create or rename one thing), with Cancel, 
 - While `busy` both buttons are disabled, the submit button says `labels.saving`, and Esc, Cancel and the backdrop do nothing.
 - Close it (unmount) only after the save succeeded, then confirm with a `Toast`.
 - Mount it to open it; focus, Tab trap and `inert` work as in `Dialog`.
+
+## Responsive
+- Below 640px it opens as a full-width bottom sheet like `Dialog`; the form scrolls inside it and the actions stack, primary on top.
