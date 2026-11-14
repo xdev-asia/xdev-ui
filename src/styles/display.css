@@ -417,16 +417,20 @@ button.x-list-row-main:disabled { cursor: default; }
 .x-zoombar { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--x-space-1); }
 .x-zoombar-pct { min-width: 56px; font-variant-numeric: tabular-nums; }
 
-/* FlowMap (.x-flowmap): a hub and its nodes on a grid that pans and zooms with them (9router's usage topology). */
+/* FlowMap (.x-flowmap): a hub and its nodes on a dot grid that pans and zooms with them (9router's usage topology). */
 .x-flowmap {
   /* FlowMap sets these inline from its layout and view; the values here are its zoom-1 defaults. */
-  --x-flowmap-node-w: 208px;
-  --x-flowmap-node-h: 56px;
-  --x-flowmap-hub-w: 240px;
-  --x-flowmap-hub-h: 64px;
+  --x-flowmap-node-w: 220px;
+  --x-flowmap-node-h: 64px;
+  --x-flowmap-hub-w: 272px;
+  --x-flowmap-hub-h: 80px;
   --x-flowmap-grid: 24px;
   --x-flowmap-grid-x: 0px;
   --x-flowmap-grid-y: 0px;
+  --x-flowmap-weight: 0;
+  --x-flowmap-flow: var(--x-color-accent);
+  --x-flowmap-dot: color-mix(in oklab, var(--x-color-line-strong) 70%, transparent);
+  --x-flowmap-lift: 0 1px 2px color-mix(in oklab, var(--x-color-ink) 6%, transparent), 0 8px 20px -10px color-mix(in oklab, var(--x-color-ink) 22%, transparent);
   position: relative;
   display: flex;
   height: calc(var(--x-space-8) * 15);
@@ -434,51 +438,103 @@ button.x-list-row-main:disabled { cursor: default; }
   overflow: hidden;
   border: 1px solid var(--x-color-line);
   border-radius: var(--x-radius-lg);
-  --x-flowmap-rule: color-mix(in oklab, var(--x-color-line) 60%, transparent);
+  /* A wash of the accent behind the hub, over dots that move with the map. */
   background-color: var(--x-color-bg);
   background-image:
-    linear-gradient(to right, var(--x-flowmap-rule) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--x-flowmap-rule) 1px, transparent 1px);
-  background-size: var(--x-flowmap-grid) var(--x-flowmap-grid);
-  background-position: var(--x-flowmap-grid-x) var(--x-flowmap-grid-y);
+    radial-gradient(ellipse 55% 60% at 50% 50%, color-mix(in oklab, var(--x-color-accent) 7%, transparent), transparent 75%),
+    radial-gradient(circle, var(--x-flowmap-dot) 1px, transparent 1.6px);
+  background-size: 100% 100%, var(--x-flowmap-grid) var(--x-flowmap-grid);
+  background-position: 0 0, var(--x-flowmap-grid-x) var(--x-flowmap-grid-y);
 }
 .x-flowmap > .x-panzoom { flex: 1; background: transparent; }
 .x-flowmap:not([data-ready]) .x-panzoom-content { visibility: hidden; }
 .x-flowmap-world { position: relative; }
 .x-flowmap-edges { position: absolute; inset: 0; overflow: visible; }
-.x-flowmap-edge { stroke: var(--x-color-line-strong); stroke-width: 1.5; }
-.x-flowmap-edge[data-active] { stroke: var(--x-color-accent); stroke-width: 2; stroke-dasharray: 6 6; animation: x-flowmap-flow 0.8s linear infinite; }
-@keyframes x-flowmap-flow { to { stroke-dashoffset: -12; } }
-@media (prefers-reduced-motion: reduce) { .x-flowmap-edge[data-active] { animation: none; } }
+/* An edge's colour: the accent, or --orange on the way out (the mark's two blades); amber or red when it failed. */
+.x-flowmap-edges g { --x-flowmap-flow: var(--x-color-accent); }
+.x-flowmap-edges g[data-side="out"] { --x-flowmap-flow: var(--orange); }
+.x-flowmap-edges g[data-tone="warn"] { --x-flowmap-flow: var(--x-color-warn); }
+.x-flowmap-edges g[data-tone="danger"] { --x-flowmap-flow: var(--x-color-danger); }
+.x-flowmap-track,
+.x-flowmap-edge,
+.x-flowmap-glow { fill: none; stroke-linecap: round; }
+.x-flowmap-track { stroke: var(--x-color-line-strong); stroke-width: 1.5px; stroke-dasharray: 1 5; }
+.x-flowmap-edge { stroke: none; stroke-width: calc(1.5px + var(--x-flowmap-weight, 0) * 3.5px); }
+.x-flowmap-edge[data-active] { stroke: color-mix(in oklab, var(--x-flowmap-flow) 80%, transparent); }
+.x-flowmap-glow {
+  stroke: color-mix(in oklab, var(--x-flowmap-flow) 16%, transparent);
+  stroke-width: calc(8px + var(--x-flowmap-weight, 0) * 10px);
+}
+.x-flowmap-packet {
+  fill: var(--x-color-surface);
+  stroke: var(--x-flowmap-flow);
+  stroke-width: 2px;
+  filter: drop-shadow(0 0 4px var(--x-flowmap-flow));
+}
 .x-flowmap-nodes { margin: 0; padding: 0; list-style: none; }
 .x-flowmap-node {
   position: absolute;
   display: flex;
   align-items: center;
-  gap: var(--x-space-2);
+  gap: var(--x-space-3);
   box-sizing: border-box;
   width: var(--x-flowmap-node-w);
   height: var(--x-flowmap-node-h);
   padding: 0 var(--x-space-3);
   translate: -50% -50%;
   border: 1px solid var(--x-color-line);
-  border-radius: var(--x-radius-md);
+  border-radius: calc(var(--x-radius-lg) + 2px);
   background: var(--x-color-surface);
   color: var(--x-color-ink);
+  box-shadow: var(--x-flowmap-lift);
+  transition: transform 160ms ease, border-color 160ms ease;
 }
-.x-flowmap-node[data-active] { border-color: var(--x-color-accent); }
+.x-flowmap-node:hover { transform: translateY(-2px); }
+.x-flowmap-node[data-active] { border-color: color-mix(in oklab, var(--x-color-accent) 45%, var(--x-color-line)); }
+.x-flowmap-nodes[data-side="out"] .x-flowmap-node[data-active] { border-color: color-mix(in oklab, var(--orange) 45%, var(--x-color-line)); }
+.x-flowmap-node[data-tone="warn"] { border-color: var(--x-color-warn-line); background: color-mix(in oklab, var(--x-color-warn-soft) 45%, var(--x-color-surface)); }
+.x-flowmap-node[data-tone="danger"] { border-color: color-mix(in oklab, var(--x-color-danger) 40%, transparent); background: color-mix(in oklab, var(--x-color-danger-soft) 45%, var(--x-color-surface)); }
+/* A node without traffic steps back: no lift, a quiet name, a faded mark. */
+.x-flowmap-node:not([data-active]):not(.x-flowmap-hub) { box-shadow: none; background: color-mix(in oklab, var(--x-color-surface) 70%, transparent); }
+.x-flowmap-node:not([data-active]):not(.x-flowmap-hub) .x-flowmap-name { color: var(--x-color-muted); }
+.x-flowmap-node:not([data-active]):not(.x-flowmap-hub) .x-emblem { opacity: 0.6; filter: grayscale(0.6); }
 .x-flowmap-hub {
   justify-content: center;
   width: var(--x-flowmap-hub-w);
   height: var(--x-flowmap-hub-h);
-  border-color: var(--x-color-accent);
-  background: var(--x-color-accent-soft);
+  border: 1.5px solid var(--x-color-accent);
+  border-radius: calc(var(--x-radius-lg) + 6px);
+  background: linear-gradient(180deg, var(--x-color-surface), color-mix(in oklab, var(--x-color-accent-soft) 70%, var(--x-color-surface)));
+  box-shadow: 0 0 0 6px color-mix(in oklab, var(--x-color-accent) 10%, transparent), 0 12px 40px -8px color-mix(in oklab, var(--x-color-accent) 35%, transparent);
 }
-.x-flowmap-text { display: flex; flex-direction: column; min-width: 0; }
+.x-flowmap-hub:hover { transform: none; }
+/* The hub breathes: a ring that grows out of it and fades. */
+.x-flowmap-hub::before {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  border: 1.5px solid var(--x-color-accent);
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  animation: x-flowmap-pulse 2.8s ease-out infinite;
+}
+@keyframes x-flowmap-pulse {
+  0% { opacity: 0.55; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.18, 1.5); }
+}
+.x-flowmap-hub .x-flowmap-name { font: var(--type-dialog-title); }
+.x-flowmap-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .x-flowmap-name,
 .x-flowmap-detail { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .x-flowmap-name { font: var(--type-heading); }
-.x-flowmap-detail { font: var(--type-status); color: var(--x-color-muted); }
+.x-flowmap-detail { font: var(--type-status); color: var(--x-color-muted); font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) {
+  .x-flowmap-packet { display: none; }
+  .x-flowmap-hub::before { animation: none; }
+  .x-flowmap-node { transition: none; }
+  .x-flowmap-node:hover { transform: none; }
+}
 .x-flowmap-controls {
   position: absolute;
   bottom: var(--x-space-3);
@@ -487,11 +543,17 @@ button.x-list-row-main:disabled { cursor: default; }
   flex-direction: column;
   overflow: hidden;
   border: 1px solid var(--x-color-line);
-  border-radius: var(--x-radius-md);
+  border-radius: var(--x-radius-lg);
   background: var(--x-color-surface);
+  box-shadow: var(--x-flowmap-lift);
 }
 .x-flowmap-controls .ws-icon-btn { border-radius: 0; }
 .x-flowmap-controls .ws-icon-btn + .ws-icon-btn { border-top: 1px solid var(--x-color-line); }
+/* On a phone the buttons grow to touch size; a row keeps them off the map's middle, where the fitted map sits. */
+@media (max-width: 767.98px) {
+  .x-flowmap-controls { flex-direction: row; }
+  .x-flowmap-controls .ws-icon-btn + .ws-icon-btn { border-top: 0; border-left: 1px solid var(--x-color-line); }
+}
 
 /* Comment (.x-comment) */
 .x-comment {
