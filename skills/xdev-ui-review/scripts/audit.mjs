@@ -37,6 +37,8 @@ function openingTags(src, name) {
   const re = new RegExp(`<${name}(?=[\\s/>])`, "g");
   let m;
   while ((m = re.exec(src))) {
+    // `useState<Dialog | null>` is a type argument, not a tag: JSX never follows a name character.
+    if (/[\w$.]/.test(src[m.index - 1] ?? "")) continue;
     let i = m.index + m[0].length;
     let depth = 0;
     let quote = "";
@@ -53,6 +55,64 @@ function openingTags(src, name) {
   }
   return out;
 }
+
+/**
+ * Top-level props of one opening tag: name → raw value (`"x"`, `{expr}`, or `true` for a bare prop).
+ * Props inside nested JSX in a value are not counted. `spread` is true when the tag spreads `{...x}`.
+ */
+function propsOf(tag) {
+  const props = new Map();
+  let spread = false;
+  const body = tag.replace(/^<[\w.]+/, "").replace(/\/?>$/, "");
+  let i = 0;
+  while (i < body.length) {
+    const c = body[i];
+    if (/\s/.test(c)) {
+      i++;
+      continue;
+    }
+    if (c === "{") {
+      const end = closeOf(body, i);
+      if (/^\{\s*\.\.\./.test(body.slice(i, end))) spread = true;
+      i = end;
+      continue;
+    }
+    const m = /^[\w:-]+/.exec(body.slice(i));
+    if (!m) {
+      i++;
+      continue;
+    }
+    i += m[0].length;
+    if (body[i] !== "=") {
+      props.set(m[0], true);
+      continue;
+    }
+    i++;
+    const q = body[i];
+    const end = q === "{" ? closeOf(body, i) : q === '"' || q === "'" ? body.indexOf(q, i + 1) + 1 : i + 1;
+    props.set(m[0], body.slice(i, end));
+    i = end;
+  }
+  return { props, spread };
+}
+
+/** Index just past the brace that closes the one at `start`, skipping quoted strings. */
+function closeOf(src, start) {
+  let depth = 0;
+  let quote = "";
+  for (let i = start; i < src.length; i++) {
+    const c = src[i];
+    if (quote) {
+      if (c === quote && src[i - 1] !== "\\") quote = "";
+    } else if (c === '"' || c === "'" || c === "`") quote = c;
+    else if (c === "{") depth++;
+    else if (c === "}" && --depth === 0) return i + 1;
+  }
+  return src.length;
+}
+
+/** A prop that is set and not `{false}`. */
+const isOn = (props, name) => props.has(name) && !/^\{\s*false\s*\}$/.test(String(props.get(name)));
 
 /** Flat `a.b.c` keys of a dictionary file with `key: value` lines and nested `{ }`; empty-string values flagged. */
 function dictKeys(text) {
@@ -287,11 +347,16 @@ export function audit(dir, opts = {}) {
 
   let tokens = null;
   let manifestTokens = [];
+  // Library components whose props take `labels` (their English defaults need the app's words in other languages).
+  let labelled = null;
   const manifestPath = opts.manifest ? resolve(opts.manifest) : findManifest(root);
   if (existsSync(manifestPath)) {
-    manifestTokens = JSON.parse(readFileSync(manifestPath, "utf8")).tokens;
+    const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+    manifestTokens = manifest.tokens;
     tokens = new Set(manifestTokens.map((t) => t.name));
+    labelled = new Set((manifest.components ?? []).filter((c) => /\blabels\?\s*:/.test(c.types ?? "")).map((c) => c.name));
   } else notes.push(`unknown-token skipped: no manifest at ${manifestPath} (pass --manifest)`);
+  if (opts.i18n && !labelled) notes.push("i18n-labels skipped: no manifest (pass --manifest)");
   const sizes = new Map(manifestTokens.filter((t) => typeof t.value === "string" && /^\d*\.?\d+(px|rem)$/.test(t.value)).map((t) => [t.name, t.value]));
 
   const files = walk(root);
@@ -442,6 +507,63 @@ export function audit(dir, opts = {}) {
     if (h1.length > 1) add(file, h1[1].line, "sign-in-shell", "warn", `${h1.length} h1 in a sign-in page; the form holds one ("Welcome back", "Sign in").`);
   }
 
+  // Page rules: the parts of a list, dashboard, dialog, form and grid that the page reviews (references/pages/*.md) can read from code.
+  const PAGES = "xdev-ui-review references/pages";
+  function pageChecks(file, text) {
+    const each = (name, fn) => {
+      for (const t of openingTags(text, name)) {
+        const { props, spread } = propsOf(t.text);
+        if (!spread) fn(t, props);
+      }
+    };
+    each("DataTable", (t, p) => {
+      // rows={RESOURCES}: a fixed set in a constant is never empty.
+      if (/^\{\s*[A-Z][A-Z0-9_]*\s*\}$/.test(String(p.get("rows") ?? ""))) return;
+      if (!p.has("empty")) add(file, t.line, "list-empty", "warn", `DataTable has no empty state; pass empty={<EmptyState …/>}, with a second one when filters hide every row (${PAGES}/list.md).`);
+    });
+    each("Dialog", (t, p) => {
+      const destructive = isOn(p, "alert") || p.get("tone") === '"danger"';
+      if (!destructive) return;
+      if (!isOn(p, "modal")) add(file, t.line, "confirm-dialog", "warn", `Destructive Dialog is not modal; without modal there is no focus trap, Esc or return of focus (${PAGES}/dialogs-forms.md).`);
+      if (!p.has("busy") && !p.has("confirmDisabled")) add(file, t.line, "confirm-dialog", "warn", `Destructive Dialog does not lock while the request runs; pass busy or confirmDisabled so it cannot be confirmed twice (${PAGES}/dialogs-forms.md).`);
+      if (!isOn(p, "alert")) add(file, t.line, "confirm-dialog", "warn", `Destructive Dialog has no alert; a confirm that destroys something is an alertdialog (${PAGES}/dialogs-forms.md).`);
+    });
+    each("FormDialog", (t, p) => {
+      if (!p.has("busy")) add(file, t.line, "form-busy", "warn", `FormDialog has no busy; it can be sent twice or closed mid-request (${PAGES}/dialogs-forms.md).`);
+    });
+    for (const name of ["Field", "input"]) {
+      each(name, (t, p) => {
+        const type = /^["']([\w-]+)["']$/.exec(String(p.get("type") ?? ""))?.[1];
+        if (["password", "email", "tel"].includes(type) && !p.has("autoComplete") && !p.has("autocomplete"))
+          add(file, t.line, "autocomplete", "warn", `A ${type} field has no autoComplete; say what the browser may fill (current-password, new-password, email, tel, or off) (SC 1.3.5).`);
+      });
+    }
+    each("img", (t, p) => {
+      if (!p.has("alt")) add(file, t.line, "img-alt", "error", 'img has no alt; give it the name, or alt="" when the words next to it already say it (SC 1.1.1).');
+    });
+    each("StatTile", (t, p) => {
+      if (p.has("delta") && !p.has("hint")) add(file, t.line, "stat-delta", "warn", `StatTile shows a delta with no hint; say what it is compared with ("vs last 7 days") (${PAGES}/dashboard.md).`);
+    });
+    each("ResourceCard", (t, p) => {
+      const face = p.get("leading");
+      if (!face) add(file, t.line, "resource-face", "warn", `ResourceCard has no leading; lead each thing with an Emblem so the grid reads by face (${PAGES}/provider-grid.md).`);
+      else if (/<(Avatar|img)\b/.test(String(face))) add(file, t.line, "resource-face", "warn", `ResourceCard leads with an Avatar or img; a thing's face is an Emblem (name, logo, colour), Avatar is for people (${PAGES}/provider-grid.md).`);
+    });
+    if (!opts.i18n || !labelled) return;
+    // Parts whose built-in words show only with one prop set; ShellTitle's default is built from the app's own words.
+    const shownWith = { EmptyState: "steps" };
+    for (const name of labelled) {
+      if (name === "ShellTitle") continue;
+      each(name, (t, p) => {
+        if (p.has("labels")) return;
+        if (shownWith[name] && !p.has(shownWith[name])) return;
+        if (name === "Dialog" && p.has("confirmLabel") && p.has("cancelLabel")) return;
+        if (name === "Spinner" && p.has("label")) return;
+        add(file, t.line, "i18n-labels", "warn", `${name} has no labels; its built-in words are English, pass them from the strings files.`);
+      });
+    }
+  }
+
   for (const { file, text } of sources) {
     const css = file.endsWith(".css");
     const lines = text.split("\n");
@@ -510,6 +632,7 @@ export function audit(dir, opts = {}) {
     if (parsed.has(file)) cssChecks(file, parsed.get(file), text);
     if (file.endsWith(".tsx")) iconButtonChecks(file, text);
     if (file.endsWith(".tsx")) signInChecks(file, text);
+    if (file.endsWith(".tsx")) pageChecks(file, text);
     if (file.endsWith(".tsx")) {
       const tags = openingTags(text, "Button").filter((t) => /variant\s*=\s*["{]\s*["']?primary/.test(t.text));
       if (tags.length > 1) add(file, tags[1].line, "primary-count", "warn", `${tags.length} primary Buttons in one file; one primary per surface, the rest secondary (the default).`);
