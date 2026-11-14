@@ -9,7 +9,7 @@ Tick each item in the running app. Items marked (auto) are also covered by `scri
 - Keyboard and focus
 - States
 - Actions and labels
-- Sign-in pages
+- Page types
 - Standards
 
 ## Tokens and type
@@ -55,14 +55,8 @@ Tick each item in the running app. Items marked (auto) are also covered by `scri
 - Labels are sentence-case verbs ("Create session"), with no emoji and no exclamation marks.
 - State is a tint, a 1px border or a `StatusDot`; never a coloured left stripe on a rounded card or row.
 
-## Sign-in pages
-- The page sits in `AuthShell`; the form pane holds the brand, the language `Select` and the `ThemeSwitch` (icon), and the form, nothing else.
-- From 1024px the showcase takes about five eighths of the width, its art centred with the headline and tagline under it, and the footer at its foot. At 375px only the form shows, the footer under it, with no horizontal scroll.
-- One `h1` ("Welcome back", "Sign in") with one muted line under it on what the account is for; no emoji, no exclamation mark.
-- One primary `Button`, full width; other ways in (another provider, a passkey, an email link, a token) are secondary, split by a short "or" line.
-- The art is the product's own picture or the built-in pattern, in tokens, so it follows dark and light; never an illustration copied from another product.
-- A failed sign-in shows a `Banner` above the form that says what to do, and keeps what the person typed; the submit button is disabled while the request runs.
-- Fields have `autoComplete` (`username`, `current-password`, `one-time-code`); a passkey prompt the person closes says nothing.
+## Page types
+- Each page type has its own check in `references/pages/`: `pages/list.md`, `pages/dashboard.md`, `pages/settings.md`, `pages/dialogs-forms.md`, `pages/sign-in.md`, `pages/provider-grid.md`. Run the one for each page after this list.
 
 ## Standards
 - This list covers the design-system rules. For WCAG 2.2 AA, the APG patterns, the platform decisions and the ten usability heuristics, walk `references/heuristics-checklist.md` in the `xdev-ui-ux-standards` skill. Run the audit with `--contrast` to list token pairs below WCAG contrast.
