@@ -115,6 +115,7 @@ export * from "./components/FileDrop/FileDrop";
 export * from "./components/Container/Container";
 export * from "./components/Stack/Stack";
 export * from "./components/SiteShell/SiteShell";
+export * from "./components/AuthShell/AuthShell";
 export * from "./components/Grid/Grid";
 export * from "./components/Grid/breakpoints";
 export * from "./components/AttentionInbox/AttentionInbox";

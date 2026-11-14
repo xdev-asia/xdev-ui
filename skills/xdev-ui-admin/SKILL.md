@@ -42,6 +42,7 @@ Existing app on Tailwind v4: import `@xdev-asia/ui/styles.css`, then `@xdev-asia
 | Forms and inputs | `Field`, `Combobox`, `DatePicker`, `DateRangePicker`, `FileDrop`, `useUnsavedGuard` | [forms](references/forms.md) |
 | Content editing | `RichTextEditor` (`/editor`), `ImageField` (`/image`) | [rich content](references/rich-content.md) |
 | Users and roles | `Avatar`, `Tag`, `StatusDot`, `Checkbox` matrix | [users and roles](references/users-roles.md) |
+| Sign-in, sign-up, password reset | `AuthShell`, `Field`, `Button`, `Banner` | [sign-in](references/sign-in.md) |
 | Settings | `NavList`, `SettingRow`, `Switch`, `Select`, `ThemeSwitch` | [settings](references/settings.md) |
 | Audit log | `DateRangePicker`, `FacetFilter`, `Disclosure`, `Pagination` | [audit log](references/audit-log.md) |
 | Any page on a phone or tablet | `PageHeader actions`, `Grid columns`, `DataTable sticky` / `stack`, sheet `Dialog` | [responsive](references/responsive.md) |
