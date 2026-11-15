@@ -226,7 +226,7 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     style: {"width": "520px", "height": "260px", "overflow": "hidden"},
     render: (X, h) => h(X.SiteShell, { brand: h("a", { href: "#" }, h(X.BrandMark, { variant: "mark", size: 20 }), h("span", null, "xDev account")),
       actions: h(X.Select, { icon: "globe", "aria-label": "Language", options: [{ value: "en", label: "English" }, { value: "vi", label: "Tiếng Việt" }] }),
-      links: [{ href: "#", label: "Privacy" }, { href: "#", label: "Terms" }], linksLabel: "Legal" }, h(X.PageHeader, { title: "Your account" })),
+      links: [{ href: "#privacy", label: "Privacy" }, { href: "#terms", label: "Terms" }], linksLabel: "Legal" }, h(X.PageHeader, { title: "Your account" })),
   },
   "AuthShell": {
     style: {"width": "720px", "height": "420px", "overflow": "hidden"},
@@ -706,6 +706,7 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     render: (X, h) => h(X.AppShell, { brand: h(X.BrandMark, { size: 20 }), nav: h(X.NavList, { items: [{ id: "home", label: "Overview", icon: "home" }, { id: "users", label: "Users", icon: "accounts" }], value: "home" }), crumbs: h(X.Breadcrumb, { items: [{ label: "Overview" }] }) }, h("p", null, "Page content")),
   },
   "ShellTitle": {
+    style: {"padding": "16px", "width": "480px", "maxWidth": "100%"},
     render: (X, h) => h("div", { style: { display: "grid", gap: "16px" } },
       h(X.ShellTitle, { icon: "plug", title: "Providers", description: "Manage your AI provider connections" }),
       h(X.ShellTitle, { parent: { label: "Providers", href: "#" }, icon: "server", title: "OpenAI" })),

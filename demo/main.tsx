@@ -225,7 +225,7 @@ function Facts() {
 /* ---------- gallery ---------- */
 
 /** Scales a live preview down until it fits its stage; the preview stays real DOM, only inert. */
-function Fit({ style, children }: { style: CSSProperties; children: ReactNode }) {
+function Fit({ style = {}, children }: { style?: CSSProperties; children: ReactNode }) {
   const outer = useRef<HTMLDivElement>(null);
   const inner = useRef<HTMLDivElement>(null);
   const [k, setK] = useState(1);
