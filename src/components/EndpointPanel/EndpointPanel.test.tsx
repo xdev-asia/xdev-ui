@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { EndpointPanel } from "./EndpointPanel";
@@ -25,5 +26,12 @@ describe("EndpointPanel", () => {
     const html = renderToStaticMarkup(<EndpointPanel title="Điểm cuối" url="u" paths={["/v1/models"]} labels={{ paths: "Đường dẫn" }} headingLevel={3} />);
     expect(html).toContain('aria-label="Đường dẫn"');
     expect(html).toMatch(/<h3[^>]*>Điểm cuối<\/h3>/);
+  });
+
+  it("wraps a long path and the description instead of clipping them on a phone", () => {
+    const css = readFileSync(new URL("../../styles/display.css", import.meta.url), "utf8");
+    expect(css).toMatch(/\.x-endpoint-path \{[^}]*overflow-wrap: anywhere;/);
+    expect(css).toMatch(/\.x-endpoint-paths > li \{[^}]*max-width: 100%;/);
+    expect(css).toMatch(/\.x-endpoint \.x-card-sub \{[^}]*white-space: normal;/);
   });
 });
