@@ -767,7 +767,10 @@ button.x-list-row-main:disabled { cursor: default; }
 .x-endpoint-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--x-space-6); }
 .x-endpoint-main { display: flex; flex-direction: column; gap: var(--x-space-3); min-width: 0; }
 .x-endpoint-paths { display: flex; flex-wrap: wrap; gap: var(--x-space-2); margin: 0; padding: 0; list-style: none; }
-.x-endpoint-path { font: var(--type-mono); }
+.x-endpoint-paths > li { min-width: 0; max-width: 100%; }
+.x-endpoint-path { font: var(--type-mono); overflow-wrap: anywhere; }
+/* The description says which clients the URL serves; on a phone it wraps instead of ending in an ellipsis. */
+.x-endpoint .x-card-sub { white-space: normal; }
 .x-endpoint-aside { min-width: 0; }
 @container (min-width: 720px) {
   .x-endpoint-body[data-aside] { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: center; }

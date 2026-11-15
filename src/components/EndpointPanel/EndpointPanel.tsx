@@ -13,7 +13,7 @@ const DEFAULT_LABELS: EndpointPanelLabels = { copy: "Copy", copied: "Copied", pa
 
 export interface EndpointPanelProps {
   title: ReactNode;
-  /** One line under the title: what to do with the URL. */
+  /** One sentence under the title: what to do with the URL. Wraps on narrow cards. */
   description?: ReactNode;
   /** The base URL a client sets. Shown whole and copied whole. */
   url: string;

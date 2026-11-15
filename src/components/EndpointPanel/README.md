@@ -7,6 +7,7 @@ The address a client points at: a `Card` with the base URL in a `CodeBlock` to c
 
 ## Rules
 - One URL per panel, the one a client sets as its base URL. Show it whole; never truncate or mask it.
+- `description` wraps under the title and a long path wraps inside its tag, so neither is clipped on a phone. Keep the description to one sentence.
 - Paths are what answers under that URL, full ("/v1/chat/completions"), at most about six.
 - `actions` holds at most one primary `Button` (for example "Create key"); the copy button is the CodeBlock's.
 - `labels` (`copy`, `copied`, `paths`) override the English defaults.
