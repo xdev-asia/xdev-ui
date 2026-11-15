@@ -116,6 +116,11 @@ Users "need a clearly marked emergency exit".
 - [ ] Tab through the screen: order follows reading order, no positive `tabIndex`, focus ring visible on every stop (K3, K4).
 - [ ] The focused control is never fully covered by a sticky header, the status bar or a toast (K5).
 - [ ] Every control has a name; icon-only controls use `IconButton` `label` (N1, N2).
+- [ ] An `Icon` beside visible text has no `label`, so a screen reader does not say it twice; an icon that carries meaning alone has one (N2).
+- [ ] Every toggle, tab, disclosure and selectable row exposes its pressed, selected or expanded state, and the state stays in sync (N1).
+- [ ] A submit that fails with several errors names each field in text and moves focus to the first error or a summary that links to each (E1, K7).
+- [ ] Sign-in fields accept paste and password managers; a code field does not block paste (E6).
+- [ ] Nothing advances or rotates by itself (carousel, ticker, rotating tip) unless it pauses on hover and focus and has a pause control. [Unverified] maps to WCAG 2.2.2, not yet in the standards map.
 - [ ] Pointer targets are 24px or have 24px of clear space; check tab close, search clear and swatches (P1).
 - [ ] Text spacing override (1.5, 2, 0.12, 0.16) clips nothing (L1).
 - [ ] Turn on reduced motion: nothing slides, scales or spins except progress (M1, M2).

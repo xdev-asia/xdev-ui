@@ -6,7 +6,31 @@ license: Apache-2.0
 
 # Review a UI built with @xdev-asia/ui
 
-Run the script, fix every error, then walk the manual checklist and the check for each page type.
+Run the script, fix every error in priority order, then walk the pre-delivery checklist and the check for each page type.
+
+## When to use
+
+- Before committing UI work, before calling a page done, or when asked to review a page or a whole app on `@xdev-asia/ui`.
+- After the `xdev-ui-admin` or `xdev-ui-build-app` workflow: both end here.
+
+Skip it for worker or API code, tests, build config and docs that render no UI. For a standards question (which ARIA pattern, which WCAG criterion), use `xdev-ui-ux-standards`.
+
+## Fix order
+
+Fix the highest priority first. A higher row can force changes that make a lower finding moot.
+
+| priority | category | must have | avoid | audit rules |
+|---|---|---|---|---|
+| 1 critical | Access | visible focus, a name on every control, 4.5:1 text and 3:1 UI contrast, keyboard for every action | `outline: none` with no replacement, a clickable `div`, an unnamed icon button | `focus-outline`, `positive-tabindex`, `icon-button-name`, `img-alt`, `contrast` |
+| 2 critical | Tokens and identity | tokens for colour, space, type, z-index; one accent; cyan only as focus | hex, Tailwind palette colours, px font sizes, a coloured left stripe | `raw-colour`, `raw-px`, `raw-font`, `unknown-token`, `left-stripe` |
+| 3 high | States and data safety | loading, error, empty and success for every region; input kept on error; destructive confirms | a blank page on error, a lost form, a double submit | `list-empty`, `confirm-dialog`, `form-busy` |
+| 4 high | Layout | no page scroll sideways at 320 to 1440px; tables scroll in their wrapper; space reserved for late content | fixed widths over 320px, clipped text, content that jumps | `fixed-width`, `nowrap` |
+| 5 high | Actions | one primary per surface, last in its row; hide what the role can never do, disable with a reason | two primaries, a reason only in a tooltip | `primary-count` |
+| 6 medium | Language | sentence case, verbs on buttons, `en` and `vi` for every string and every `labels` | emoji, `!`, Title Case, English left in a library part | `label-voice`, `i18n-parity`, `i18n-labels` |
+| 7 medium | Forms | a visible label, errors on the field, autofill and paste allowed | placeholder as label, errors only in a toast | `autocomplete` |
+| 8 medium | Motion and platform | reduced motion, forced colours, 24px targets (44px on touch) | slides and spins with no `prefers-reduced-motion` guard | `reduced-motion`, `forced-colors`, `target-size` |
+| 9 medium | Page patterns | the shape each pattern expects | a bare `AuthShell`, a delta with no baseline, a card with no face | `sign-in-shell`, `stat-delta`, `resource-face` |
+| 10 low | Visual finish | a screenshot in dark and light at 375 and 1440px with real data | calling it done from the source alone | none: look at it |
 
 ## 1. Run the audit
 
@@ -51,13 +75,25 @@ node <skill-dir>/scripts/audit.mjs src --i18n src/i18n
 
 ## 2. Fix, do not silence
 
+- Work down the fix order: all critical findings, then high, then the rest.
 - Colour, size, type: replace the literal with a token. Find it with `xdevui_search_tokens` (see `references/grep-recipes.md`).
 - Stripe: use a tint, a 1px border or a `StatusDot`.
 - Do not delete the audit rule or the line to make it pass; do not add `outline: none`.
 
 ## 3. Check by hand
 
-Work through `references/checklist.md`: 375, 768 and 1440px widths (and 320px for overflow), dark and light, `en` and `vi`, keyboard order, focus ring, empty, loading and error states, destructive actions.
+Work through [the pre-delivery checklist](references/checklist.md), the only one: process, tokens, layout at 375, 768, 1440 and 320px, both themes each on screen, `en` and `vi`, keyboard and names, states, forms, lists, actions and code.
+
+When something looks wrong and the cause is not obvious, start here:
+
+| symptom | look at |
+|---|---|
+| The screen looks flat, grey or unfinished | `xdev-ui-admin` visual identity; the 10th row of the fix order |
+| The page scrolls sideways on a phone | `fixed-width` and `nowrap` findings, then the layout section |
+| Text is clipped or still English in `vi` | `i18n-parity`, `i18n-labels`, then themes and language |
+| Focus is lost after a dialog or drawer closes | keyboard section; the widget's row in the standards skill patterns |
+| A colour or size will not take a token | `references/grep-recipes.md` and `xdevui_search_tokens` |
+| The library part lacks something the page needs | the standards skill's known gaps; fix it in `@xdev-asia/ui`, not in the app |
 
 Then run the check for each page's type. A page can be more than one type (a list that opens a dialog gets both checks).
 

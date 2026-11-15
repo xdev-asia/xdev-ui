@@ -14,13 +14,16 @@ The bar is WCAG 2.2 level AA, the APG pattern for every widget, and one decision
 - **Build**: while you wire keyboard, ARIA, focus, motion and status messages.
 - **Review**: after `node <review-skill-dir>/scripts/audit.mjs` passes, for what a script cannot see.
 
+Skip it for layout, tokens and page patterns (use `xdev-ui-admin`) and for the pre-delivery pass itself (use `xdev-ui-review`). This skill answers which rule applies and where it comes from.
+
 ## How it fits with the other skills
 
 | skill | answers |
 |---|---|
 | `xdev-ui-build-app` | how to set up and build the app: shell, theme, i18n, states |
+| `xdev-ui-admin` | which page pattern, container and states an admin screen needs |
 | `xdev-ui-ux-standards` | what the result must satisfy, with the source for each rule |
-| `xdev-ui-review` | how to check it: `audit.mjs` and the manual checklist |
+| `xdev-ui-review` | how to check it: `audit.mjs`, the fix order and the pre-delivery checklist, the only one |
 
 The review audit rules `focus-outline`, `forced-colors`, `positive-tabindex`, `icon-button-name`, `target-size`, `reduced-motion` and `contrast` are the automated part of this skill. Their rule IDs are in [standards map](references/standards-map.md).
 
