@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
@@ -31,5 +32,12 @@ describe("Card", () => {
     const html = renderToStaticMarkup(<Card title="Models" titleAside={<select aria-label="Mode" />} />);
     expect(html).toContain('<div class="x-card-title-row"><h3 class="x-card-title" id="x-card-:c1:">Models</h3><select aria-label="Mode"></select></div>');
     expect(renderToStaticMarkup(<Card title="Models" />)).not.toContain("x-card-title-row");
+  });
+
+  it("wraps a long subtitle instead of ending it in an ellipsis", () => {
+    const css = readFileSync(new URL("../../styles/display.css", import.meta.url), "utf8");
+    const rule = css.match(/\.x-card-sub \{([^}]*)\}/)?.[1] ?? "";
+    expect(rule).not.toMatch(/white-space: nowrap|text-overflow: ellipsis/);
+    expect(rule).toMatch(/overflow-wrap: anywhere;/);
   });
 });

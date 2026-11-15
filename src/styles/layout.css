@@ -81,6 +81,10 @@
 @media (min-width: 64rem) /* --x-bp-lg */ {
   .x-shell-title-desc { display: block; }
 }
+/* On a phone a 24px title fits a few characters beside the menu button: it takes two 18px lines, still inside the 64px bar. */
+@media (max-width: 639.98px) /* below --x-bp-sm */ {
+  .x-shell-title-text { display: -webkit-box; font-size: 18px; line-height: 1.25; white-space: normal; overflow-wrap: anywhere; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+}
 
 /* drawerBelow="lg": the same drawer as below, from 1024px down. */
 @media (max-width: 1023.98px) /* below --x-bp-lg */ {

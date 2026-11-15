@@ -223,7 +223,8 @@ button.x-list-row-main:disabled { cursor: default; }
 .x-card-heading { min-width: 0; }
 .x-card-title-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--x-space-2) var(--x-space-3); min-width: 0; }
 .x-card-title { margin: 0; font: 600 14px var(--font-body); color: var(--x-color-ink); }
-.x-card-sub { margin: 2px 0 0; overflow: hidden; font-size: 12px; color: var(--x-color-muted); text-overflow: ellipsis; white-space: nowrap; }
+/* The subtitle wraps: an ellipsis hid the end of a sentence on every narrow card. A long path or URL breaks anywhere. */
+.x-card-sub { margin: 2px 0 0; font-size: 12px; color: var(--x-color-muted); overflow-wrap: anywhere; }
 .x-card-actions { display: inline-flex; flex: none; align-items: center; gap: var(--x-space-2); }
 .x-card-body { padding: var(--x-space-4); }
 .x-card-body[data-flush] { padding: 0; }
@@ -770,8 +771,6 @@ button.x-list-row-main:disabled { cursor: default; }
 .x-endpoint-paths { display: flex; flex-wrap: wrap; gap: var(--x-space-2); margin: 0; padding: 0; list-style: none; }
 .x-endpoint-paths > li { min-width: 0; max-width: 100%; }
 .x-endpoint-path { font: var(--type-mono); overflow-wrap: anywhere; }
-/* The description says which clients the URL serves; on a phone it wraps instead of ending in an ellipsis. */
-.x-endpoint .x-card-sub { white-space: normal; }
 .x-endpoint-aside { min-width: 0; }
 @container (min-width: 720px) {
   .x-endpoint-body[data-aside] { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: center; }

@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { ShellTitle } from "./ShellTitle";
@@ -34,5 +35,13 @@ describe("ShellTitle", () => {
   it("names the trail with the given label", () => {
     const html = renderToStaticMarkup(<ShellTitle parent={{ label: "Providers", href: "#/providers" }} title="OpenAI" labels={{ trail: "Đường dẫn" }} />);
     expect(html).toContain('<nav aria-label="Đường dẫn"');
+  });
+
+  it("lets a long title take two smaller lines on a phone instead of cutting it", () => {
+    const css = readFileSync(new URL("../../styles/layout.css", import.meta.url), "utf8");
+    const phone = css.match(/@media \(max-width: 639\.98px\)[^{]*\{\s*\.x-shell-title-text \{([^}]*)\}/)?.[1] ?? "";
+    expect(phone).toMatch(/white-space: normal;/);
+    expect(phone).toMatch(/-webkit-line-clamp: 2;/);
+    expect(phone).toMatch(/font-size: 18px;/);
   });
 });
