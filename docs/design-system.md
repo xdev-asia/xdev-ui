@@ -84,7 +84,7 @@ A page built from the library has no horizontal page scroll from 320px up, and l
 |---|---|
 | every width | Toolbar, BulkBar, PageHeader, Card head, SettingRow, SaveBar, Composer, EmptyState, Dialog and Drawer footers wrap. Buttons keep their label on one line. `.ws-mono` text breaks anywhere. Menus and popovers stay inside the window. TabStrip, StatusBar and the `.ws-header` row scroll sideways inside themselves. |
 | every width | `DataTable` scrolls inside `.x-table-wrap`; the select column and `sticky` columns stay pinned. `stack` turns rows into label/value cards below a 480px container. |
-| below 768px (`--x-bp-md`) | The AppShell sidebar is a drawer. `Tabs` and `Segmented` scroll sideways inside themselves. |
+| below 768px (`--x-bp-md`) | The AppShell sidebar is a drawer. `Tabs` and `Segmented` scroll sideways inside themselves and fade the edge that hides more. A long `ShellTitle` wraps to two lines and `Card` subtitles wrap. |
 | below 640px (`--x-bp-sm`) | Modal `Dialog` and `FormDialog` open as a bottom sheet with stacked actions, primary on top. `Drawer` takes the full width. Toasts span the width. An empty top-bar `SearchInput` collapses to an icon. |
 | `pointer: coarse` | Buttons, icon buttons, tabs, segments, menu items and inputs get a 44px hit area; inputs use 16px text so iOS does not zoom. |
 
@@ -126,7 +126,7 @@ The library targets WCAG 2.2 level AA on macOS, Windows and Linux. The `xdev-ui-
 - **Keyboard.** Every component follows its WAI-ARIA Authoring Practices pattern; a composite widget is one Tab stop and arrow keys move inside it. Known gaps: `Menu`, `TabStrip`, `Toolbar` and `ZoomBar`.
 - **Focus.** The ring is `--x-color-focus`, at least 3:1 on every ground. Never remove the outline without a `:focus-visible` replacement.
 - **Contrast.** Body text 4.5:1 (`text-1` to `text-3`), UI parts 3:1 (`--line-strong`, `--x-color-line-strong`, the focus ring). The only pairs below that are the decorative hairlines `--line` and `--x-color-line`; `prefers-contrast: more` swaps them, `--text-2` and `--text-3` for stronger values. `audit.mjs --contrast` lists every pair.
-- **Targets.** Pointer targets are 24 by 24 CSS px, or have 24px of clear space.
+- **Targets.** Pointer targets are 24 by 24 CSS px, or have 24px of clear space. Controls drawn smaller (`Switch`, the `CodeBlock` copy button, `DataTable` sort buttons) get an invisible 24px hit area.
 - **Preferences.** Motion stops under `prefers-reduced-motion: reduce`; focus and state stay visible under `forced-colors: active`.
 - **Platforms.** One behaviour on every platform: Cancel before the primary button, sentence case, Cmd or Ctrl plus comma for settings, F6 to the next pane, native window controls.
 

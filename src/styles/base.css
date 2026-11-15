@@ -46,6 +46,19 @@ body {
   outline-offset: 2px;
 }
 .x-split-handle:focus-visible { outline-offset: 0; }
+
+/* Target size (WCAG 2.2 SC 2.5.8): controls drawn smaller than 24 x 24 px get an invisible hit area that
+   reaches 24px, centred on the control, so the drawn size stays the same. */
+.agent-switch, .connect-copy, .x-table-sort { position: relative; }
+:where(.agent-switch, .connect-copy, .x-table-sort)::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100%, var(--x-space-6));
+  height: max(100%, var(--x-space-6));
+  transform: translate(-50%, -50%);
+}
 .ws-tree-row:focus-visible, .x-list-row-main:focus-visible { outline-offset: -2px; }
 
 .x-sr-only {

@@ -8,6 +8,6 @@ Page title for the `AppShell` top bar (its `title` slot): the page's icon (24px,
 ## Rules
 - One per page, in `AppShell` `title`; it is the page's only h1. Do not also render a `PageHeader` title.
 - `icon` is the same `IconName` the page has in the sidebar. On a detail page pass the item's logo or `Emblem` as `media` and the list as `parent` ("Providers › OpenAI").
-- The description is one sentence and shows from 1024px up; keep the title short enough to fit a phone top bar.
+- The description is one sentence and shows from 1024px up. Below 768px a long title wraps to two lines (then an ellipsis) and the top bar grows; from 768px up it stays on one line. Keep it short anyway.
 - With a `parent` the wrapper is a `nav` named "<parent> / <title>"; pass `labels.trail` when the title is not plain text or for another language.
 - Page actions (buttons, filters) stay in the page content; search for the page may go in `AppShell` `actions`.

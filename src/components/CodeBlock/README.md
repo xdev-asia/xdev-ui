@@ -11,3 +11,4 @@ Read-only snippet of a command or config with a language label and a copy button
 - The copy button appears only when `navigator.clipboard` exists, so it stays hidden in the server markup.
 - After a copy the button reads `labels.copied` in `--ok` for 1.5s; the text change is announced politely.
 - `CodeBlockLabels`: `copy`, `copied`.
+- The copy button (`.connect-copy`) has a hit area of at least 24 x 24 px (an invisible `::before`; WCAG 2.5.8) without growing.
