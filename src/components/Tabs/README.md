@@ -15,3 +15,4 @@ Row of tabs that switches between views of one surface, such as the panels of a 
 
 ## Responsive
 - Below 768px the tab row scrolls sideways inside itself instead of widening the page; the selected underline stays visible.
+- While it scrolls, the edge that hides more tabs fades (`data-scroll-fade="start" | "end" | "both"`, kept current on scroll and resize; right-to-left aware). The fade is decorative: no motion, and none in forced colors.

@@ -5,6 +5,7 @@ import { findAll } from "../../test-utils";
 const setInner = vi.fn();
 vi.mock("react", async (orig) => ({ ...(await orig<typeof import("react")>()), useState: (v: unknown) => [v, setInner] }));
 const { Segmented } = await import("./Segmented");
+const { scrollFadeRef } = await import("../../internal/scroll-fade");
 
 const options = [
   { value: "a", label: "A" },
@@ -36,5 +37,8 @@ describe("Segmented", () => {
     expect(html).toContain('A<span class="segmented-count">0</span>');
     expect(html).toContain('B<span class="segmented-count">12</span>');
     expect(html.match(/segmented-count/g)).toHaveLength(2);
+  });
+  it("marks the edges that hide more segments when the row scrolls", () => {
+    expect((Segmented({ options }) as any).ref).toBe(scrollFadeRef);
   });
 });

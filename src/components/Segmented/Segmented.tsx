@@ -1,4 +1,5 @@
 import { useState, type JSX } from "react";
+import { scrollFadeRef } from "../../internal/scroll-fade";
 
 export interface SegmentedOption {
   value: string;
@@ -22,7 +23,7 @@ export function Segmented({ options, value, defaultValue, onChange, label, disab
   const [inner, setInner] = useState(defaultValue ?? options[0]?.value);
   const current = value ?? inner;
   return (
-    <div className="segmented" role="group" aria-label={label}>
+    <div className="segmented" role="group" aria-label={label} ref={scrollFadeRef}>
       {options.map((o) => (
         <button
           key={o.value}
