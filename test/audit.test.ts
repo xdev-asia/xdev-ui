@@ -280,3 +280,115 @@ describe("audit: token contrast", () => {
     expect(c.every((x) => x.level === "warn" && /^(line|x-color-line) /.test(x.message))).toBe(true);
   });
 });
+
+describe("audit: page rules", () => {
+  const only = (f: Finding[], rule: string) => f.filter((x) => x.rule === rule);
+  const at = (f: Finding[], rule: string) => only(f, rule).map((x) => [x.line, x.level]);
+  it("list-empty warns on a DataTable with no empty state", () => {
+    const f = inDir({
+      "List.tsx": [
+        `export const A = () => <DataTable caption="Users" rows={[]} rowKey={(r) => r.id} columns={[]} />;`,
+        `export const B = () => <DataTable caption="Users" rows={[]} rowKey={(r) => r.id} columns={[]} empty={<EmptyState title="No users" />} />;`,
+        `export const C = (p: object) => <DataTable {...p} />;`,
+        `export const D = () => <DataTable caption="Matrix" rows={RESOURCES} rowKey={(r) => r} columns={[]} />;`,
+        "",
+      ].join("\n"),
+    });
+    expect(at(f, "list-empty")).toEqual([[1, "warn"]]);
+  });
+  it("confirm-dialog warns on a destructive Dialog that is not modal, not alert or not locked", () => {
+    const f = inDir({
+      "Del.tsx": [
+        `export const A = () => <Dialog alert tone="danger" title="Delete?" onConfirm={go} />;`,
+        `export const B = () => <Dialog modal tone="danger" title="Delete?" busy={busy} onConfirm={go} />;`,
+        `export const C = () => <Dialog modal alert tone="danger" title="Delete?" confirmDisabled={busy} onConfirm={go} />;`,
+        `export const D = () => <Dialog modal title="Rename" onConfirm={go} />;`,
+        `export const E = () => <Dialog modal={false} alert busy={b} title="Delete?" onConfirm={go} />;`,
+        "",
+      ].join("\n"),
+    });
+    const c = only(f, "confirm-dialog");
+    expect(c.every((x) => x.level === "warn")).toBe(true);
+    expect(c.map((x) => [x.line, x.message.split(";")[0]])).toEqual([
+      [1, "Destructive Dialog is not modal"],
+      [1, "Destructive Dialog does not lock while the request runs"],
+      [2, "Destructive Dialog has no alert"],
+      [5, "Destructive Dialog is not modal"],
+    ]);
+  });
+  it("form-busy warns on a FormDialog with no busy", () => {
+    const f = inDir({
+      "New.tsx": `export const A = () => <FormDialog title="New" onSubmit={s} onCancel={c}><Field label="Name" /></FormDialog>;\nexport const B = () => <FormDialog title="New" busy={b} onSubmit={s} onCancel={c} />;\n`,
+    });
+    expect(at(f, "form-busy")).toEqual([[1, "warn"]]);
+  });
+  it("autocomplete warns on password, email and tel fields with no autoComplete", () => {
+    const f = inDir({
+      "Form.tsx": [
+        `export const A = () => <Field label="Password" type="password" />;`,
+        `export const B = () => <input type="email" name="email" />;`,
+        `export const C = () => <Field label="Password" type="password" autoComplete="current-password" />;`,
+        `export const D = () => <Field label="Name" />;`,
+        `export const E = () => <input type="tel" autocomplete="tel" />;`,
+        "",
+      ].join("\n"),
+    });
+    expect(at(f, "autocomplete")).toEqual([[1, "warn"], [2, "warn"]]);
+  });
+  it("img-alt is an error on an img with no alt", () => {
+    const f = inDir({ "Logo.tsx": `export const A = () => <img src="/a.svg" />;\nexport const B = () => <img src="/a.svg" alt="" />;\nexport const C = (p: object) => <img {...p} />;\n` });
+    expect(at(f, "img-alt")).toEqual([[1, "error"]]);
+  });
+  it("stat-delta warns on a StatTile delta with no basis", () => {
+    const f = inDir({
+      "Dash.tsx": `export const A = () => <StatTile label="Requests" value="12" delta="+4%" />;\nexport const B = () => <StatTile label="Requests" value="12" delta="+4%" hint="vs last week" />;\nexport const C = () => <StatTile label="Requests" value="12" />;\n`,
+    });
+    expect(at(f, "stat-delta")).toEqual([[1, "warn"]]);
+  });
+  it("resource-face warns on a ResourceCard with no face, or an Avatar or img as its face", () => {
+    const f = inDir({
+      "Grid.tsx": [
+        `export const A = () => <ResourceCard title="OpenAI" />;`,
+        `export const B = () => <ResourceCard title="OpenAI" leading={<Avatar name="OpenAI" />} />;`,
+        `export const C = () => <ResourceCard title="OpenAI" leading={p.logo ? <img src={p.logo} alt="" /> : null} status="on" />;`,
+        `export const D = () => <ResourceCard title="OpenAI" leading={<Emblem name="OpenAI" src={logo} />} trailing={<Avatar name="x" />} />;`,
+        "",
+      ].join("\n"),
+    });
+    expect(at(f, "resource-face")).toEqual([[1, "warn"], [2, "warn"], [3, "warn"]]);
+  });
+  it("i18n-labels warns on library parts with English defaults and no labels, only with --i18n", () => {
+    const files = {
+      "Page.tsx": [
+        `export const A = () => <DataTable caption="x" rows={[]} rowKey={k} columns={[]} empty={e} />;`,
+        `export const B = () => <Pagination page={1} pages={3} onChange={go} labels={ui.pagination} />;`,
+        `export const C = () => <Dialog modal title="Rename" confirmLabel={t("ok")} cancelLabel={t("cancel")} />;`,
+        `export const D = () => <Dialog modal title="Rename" confirmLabel={t("ok")} />;`,
+        `export const E = () => <Button variant="primary">Go</Button>;`,
+        `export const F = () => <EmptyState title="None yet" />;`,
+        `export const G = () => <EmptyState title="Set up" steps={steps} />;`,
+        `export const H = () => <ShellTitle title="Usage" />;`,
+        `export const I = () => <Spinner size="md" label={t("loading")} />;`,
+        `export function J() { const [d, setD] = useState<Dialog | null>(null); return d; }`,
+        `export const K = () => <Spinner />;`,
+        "",
+      ].join("\n"),
+      "en.ts": `export const en = { ok: "OK" };\n`,
+      "vi.ts": `export const vi = { ok: "OK" };\n`,
+    };
+    expect(only(inDir(files), "i18n-labels")).toEqual([]);
+    const dir = mkdtempSync(join(tmpdir(), "audit-labels-"));
+    try {
+      for (const [name, body] of Object.entries(files)) writeFileSync(join(dir, name), body);
+      const f = only(audit(dir, { manifest, i18n: dir }).findings, "i18n-labels");
+      expect(f.map((x: Finding) => [x.line, x.level, x.message.slice(0, 20)])).toEqual([
+        [1, "warn", "DataTable has no lab"],
+        [4, "warn", "Dialog has no labels"],
+        [7, "warn", "EmptyState has no la"],
+        [11, "warn", "Spinner has no label"],
+      ]);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});

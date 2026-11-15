@@ -132,7 +132,7 @@ export function UserDetailView({ user, activity, viewer, roles, onSave, onToggle
           <form className="app-stack" onSubmit={submit} noValidate>
             <FormSection title={t("user.profileSection")} description={t("user.profileHint")} columns={2}>
               <Field label={t("user.fullName")} value={values.name} disabled={!editable} onChange={(e) => set({ name: e.target.value })} error={errors.name ? t(errors.name) : undefined} />
-              <Field label={t("user.email")} type="email" value={values.email} disabled={!editable} onChange={(e) => set({ email: e.target.value })} error={errors.email ? t(errors.email) : undefined} />
+              <Field label={t("user.email")} type="email" autoComplete="off" value={values.email} disabled={!editable} onChange={(e) => set({ email: e.target.value })} error={errors.email ? t(errors.email) : undefined} />
             </FormSection>
             <FormSection
               title={t("user.accessSection")}
