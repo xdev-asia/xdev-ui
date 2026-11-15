@@ -20,6 +20,8 @@ export interface CodeInputProps {
   invalid?: boolean;
   disabled?: boolean;
   autoFocus?: boolean;
+  /** Default "one-time-code", so the platform can offer a code it received by SMS or email. Pass "off" for a code it cannot know. */
+  autoComplete?: string;
   className?: string;
 }
 
@@ -34,6 +36,7 @@ export function CodeInput({
   invalid = false,
   disabled = false,
   autoFocus = false,
+  autoComplete = "one-time-code",
   className,
 }: CodeInputProps): JSX.Element {
   const code = value.slice(0, length);
@@ -69,7 +72,7 @@ export function CodeInput({
         disabled={disabled}
         autoFocus={autoFocus}
         inputMode={alphabet === "digits" ? "numeric" : "text"}
-        autoComplete="off"
+        autoComplete={autoComplete}
         autoCapitalize="characters"
         autoCorrect="off"
         spellCheck={false}

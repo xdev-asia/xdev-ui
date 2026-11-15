@@ -12,6 +12,7 @@ Entry for a short code that someone reads off another screen, such as a pairing 
 - `onChange` always gets the normalised code: upper case, no spaces or dashes, cut to `length`. Pasting `7K4QM-2XD9P` and typing `7k4qm2xd9p` give `7K4QM2XD9P`.
 - `alphabet="crockford"` (default) maps `O` to `0` and `I` or `L` to `1` and drops other characters such as `U`. `"digits"` accepts 0 to 9 only and shows a numeric keypad.
 - `onComplete` is called once each time the code reaches `length`.
+- `autoComplete` defaults to `"one-time-code"`, so the browser can offer a code from SMS or email; pass `"off"` (or another token) for codes that are not one-time codes. Paste works either way.
 - `invalid` gives each cell a 1px `--x-color-danger` border and `aria-invalid`; say why in a `FieldMessage` next to it.
 - Focus draws a 2px `--x-color-focus` ring around the group. Cells shrink to fit 360px.
 
