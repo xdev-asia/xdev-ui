@@ -2,9 +2,9 @@
 // Rules audit for apps built on @xdev-asia/ui. Line based, no dependencies.
 //   node audit.mjs <src-dir> [--i18n <dir>] [--manifest <path>] [--contrast]
 // Prints `file:line rule message` per finding; exit code 1 on any error. Also exports audit(dir, opts).
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, realpathSync, statSync } from "node:fs";
 import { dirname, extname, join, relative, resolve } from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { fileURLToPath } from "node:url";
 
 const SKIP_DIRS = new Set(["node_modules", "dist", "dist-examples", ".git", "generated", "fixtures"]);
 const EXTS = new Set([".css", ".ts", ".tsx"]);
@@ -668,7 +668,15 @@ export function audit(dir, opts = {}) {
   return { findings, notes, files: files.length };
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+// Compare real paths: pnpm puts the package behind a symlink, and the URL of this module is the resolved one.
+const isMain = (() => {
+  try {
+    return !!process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url));
+  } catch {
+    return false;
+  }
+})();
+if (isMain) {
   const args = process.argv.slice(2);
   const opts = {};
   let dir;
