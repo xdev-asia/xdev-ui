@@ -22,14 +22,17 @@ describe("Toaster", () => {
   it("renders an empty labelled region on the server", () => {
     h.client = false;
     toast("x");
-    expect(renderToStaticMarkup(<Toaster />)).toBe('<section class="x-toaster ws-toasts" aria-label="Notifications" data-position="bottom-end"></section>');
+    expect(renderToStaticMarkup(<Toaster />)).toBe(
+      '<section class="x-toaster ws-toasts" aria-label="Notifications" data-position="bottom-end"><div class="x-toast-live" aria-live="assertive"></div><div class="x-toast-live" aria-live="polite"></div></section>',
+    );
   });
-  it("renders the queue with Toast: status by default, alert for danger, tone and description", () => {
+  it("renders the queue in live regions that exist before it: danger assertive, the rest polite, no nested roles", () => {
     toast("Saved", { tone: "ok" });
     toast("Could not save", { tone: "danger", description: "The server did not answer." });
     const html = renderToStaticMarkup(<Toaster />);
-    expect(html).toContain('<div class="ws-toast" role="status" data-tone="ok">');
-    expect(html).toContain('<div class="ws-toast" role="alert" data-tone="danger">');
+    expect(html).toContain('<div class="x-toast-live" aria-live="polite"><div class="ws-toast" data-tone="ok">');
+    expect(html).toContain('<div class="x-toast-live" aria-live="assertive"><div class="ws-toast" data-tone="danger">');
+    expect(html).not.toMatch(/role="(status|alert)"/);
     expect(html).toContain('<span class="ws-toast-desc">The server did not answer.</span>');
     expect(html.match(/aria-label="Dismiss"/g)).toHaveLength(2);
   });

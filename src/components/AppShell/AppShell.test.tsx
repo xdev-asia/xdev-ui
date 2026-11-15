@@ -14,6 +14,7 @@ vi.mock("react", async (orig) => ({
   },
 }));
 const { AppShell } = await import("./AppShell");
+const { Toast } = await import("../Toast/Toast");
 
 const base = { nav: <nav aria-label="Main">nav</nav>, children: <p>Content</p> };
 
@@ -62,7 +63,27 @@ describe("AppShell", () => {
     const html = renderToStaticMarkup(<AppShell {...base} toasts={<span>Saved</span>} />);
     expect(html).toContain('class="x-shell-toasts ws-toasts"');
     expect(html).toContain("Saved");
-    expect(renderToStaticMarkup(<AppShell {...base} />)).not.toContain("x-shell-toasts");
+  });
+  it("mounts the toast live regions before the first toast", () => {
+    const html = renderToStaticMarkup(<AppShell {...base} />);
+    expect(html).toContain('<div class="x-shell-toasts ws-toasts"><div class="x-toast-live" aria-live="assertive"></div><div class="x-toast-live" aria-live="polite"></div></div>');
+  });
+  it("announces Toasts through its regions: danger assertive, the rest polite, no nested roles", () => {
+    const html = renderToStaticMarkup(
+      <AppShell
+        {...base}
+        toasts={[
+          <Toast key="a">Saved</Toast>,
+          <Toast key="b" tone="danger">
+            Push failed
+          </Toast>,
+        ]}
+      />,
+    );
+    expect(html).toMatch(/aria-live="assertive"><div class="ws-toast" data-tone="danger">.*Push failed/);
+    expect(html).toMatch(/aria-live="polite"><div class="ws-toast">.*Saved/);
+    expect(html).not.toContain('role="status"');
+    expect(html).not.toContain('role="alert"');
   });
   it("skip link focuses main without changing location.hash", () => {
     const tree = AppShell({ ...base, mainId: "page" });

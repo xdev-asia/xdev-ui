@@ -31,6 +31,11 @@ describe("CodeInput", () => {
     expect(html.match(/class="x-code-group"/g)).toHaveLength(2);
     expect(html).toContain('inputMode="numeric"');
   });
+  it("offers one-time codes from the platform by default; autoComplete overrides it", () => {
+    expect(renderToStaticMarkup(<CodeInput {...base} />)).toMatch(/autocomplete="one-time-code"/i);
+    expect(renderToStaticMarkup(<CodeInput {...base} autoComplete="off" />)).toMatch(/autocomplete="off"/i);
+    expect(enter("7K4QM-2XD9P", { autoComplete: "one-time-code" }).onComplete).toHaveBeenCalledWith("7K4QM2XD9P");
+  });
   it("typing lower case gives the upper case code", () => {
     expect(enter("7k4qm2xd9p").onChange).toHaveBeenCalledWith("7K4QM2XD9P");
   });

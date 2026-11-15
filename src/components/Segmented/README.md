@@ -12,3 +12,4 @@ Two to four mutually exclusive options shown together, such as a diff view mode 
 
 ## Responsive
 - Below 768px the control scrolls sideways inside itself when the options do not fit. Past four options, use `Select`.
+- While it scrolls, the edge that hides more options fades (`data-scroll-fade="start" | "end" | "both"`, kept current on scroll and resize; right-to-left aware). The fade is decorative: no motion, and none in forced colors.

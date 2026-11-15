@@ -16,3 +16,4 @@ Flat bordered surface that groups one topic, with an optional head of title, sub
 
 ## Responsive
 - The head wraps: actions move under the title when the card is narrow.
+- Below 768px the subtitle wraps instead of being cut with an ellipsis; from 768px up it stays on one line.

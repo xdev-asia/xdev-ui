@@ -14,11 +14,11 @@ Page frame for a generic app or an admin console: a sidebar for navigation, a to
 - Below 768px a `BottomNav` in `bottomNav` sits under `main`, outside the scroll area, and the page column (bottom bar included) goes `inert` while the drawer is open. From 768px up the slot is hidden; the sidebar carries the same destinations. Toasts move above the bar. Keep the sidebar and the bar in sync from one list of destinations.
 - The skip link is the first focusable element and focuses `main` without changing `location.hash`, so hash-routed apps keep their route; `mainId` changes the target id.
 - Landmarks: the sidebar is `aside` named by `labels.nav`, `header`, `main`. Each `NavList` is its own `nav` with its own name.
-- `toasts` render in a fixed bottom-right `.ws-toasts` region; pass `Toast` elements.
+- `toasts` render in a fixed bottom-right `.ws-toasts` region; pass `Toast` elements, not a `Toaster`. The region and its two live regions (`.x-toast-live`: assertive for `danger` toasts, polite for the rest) are always mounted, even with no toasts, so the first toast is announced; the empty region lets clicks through.
 - `labels` (`AppShellLabels`: `openNav`, `closeNav`, `skipToContent`, `nav`) overrides the English defaults; pass translated strings from the app.
 - The shell scrolls `main`, not the page. Wide content scrolls inside its own wrapper, never the whole page.
 
 ## Responsive
 - The top-bar action slot shrinks with the title instead of pushing past the edge; icon buttons keep their size and a `SearchInput` in it takes the free space.
-- From 640px up the title keeps at least `min(12rem, 35%)`. Below 640px an empty search collapses to a 44px icon and opens while it has focus.
+- Below 768px a long `ShellTitle` wraps to two lines instead of an ellipsis, and the titled top bar grows to fit. From 640px up the title keeps at least `min(12rem, 35%)`. Below 640px an empty search collapses to a 44px icon and opens while it has focus.
 - Keep at most three icon actions in the top bar on a phone; move the rest into an account `Menu`.

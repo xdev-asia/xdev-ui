@@ -104,6 +104,13 @@
   .segmented { max-width: 100%; overflow-x: auto; scrollbar-width: thin; box-sizing: border-box; }
   .segmented button { flex: none; }
   .segmented button:focus-visible { outline-offset: -2px; }
+
+  /* AppShell title: a long title wraps to two lines instead of an ellipsis; the bar grows to fit. */
+  .x-shell[data-titled] .x-shell-top { height: auto; min-height: calc(var(--x-space-8) * 2); padding-block: var(--x-space-1); }
+  .x-shell-title-text { white-space: normal; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; }
+
+  /* Card subtitles wrap. */
+  .x-card-sub { white-space: normal; overflow-wrap: anywhere; }
 }
 
 /* ---- sm and up: the AppShell title keeps a readable width next to a top-bar search ---- */

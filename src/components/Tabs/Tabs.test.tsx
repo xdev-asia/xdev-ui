@@ -6,6 +6,7 @@ import { rovingIndex } from "../../internal/keys";
 const setInner = vi.fn();
 vi.mock("react", async (orig) => ({ ...(await orig<typeof import("react")>()), useState: (v: unknown) => [v, setInner], useRef: (v: unknown) => ({ current: v }) }));
 const { Tabs } = await import("./Tabs");
+const { scrollFadeRef } = await import("../../internal/scroll-fade");
 
 const items = [
   { id: "changes", label: "Changes", badge: 4 },
@@ -46,5 +47,8 @@ describe("Tabs", () => {
     expect(rovingIndex("Home", 1, 3)).toBe(0);
     expect(rovingIndex("End", 0, 3, "horizontal", off)).toBe(1);
     expect(rovingIndex("ArrowDown", 0, 3)).toBeNull();
+  });
+  it("marks the edges that hide more tabs when the row scrolls", () => {
+    expect((Tabs({ items }) as any).ref).toBe(scrollFadeRef);
   });
 });

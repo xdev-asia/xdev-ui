@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, type JSX, type ReactNode } from "react";
 import { cx } from "../../internal/cx";
 import { focusFirst, focusableIn, isShown, restoreFocus, trapTarget } from "../../internal/focus";
 import { IconButton } from "../IconButton/IconButton";
+import { splitUrgent, toastRegions } from "../Toast/toast-region";
 
 export interface AppShellLabels {
   openNav: string;
@@ -31,7 +32,7 @@ export interface AppShellProps {
   /** Phone tab bar, usually a `BottomNav`. Shown under `main` below 768px only; the sidebar covers wider screens. */
   bottomNav?: ReactNode;
   children: ReactNode;
-  /** Toast elements, stacked bottom-right in a fixed .ws-toasts region. */
+  /** Toast elements, stacked bottom-right in a fixed .ws-toasts region. Its live regions are always mounted: a `Toast` with `tone="danger"` is announced assertively, the rest politely. */
   toasts?: ReactNode;
   /** Drawer state below 768px; controlled. */
   navOpen?: boolean;
@@ -117,7 +118,9 @@ export function AppShell({ brand, nav, navFooter, title, crumbs, drawerBelow = "
         </main>
         {bottomNav ? <div className="x-shell-bottom">{bottomNav}</div> : null}
       </div>
-      {toasts ? <div className="x-shell-toasts ws-toasts">{toasts}</div> : null}
+      <div className="x-shell-toasts ws-toasts">
+        {toastRegions(splitUrgent(toasts))}
+      </div>
     </div>
   );
 }

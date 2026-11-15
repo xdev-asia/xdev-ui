@@ -5,10 +5,10 @@ Short-lived confirmation stacked at the bottom-right in `.ws-toasts`.
 ## Rules
 - One sentence, past tense, saying what happened ("Session archived.").
 - At most one action, usually Undo.
-- `role="status"`, so screen readers announce it without moving focus.
+- Standalone it has `role="status"`, so screen readers announce it without moving focus. Inside `AppShell` `toasts` or the `Toaster` it has no role: those mount live regions before any toast arrives (WCAG 4.1.3), polite for most tones and assertive for `danger`, so each toast is announced once.
 - Never put errors that need a decision in a toast: use a `Dialog` or `Banner`.
 - `labels` (`ToastLabels`: `dismiss`) overrides the English default.
-- `tone` (`ok` | `warn` | `danger` | `info`) adds an icon and `data-tone`; `danger` uses `role="alert"`. `description` adds a quieter second line.
+- `tone` (`ok` | `warn` | `danger` | `info`) adds an icon and `data-tone`; `danger` uses `role="alert"` standalone and the assertive region inside a shell or `Toaster`. `description` adds a quieter second line.
 
 ## Toaster and toast()
 
@@ -24,3 +24,4 @@ toast.dismiss(id); // or toast.dismiss() for all
 - `Toaster` props: `position` (`bottom-end` default, `bottom-start`, `bottom-center`, `top-end`, `top-start`, `top-center`), `max` (on screen at once, default 3; the rest wait), `labels` (`ToasterLabels`: `region`, `dismiss`).
 - Timers pause while the pointer or keyboard focus is inside the region. The entry animation is off under `prefers-reduced-motion`.
 - The store is a module singleton read with `useSyncExternalStore`; the server snapshot is empty, so SSR renders an empty region.
+- Mount one `Toaster`, at the root and not inside `AppShell` `toasts`: each one holds its own live regions, and nested live regions announce twice. The empty regions let clicks through to the page.

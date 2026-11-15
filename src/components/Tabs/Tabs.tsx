@@ -1,6 +1,7 @@
 import { useRef, useState, type JSX, type KeyboardEvent, type ReactNode } from "react";
 import { cx } from "../../internal/cx";
 import { rovingIndex } from "../../internal/keys";
+import { scrollFadeRef } from "../../internal/scroll-fade";
 
 export interface TabsItem {
   id: string;
@@ -48,7 +49,7 @@ export function Tabs({ items, value, defaultValue, onChange, variant = "underlin
     select(items[next].id);
   };
   return (
-    <div className={cx("kit-tabs", className)} role="tablist" aria-label={label} data-variant={variant} data-size={size === "sm" ? "sm" : undefined} onKeyDown={onKeyDown}>
+    <div className={cx("kit-tabs", className)} role="tablist" aria-label={label} data-variant={variant} data-size={size === "sm" ? "sm" : undefined} onKeyDown={onKeyDown} ref={scrollFadeRef}>
       {items.map((t, i) => {
         const isSel = i === currentIndex;
         return (
