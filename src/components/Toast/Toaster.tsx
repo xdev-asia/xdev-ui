@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useSyncExternalStore, type FocusEvent, type JSX } from "react";
 import { Toast } from "./Toast";
+import { toastRegions } from "./toast-region";
 import { toast, toastDuration, toastStore, visibleToasts } from "./toast-store";
 
 export interface ToasterLabels {
@@ -24,7 +25,10 @@ interface Timer {
   handle?: ReturnType<typeof setTimeout>;
 }
 
-/** Renders the `toast()` queue. Mount it once, near the root. Timers pause while the pointer or focus is on a toast. */
+/**
+ * Renders the `toast()` queue. Mount it once, near the root, and not inside `AppShell` `toasts`. Its live regions are
+ * mounted before the first toast: danger toasts are assertive, the rest polite. Timers pause while the pointer or focus is on a toast.
+ */
 export function Toaster({ position = "bottom-end", max = 3, labels }: ToasterProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
   const all = useSyncExternalStore(toastStore.subscribe, toastStore.getSnapshot, toastStore.getServerSnapshot);
@@ -57,6 +61,27 @@ export function Toaster({ position = "bottom-end", max = 3, labels }: ToasterPro
     };
   }, [shownKey, paused]); // eslint-disable-line react-hooks/exhaustive-deps -- shownKey stands for shown
 
+  const render = (t: (typeof shown)[number]): JSX.Element => (
+    <Toast
+      key={t.id}
+      tone={t.tone}
+      description={t.description}
+      actionLabel={t.action?.label}
+      onAction={
+        t.action
+          ? () => {
+              t.action?.onClick();
+              toast.dismiss(t.id);
+            }
+          : undefined
+      }
+      onDismiss={() => toast.dismiss(t.id)}
+      labels={{ dismiss: l.dismiss }}
+    >
+      {t.message}
+    </Toast>
+  );
+
   return (
     <section
       className="x-toaster ws-toasts"
@@ -69,26 +94,7 @@ export function Toaster({ position = "bottom-end", max = 3, labels }: ToasterPro
         if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setPaused(false);
       }}
     >
-      {shown.map((t) => (
-        <Toast
-          key={t.id}
-          tone={t.tone}
-          description={t.description}
-          actionLabel={t.action?.label}
-          onAction={
-            t.action
-              ? () => {
-                  t.action?.onClick();
-                  toast.dismiss(t.id);
-                }
-              : undefined
-          }
-          onDismiss={() => toast.dismiss(t.id)}
-          labels={{ dismiss: l.dismiss }}
-        >
-          {t.message}
-        </Toast>
-      ))}
+      {toastRegions({ urgent: shown.filter((t) => t.tone === "danger").map(render), rest: shown.filter((t) => t.tone !== "danger").map(render) })}
     </section>
   );
 }

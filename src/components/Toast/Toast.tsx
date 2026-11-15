@@ -1,7 +1,8 @@
-import type { JSX, ReactNode } from "react";
+import { useContext, type JSX, type ReactNode } from "react";
 import type { IconName } from "../../icons";
 import { Button } from "../Button/Button";
 import { Icon } from "../Icon/Icon";
+import { ToastRegionContext } from "./toast-region";
 import type { ToastTone } from "./toast-store";
 
 export interface ToastLabels {
@@ -17,7 +18,7 @@ export interface ToastProps {
   onDismiss?: () => void;
   /** Override the English defaults (e.g. for vi). */
   labels?: Partial<ToastLabels>;
-  /** Adds a tone icon and `data-tone`. "danger" is announced with role="alert". Default: none. */
+  /** Adds a tone icon and `data-tone`. "danger" is announced with role="alert" (inside `AppShell` or `Toaster`: their assertive region). Default: none. */
   tone?: ToastTone;
   /** A second, quieter line under the message. */
   description?: ReactNode;
@@ -27,8 +28,10 @@ const TONE_ICON: Record<ToastTone, IconName> = { ok: "check", warn: "warn", dang
 
 export function Toast({ children, actionLabel, onAction, onDismiss, labels, tone, description }: ToastProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
+  // Inside AppShell or Toaster the region around it announces it; a role here would be a second, nested live region.
+  const inRegion = useContext(ToastRegionContext);
   return (
-    <div className="ws-toast" role={tone === "danger" ? "alert" : "status"} data-tone={tone}>
+    <div className="ws-toast" role={inRegion ? undefined : tone === "danger" ? "alert" : "status"} data-tone={tone}>
       {tone ? <Icon name={TONE_ICON[tone]} className="ws-toast-icon" /> : null}
       <span className="ws-toast-text">
         {children}
