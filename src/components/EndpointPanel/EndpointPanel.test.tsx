@@ -32,6 +32,7 @@ describe("EndpointPanel", () => {
     const css = readFileSync(new URL("../../styles/display.css", import.meta.url), "utf8");
     expect(css).toMatch(/\.x-endpoint-path \{[^}]*overflow-wrap: anywhere;/);
     expect(css).toMatch(/\.x-endpoint-paths > li \{[^}]*max-width: 100%;/);
-    expect(css).toMatch(/\.x-endpoint \.x-card-sub \{[^}]*white-space: normal;/);
+    // Card subtitles wrap everywhere now (Card.test.tsx), so the panel needs no rule of its own.
+    expect(css).not.toMatch(/\.x-endpoint \.x-card-sub/);
   });
 });
