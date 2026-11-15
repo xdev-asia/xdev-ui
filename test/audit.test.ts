@@ -1,4 +1,5 @@
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -389,6 +390,21 @@ describe("audit: page rules", () => {
       ]);
     } finally {
       rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("audit: command line", () => {
+  // pnpm installs packages behind a symlink; the script must still run from there, not exit 0 silently.
+  it("runs when started through a symlinked folder", () => {
+    const tmp = mkdtempSync(join(tmpdir(), "audit-link-"));
+    try {
+      const link = join(tmp, "scripts");
+      symlinkSync(resolve(here, "../skills/xdev-ui-review/scripts"), link, "junction");
+      const out = execFileSync(process.execPath, [join(link, "audit.mjs"), fx("good")], { encoding: "utf8" });
+      expect(out).toMatch(/^audit: \d+ files, 0 errors/m);
+    } finally {
+      rmSync(tmp, { recursive: true, force: true });
     }
   });
 });
