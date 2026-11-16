@@ -1,9 +1,10 @@
 import { useState, type JSX } from "react";
-import { AgentChip, DiffStat, IconButton, List, ListRow, MenuButton, SearchInput, Stack, StatusDot, Tag } from "@xdev-asia/ui";
+import { AgentChip, Checkbox, Dialog, DiffStat, IconButton, List, ListRow, MenuButton, SearchInput, Stack, StatusDot, Tag, type MenuEntry } from "@xdev-asia/ui";
 import { agentOf } from "../data";
 import { useI18n } from "../i18n";
 import { href, navigate } from "../router";
-import { inProject, useStore } from "../store";
+import { useNotify } from "../notify";
+import { can, inProject, useStore } from "../store";
 import type { Session } from "../workspace";
 
 export interface SessionListProps {
@@ -18,6 +19,10 @@ export function SessionList({ onPick, onNew }: SessionListProps): JSX.Element {
   const { t, ui } = useI18n();
   const [query, setQuery] = useState("");
   const [hide, setHide] = useState({ idle: false, root: false, runs: false });
+  const notify = useNotify();
+  const [removing, setRemoving] = useState<Session | null>(null);
+  const [discard, setDiscard] = useState(false);
+  const operator = can(s.role, "operator");
 
   const isRun = (x: Session): boolean => x.branch.startsWith("sdlc/");
   const q = query.trim().toLowerCase();
@@ -57,7 +62,12 @@ export function SessionList({ onPick, onNew }: SessionListProps): JSX.Element {
         meta={
           <span className="app-row">
             <span>{unread ? t("side.unread") : ui.sessionState[x.status]}</span>
-            {run ? <span>{t(`runs.stage${run.stage[0].toUpperCase()}${run.stage.slice(1)}` as "runs.stageCode")}</span> : null}
+            {x.root ? <span>{t("side.root")}</span> : null}
+            {run ? (
+              <span>
+                {t(`runs.stage${run.stage[0].toUpperCase()}${run.stage.slice(1)}` as "runs.stageCode")}, {t("side.attempt", { n: run.attempts.filter((a) => a.stage === run.stage).length })}
+              </span>
+            ) : null}
             {x.diff.add + x.diff.del > 0 ? <DiffStat added={x.diff.add} removed={x.diff.del} labels={{ diffStat: ui.diffStat }} /> : null}
           </span>
         }
@@ -72,7 +82,23 @@ export function SessionList({ onPick, onNew }: SessionListProps): JSX.Element {
               variant="icon"
               align="end"
               label={t("side.actionsFor", { name: x.branch })}
-              items={[{ label: t(pinned ? "side.unpin" : "side.pin"), onSelect: () => s.setPinned((p) => (pinned ? p.filter((id) => id !== x.id) : [...p, x.id])) }]}
+              items={[
+                { label: t(pinned ? "side.unpin" : "side.pin"), onSelect: () => s.setPinned((p) => (pinned ? p.filter((id) => id !== x.id) : [...p, x.id])) },
+                // The main checkout is not a worktree: it leaves only with its project.
+                ...(x.root || !operator
+                  ? []
+                  : ([
+                      { type: "separator" },
+                      {
+                        label: t("side.remove"),
+                        danger: true,
+                        onSelect: () => {
+                          setDiscard(false);
+                          setRemoving(x);
+                        },
+                      },
+                    ] satisfies MenuEntry[])),
+              ]}
             />
           </Stack>
         }
@@ -96,7 +122,7 @@ export function SessionList({ onPick, onNew }: SessionListProps): JSX.Element {
               { label: t("side.hideRuns"), checked: hide.runs, onSelect: () => setHide((h) => ({ ...h, runs: !h.runs })) },
             ]}
           />
-          <IconButton icon="plus" label={t("ws.newSession")} onClick={onNew} />
+          {operator ? <IconButton icon="plus" label={t("ws.newSession")} onClick={onNew} /> : null}
         </Stack>
       </Stack>
       <SearchInput size="sm" aria-label={t("side.search")} placeholder={t("side.search")} value={query} onChange={(e) => setQuery(e.target.value)} onClear={() => setQuery("")} labels={ui.searchInput} />
@@ -107,6 +133,37 @@ export function SessionList({ onPick, onNew }: SessionListProps): JSX.Element {
           <List>{ordered(name).map(row)}</List>
         </Stack>
       ))}
+      {removing ? (
+        <Dialog
+          alert
+          modal
+          tone="danger"
+          body="plain"
+          title={t("side.removeTitle", { name: `${removing.project} / ${removing.branch}` })}
+          confirmLabel={t("side.remove")}
+          cancelLabel={t("add.cancel")}
+          confirmDisabled={removing.diff.add + removing.diff.del > 0 && !discard}
+          onCancel={() => setRemoving(null)}
+          onConfirm={() => {
+            const gone = removing;
+            s.setSessions((list) => list.filter((x) => x.id !== gone.id));
+            s.setTerminals((list) => list.filter((x) => x.sessionId !== gone.id));
+            if (s.sessionId === gone.id) s.setSessionId(s.sessions.find((x) => x.project === gone.project && x.root)?.id ?? "");
+            notify(t("side.removed", { name: `${gone.project} / ${gone.branch}` }));
+            setRemoving(null);
+          }}
+        >
+          <Stack gap={3}>
+            <p className="app-text">{t("side.removeBody")}</p>
+            {removing.diff.add + removing.diff.del > 0 ? (
+              <>
+                <p className="app-text">{t("side.removeDirty", { add: removing.diff.add, del: removing.diff.del })}</p>
+                <Checkbox label={t("side.discard")} checked={discard} onChange={(e) => setDiscard(e.target.checked)} />
+              </>
+            ) : null}
+          </Stack>
+        </Dialog>
+      ) : null}
     </Stack>
   );
 }

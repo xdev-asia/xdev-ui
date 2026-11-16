@@ -1,6 +1,6 @@
 import { useState, type JSX } from "react";
 import { Button, CodeBlock, FieldMessage, FormDialog, Select, Stack } from "@xdev-asia/ui";
-import { AGENTS, agentOf, blockReason, type Account, type AgentId } from "../data";
+import { AGENTS, agentOf, blockReason, type Account, type TermAgent } from "../data";
 import { useI18n } from "../i18n";
 import { useNotify } from "../notify";
 import { href } from "../router";
@@ -11,11 +11,11 @@ export function OpenTerminalDialog({ sessionId, onClose }: { sessionId: string; 
   const s = useStore();
   const { t, ui } = useI18n();
   const notify = useNotify();
-  const [agent, setAgent] = useState<AgentId>("claude-code");
+  const [agent, setAgent] = useState<TermAgent>("claude-code");
   const [accountId, setAccountId] = useState(s.defaults["claude-code"]);
 
   const mine = s.accounts.filter((a) => a.agent === agent);
-  const picked = mine.find((a) => a.id === accountId);
+  const picked = agent === "shell" ? undefined : mine.find((a) => a.id === accountId);
   const reason = picked ? blockReason(picked) : null;
   const nameOf = (id: string): string => s.accounts.find((a) => a.id === id)?.name ?? t("terminals.noAccount");
 
@@ -24,7 +24,7 @@ export function OpenTerminalDialog({ sessionId, onClose }: { sessionId: string; 
     if (why === "signedOut") return t("terminals.optionSignedOut", { name: a.name });
     if (why === "error") return t("terminals.optionError", { name: a.name });
     if (why === "full") return t("terminals.optionFull", { name: a.name, used: a.terminals, max: a.maxTerminals ?? 0 });
-    return s.defaults[agent] === a.id ? t("terminals.optionDefault", { name: a.name }) : a.name;
+    return agent !== "shell" && s.defaults[agent] === a.id ? t("terminals.optionDefault", { name: a.name }) : a.name;
   };
 
   return (
@@ -40,10 +40,11 @@ export function OpenTerminalDialog({ sessionId, onClose }: { sessionId: string; 
         e.preventDefault();
         if (reason !== null) return;
         const id = Math.random().toString(16).slice(2, 14).padEnd(12, "0");
-        s.setTerminals((list) => [...list, { id, sessionId, name: agentOf(agent).command, agent, account: accountId, state: "working", elapsedMs: 0, output: [`$ ${agentOf(agent).command}`] }]);
-        s.setAccounts((list) => list.map((a) => (a.id === accountId ? { ...a, terminals: a.terminals + 1 } : a)));
+        const account = agent === "shell" ? "" : accountId;
+        s.setTerminals((list) => [...list, { id, sessionId, name: agentOf(agent).command, agent, account, state: agent === "shell" ? "idle" : "working", elapsedMs: 0, output: [`$ ${agentOf(agent).command}`] }]);
+        s.setAccounts((list) => list.map((a) => (account && a.id === account ? { ...a, terminals: a.terminals + 1 } : a)));
         s.setSessions((list) => list.map((x) => (x.id === sessionId ? { ...x, status: "working" } : x)));
-        notify(t("terminals.opened", { agent: agentOf(agent).name, account: nameOf(accountId) }));
+        notify(t("terminals.opened", { agent: agentOf(agent).name, account: nameOf(account) }));
         onClose();
       }}
     >
@@ -56,13 +57,14 @@ export function OpenTerminalDialog({ sessionId, onClose }: { sessionId: string; 
             id="term-agent"
             value={agent}
             onChange={(e) => {
-              const next = e.target.value as AgentId;
+              const next = e.target.value as TermAgent;
               setAgent(next);
-              setAccountId(s.defaults[next]);
+              setAccountId(next === "shell" ? "" : s.defaults[next]);
             }}
-            options={AGENTS.map((a) => ({ value: a.id, label: a.name }))}
+            options={[...AGENTS.map((a) => ({ value: a.id as string, label: a.name })), { value: "shell", label: t("ws.shell") }]}
           />
         </div>
+        {agent !== "shell" ? (
         <div className="app-field">
           <label className="app-label" htmlFor="term-account">
             {t("terminals.account")}
@@ -91,9 +93,10 @@ export function OpenTerminalDialog({ sessionId, onClose }: { sessionId: string; 
             </Stack>
           ) : null}
         </div>
+        ) : null}
         <div className="app-field">
           <span className="app-label">{t("terminals.command")}</span>
-          <CodeBlock language="sh" labels={ui.codeBlock} code={`xdev term open ${sessionId} --agent ${agent}${accountId ? ` --account ${accountId}` : ""}`} />
+          <CodeBlock language="sh" labels={ui.codeBlock} code={agent === "shell" ? `xdev term open ${sessionId}` : `xdev term open ${sessionId} --agent ${agent}${accountId ? ` --account ${accountId}` : ""}`} />
         </div>
       </Stack>
     </FormDialog>

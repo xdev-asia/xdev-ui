@@ -25,6 +25,7 @@ import {
 import { AGENTS, agentOf, type Account, type AccountStatus, type AgentId } from "../data";
 import { useI18n, type MessageKey } from "../i18n";
 import { useNotify } from "../notify";
+import { can, useStore } from "../store";
 import { AddAccountDialog } from "../parts/AddAccountDialog";
 import { SignInPanel } from "../parts/SignInPanel";
 
@@ -47,6 +48,8 @@ export interface AccountsPageProps {
 export function AccountsPage({ accounts, setAccounts, defaults, setDefaults }: AccountsPageProps): JSX.Element {
   const { t, ui, date } = useI18n();
   const notify = useNotify();
+  const store = useStore();
+  const admin = can(store.role, "admin");
   const [view, setView] = useState<View>("list");
   const [adding, setAdding] = useState<AgentId | null>(null);
   const [signingIn, setSigningIn] = useState<Account | null>(null);
@@ -81,18 +84,23 @@ export function AccountsPage({ accounts, setAccounts, defaults, setDefaults }: A
 
   const menu = (a: Account): MenuEntry[] => [
     { label: t("accounts.details"), onSelect: () => setDetail(a) },
-    { label: t("accounts.checkNow"), disabled: a.status === "checking", onSelect: () => check([a.id], false) },
-    ...(a.auth === "login" ? [{ label: t(a.status === "signed_in" ? "accounts.signInAgain" : "accounts.signIn"), onSelect: () => startSignIn(a) }] : []),
-    {
-      label: t("accounts.setDefault"),
-      disabled: defaults[a.agent] === a.id || a.status !== "signed_in",
-      onSelect: () => {
-        setDefaults((d) => ({ ...d, [a.agent]: a.id }));
-        notify(t("accounts.madeDefault", { name: a.name, agent: agentOf(a.agent).name }));
-      },
-    },
-    { type: "separator" },
-    { label: t("accounts.remove"), danger: true, onSelect: () => setRemoving(a) },
+    // Everything below changes an account: it takes the Admin role.
+    ...(admin
+      ? ([
+          { label: t("accounts.checkNow"), disabled: a.status === "checking", onSelect: () => check([a.id], false) },
+          ...(a.auth === "login" ? [{ label: t(a.status === "signed_in" ? "accounts.signInAgain" : "accounts.signIn"), onSelect: () => startSignIn(a) }] : []),
+          {
+            label: t("accounts.setDefault"),
+            disabled: defaults[a.agent] === a.id || a.status !== "signed_in",
+            onSelect: () => {
+              setDefaults((d) => ({ ...d, [a.agent]: a.id }));
+              notify(t("accounts.madeDefault", { name: a.name, agent: agentOf(a.agent).name }));
+            },
+          },
+          { type: "separator" },
+          { label: t("accounts.remove"), danger: true, onSelect: () => setRemoving(a) },
+        ] satisfies MenuEntry[])
+      : []),
   ];
 
   const startSignIn = (a: Account): void => {
@@ -124,12 +132,12 @@ export function AccountsPage({ accounts, setAccounts, defaults, setDefaults }: A
       trailing={
         <Stack direction="row" gap={2} align="center" justify="end" wrap>
           {statusText(a)}
-          {a.status === "signed_out" && a.auth === "login" ? (
+          {admin && a.status === "signed_out" && a.auth === "login" ? (
             <Button variant="secondary" size="sm" onClick={() => startSignIn(a)}>
               {t("accounts.signIn")}
             </Button>
           ) : null}
-          {a.status === "error" ? (
+          {admin && a.status === "error" ? (
             <Button variant="secondary" size="sm" onClick={() => check([a.id], false)}>
               {t("accounts.checkAgain")}
             </Button>
@@ -148,16 +156,20 @@ export function AccountsPage({ accounts, setAccounts, defaults, setDefaults }: A
         title={t("accounts.title")}
         description={t("accounts.description")}
         actions={
-          <>
-            <Button variant="secondary" icon="refresh" disabled={view !== "list" || accounts.length === 0} onClick={() => check(accounts.map((a) => a.id), true)}>
-              {t("accounts.checkAll")}
-            </Button>
-            <Button variant="primary" icon="plus" onClick={() => setAdding("claude-code")}>
-              {t("accounts.add")}
-            </Button>
-          </>
+          admin ? (
+            <>
+              <Button variant="secondary" icon="refresh" disabled={view !== "list" || accounts.length === 0} onClick={() => check(accounts.map((a) => a.id), true)}>
+                {t("accounts.checkAll")}
+              </Button>
+              <Button variant="primary" icon="plus" onClick={() => setAdding("claude-code")}>
+                {t("accounts.add")}
+              </Button>
+            </>
+          ) : undefined
         }
       />
+      {!admin ? <Banner tone="info" title={t("accounts.adminOnly")} /> : null}
+      <FieldMessage tone="warn">{t("add.consoleNote")}</FieldMessage>
 
       <div className="app-proto">
         <Tag>{t("app.prototype")}</Tag>
@@ -296,13 +308,14 @@ export function AccountsPage({ accounts, setAccounts, defaults, setDefaults }: A
                 { term: t("detail.id"), value: detail.id, mono: true },
                 { term: t("detail.auth"), value: t(detail.auth === "login" ? "add.authLogin" : "add.authEnv") },
                 { term: t("detail.status"), value: statusText(detail) },
-                { term: t("detail.configDir"), value: `~/.xdev/accounts/${detail.id}/${detail.agent}`, mono: true },
+                { term: `${t("detail.configDir")} (${agentOf(detail.agent).configVar})`, value: `~/.xdev/accounts/${detail.id}/${detail.agent}`, mono: true },
                 ...(detail.envFile ? [{ term: t("detail.envFile"), value: detail.envFile, mono: true }] : []),
                 { term: t("detail.terminals"), value: detail.maxTerminals !== undefined ? usage(detail) : t("detail.noLimit", { used: detail.terminals }) },
                 { term: t("detail.checkedAt"), value: date(detail.checkedAt, true) },
               ]}
             />
             <p className="app-muted">{t(detail.auth === "login" ? "detail.privacyLogin" : "detail.privacyEnv")}</p>
+            <p className="app-muted">{t("detail.configNote")}</p>
           </Stack>
         </Drawer>
       ) : null}

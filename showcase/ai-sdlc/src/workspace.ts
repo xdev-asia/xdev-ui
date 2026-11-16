@@ -1,5 +1,5 @@
 import type { SessionState } from "@xdev-asia/ui";
-import type { AgentId } from "./data";
+import type { AgentId, TermAgent } from "./data";
 
 // Mock data for the desktop prototype. Names follow the specs in xdev-internal/specs:
 // core design 4.3 (sessions), 4.5 (approvals), AI SDLC 3, 4, 8 and 10 (runs, stages, gates).
@@ -12,17 +12,22 @@ export interface Session {
   root: boolean;
   status: SessionState;
   diff: { add: number; del: number };
+  /** The port given to this session's terminals. */
+  port?: number;
+  /** How the project's setup script ended in this worktree. */
+  setup?: "ok" | "failed" | "running";
+  setupLog?: string[];
 }
 
 export const SEED_SESSIONS: Session[] = [
   { id: "08c66a159121", project: "demo", branch: "main", root: true, status: "idle", diff: { add: 0, del: 0 } },
-  { id: "5d1f0a77c3e2", project: "demo", branch: "feat/login-retry", root: false, status: "working", diff: { add: 128, del: 14 } },
+  { id: "5d1f0a77c3e2", project: "demo", branch: "feat/login-retry", root: false, status: "working", diff: { add: 128, del: 14 }, port: 4311 },
   { id: "b7e90c214fa8", project: "api", branch: "main", root: true, status: "idle", diff: { add: 0, del: 0 } },
-  { id: "c20a8e6d91b4", project: "api", branch: "fix-auth-redirect", root: false, status: "waiting", diff: { add: 42, del: 9 } },
-  { id: "e4a41f02d6c7", project: "api", branch: "sdlc/a41f-export-csv", root: false, status: "working", diff: { add: 311, del: 27 } },
-  { id: "a7c09c0211e5", project: "api", branch: "sdlc/9c02-rate-limit", root: false, status: "waiting", diff: { add: 0, del: 0 } },
-  { id: "d2e877b1f300", project: "demo", branch: "sdlc/77b1-vi-pairing", root: false, status: "waiting", diff: { add: 96, del: 12 } },
-  { id: "b9f131d8aa42", project: "demo", branch: "sdlc/31d8-devices-empty", root: false, status: "failed", diff: { add: 58, del: 21 } },
+  { id: "c20a8e6d91b4", project: "api", branch: "fix-auth-redirect", root: false, status: "waiting", diff: { add: 42, del: 9 }, port: 4312, setup: "failed", setupLog: ["$ cargo fetch --locked", "error: the lock file needs to be updated but --locked was passed", "exit status 101"] },
+  { id: "e4a41f02d6c7", project: "api", branch: "sdlc/a41f-export-csv", root: false, status: "working", diff: { add: 311, del: 27 }, port: 4313 },
+  { id: "a7c09c0211e5", project: "api", branch: "sdlc/9c02-rate-limit", root: false, status: "waiting", diff: { add: 0, del: 0 }, port: 4314 },
+  { id: "d2e877b1f300", project: "demo", branch: "sdlc/77b1-vi-pairing", root: false, status: "waiting", diff: { add: 96, del: 12 }, port: 4315 },
+  { id: "b9f131d8aa42", project: "demo", branch: "sdlc/31d8-devices-empty", root: false, status: "failed", diff: { add: 58, del: 21 }, port: 4316 },
   { id: "c51d0b7e9f66", project: "site", branch: "main", root: true, status: "idle", diff: { add: 0, del: 0 } },
 ];
 
@@ -30,7 +35,7 @@ export interface Terminal {
   id: string;
   sessionId: string;
   name: string;
-  agent: AgentId;
+  agent: TermAgent;
   /** Account id, or "" when the CLI uses its own sign-in. */
   account: string;
   state: SessionState;
@@ -80,6 +85,26 @@ export const SEED_TERMINALS: Terminal[] = [
     elapsedMs: 1260000,
     output: ["STAGE.md: Code, attempt 1 of 3", "Task 2 of 5: CSV writer with a streaming response", "Running cargo test export ..."],
   },
+  {
+    id: "3f1a7d20b9c4",
+    sessionId: "b9f131d8aa42",
+    name: "code (attempt 3)",
+    agent: "claude-code",
+    account: "work",
+    state: "failed",
+    elapsedMs: 412000,
+    output: ["> stage code, attempt 3", "Editing src/pages/Devices.tsx", "Running pnpm test devices ...", "2 failed, 11 passed", "error: the stage ended with exit code 1"],
+  },
+  {
+    id: "6b0e94c1d7a2",
+    sessionId: "d2e877b1f300",
+    name: "test (attempt 1)",
+    agent: "claude-code",
+    account: "work",
+    state: "done",
+    elapsedMs: 268000,
+    output: ["> stage test, attempt 1", "Running pnpm test pair ...", "23 passed", "Wrote 06-test.md", "The stage is done. It waits at its gate."],
+  },
 ];
 
 export interface ChangedFile {
@@ -98,6 +123,11 @@ export const SEED_CHANGES: Record<string, ChangedFile[]> = {
     { path: "src/auth/retry.test.ts", status: "new", add: 30, del: 5, lines: ["+test(\"gives up after three attempts\", async () => {", "+  const run = vi.fn().mockRejectedValue(new Error(\"503\"));", "+  await expect(withRetry(run)).rejects.toThrow(\"503\");", "+  expect(run).toHaveBeenCalledTimes(3);", "+});"] },
   ],
   c20a8e6d91b4: [{ path: "worker/auth/callback.ts", status: "changed", add: 42, del: 9, lines: ["-  return redirect(\"/\");", "+  return redirect(safeReturnPath(state.returnTo));"] }],
+  d2e877b1f300: [
+    { path: "src/i18n/vi.ts", status: "changed", add: 61, del: 4, lines: [" export const vi = {", "+  pair: {", "+    title: \"Ghép trình duyệt này với {host}\",", "+    code: \"Mã ghép\",", "+    submit: \"Ghép\",", "+  },", " };"] },
+    { path: "src/pages/Pair.tsx", status: "changed", add: 23, del: 8, lines: ["-      <h1>Pair this browser</h1>", "+      <h1>{t(\"pair.title\", { host })}</h1>", "-      <Button>Pair</Button>", "+      <Button>{t(\"pair.submit\")}</Button>"] },
+    { path: "src/pages/Pair.test.tsx", status: "new", add: 12, del: 0, lines: ["+test(\"shows the Vietnamese title\", () => {", "+  render(<PairPage />, { locale: \"vi\" });", "+  expect(screen.getByRole(\"heading\")).toHaveTextContent(\"Ghép trình duyệt này\");", "+});"] },
+  ],
   e4a41f02d6c7: [{ path: "crates/api/src/export.rs", status: "new", add: 311, del: 27, lines: ["+pub async fn export_csv(State(db): State<Db>, Query(q): Query<ExportQuery>) -> Response {", "+    let rows = db.invoices(q.from, q.to).await?;", "+    csv_stream(rows)", "+}"] }],
 };
 
@@ -118,17 +148,21 @@ export interface Approval {
   expiresMin?: number;
   command?: string;
   diff?: string[];
+  /** The diff was longer than 256 KB and was cut. */
+  truncated?: boolean;
   runId?: string;
-  decided?: { choice: "approve" | "changes"; by: string; note?: string };
+  /** `agoMin` is how many minutes ago the decision was made. */
+  decided?: { choice: "approve" | "changes"; by: string; note?: string; agoMin: number };
 }
 
 export const SEED_APPROVALS: Approval[] = [
   { id: "ap-1", kind: "command", title: "pnpm test auth --coverage", session: "demo / feat/login-retry", sessionId: "5d1f0a77c3e2", termId: "725a3ae3af5a", agent: "codex", waitedMin: 2, expiresMin: 8, command: "pnpm test auth --coverage" },
   { id: "ap-2", kind: "edit", title: ".github/workflows/ci.yml", session: "api / fix-auth-redirect", sessionId: "c20a8e6d91b4", termId: "1c44a0be7d21", agent: "claude-code", waitedMin: 6, expiresMin: 4, diff: [" steps:", "   - uses: actions/checkout@v7", "-  - run: pnpm test", "+  - run: pnpm test --shard=${{ matrix.shard }}"] },
+  { id: "ap-7", kind: "edit", title: "pnpm-lock.yaml", session: "demo / feat/login-retry", sessionId: "5d1f0a77c3e2", agent: "claude-code", waitedMin: 1, expiresMin: 9, truncated: true, diff: [" lockfileVersion: '9.0'", "-  vitest: 4.1.11", "+  vitest: 4.1.12", " ..."] },
   { id: "ap-3", kind: "stage", title: "Rate-limit sign-in: Design (attempt 1)", session: "api / sdlc/9c02-rate-limit", sessionId: "a7c09c0211e5", agent: "claude-code", waitedMin: 41, runId: "run-2" },
   { id: "ap-4", kind: "stage", title: "Vietnamese strings for pairing: Test (attempt 1)", session: "demo / sdlc/77b1-vi-pairing", sessionId: "d2e877b1f300", agent: "claude-code", waitedMin: 95, runId: "run-4" },
-  { id: "ap-5", kind: "push", title: "feat/login-retry -> origin", session: "demo / feat/login-retry", sessionId: "5d1f0a77c3e2", agent: "claude-code", waitedMin: 180, command: "git push origin feat/login-retry", decided: { choice: "approve", by: "you" } },
-  { id: "ap-6", kind: "command", title: "rm -rf node_modules", session: "api / fix-auth-redirect", sessionId: "c20a8e6d91b4", agent: "claude-code", waitedMin: 260, command: "rm -rf node_modules", decided: { choice: "changes", by: "Pixel", note: "Use pnpm install --force instead." } },
+  { id: "ap-5", kind: "push", title: "feat/login-retry -> origin", session: "demo / feat/login-retry", sessionId: "5d1f0a77c3e2", agent: "claude-code", waitedMin: 180, command: "git push origin feat/login-retry", decided: { choice: "approve", by: "you", agoMin: 172 } },
+  { id: "ap-6", kind: "command", title: "rm -rf node_modules", session: "api / fix-auth-redirect", sessionId: "c20a8e6d91b4", agent: "claude-code", waitedMin: 260, command: "rm -rf node_modules", decided: { choice: "changes", by: "Pixel", agoMin: 251, note: "Use pnpm install --force instead." } },
 ];
 
 export type StageId = "requirements" | "design" | "plan" | "code" | "review" | "test";
@@ -151,6 +185,8 @@ export interface Attempt {
   at: string;
   durationMs?: number;
   verdict?: "pass" | "fail";
+  /** What a Review or Test stage concluded, in one or two sentences. */
+  summary?: string;
   /** The file the stage left, as sections of plain lines. */
   artifact?: { file: string; sections: { heading: string; items: string[] }[] };
   /** Why this attempt started again: a reviewer's note or a failed verdict. */
@@ -224,6 +260,7 @@ export const SEED_RUNS: Run[] = [
     attempts: [
       { id: "r1-1", stage: "requirements", n: 1, status: "done", at: "09:02", durationMs: 240000 },
       { id: "r1-2", stage: "design", n: 1, status: "done", at: "09:14", durationMs: 420000 },
+      { id: "r1-2b", stage: "design", n: 2, status: "done", at: "09:21", durationMs: 380000, reason: "Stream the rows instead of building the whole file in memory." },
       { id: "r1-3", stage: "plan", n: 1, status: "done", at: "09:31", durationMs: 300000 },
       { id: "r1-4", stage: "code", n: 1, status: "running", at: "09:44" },
     ],
@@ -280,8 +317,8 @@ export const SEED_RUNS: Run[] = [
       { id: "r4-2", stage: "design", n: 1, status: "done", at: "Fri 10:08", durationMs: 260000 },
       { id: "r4-3", stage: "plan", n: 1, status: "done", at: "Fri 10:20", durationMs: 190000 },
       { id: "r4-4", stage: "code", n: 1, status: "done", at: "Fri 10:31", durationMs: 900000 },
-      { id: "r4-5", stage: "review", n: 1, status: "done", at: "Fri 10:47", durationMs: 140000, verdict: "pass" },
-      { id: "r4-6", stage: "test", n: 1, status: "done", at: "Fri 10:51", durationMs: 230000, verdict: "pass", artifact: TEST_REPORT },
+      { id: "r4-5", stage: "review", n: 1, status: "done", at: "Fri 10:47", durationMs: 140000, verdict: "pass", summary: "No finding above low. AC-1 and AC-2 are covered by the diff." },
+      { id: "r4-6", stage: "test", n: 1, status: "done", at: "Fri 10:51", durationMs: 230000, verdict: "pass", summary: "212 tests passed and the type check is clean. AC-3 was not checked: it needs a real phone.", artifact: TEST_REPORT },
     ],
   },
   {
@@ -344,12 +381,18 @@ export interface Project {
   /** How a new session is prepared: a script run in the new worktree, and git-ignored files copied from the main checkout. */
   setupScript: string;
   copyFiles: string[];
+  /** Folders of the repository whose Markdown files the Documents page lists. */
+  docFolders: string[];
+  /** Markdown files the agent of every stage is told to read. */
+  steering: string[];
+  /** Where approved documents of runs are copied to, if anywhere. */
+  exportDir?: string;
 }
 
 export const SEED_PROJECTS: Project[] = [
-  { id: "f8775985cb5f", name: "demo", path: "/srv/repos/demo", base: "main", setupScript: "pnpm install --frozen-lockfile", copyFiles: [".env.local"] },
-  { id: "2ab19c07e4d1", name: "api", path: "/srv/repos/api", base: "main", setupScript: "cargo fetch --locked", copyFiles: [".env", "config/local.toml"] },
-  { id: "9d30f6a2b8c4", name: "site", path: "/srv/repos/site", base: "main", setupScript: "", copyFiles: [] },
+  { id: "f8775985cb5f", name: "demo", path: "/srv/repos/demo", base: "main", setupScript: "pnpm install --frozen-lockfile", copyFiles: [".env.local"], docFolders: ["."], steering: [] },
+  { id: "2ab19c07e4d1", name: "api", path: "/srv/repos/api", base: "main", setupScript: "cargo fetch --locked", copyFiles: [".env", "config/local.toml"], docFolders: [".", "docs/"], steering: ["docs/steering/product.md", "docs/steering/tech.md"], exportDir: "/srv/xdev-docs/api" },
+  { id: "9d30f6a2b8c4", name: "site", path: "/srv/repos/site", base: "main", setupScript: "", copyFiles: [], docFolders: [], steering: [] },
 ];
 
 export type DocGroup = "steering" | "run" | "repo";
@@ -364,6 +407,7 @@ export interface DocVersion {
   at: string;
   text: string;
   approvedBy?: string;
+  approvedAt?: string;
   note?: string;
 }
 
@@ -378,15 +422,17 @@ export interface Doc {
   runId?: string;
   stage?: StageId;
   status?: DocStatus;
+  /** The file is longer than 256 KB: the page shows its first 256 KB. */
+  truncated?: boolean;
   versions: DocVersion[];
 }
 
-const md = (sections: { heading: string; items: string[] }[]): string => sections.map((s) => `## ${s.heading}\n${s.items.map((i) => `- ${i}`).join("\n")}`).join("\n\n");
+export const md = (sections: { heading: string; items: string[] }[]): string => sections.map((s) => `## ${s.heading}\n${s.items.map((i) => `- ${i}`).join("\n")}`).join("\n\n");
 
 export const SEED_DOCS: Doc[] = [
   { id: "d-api-product", project: "api", group: "steering", file: "product.md", folder: "docs/steering/", inGit: true, versions: [{ n: 1, by: "person", who: "Chrome on Linux", at: "Mon 09:12", text: "## Product\n- An invoicing API for small shops.\n- Customers call it from their own back office.\n\n## Not goals\n- A hosted dashboard." }] },
   { id: "d-api-tech", project: "api", group: "steering", file: "tech.md", folder: "docs/steering/", inGit: true, versions: [{ n: 1, by: "person", who: "Chrome on Linux", at: "Mon 09:20", text: "## Stack\n- Rust, axum, SQLite through sqlx.\n- Tests run with cargo test; no network in tests.\n\n## Rules\n- Every endpoint has a rate limit.\n- No new dependency without a note in the design." }] },
-  { id: "d-r2-req", project: "api", group: "run", runId: "run-2", stage: "requirements", status: "approved", file: "01-requirements.md", folder: ".xdev/runs/9c02/", inGit: false, versions: [{ n: 1, by: "agent", who: "Requirements, attempt 1", at: "08:13", approvedBy: "Pixel", text: md(REQUIREMENTS.sections) }] },
+  { id: "d-r2-req", project: "api", group: "run", runId: "run-2", stage: "requirements", status: "approved", file: "01-requirements.md", folder: ".xdev/runs/9c02/", inGit: false, versions: [{ n: 1, by: "agent", who: "Requirements, attempt 1", at: "08:13", approvedBy: "Pixel", approvedAt: "08:16", text: md(REQUIREMENTS.sections) }] },
   {
     id: "d-r2-design",
     project: "api",
@@ -399,7 +445,7 @@ export const SEED_DOCS: Doc[] = [
     inGit: false,
     versions: [{ n: 1, by: "agent", who: "Design, attempt 1", at: "08:30", text: md(DESIGN.sections) }],
   },
-  { id: "d-r1-req", project: "api", group: "run", runId: "run-1", stage: "requirements", status: "approved", file: "01-requirements.md", folder: ".xdev/runs/a41f/", inGit: false, versions: [{ n: 1, by: "agent", who: "Requirements, attempt 1", at: "09:06", approvedBy: "Chrome on Linux", text: "## Problem\n- Shops cannot get their invoices out of the API in bulk.\n\n## Acceptance criteria\n- AC-1: GET /v1/invoices/export answers a CSV file for a date range.\n- AC-2: 80,000 invoices export without a timeout.\n\n## Out of scope\n- Excel files." }] },
+  { id: "d-r1-req", project: "api", group: "run", runId: "run-1", stage: "requirements", status: "approved", file: "01-requirements.md", folder: ".xdev/runs/a41f/", inGit: false, versions: [{ n: 1, by: "agent", who: "Requirements, attempt 1", at: "09:06", approvedBy: "Chrome on Linux", approvedAt: "09:10", text: "## Problem\n- Shops cannot get their invoices out of the API in bulk.\n\n## Acceptance criteria\n- AC-1: GET /v1/invoices/export answers a CSV file for a date range.\n- AC-2: 80,000 invoices export without a timeout.\n\n## Out of scope\n- Excel files." }] },
   {
     id: "d-r1-design",
     project: "api",
@@ -412,10 +458,10 @@ export const SEED_DOCS: Doc[] = [
     inGit: false,
     versions: [
       { n: 1, by: "agent", who: "Design, attempt 1", at: "09:14", text: "## Chosen approach\n- Build the whole CSV in memory, then answer it.\n\n## Code affected\n- crates/api/src/export.rs (new)", note: "Changes requested: this will not fit 80,000 invoices in memory." },
-      { n: 2, by: "agent", who: "Design, attempt 2", at: "09:21", approvedBy: "Pixel", text: "## Chosen approach\n- Stream the rows from the database as CSV, 500 rows per chunk.\n- Why: the largest shop has 80,000 invoices.\n\n## Code affected\n- crates/api/src/export.rs (new)\n- crates/api/src/routes.rs\n\n## Risks\n- A client that reads slowly keeps the stream open." },
+      { n: 2, by: "agent", who: "Design, attempt 2", at: "09:21", approvedBy: "Pixel", approvedAt: "09:28", text: "## Chosen approach\n- Stream the rows from the database as CSV, 500 rows per chunk.\n- Why: the largest shop has 80,000 invoices.\n\n## Code affected\n- crates/api/src/export.rs (new)\n- crates/api/src/routes.rs\n\n## Risks\n- A client that reads slowly keeps the stream open." },
     ],
   },
-  { id: "d-r1-plan", project: "api", group: "run", runId: "run-1", stage: "plan", status: "approved", file: "03-plan.md", folder: ".xdev/runs/a41f/", inGit: false, versions: [{ n: 1, by: "agent", who: "Plan, attempt 1", at: "09:36", approvedBy: "Chrome on Linux", text: "## Tasks\n- 1. Query invoices by date range, in pages. Test: export_pages. Serves AC-1.\n- 2. CSV writer with a streaming response. Test: export_stream. Serves AC-2.\n- 3. Route and rate limit. Test: export_route. Serves AC-1." }] },
+  { id: "d-r1-plan", project: "api", group: "run", runId: "run-1", stage: "plan", status: "approved", truncated: true, file: "03-plan.md", folder: ".xdev/runs/a41f/", inGit: false, versions: [{ n: 1, by: "agent", who: "Plan, attempt 1", at: "09:36", approvedBy: "Chrome on Linux", approvedAt: "09:40", text: "## Tasks\n- 1. Query invoices by date range, in pages. Test: export_pages. Serves AC-1.\n- 2. CSV writer with a streaming response. Test: export_stream. Serves AC-2.\n- 3. Route and rate limit. Test: export_route. Serves AC-1." }] },
   { id: "d-r1-changes", project: "api", group: "run", runId: "run-1", stage: "code", status: "writing", file: "04-changes.md", folder: ".xdev/runs/a41f/", inGit: false, versions: [{ n: 1, by: "agent", who: "Code, attempt 1", at: "09:44", text: "## Task 1\n- Done. Commit 4c1e9aa. cargo test export_pages: passed.\n\n## Task 2\n- In progress." }] },
   { id: "d-api-readme", project: "api", group: "repo", file: "README.md", folder: "", inGit: true, versions: [{ n: 1, by: "person", who: "git", at: "last week", text: "## api\n- The invoicing API. Run it with cargo run.\n- Configuration is in config/." }] },
   { id: "d-api-arch", project: "api", group: "repo", file: "architecture.md", folder: "docs/", inGit: true, versions: [{ n: 1, by: "person", who: "git", at: "last month", text: "## Layers\n- routes: HTTP only.\n- services: rules.\n- store: SQL only." }] },
@@ -427,7 +473,7 @@ export const SEED_DOCS: Doc[] = [
 export interface RunEvent {
   at: string;
   /** One of a fixed list of event kinds. */
-  kind: "run_created" | "attempt_started" | "stage_done" | "verdict" | "gate_opened" | "gate_decided" | "doc_edited" | "stage_retried" | "run_stopped" | "run_cancelled" | "run_done";
+  kind: "run_created" | "attempt_started" | "stage_done" | "verdict" | "gate_opened" | "gate_decided" | "doc_edited" | "approved_overwritten" | "stage_retried" | "run_stopped" | "run_cancelled" | "run_done";
   actor: string;
   detail: string;
 }
@@ -453,6 +499,12 @@ export interface Comment {
   quote: string;
   text: string;
 }
+
+/** Pure: a time of day as HH:MM (UTC), from milliseconds. */
+export const clock = (ms: number): string => new Date(ms).toISOString().slice(11, 16);
+
+/** Pure: the name xDev gives the terminal of one attempt. */
+export const attemptTerminal = (a: Attempt): string => `${a.stage} (attempt ${a.n})`;
 
 /** Pure: the session of a run, found by its branch. */
 export function sessionOfRun(run: Run, sessions: readonly Session[]): Session | undefined {
@@ -496,4 +548,12 @@ export function lineDiff(before: string, after: string): string[] {
   while (i < a.length) rows.push(`-${a[i++]}`);
   while (j < b.length) rows.push(`+${b[j++]}`);
   return rows;
+}
+
+/** Pure: a short stand-in for a document hash. The daemon stores the SHA-256 of the approved copy. */
+export function fakeHash(text: string): string {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 0x01000193) >>> 0;
+  const hex = h.toString(16).padStart(8, "0");
+  return `${hex}${hex.split("").reverse().join("")}`.slice(0, 12);
 }

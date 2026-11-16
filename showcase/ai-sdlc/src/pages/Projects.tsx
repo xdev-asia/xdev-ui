@@ -3,7 +3,7 @@ import { Button, Card, DescriptionList, Dialog, Field, FormDialog, Grid, MenuBut
 import { useI18n } from "../i18n";
 import { useNotify } from "../notify";
 import { href, navigate } from "../router";
-import { pending, projectOfLabel, useStore } from "../store";
+import { can, pending, projectOfLabel, useStore } from "../store";
 import type { Project } from "../workspace";
 
 export function ProjectsPage(): JSX.Element {
@@ -16,8 +16,10 @@ export function ProjectsPage(): JSX.Element {
   const [setup, setSetup] = useState<Project | null>(null);
   const [script, setScript] = useState("");
   const [copy, setCopy] = useState("");
+  const [folders, setFolders] = useState("");
+  const [steer, setSteer] = useState("");
   const [removing, setRemoving] = useState<Project | null>(null);
-  const admin = s.role === "admin";
+  const admin = can(s.role, "admin");
 
   const clean = path.trim().replace(/\/+$/, "");
   // The showcase knows one folder of repositories; the daemon asks git.
@@ -25,7 +27,7 @@ export function ProjectsPage(): JSX.Element {
 
   const waiting = (p: Project): number => pending(s.approvals).filter((a) => projectOfLabel(a.session) === p.name).length + s.runs.filter((r) => r.project === p.name && r.state === "blocked").length;
   const busy = (p: Project): boolean =>
-    s.terminals.some((term) => s.sessions.some((x) => x.id === term.sessionId && x.project === p.name) && term.state === "working") || s.runs.some((r) => r.project === p.name && (r.state === "running" || r.state === "waiting_gate"));
+    s.terminals.some((term) => s.sessions.some((x) => x.id === term.sessionId && x.project === p.name) && term.state === "working") || s.runs.some((r) => r.project === p.name && (r.state === "running" || r.state === "waiting_gate" || r.state === "blocked"));
   const open = (p: Project, to: string): void => {
     s.setProject(p.name);
     const first = s.sessions.find((x) => x.project === p.name);
@@ -60,7 +62,7 @@ export function ProjectsPage(): JSX.Element {
             key={p.id}
             title={p.name}
             titleAside={waiting(p) > 0 ? <Tag tone="warn">{t("projects.waiting", { count: waiting(p) })}</Tag> : undefined}
-            subtitle={admin ? p.path : t("projects.base", { branch: p.base })}
+            subtitle={admin ? p.path : undefined}
             monoSubtitle={admin}
             headingLevel={2}
             actions={
@@ -75,6 +77,8 @@ export function ProjectsPage(): JSX.Element {
                       onSelect: () => {
                         setScript(p.setupScript);
                         setCopy(p.copyFiles.join("\n"));
+                        setFolders(p.docFolders.join("\n"));
+                        setSteer(p.steering.join("\n"));
                         setSetup(p);
                       },
                     },
@@ -89,6 +93,7 @@ export function ProjectsPage(): JSX.Element {
               <DescriptionList
                 layout="columns"
                 items={[
+                  { term: t("projects.baseBranch"), value: p.base },
                   { term: t("projects.statSessions"), value: s.sessions.filter((x) => x.project === p.name).length },
                   { term: t("projects.statRunning"), value: s.terminals.filter((term) => term.state === "working" && s.sessions.some((x) => x.id === term.sessionId && x.project === p.name)).length },
                   { term: t("projects.statRuns"), value: s.runs.filter((r) => r.project === p.name).length },
@@ -120,7 +125,7 @@ export function ProjectsPage(): JSX.Element {
             e.preventDefault();
             if (pathError) return setTried(true);
             const name = clean.split("/").pop() ?? clean;
-            s.setProjects((list) => [...list, { id: Math.random().toString(16).slice(2, 14).padEnd(12, "0"), name, path: clean, base: "main", setupScript: "", copyFiles: [] }]);
+            s.setProjects((list) => [...list, { id: Math.random().toString(16).slice(2, 14).padEnd(12, "0"), name, path: clean, base: "main", setupScript: "", copyFiles: [], docFolders: [], steering: [] }]);
             s.setSessions((list) => [...list, { id: Math.random().toString(16).slice(2, 14).padEnd(12, "0"), project: name, branch: "main", root: true, status: "idle", diff: { add: 0, del: 0 } }]);
             notify(t("projects.added", { name }));
             setAdding(false);
@@ -141,11 +146,12 @@ export function ProjectsPage(): JSX.Element {
           onCancel={() => setSetup(null)}
           onSubmit={(e) => {
             e.preventDefault();
-            const copyFiles = copy
-              .split("\n")
-              .map((l) => l.trim())
-              .filter(Boolean);
-            s.setProjects((list) => list.map((p) => (p.id === setup.id ? { ...p, setupScript: script.trim(), copyFiles } : p)));
+            const lines = (value: string): string[] =>
+              value
+                .split("\n")
+                .map((l) => l.trim())
+                .filter(Boolean);
+            s.setProjects((list) => list.map((p) => (p.id === setup.id ? { ...p, setupScript: script.trim(), copyFiles: lines(copy), docFolders: lines(folders), steering: lines(steer) } : p)));
             notify(t("projects.saved", { name: setup.name }));
             setSetup(null);
           }}
@@ -153,6 +159,8 @@ export function ProjectsPage(): JSX.Element {
           <Stack gap={3}>
             <Field label={t("projects.script")} hint={t("projects.scriptHint")} value={script} autoComplete="off" spellCheck={false} onChange={(e) => setScript(e.target.value)} />
             <Textarea label={t("projects.copy")} hint={t("projects.copyHint")} mono value={copy} spellCheck={false} onChange={(e) => setCopy(e.target.value)} />
+            <Textarea label={t("projects.docFolders")} hint={t("projects.docFoldersHint")} mono value={folders} spellCheck={false} onChange={(e) => setFolders(e.target.value)} />
+            <Textarea label={t("projects.steering")} hint={t("projects.steeringHint")} mono value={steer} spellCheck={false} onChange={(e) => setSteer(e.target.value)} />
           </Stack>
         </FormDialog>
       ) : null}

@@ -2,7 +2,7 @@ import { useEffect, useState, type JSX } from "react";
 import { Badge, Button, Card, CodeBlock, Dialog, EmptyState, FormDialog, List, ListRow, MenuButton, PageHeader, PairingCode, RadioGroup, Select, Spinner, Stack, StatusDot, Tag } from "@xdev-asia/ui";
 import { useI18n, type MessageKey } from "../i18n";
 import { useNotify } from "../notify";
-import { useStore } from "../store";
+import { can, useStore } from "../store";
 import { EXPIRY_DAYS, ROLES, type Peer, type Role } from "../workspace";
 
 const ROLE_KEY: Record<Role, MessageKey> = { viewer: "devices.roleViewer", approver: "devices.roleApprover", operator: "devices.roleOperator", admin: "devices.roleAdmin" };
@@ -17,7 +17,7 @@ export function DevicesPage(): JSX.Element {
   const [role, setRole] = useState<Role>("viewer");
   const [days, setDays] = useState("30");
   const [removing, setRemoving] = useState<Peer | null>(null);
-  const admin = s.role === "admin";
+  const admin = can(s.role, "admin");
 
   return (
     <Stack gap={4}>
@@ -50,6 +50,7 @@ export function DevicesPage(): JSX.Element {
                 title={
                   <span className="app-row">
                     {p.name}
+                    {p.name === s.device ? <Tag>{t("devices.thisBrowser")}</Tag> : null}
                     <Tag>{t(p.kind === "browser" ? "devices.kindBrowser" : "devices.kindPhone")}</Tag>
                     <Badge status="neutral">{t(ROLE_KEY[p.role])}</Badge>
                   </span>
@@ -116,10 +117,15 @@ export function DevicesPage(): JSX.Element {
           onConfirm={() => {
             s.setPeers((list) => list.filter((p) => p.id !== removing.id));
             notify(t("devices.removed", { name: removing.name }));
+            // Removing the browser in use ends its pairing at once: the page goes back to the pairing screen.
+            if (removing.name === s.device) {
+              s.setPairNote(true);
+              s.setPaired(false);
+            }
             setRemoving(null);
           }}
         >
-          {t("devices.removeBody")}
+          {removing.name === s.device ? `${t("devices.removeBody")} ${t("devices.removeSelf")}` : t("devices.removeBody")}
         </Dialog>
       ) : null}
     </Stack>

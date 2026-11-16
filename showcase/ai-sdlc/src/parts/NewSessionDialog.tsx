@@ -32,7 +32,8 @@ export function NewSessionDialog({ onClose }: { onClose: () => void }): JSX.Elem
         e.preventDefault();
         if (error) return setTried(true);
         const id = Math.random().toString(16).slice(2, 14).padEnd(12, "0");
-        s.setSessions((list) => [...list, { id, project: projectName, branch: name, root: false, status: "idle", diff: { add: 0, del: 0 } }]);
+        const steps = [...(project?.copyFiles ?? []).map((f) => `$ cp ${f}`), ...(project?.setupScript ? [`$ ${project.setupScript}`] : [])];
+        s.setSessions((list) => [...list, { id, project: projectName, branch: name, root: false, status: "idle", diff: { add: 0, del: 0 }, ...(steps.length ? { setup: "running" as const, setupLog: steps } : {}) }]);
         s.setSessionId(id);
         notify(t("ws.created", { name: `${projectName} / ${name}` }));
         navigate(href.workspace);

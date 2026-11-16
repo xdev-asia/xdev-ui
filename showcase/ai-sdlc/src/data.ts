@@ -24,14 +24,24 @@ export interface AgentInfo {
   name: string;
   profile: AgentProfile;
   command: string;
+  /** The environment variable that points the CLI at one account's own config folder. */
+  configVar: string;
+  /** What the sign-in terminal runs, and what xDev runs to read whether the account is signed in. */
+  loginCommand: string;
+  statusCommand: string;
 }
 
 export const AGENTS: AgentInfo[] = [
-  { id: "claude-code", name: "Claude Code", profile: "claude", command: "claude" },
-  { id: "codex", name: "Codex", profile: "codex", command: "codex" },
+  { id: "claude-code", name: "Claude Code", profile: "claude", command: "claude", configVar: "CLAUDE_CONFIG_DIR", loginCommand: "claude auth login", statusCommand: "claude auth status" },
+  { id: "codex", name: "Codex", profile: "codex", command: "codex", configVar: "CODEX_HOME", loginCommand: "codex login --device-auth", statusCommand: "codex login status" },
 ];
 
-export const agentOf = (id: AgentId): AgentInfo => AGENTS.find((a) => a.id === id) ?? AGENTS[0];
+/** What a terminal runs: one of the agents, or a plain shell. */
+export type TermAgent = AgentId | "shell";
+
+const SHELL = { id: "shell", name: "Shell", profile: "custom" as AgentProfile, command: "sh" };
+
+export const agentOf = (id: TermAgent): Omit<AgentInfo, "id"> & { id: TermAgent } => (id === "shell" ? SHELL : (AGENTS.find((a) => a.id === id) ?? AGENTS[0])) as Omit<AgentInfo, "id"> & { id: TermAgent };
 
 export const SEED_ACCOUNTS: Account[] = [
   { id: "work", name: "Work", agent: "claude-code", auth: "login", status: "signed_in", terminals: 2, maxTerminals: 4, checkedAt: "2026-11-16T07:40:00Z" },

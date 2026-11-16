@@ -3,7 +3,7 @@ import { Board, BoardCard, BoardColumn, Button, Field, FieldMessage, FormDialog,
 import { slugify } from "../data";
 import { useI18n } from "../i18n";
 import { useNotify } from "../notify";
-import { inProject, logEvent, useStore } from "../store";
+import { can, inProject, logEvent, useStore } from "../store";
 import { PIPELINES, STAGES, boardColumn, type PipelineId, type Run, type StageId } from "../workspace";
 import { RunDetail } from "./RunDetail";
 import { CARD_STATUS, STAGE_KEY, attemptsOf } from "./run-keys";
@@ -30,9 +30,11 @@ function RunBoard(): JSX.Element {
         title={t("runs.title")}
         description={t("runs.description")}
         actions={
-          <Button variant="primary" icon="plus" onClick={() => setCreating(true)}>
-            {t("runs.new")}
-          </Button>
+          can(s.role, "operator") ? (
+            <Button variant="primary" icon="plus" onClick={() => setCreating(true)}>
+              {t("runs.new")}
+            </Button>
+          ) : undefined
         }
       />
       <Board aria-label={t("runs.board")}>
@@ -52,8 +54,8 @@ function RunBoard(): JSX.Element {
                   tags={
                     <>
                       {r.state === "waiting_gate" ? <Tag tone="warn">{t(STAGE_KEY[r.stage])}</Tag> : null}
-                      {r.state === "blocked" ? <Tag tone="warn">{t("runs.stateBlocked")}</Tag> : null}
-                      {r.state === "running" ? <Tag>{t("runs.attempt", { stage: t(STAGE_KEY[r.stage]), n: attemptsOf(r, r.stage) })}</Tag> : null}
+                      {r.state === "blocked" ? <Tag tone="warn">{t(r.blocked === "interrupted" ? "runs.blockedShortInterrupted" : r.blocked === "agent_exit" ? "runs.blockedShortExit" : "runs.blockedShortMax", { n: attemptsOf(r, r.stage) })}</Tag> : null}
+                      {r.state !== "done" && r.state !== "cancelled" ? <Tag>{t("runs.attempt", { stage: t(STAGE_KEY[r.stage]), n: attemptsOf(r, r.stage) })}</Tag> : null}
                     </>
                   }
                 />
@@ -126,7 +128,7 @@ function NewRunDialog({ onClose }: { onClose: () => void }): JSX.Element {
         <FieldMessage tone="info">
           {t("runs.gates")}: {gates}
         </FieldMessage>
-        {reviewer ? <FieldMessage tone="info">{t("runs.reviewOther", { agent: "Codex" })}</FieldMessage> : null}
+        <FieldMessage tone="info">{reviewer ? t("runs.reviewOther", { agent: "Codex" }) : t("runs.sameAgent")}</FieldMessage>
       </Stack>
     </FormDialog>
   );

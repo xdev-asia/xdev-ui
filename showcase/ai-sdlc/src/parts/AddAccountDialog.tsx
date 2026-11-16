@@ -1,5 +1,5 @@
 import { useState, type JSX } from "react";
-import { Button, Dialog, Field, RadioGroup, Stack, StepDots } from "@xdev-asia/ui";
+import { Button, Dialog, Field, FieldMessage, RadioGroup, Stack, StepDots } from "@xdev-asia/ui";
 import { AGENTS, checkId, slugify, type Account, type AgentId, type AuthKind } from "../data";
 import { useI18n } from "../i18n";
 import { SignInPanel } from "./SignInPanel";
@@ -125,6 +125,7 @@ export function AddAccountDialog({ accounts, agent: firstAgent = "claude-code", 
                 { value: "env_file", label: t("add.authEnv"), hint: t("add.authEnvHint") },
               ]}
             />
+            {auth === "login" && agent === "claude-code" ? <FieldMessage tone="info">{t("add.consoleNote")}</FieldMessage> : null}
             {auth === "env_file" ? (
               <Field label={t("add.envFile")} hint={t("add.envFileHint")} error={tried ? envError : undefined} value={envFile} placeholder="/run/secrets/xdev/ci.env" autoComplete="off" spellCheck={false} onChange={(e) => setEnvFile(e.target.value)} />
             ) : null}

@@ -1,12 +1,14 @@
 import { useState, type JSX } from "react";
-import { AgentChip, Badge, Banner, Button, Card, Dialog, Disclosure, EmptyState, FieldMessage, List, ListRow, PageHeader, RunTimeline, Stack, StatusDot, Tag, Textarea, type StatusTone } from "@xdev-asia/ui";
+import { AgentChip, Badge, Banner, Button, Card, DescriptionList, Dialog, DiffStat, Disclosure, EmptyState, FieldMessage, List, ListRow, PageHeader, RunTimeline, Stack, StatusDot, Tag, Textarea, type StatusTone } from "@xdev-asia/ui";
 import { useI18n } from "../i18n";
 import { useNotify } from "../notify";
 import { CommentDialog, PendingComments } from "../parts/Comments";
+import { DiffView } from "../parts/DiffView";
 import { MdView } from "../parts/MdView";
+import { useGate } from "../parts/useGate";
 import { href, navigate } from "../router";
-import { logEvent, useStore } from "../store";
-import { PIPELINES, nextStage, sessionOfRun, type Run, type StageId } from "../workspace";
+import { can, logEvent, useStore } from "../store";
+import { PIPELINES, attemptTerminal, md, sessionOfRun, type Run, type StageId } from "../workspace";
 import { STAGE_KEY, STATE_KEY, attemptsOf } from "./run-keys";
 
 /** One run: its stages, its attempts in order, what the chosen attempt left, the gate when it waits, and its log. */
@@ -19,50 +21,52 @@ export function RunDetail({ run }: { run: Run }): JSX.Element {
   const [tried, setTried] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const [passage, setPassage] = useState<string | null>(null);
+  const [branchPath, setBranchPath] = useState<string | null>(null);
 
+  const gate = useGate(run);
+  const operator = can(s.role, "operator");
+  const approver = can(s.role, "approver");
+  const roleName = t(`roles.${s.role}`);
   const stages = PIPELINES[run.pipeline].stages;
   const gates = PIPELINES[run.pipeline].gatesAfter;
   const attempt = run.attempts.find((a) => a.id === attemptId) ?? run.attempts[run.attempts.length - 1];
   const doc = attempt ? s.docs.find((d) => d.runId === run.id && d.stage === attempt.stage) : undefined;
-  const text = doc?.versions[doc.versions.length - 1]?.text;
+  // An attempt that left its own copy shows that copy; otherwise the stage's current document.
+  const latest = attempt ? [...run.attempts].reverse().find((a) => a.stage === attempt.stage)?.id === attempt.id : true;
+  const text = attempt?.artifact && !latest ? md(attempt.artifact.sections) : (doc?.versions[doc.versions.length - 1]?.text ?? (attempt?.artifact ? md(attempt.artifact.sections) : undefined));
   const atGate = run.state === "waiting_gate" && attempt?.stage === run.stage;
-  const final = run.stage === stages[stages.length - 1];
-  const scope = `gate:${run.id}`;
-  const comments = s.comments[scope] ?? [];
+  const { final, scope, comments } = gate;
   const session = sessionOfRun(run, s.sessions);
   const log = s.runLog[run.id] ?? [];
+  const branchFiles = session ? (s.changes[session.id] ?? []) : [];
+  const branchFile = branchFiles.find((f) => f.path === branchPath) ?? branchFiles[0];
+  const attemptTerm = attempt && session ? s.terminals.find((x) => x.sessionId === session.id && x.name === attemptTerminal(attempt)) : undefined;
+  // What stopped the run: the stage that kept failing its verdict, or the stage that was running.
+  const failed = [...run.attempts].reverse().find((a) => a.verdict === "fail");
+  const stopped = run.blocked === "max_attempts" && failed ? failed : { stage: run.stage, n: attemptsOf(run, run.stage) };
+  const blockedText = t(run.blocked === "interrupted" ? "runs.blockedInterrupted" : run.blocked === "agent_exit" ? "runs.blockedExit" : "runs.blockedMax", { stage: t(STAGE_KEY[stopped.stage]), n: stopped.n });
+  const verdictOf = (stage: StageId): string => {
+    const a = lastOf(stage);
+    return `${t(a?.verdict === "fail" ? "runs.verdictFail" : "runs.verdictPass")}: ${a?.summary ?? t("runs.summaryNone")}`;
+  };
+  /** The account a stage's agent signs in with: Review runs on the second agent. */
+  const accountOf = (stage: StageId): string => s.accounts.find((a) => a.id === s.defaults[stage === "review" ? "codex" : "claude-code"])?.name ?? t("terminals.noAccount");
+  const lastOf = (stage: StageId): Run["attempts"][number] | undefined => [...run.attempts].reverse().find((a) => a.stage === stage);
 
   const patch = (change: Partial<Run>): void => s.setRuns((list) => list.map((r) => (r.id === run.id ? { ...r, ...change } : r)));
   const startAttempt = (stage: StageId, reason?: string): Run["attempts"] => [...run.attempts, { id: `${run.id}-${run.attempts.length + 1}`, stage, n: attemptsOf(run, stage) + 1, status: "running", at: "now", reason }];
-  const settle = (choice: "approve" | "changes"): void => {
-    s.setApprovals((list) => list.map((a) => (a.runId === run.id && !a.decided ? { ...a, decided: { choice, by: s.device, note: note.trim() || undefined } } : a)));
-    s.setComments((all) => ({ ...all, [scope]: [] }));
-    setNote("");
-    setTried(false);
-  };
 
   const approve = (): void => {
-    const next = nextStage(run.pipeline, run.stage);
-    if (doc) s.setDocs((list) => list.map((d) => (d.id === doc.id ? { ...d, status: "approved", versions: d.versions.map((v, i) => (i === d.versions.length - 1 ? { ...v, approvedBy: s.device } : v)) } : d)));
-    logEvent(s, run.id, "gate_decided", s.device, "approve");
-    if (next) patch({ state: "running", stage: next, attempts: startAttempt(next) });
-    else {
-      patch({ state: "done" });
-      logEvent(s, run.id, "run_done", "xdevd", run.branch);
-    }
-    settle("approve");
+    gate.approve();
+    setNote("");
+    setTried(false);
     notify(t("approvals.approved", { title: run.title }));
   };
 
   const requestChanges = (): void => {
-    if (!note.trim() && comments.length === 0) return setTried(true);
-    // At the last gate the thing to change is the code, not the test report.
-    const back: StageId = final ? "code" : run.stage;
-    const reason = [note.trim(), ...comments.map((c) => `"${c.quote}": ${c.text}`)].filter(Boolean).join(" · ");
-    if (doc) s.setDocs((list) => list.map((d) => (d.id === doc.id ? { ...d, status: "changes" } : d)));
-    logEvent(s, run.id, "gate_decided", s.device, `changes: ${reason}`);
-    patch({ state: "running", stage: back, attempts: startAttempt(back, reason) });
-    settle("changes");
+    if (!gate.requestChanges(note)) return setTried(true);
+    setNote("");
+    setTried(false);
     notify(t("approvals.changesSent", { title: run.title }));
   };
 
@@ -105,7 +109,7 @@ export function RunDetail({ run }: { run: Run }): JSX.Element {
                 {t("runs.openSession")}
               </Button>
             ) : null}
-            {run.state !== "done" && run.state !== "cancelled" ? (
+            {operator && run.state !== "done" && run.state !== "cancelled" ? (
               <Button variant="danger" onClick={() => setCancelling(true)}>
                 {t("runs.cancel")}
               </Button>
@@ -132,8 +136,9 @@ export function RunDetail({ run }: { run: Run }): JSX.Element {
             <Button
               variant="secondary"
               icon="refresh"
+              disabled={!operator}
               onClick={() => {
-                patch({ state: "running", blocked: undefined, attempts: startAttempt(run.stage) });
+                patch({ state: "running", blocked: undefined, attempts: startAttempt(run.stage, blockedText) });
                 logEvent(s, run.id, "stage_retried", s.device, run.stage);
                 notify(t("runs.retried", { stage: t(STAGE_KEY[run.stage]) }));
               }}
@@ -142,7 +147,30 @@ export function RunDetail({ run }: { run: Run }): JSX.Element {
             </Button>
           }
         >
-          {t(run.blocked === "interrupted" ? "runs.blockedInterrupted" : run.blocked === "agent_exit" ? "runs.blockedExit" : "runs.blockedMax", { stage: t(STAGE_KEY["review"]), n: 3 })}
+          {blockedText}
+        </Banner>
+      ) : null}
+
+      {run.state === "done" ? (
+        <Banner
+          tone="ok"
+          title={t("runs.notPushedTitle")}
+          action={
+            session ? (
+              <Button
+                variant="secondary"
+                icon="terminal"
+                onClick={() => {
+                  s.setSessionId(session.id);
+                  navigate(href.workspace);
+                }}
+              >
+                {t("runs.openSession")}
+              </Button>
+            ) : undefined
+          }
+        >
+          {t("runs.notPushedHint")}
         </Banner>
       ) : null}
 
@@ -161,6 +189,7 @@ export function RunDetail({ run }: { run: Run }): JSX.Element {
                     <Button variant="link" onClick={() => setAttemptId(a.id)} aria-current={a.id === attempt?.id ? "true" : undefined}>
                       {t("runs.attempt", { stage: t(STAGE_KEY[a.stage]), n: a.n })}
                     </Button>
+                    <Tag>{accountOf(a.stage)}</Tag>
                     {a.verdict ? <Badge tone={a.verdict === "fail" ? "danger" : undefined}>{t(a.verdict === "pass" ? "runs.verdictPass" : "runs.verdictFail")}</Badge> : null}
                     {a.stale ? <Badge status="foreign">{t("docs.basedOnOld")}</Badge> : null}
                   </span>
@@ -175,16 +204,43 @@ export function RunDetail({ run }: { run: Run }): JSX.Element {
             {atGate ? (
               <Card title={t("runs.gateTitle", { stage: t(STAGE_KEY[run.stage]) })} subtitle={t(final ? "runs.finalHint" : "runs.gateHint")} headingLevel={2}>
                 <Stack gap={3}>
+                  {final ? (
+                    <Stack gap={2}>
+                      <span className="app-label">{t("runs.finalTitle")}</span>
+                      <DescriptionList
+                        layout="columns"
+                        items={[
+                          { term: t("runs.branchDiff", { base: run.base }), value: <DiffStat added={run.diff.add} removed={run.diff.del} labels={{ diffStat: ui.diffStat }} /> },
+                          { term: t(STAGE_KEY.review), value: verdictOf("review") },
+                          { term: t(STAGE_KEY.test), value: verdictOf("test") },
+                          { term: t("runs.attemptsPerStage"), value: stages.map((st) => `${t(STAGE_KEY[st])} ${attemptsOf(run, st)}`).join(" · ") },
+                        ]}
+                      />
+                      {branchFiles.length > 0 ? (
+                        <List aria-label={t("runs.branchFiles")}>
+                          {branchFiles.map((f) => (
+                            <ListRow key={f.path} as="li" selected={f.path === branchFile?.path} onClick={() => setBranchPath(f.path)} title={f.path} trailing={<DiffStat added={f.add} removed={f.del} labels={{ diffStat: ui.diffStat }} />} />
+                          ))}
+                        </List>
+                      ) : null}
+                      {branchFile ? <DiffView lines={branchFile.lines} label={t("changes.diffOf", { path: branchFile.path })} /> : null}
+                    </Stack>
+                  ) : null}
+                  {!approver ? <FieldMessage tone="info">{t("roles.needApprover", { role: roleName })}</FieldMessage> : null}
                   {comments.length > 0 ? <PendingComments scope={scope} /> : null}
                   <Textarea label={t("approvals.note")} hint={t("approvals.noteHint")} error={tried && !note.trim() && comments.length === 0 ? t("approvals.noteRequired") : undefined} value={note} onChange={(e) => setNote(e.target.value)} />
+                  <p className="app-muted">
+                    {final ? t("runs.changesHintFinal") : t("runs.changesHint", { stage: t(STAGE_KEY[run.stage]) })} {t("runs.noExpiry")}
+                  </p>
                   <Stack direction="row" gap={2} justify="end" wrap>
-                    <Button variant="secondary" onClick={requestChanges}>
+                    <Button variant="secondary" disabled={!approver} onClick={requestChanges}>
                       {t("approvals.requestChanges")}
                     </Button>
                     {doc ? (
                       <Button
                         variant="secondary"
                         icon="edit"
+                        disabled={!approver}
                         onClick={() => {
                           s.setProject(run.project);
                           s.setDocId(doc.id);
@@ -194,7 +250,7 @@ export function RunDetail({ run }: { run: Run }): JSX.Element {
                         {t("runs.editDoc")}
                       </Button>
                     ) : null}
-                    <Button variant="primary" icon="check" onClick={approve}>
+                    <Button variant="primary" icon="check" disabled={!approver} onClick={approve}>
                       {t("approvals.approve")}
                     </Button>
                   </Stack>
@@ -203,7 +259,25 @@ export function RunDetail({ run }: { run: Run }): JSX.Element {
             ) : null}
             <Card title={t("runs.artifact")} subtitle={doc?.file} monoSubtitle headingLevel={2}>
               {attempt?.reason ? <FieldMessage tone="warn">{attempt.reason}</FieldMessage> : null}
-              {text ? <MdView text={text} onPick={atGate ? setPassage : undefined} pickLabel={t("comments.addPassage")} /> : <EmptyState size="inline" title={t("runs.noArtifact")} />}
+              {text ? <MdView text={text} onPick={atGate && approver ? setPassage : undefined} pickLabel={t("comments.addPassage")} /> : <EmptyState size="inline" title={t("runs.noArtifact")} />}
+              {doc?.truncated && latest ? <FieldMessage tone="warn">{t("docs.truncated")}</FieldMessage> : null}
+              {session && attemptTerm ? (
+                <Stack direction="row" justify="end">
+                  <Button
+                    variant="ghost"
+                    icon="terminal"
+                    onClick={() => {
+                      s.setSessionId(session.id);
+                      s.setTermId(attemptTerm.id);
+                      navigate(href.workspace);
+                    }}
+                  >
+                    {t("runs.openTerminal")}
+                  </Button>
+                </Stack>
+              ) : (
+                <p className="app-muted">{t("runs.terminalGone")}</p>
+              )}
             </Card>
             <Disclosure title={t("log.title")} count={log.length}>
               {log.length === 0 ? (
@@ -240,7 +314,7 @@ export function RunDetail({ run }: { run: Run }): JSX.Element {
           onCancel={() => setCancelling(false)}
           onConfirm={() => {
             patch({ state: "cancelled" });
-            settle("changes");
+            s.setApprovals((list) => list.map((a) => (a.runId === run.id && !a.decided ? { ...a, decided: { choice: "changes", by: s.device, agoMin: 0 } } : a)));
             logEvent(s, run.id, "run_cancelled", s.device, run.branch);
             notify(t("runs.cancelled", { title: run.title }));
             setCancelling(false);

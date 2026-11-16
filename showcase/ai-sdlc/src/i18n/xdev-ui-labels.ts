@@ -2,6 +2,7 @@
 export const uiLabels = {
   en: {
     appShell: { openNav: "Open navigation", closeNav: "Close navigation", skipToContent: "Skip to content", nav: "Navigation" },
+    bottomNav: { nav: "Main", badge: (count: number) => `${count} waiting` },
     toast: { dismiss: "Dismiss" },
     themeSwitch: { group: "Theme", system: "System", dark: "Dark", light: "Light" },
     spinner: { loading: "Loading" },
@@ -25,6 +26,7 @@ export const uiLabels = {
     boardCard: { need: "Needs you", status: { idle: "Idle", running: "Running", waiting: "Waiting for you", error: "Stopped" } },
     toolbar: { actions: "Actions" },
     searchInput: { search: "Search", clear: "Clear search", count: (n: number) => (n === 1 ? "1 result" : `${n} results`) },
+    commandPalette: { dialog: "Jump to", placeholder: "Find", search: "Search", noMatches: "No matches", move: "Move", open: "Open", close: "Close" },
     formDialogCreate: { submit: "Create", cancel: "Cancel", saving: "Creating" },
     attentionInbox: {
       title: "Waiting for you",
@@ -37,6 +39,7 @@ export const uiLabels = {
   },
   vi: {
     appShell: { openNav: "Mở điều hướng", closeNav: "Đóng điều hướng", skipToContent: "Chuyển đến nội dung", nav: "Điều hướng" },
+    bottomNav: { nav: "Chính", badge: (count: number) => `${count} đang chờ` },
     toast: { dismiss: "Đóng" },
     themeSwitch: { group: "Chủ đề", system: "Hệ thống", dark: "Tối", light: "Sáng" },
     spinner: { loading: "Đang tải" },
@@ -60,6 +63,7 @@ export const uiLabels = {
     boardCard: { need: "Cần bạn", status: { idle: "Rảnh", running: "Đang chạy", waiting: "Đang chờ bạn", error: "Đã dừng" } },
     toolbar: { actions: "Thao tác" },
     searchInput: { search: "Tìm", clear: "Xóa ô tìm", count: (n: number) => `${n} kết quả` },
+    commandPalette: { dialog: "Nhảy tới", placeholder: "Tìm", search: "Tìm", noMatches: "Không có kết quả", move: "Di chuyển", open: "Mở", close: "Đóng" },
     formDialogCreate: { submit: "Tạo", cancel: "Hủy", saving: "Đang tạo" },
     attentionInbox: {
       title: "Đang chờ bạn",

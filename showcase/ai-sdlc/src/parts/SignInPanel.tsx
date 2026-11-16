@@ -32,10 +32,11 @@ export function SignInPanel({ account, onDone }: SignInPanelProps): JSX.Element 
           <figure className="app-figure">
             <figcaption className="app-muted">{t("signIn.sample")}</figcaption>
             <pre className="app-term">
-              {`$ xdev account login ${account.id}\n`}
+              {`$ xdev account login ${account.id}\n${agent.configVar}=~/.xdev/accounts/${account.id}/${account.agent} ${agent.loginCommand}\n`}
               <span className="app-term-note">{t("signIn.cliScreen")}</span>
             </pre>
           </figure>
+          <p className="app-muted">{t("signIn.checkWith", { command: agent.statusCommand })}</p>
         </>
       ) : (
         <pre className="app-term">{account.envFile}</pre>

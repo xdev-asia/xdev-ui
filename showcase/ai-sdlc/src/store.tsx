@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState, type JSX, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type JSX, type ReactNode } from "react";
 import type { AttentionItem } from "@xdev-asia/ui";
 import { SEED_ACCOUNTS, agentOf, type Account, type AgentId } from "./data";
 import {
@@ -15,6 +15,7 @@ import {
   type ChangedFile,
   type Comment,
   type Doc,
+  type DocVersion,
   type Peer,
   type Project,
   type Role,
@@ -28,21 +29,54 @@ import {
 // replaces this file with calls to the daemon.
 
 const NOW = Date.UTC(2026, 10, 16, 10, 0);
+const PROJECT_KEY = "xdev-showcase-project";
+
+function storedProject(): string {
+  try {
+    return window.localStorage.getItem(PROJECT_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
 
 function useAppState() {
   const [projects, setProjects] = useState<Project[]>(SEED_PROJECTS);
-  /** The chosen project's name, or "" for all projects. */
-  const [project, setProject] = useState("");
+  /** The chosen project's name, or "" for all projects. Remembered in this browser. */
+  const [project, setProject] = useState(storedProject);
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(PROJECT_KEY, project);
+    } catch {
+      /* private mode: the choice lasts for this visit */
+    }
+  }, [project]);
+  /** The role this browser was paired with. The showcase lets you change it in Settings. */
+  const [role, setRole] = useState<Role>("admin");
+  /** False shows the pairing screen. `pairNote` says why the pairing ended, if it did. */
+  const [paired, setPaired] = useState(true);
+  const [pairNote, setPairNote] = useState(false);
+  const [online, setOnline] = useState(true);
+  /** Showcase control: the next document save finds a newer version on the server. */
+  const [conflictNext, setConflictNext] = useState(false);
+  const [notifications, setNotifications] = useState(false);
+  /** Prompts sent from the composer, newest last, by terminal. */
+  const [prompts, setPrompts] = useState<Record<string, string[]>>({});
   const [sessions, setSessions] = useState<Session[]>(SEED_SESSIONS);
   const [sessionId, setSessionId] = useState("5d1f0a77c3e2");
   const [terminals, setTerminals] = useState<Terminal[]>(SEED_TERMINALS);
+  /** The terminal tab to show in the open session; null shows the first one. */
+  const [termId, setTermId] = useState<string | null>(null);
   const [changes, setChanges] = useState<Record<string, ChangedFile[]>>(SEED_CHANGES);
   const [approvals, setApprovals] = useState<Approval[]>(SEED_APPROVALS);
+  /** The request the Approvals page shows; null shows the first one. */
+  const [approvalId, setApprovalId] = useState<string | null>(null);
   const [runs, setRuns] = useState<Run[]>(SEED_RUNS);
   const [runId, setRunId] = useState<string | null>(null);
   const [runLog, setRunLog] = useState<Record<string, RunEvent[]>>(SEED_RUN_LOG);
   const [docs, setDocs] = useState<Doc[]>(SEED_DOCS);
   const [docId, setDocId] = useState<string | null>(null);
+  /** The document being edited and its text so far. It outlives a change of page, so nothing is lost by a wrong click. */
+  const [draft, setDraft] = useState<{ doc: string; from: DocVersion; text: string } | null>(null);
   const [accounts, setAccounts] = useState<Account[]>(SEED_ACCOUNTS);
   const [defaults, setDefaults] = useState<Record<AgentId, string>>({ "claude-code": "work", codex: "codex-work" });
   const [peers, setPeers] = useState<Peer[]>(SEED_PEERS);
@@ -51,9 +85,38 @@ function useAppState() {
   /** Comments not sent yet, by session id (diff comments) or document id (passage comments). */
   const [comments, setComments] = useState<Record<string, Comment[]>>({});
 
+  // The showcase's stand-in for an agent: it answers a prompt after a moment. A session the person
+  // is not looking at then counts as unread (new output and a new state since they last opened it).
+  const openSession = useRef(sessionId);
+  openSession.current = sessionId;
+  const agentReply = useCallback((ofSession: string, ofTerm: string): void => {
+    setTerminals((list) => list.map((x) => (x.id === ofTerm ? { ...x, state: "working" } : x)));
+    window.setTimeout(() => {
+      setTerminals((list) => list.map((x) => (x.id === ofTerm ? { ...x, state: "idle", output: [...x.output, "Read the request.", "Done. Nothing else to change."] } : x)));
+      if (openSession.current !== ofSession) setUnread((list) => (list.includes(ofSession) ? list : [...list, ofSession]));
+    }, 2500);
+  }, []);
+
   return {
-    /** The role of this browser. The showcase is paired as Admin. */
-    role: "admin" as Role,
+    agentReply,
+    termId,
+    setTermId,
+    approvalId,
+    setApprovalId,
+    role,
+    setRole,
+    paired,
+    setPaired,
+    pairNote,
+    setPairNote,
+    online,
+    setOnline,
+    conflictNext,
+    setConflictNext,
+    notifications,
+    setNotifications,
+    prompts,
+    setPrompts,
     /** This browser's name in the list of devices. */
     device: "Chrome on Linux",
     now: NOW,
@@ -81,6 +144,8 @@ function useAppState() {
     setDocs,
     docId,
     setDocId,
+    draft,
+    setDraft,
     accounts,
     setAccounts,
     defaults,
@@ -143,3 +208,8 @@ export function useAttention(): AttentionItem[] {
 export function logEvent(store: Store, runId: string, kind: RunEvent["kind"], actor: string, detail: string): void {
   store.setRunLog((log) => ({ ...log, [runId]: [...(log[runId] ?? []), { at: "now", kind, actor, detail }] }));
 }
+
+const ROLE_ORDER: Role[] = ["viewer", "approver", "operator", "admin"];
+
+/** Pure: whether a browser paired as `role` may do something that needs `need`. */
+export const can = (role: Role, need: Role): boolean => ROLE_ORDER.indexOf(role) >= ROLE_ORDER.indexOf(need);
