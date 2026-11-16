@@ -14,7 +14,7 @@ A port keeps what the other product got right (what is on each page, in what ord
 3. **Fill the gaps in xdev-ui**, not in the app (see the last section).
 4. **Build** each page from the screen recipes in `screens.md`, keeping the source's region order.
 5. **Strings.** Rewrite labels in xDev voice (sentence case, verbs on buttons) in `en` and `vi`; do not copy the source's text.
-6. **Compare.** Put source and port screenshots side by side, dark and light, 1440px and 360px. List each difference and decide: keep (xDev rule wins) or fix.
+6. **Compare.** For a 1:1 port, measure both apps (see owner-notes.md, linked from SKILL.md). Put source and port screenshots side by side, dark and light, 1440px and 360px. List each difference and decide: keep (xDev rule wins) or fix.
 
 ## What to keep, what to replace
 
@@ -33,7 +33,7 @@ Never copy the source's logo, illustrations, colour palette or wording. Third-pa
 | source pattern | xDev part |
 |---|---|
 | sidebar with icon + label items | `AppShell` `nav` with `NavList` |
-| top bar with title and actions | `AppShell` header (title via the shell, actions in `actions`) |
+| top bar with title and actions | `AppShell` header (title via the shell, actions in `actions` as icon buttons, `MenuButton` with `variant="icon"` for menus) |
 | page title with buttons | `PageHeader` |
 | logo tiles or provider cards | `ResourceCard` with `Emblem` |
 | key-value list | `DescriptionList` |

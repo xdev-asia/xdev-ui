@@ -18,6 +18,8 @@ xDev looks like a quiet developer tool: dark first, graphite surfaces, 1px hairl
 
 Decide by asking: will a person *see* a different pixel after this change? If yes, apply.
 
+The owner's own decisions (1:1 ports by measurement, the top bar, the brand, no left stripes) are in [owner's notes](references/owner-notes.md); they override the rules below.
+
 ## Rule categories by priority
 
 | # | category | impact | key checks | anti-patterns | reference |
@@ -56,7 +58,8 @@ Rule IDs; the full rule, the why and the check are in [rules](references/rules.m
 4. **Apply tokens** by role, never by value ([tokens](references/tokens.md)). App classes carry the app's prefix, never `x-` or `ws-`.
 5. **Place the brand** ([brand](references/brand.md)): `BrandMark` in the shell, the app name beside it.
 6. **Porting?** Keep the other product's layout and information order; replace its look with xDev's ([porting](references/porting.md)).
-7. **Verify**: run the audit, take dark and light screenshots at 1440px and 360px, walk the [checklist](references/checklist.md). Compare with the reference picture if there is one.
+   Read the [owner's notes](references/owner-notes.md) first: a 1:1 port matches measured geometry, the top bar uses icon buttons, and they win over the general rules.
+7. **Verify**: run the audit, take dark and light screenshots at 1440px and 375px (and check 768px: no horizontal page scroll), walk the [checklist](references/checklist.md). Compare with the reference picture if there is one.
 
 ```bash
 node node_modules/@xdev-asia/ui/skills/xdev-ui-review/scripts/audit.mjs src --i18n src/strings --contrast

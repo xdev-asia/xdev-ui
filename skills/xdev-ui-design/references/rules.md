@@ -73,6 +73,7 @@ HIGH. Structure first, then colour.
 | `lay-radius-scale` | radius from `--radius-s`, `--radius-m`, `--radius-l` (or `--x-radius-sm` to `--x-radius-lg` on semantic surfaces) | one corner language | look for odd corners |
 | `lay-360` | no horizontal page scroll at 360px; tables scroll inside themselves | phones and split windows | 360px screenshot |
 | `lay-control-width` | header controls are as wide as their content | stretched tabs look broken | 1440px screenshot |
+| `lay-top-bar-surface` | the top bar has the page's surface and no rule under it until the page scrolls | a lighter band with a border reads as a separate box; cut-off cards show their corners | read `.x-shell-top` background and border at scroll 0 and after |
 | `lay-shell` | console apps use `AppShell`; public pages use `SiteShell` | one frame per kind of app | read the root component |
 
 ## 6 States and feedback

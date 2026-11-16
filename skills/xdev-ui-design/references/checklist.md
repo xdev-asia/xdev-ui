@@ -36,8 +36,12 @@ Walk this in the running app before calling a screen done. Items marked (audit) 
 
 ## Layout
 - [ ] One `Container` per page; nothing runs edge to edge at 1440px.
-- [ ] No horizontal page scroll at 360px; tables scroll inside their wrapper.
+- [ ] Checked at 375, 768 and 1440px: no horizontal page scroll (also at 320px); tables scroll inside their wrapper or use `stack`.
+- [ ] (audit) No `fixed-width` or `nowrap` warnings left unexplained.
+- [ ] On a phone, modal dialogs open as a bottom sheet and drawers fill the width; header and toolbar actions wrap.
+- [ ] Under `pointer: coarse` every control is at least 44px.
 - [ ] Header controls are as wide as their content.
+- [ ] The top bar has the page's background and no rule under it at the top of the page.
 - [ ] A heading and a count above every grid and list.
 - [ ] Empty, loading and error states designed for each region.
 
@@ -48,4 +52,4 @@ Walk this in the running app before calling a screen done. Items marked (audit) 
 - [ ] (audit) Movement has a reduced-motion guard.
 
 ## Evidence
-Attach to the change: the audit output, and dark plus light screenshots at 1440px and 360px. When porting, put the source screenshot beside each.
+Attach to the change: the audit output, and dark plus light screenshots at 1440px and 375px (and 768px when the layout changes there). When porting, put the source screenshot beside each.
