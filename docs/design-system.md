@@ -7,7 +7,7 @@ Design system and React component package (`@xdev-asia/ui`) for xDev: the deskto
 - **Terse and technical.** Labels are verbs or nouns, sentence case: "Create session", "Kill session", "Changes (7)".
 - **Name the object.** "Kill session fix-auth-redirect?", not "Are you sure?".
 - **Say the consequence, not the mechanism.** "Uncommitted changes stay in the worktree."
-- **Bilingual.** Every string ships in English and Vietnamese (`en`, `vi`). Be Vietnam Pro carries Vietnamese diacritics; keep labels short enough to survive a 30% longer translation.
+- **Bilingual.** Every string ships in English and Vietnamese (`en`, `vi`). Roboto carries Vietnamese diacritics; keep labels short enough to survive a 30% longer translation.
 - **Identifiers stay literal.** Branches, paths, commands and counts are set in mono and never translated.
 - **No exclamation marks, no emoji in UI chrome.**
 
@@ -36,7 +36,7 @@ A product whose mark sits on another ground sets `data-ground="<id>"` next to `d
 - **Radius.** Small and quiet. Workspace: `radius-s` 4px (tags, chips, menu items), `radius-m` 6px (icon buttons, fields, palette), `radius-l` 8px (menus, toasts). Semantic: `x-radius-sm` 4px (keys, dialog inputs), `x-radius-md` 8px (buttons), `x-radius-lg` 12px (banners, activity items).
 - **One accent.** `--accent` / `--x-color-accent` blue marks the current thing: primary button, pressed segment, selected tab, current app. Cyan `--x-color-signal` is the focus ring only.
 - **Motion.** Only the `working` dot pulses (off under `prefers-reduced-motion`). Apart from short positional transitions (0.12s), state changes are instant.
-- **Type.** Be Vietnam Pro for interface text (13px controls and menus, 14px body, 18px dialog titles); JetBrains Mono for code, paths, counts and keys (10â€“12px).
+- **Type.** Roboto for interface text (13px controls and menus, 14px body, 18px dialog titles); JetBrains Mono for code, paths, counts and keys (10â€“12px).
 - **Contrast.** `text-3` is the quietest text step (timestamps, counts, placeholders, hints). It is still 4.5:1 on every workspace ground in both themes, so it may carry text a user reads. Use `--line-strong` (at least 3:1) for the edge of a control that has no other boundary; `--line` stays a decorative hairline between regions.
 
 ## Iconography

@@ -17,7 +17,7 @@ addons.setConfig({
     barBg: "#101013",
     textColor: "#e8e8ec",
     textMutedColor: "#8e8e98",
-    fontBase: '"Be Vietnam Pro", "Segoe UI", system-ui, sans-serif',
+    fontBase: '"Roboto", "Segoe UI", system-ui, sans-serif',
     fontCode: '"JetBrains Mono", ui-monospace, Consolas, monospace',
   }),
 });

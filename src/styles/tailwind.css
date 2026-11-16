@@ -6,7 +6,7 @@
   --breakpoint-lg: 64rem;
   --breakpoint-xl: 80rem;
   --breakpoint-2xl: 96rem;
-  --font-sans: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+  --font-sans: "Roboto", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
 }
 @theme inline {

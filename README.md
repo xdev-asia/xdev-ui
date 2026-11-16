@@ -26,7 +26,7 @@ pnpm add @xdev-asia/ui
 
 ```tsx
 import "@xdev-asia/ui/styles.css";      // tokens + all component CSS
-import "@xdev-asia/ui/fonts.css";       // optional: Be Vietnam Pro + JetBrains Mono (Google Fonts)
+import "@xdev-asia/ui/fonts.css";       // optional: Roboto + JetBrains Mono (Google Fonts)
 import { Button, TabStrip, BrandMark } from "@xdev-asia/ui";
 
 <html data-theme="dark">                // or "light"
