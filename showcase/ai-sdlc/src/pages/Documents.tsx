@@ -5,8 +5,9 @@ import { useNotify } from "../notify";
 import { DiffView } from "../parts/DiffView";
 import { MdView } from "../parts/MdView";
 import { href, navigate } from "../router";
-import { can, logEvent, useStore } from "../store";
-import { PIPELINES, STAGES, fakeHash, lineDiff, nextStage, type Doc, type DocStatus, type DocVersion, type StageId } from "../workspace";
+import { can, logEvent, showInWorkspace, useStore } from "../store";
+import { PIPELINES, STAGES, sessionOfRun, fakeHash, lineDiff, nextStage, type Doc, type DocStatus, type DocVersion, type StageId } from "../workspace";
+import { tabKey } from "../layout";
 import { STAGE_KEY } from "./run-keys";
 
 const STATUS_KEY: Record<DocStatus, MessageKey> = { writing: "docs.statusWriting", waiting: "docs.statusWaiting", approved: "docs.statusApproved", changes: "docs.statusChanges" };
@@ -182,8 +183,9 @@ export function DocumentsPage(): JSX.Element {
                               variant="secondary"
                               icon="inbox"
                               onClick={() => {
-                                s.setApprovalId(s.approvals.find((a) => a.runId === run.id && !a.decided)?.id ?? null);
-                                navigate(href.approvals);
+                                // The gate is answered in the worktree of the run, beside the document.
+                                const at = sessionOfRun(run, s.sessions);
+                                if (at) showInWorkspace(s, at.id, { tab: tabKey({ kind: "doc", id: doc.id }), dock: "run" });
                               }}
                             >
                               {t("docs.openGate")}

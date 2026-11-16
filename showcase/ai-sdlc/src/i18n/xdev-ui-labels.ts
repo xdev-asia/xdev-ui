@@ -3,6 +3,8 @@ export const uiLabels = {
   en: {
     appShell: { openNav: "Open navigation", closeNav: "Close navigation", skipToContent: "Skip to content", nav: "Navigation" },
     bottomNav: { nav: "Main", badge: (count: number) => `${count} waiting` },
+    saveBar: { unsaved: "You have unsaved changes", save: "Save", discard: "Discard", saving: "Saving" },
+    agentRow: { details: (name: string) => `${name} settings` },
     toast: { dismiss: "Dismiss" },
     themeSwitch: { group: "Theme", system: "System", dark: "Dark", light: "Light" },
     spinner: { loading: "Loading" },
@@ -40,6 +42,8 @@ export const uiLabels = {
   vi: {
     appShell: { openNav: "Mở điều hướng", closeNav: "Đóng điều hướng", skipToContent: "Chuyển đến nội dung", nav: "Điều hướng" },
     bottomNav: { nav: "Chính", badge: (count: number) => `${count} đang chờ` },
+    saveBar: { unsaved: "Bạn có thay đổi chưa lưu", save: "Lưu", discard: "Bỏ thay đổi", saving: "Đang lưu" },
+    agentRow: { details: (name: string) => `Cài đặt ${name}` },
     toast: { dismiss: "Đóng" },
     themeSwitch: { group: "Chủ đề", system: "Hệ thống", dark: "Tối", light: "Sáng" },
     spinner: { loading: "Đang tải" },

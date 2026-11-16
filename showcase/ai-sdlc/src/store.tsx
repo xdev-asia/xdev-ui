@@ -1,6 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type JSX, type ReactNode } from "react";
 import type { AttentionItem } from "@xdev-asia/ui";
 import { SEED_ACCOUNTS, agentOf, type Account, type AgentId } from "./data";
+import { SEED_SQUADS, openEscalations, type Squad } from "./squads";
+import { SEED_AGENT_CONFIGS, SEED_APPROVAL_RULES, SEED_PIPELINES, SEED_TEMPLATES, type AgentConfig, type ApprovalRule, type PipelineConfig, type SquadTemplate } from "./config";
+import { initialLayout, openTab, tabKey, withTabs, type Layout } from "./layout";
+import { href, navigate } from "./router";
 import {
   SEED_APPROVALS,
   SEED_CHANGES,
@@ -39,6 +43,9 @@ function storedProject(): string {
   }
 }
 
+/** What the column on the right of the workspace shows. */
+export type Dock = "changes" | "run" | "squad";
+
 function useAppState() {
   const [projects, setProjects] = useState<Project[]>(SEED_PROJECTS);
   /** The chosen project's name, or "" for all projects. Remembered in this browser. */
@@ -64,15 +71,24 @@ function useAppState() {
   const [sessions, setSessions] = useState<Session[]>(SEED_SESSIONS);
   const [sessionId, setSessionId] = useState("5d1f0a77c3e2");
   const [terminals, setTerminals] = useState<Terminal[]>(SEED_TERMINALS);
-  /** The terminal tab to show in the open session; null shows the first one. */
-  const [termId, setTermId] = useState<string | null>(null);
+  /** Tabs and panes of each worktree, by session id. A worktree without an entry gets `initialLayout`. */
+  const [layouts, setLayouts] = useState<Record<string, Layout>>({});
+  /** The column on the right of the workspace: which tab it shows, and whether it is open. */
+  const [dock, setDock] = useState<Dock>("changes");
+  const [dockOpen, setDockOpen] = useState(true);
   const [changes, setChanges] = useState<Record<string, ChangedFile[]>>(SEED_CHANGES);
   const [approvals, setApprovals] = useState<Approval[]>(SEED_APPROVALS);
-  /** The request the Approvals page shows; null shows the first one. */
-  const [approvalId, setApprovalId] = useState<string | null>(null);
   const [runs, setRuns] = useState<Run[]>(SEED_RUNS);
   const [runId, setRunId] = useState<string | null>(null);
   const [runLog, setRunLog] = useState<Record<string, RunEvent[]>>(SEED_RUN_LOG);
+  // What the server is configured with. The real app reads and writes the files under the xdev config folder.
+  const [agentConfigs, setAgentConfigs] = useState<AgentConfig[]>(SEED_AGENT_CONFIGS);
+  const [pipelines, setPipelines] = useState<PipelineConfig[]>(SEED_PIPELINES);
+  const [templates, setTemplates] = useState<SquadTemplate[]>(SEED_TEMPLATES);
+  const [approvalRules, setApprovalRules] = useState<ApprovalRule[]>(SEED_APPROVAL_RULES);
+  const [squads, setSquads] = useState<Squad[]>(SEED_SQUADS);
+  /** The squad the Squads page shows; null shows the list. */
+  const [squadId, setSquadId] = useState<string | null>(null);
   const [docs, setDocs] = useState<Doc[]>(SEED_DOCS);
   const [docId, setDocId] = useState<string | null>(null);
   /** The document being edited and its text so far. It outlives a change of page, so nothing is lost by a wrong click. */
@@ -99,10 +115,12 @@ function useAppState() {
 
   return {
     agentReply,
-    termId,
-    setTermId,
-    approvalId,
-    setApprovalId,
+    layouts,
+    setLayouts,
+    dock,
+    setDock,
+    dockOpen,
+    setDockOpen,
     role,
     setRole,
     paired,
@@ -140,6 +158,18 @@ function useAppState() {
     setRunId,
     runLog,
     setRunLog,
+    agentConfigs,
+    setAgentConfigs,
+    pipelines,
+    setPipelines,
+    templates,
+    setTemplates,
+    approvalRules,
+    setApprovalRules,
+    squads,
+    setSquads,
+    squadId,
+    setSquadId,
     docs,
     setDocs,
     docId,
@@ -185,9 +215,9 @@ export const projectOfLabel = (label: string): string => label.split(" / ")[0] ?
 /** Pure: approvals nobody has decided yet. */
 export const pending = (approvals: readonly Approval[]): Approval[] => approvals.filter((a) => !a.decided);
 
-/** Everything that waits for a person: pending approvals and stopped runs, longest wait first. */
+/** Everything that waits for a person: pending approvals, stopped runs and escalations of squads, longest wait first. */
 export function useAttention(): AttentionItem[] {
-  const { approvals, runs, now } = useStore();
+  const { approvals, runs, squads, now } = useStore();
   return useMemo(() => {
     const fromApprovals: AttentionItem[] = pending(approvals).map((a) => ({
       id: a.id,
@@ -200,8 +230,20 @@ export function useAttention(): AttentionItem[] {
     const fromRuns: AttentionItem[] = runs
       .filter((r) => r.state === "blocked")
       .map((r) => ({ id: r.id, agent: "claude", worktree: `${r.project} / ${r.branch}`, text: r.title, since: now - 200 * 60_000, kind: "failed" }));
-    return [...fromApprovals, ...fromRuns].sort((a, b) => Number(a.since) - Number(b.since));
-  }, [approvals, runs, now]);
+    const fromSquads: AttentionItem[] = squads
+      .filter((q) => q.state === "active")
+      .flatMap((q) =>
+        openEscalations(q).map((e) => ({
+          id: `squad:${q.id}`,
+          agent: q.seats.find((x) => x.id === e.from)?.agent?.profile ?? "custom",
+          worktree: `${q.project} / ${q.name}`,
+          text: e.text,
+          since: now - e.waitedMin * 60_000,
+          kind: "question" as const,
+        })),
+      );
+    return [...fromApprovals, ...fromRuns, ...fromSquads].sort((a, b) => Number(a.since) - Number(b.since));
+  }, [approvals, runs, squads, now]);
 }
 
 /** Appends one line to a run's log. */
@@ -213,3 +255,30 @@ const ROLE_ORDER: Role[] = ["viewer", "approver", "operator", "admin"];
 
 /** Pure: whether a browser paired as `role` may do something that needs `need`. */
 export const can = (role: Role, need: Role): boolean => ROLE_ORDER.indexOf(role) >= ROLE_ORDER.indexOf(need);
+
+/** The tabs and panes of a worktree as they are now: terminals opened or closed since are added or dropped. */
+export function layoutOf(store: Store, sessionId: string): Layout {
+  const terms = store.terminals.filter((x) => x.sessionId === sessionId).map((x) => x.id);
+  const base = store.layouts[sessionId] ?? initialLayout(terms, store.changes[sessionId]?.[0]?.path);
+  return withTabs(base, terms.map((id) => tabKey({ kind: "term", id })));
+}
+
+/** Opens a worktree in the workspace, with a tab in front and the right column on a given tab. */
+export function showInWorkspace(store: Store, sessionId: string, opts: { tab?: string; dock?: Dock } = {}): void {
+  store.setSessionId(sessionId);
+  store.setUnread((list) => list.filter((x) => x !== sessionId));
+  if (opts.tab) {
+    const tab = opts.tab;
+    store.setLayouts((all) => ({ ...all, [sessionId]: openTab(layoutOf(store, sessionId), tab) }));
+  }
+  if (opts.dock) {
+    store.setDock(opts.dock);
+    store.setDockOpen(true);
+  }
+  navigate(href.workspace);
+}
+
+/** Whether this browser may decide a request of this kind, by the approval rules. */
+export function canDecide(store: Store, kind: ApprovalRule["kind"]): boolean {
+  return can(store.role, store.approvalRules.find((r) => r.kind === kind)?.minRole ?? "approver");
+}

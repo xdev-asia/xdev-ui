@@ -7,7 +7,8 @@ import { DiffView } from "../parts/DiffView";
 import { MdView } from "../parts/MdView";
 import { useGate } from "../parts/useGate";
 import { href, navigate } from "../router";
-import { can, logEvent, useStore } from "../store";
+import { can, logEvent, showInWorkspace, useStore } from "../store";
+import { tabKey } from "../layout";
 import { PIPELINES, attemptTerminal, md, sessionOfRun, type Run, type StageId } from "../workspace";
 import { STAGE_KEY, STATE_KEY, attemptsOf } from "./run-keys";
 
@@ -267,9 +268,7 @@ export function RunDetail({ run }: { run: Run }): JSX.Element {
                     variant="ghost"
                     icon="terminal"
                     onClick={() => {
-                      s.setSessionId(session.id);
-                      s.setTermId(attemptTerm.id);
-                      navigate(href.workspace);
+                      showInWorkspace(s, session.id, { tab: tabKey({ kind: "term", id: attemptTerm.id }) });
                     }}
                   >
                     {t("runs.openTerminal")}
