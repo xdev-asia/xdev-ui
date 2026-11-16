@@ -35,6 +35,11 @@ a.btn, a.btn-secondary { display: inline-flex; align-items: center; justify-cont
 .hp-nav-links a:hover, .hp-nav-gh:hover { color: var(--text-1); }
 .hp-nav-tools { display: flex; align-items: center; gap: 12px; margin-left: auto; }
 .hp-nav-gh { font-size: 14px; color: var(--text-2); }
+/* "Showcase" opens a menu of the showcases; it reads as one of the links beside it. */
+.hp-nav-drop { display: inline-flex; }
+.hp-nav-drop > button { height: auto; min-height: 0; padding: 0; gap: 4px; border: 0; background: transparent; box-shadow: none; font: inherit; font-weight: 400; color: inherit; cursor: pointer; transition: color 0.15s; }
+.hp-nav-drop > button:hover, .hp-nav-drop > button[aria-expanded="true"] { color: var(--text-1); background: transparent; }
+.hp-nav-more { display: none; }
 .hp-search {
   display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 6px 0 10px; min-width: 240px;
   border: 1px solid var(--line); border-radius: var(--radius-m); background: var(--bg-1);
@@ -245,6 +250,7 @@ a.btn, a.btn-secondary { display: inline-flex; align-items: center; justify-cont
   .hp-app { grid-template-columns: auto 240px minmax(0, 1fr); }
   .hp-app-files { display: none; }
   .hp-nav-links { display: none; }
+  .hp-nav-more { display: inline-flex; }
 }
 @media (max-width: 900px) {
   :root { --hp-sec: 96px; }
