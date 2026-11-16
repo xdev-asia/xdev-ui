@@ -1,0 +1,49 @@
+/* App styles use tokens only: var(--x-space-*), var(--text-*), var(--type-*). No raw colours, px or font sizes. */
+.app-stack { display: flex; flex-direction: column; gap: var(--x-space-4); }
+.app-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--x-space-2); }
+.app-muted { margin: 0; font: var(--type-status); color: var(--text-2); }
+.app-text { margin: 0; font: var(--type-body); color: var(--text-1); }
+.app-field { display: flex; flex-direction: column; gap: var(--x-space-1); min-width: 0; }
+.app-label { font: var(--type-label); color: var(--text-2); }
+.app-figure { margin: 0; display: flex; flex-direction: column; gap: var(--x-space-1); }
+.app-term { margin: 0; padding: var(--x-space-3); background: var(--term); border: 1px solid var(--line); border-radius: var(--radius-m); font: var(--type-mono); color: var(--text-1); white-space: pre-wrap; overflow-wrap: anywhere; }
+.app-term-note { color: var(--text-3); }
+.app-proto { display: flex; flex-wrap: wrap; align-items: center; gap: var(--x-space-2); padding: var(--x-space-2) var(--x-space-3); border: 1px dashed var(--line-strong); border-radius: var(--radius-m); }
+.app-side { padding: var(--x-space-2); min-width: 0; }
+.app-group { font: var(--type-label); color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; }
+.app-ws { display: flex; flex-wrap: wrap; gap: var(--x-space-4); align-items: flex-start; }
+.app-ws-main { flex: 1 1 28rem; min-width: 0; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--radius-l); overflow: hidden; background: var(--bg-1); }
+.app-ws-panel { flex: 1 1 18rem; max-inline-size: 100%; min-width: 0; display: flex; flex-direction: column; gap: var(--x-space-3); }
+.app-pad { padding: var(--x-space-3); display: flex; flex-direction: column; gap: var(--x-space-3); }
+.app-output { margin: 0; min-block-size: 14rem; max-block-size: 24rem; overflow: auto; padding: var(--x-space-3); background: var(--term); font: var(--type-mono); color: var(--text-1); white-space: pre-wrap; overflow-wrap: anywhere; }
+.app-output.app-log { min-block-size: 0; max-block-size: 10rem; border-radius: var(--radius-m); }
+.app-diff { margin: 0; padding: 0; list-style: none; border: 1px solid var(--line); border-radius: var(--radius-m); background: var(--term); overflow: auto; max-block-size: 20rem; }
+.app-diff-row { display: block; inline-size: 100%; margin: 0; padding: 0 var(--x-space-2); border: 0; background: transparent; text-align: start; font: var(--type-mono); color: var(--text-2); white-space: pre-wrap; overflow-wrap: anywhere; }
+button.app-diff-row { cursor: pointer; }
+button.app-diff-row:hover { background: var(--bg-3); }
+button.app-diff-row:focus-visible { outline: 2px solid var(--x-color-focus); outline-offset: -2px; }
+.app-diff-row[data-kind="add"] { color: var(--ok); }
+.app-diff-row[data-kind="del"] { color: var(--danger); }
+.app-split { display: flex; flex-wrap: wrap; gap: var(--x-space-4); align-items: flex-start; }
+.app-split > * { min-width: 0; }
+.app-col-narrow { flex: 1 1 16rem; }
+.app-col-wide { flex: 3 1 24rem; }
+.app-stages { display: flex; flex-wrap: wrap; align-items: center; gap: var(--x-space-2); }
+.app-editor textarea { min-block-size: 18rem; }
+.app-passage { display: block; inline-size: 100%; margin: 0; padding: var(--x-space-1) var(--x-space-2); border: 0; border-radius: var(--radius-s); background: transparent; text-align: start; font: inherit; color: inherit; cursor: pointer; }
+.app-passage:hover { background: var(--bg-3); }
+.app-passage:focus-visible { outline: 2px solid var(--x-color-focus); outline-offset: 1px; }
+.app-md { display: flex; flex-direction: column; gap: var(--x-space-1); }
+.app-md h3 { margin: var(--x-space-2) 0 0; font: var(--type-section); color: var(--text-1); }
+.app-md p, .app-md li { margin: 0; font: var(--type-body); color: var(--text-2); }
+.app-md ul { margin: 0; padding-inline-start: var(--x-space-6); display: flex; flex-direction: column; gap: var(--x-space-1); }
+.app-center { min-block-size: 100dvh; display: grid; place-items: center; padding: var(--x-space-4); background: var(--bg-0); }
+.app-pair { inline-size: min(28rem, 100%); }
+.app-steps { margin: 0; padding-inline-start: var(--x-space-6); display: flex; flex-direction: column; gap: var(--x-space-2); font: var(--type-body); color: var(--text-2); }
+.app-page { display: flex; flex-direction: column; gap: var(--x-space-4); min-block-size: 100%; }
+.app-page-body { flex: 1; min-width: 0; }
+.app-side-picker { padding: var(--x-space-2) var(--x-space-2) 0; }
+.app-side-picker > * { inline-size: 100%; }
+.app-side-picker .app-fill { inline-size: 100%; }
+/* The palette trigger fills its box, so the top bar gives it one of a fixed width. */
+.app-top-search { flex: none; inline-size: calc(var(--x-space-8) * 9); }

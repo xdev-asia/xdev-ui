@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import * as X from "../src";
 import "../src/styles/fonts.css";
 import "../src/styles/index.css";
-import { COMPONENTS, GROUPS, ICON_COUNT, MCP_TOOLS, REPO, TOKEN_COUNT, VERSION } from "./data";
+import { COMPONENTS, GROUPS, ICON_COUNT, MCP_TOOLS, REPO, SHOWCASES, TOKEN_COUNT, VERSION } from "./data";
 import { Palette } from "./palette";
 import { previews } from "./previews";
 import "./home.css";
@@ -54,6 +54,7 @@ function Nav({ theme, onTheme, onSearch }: { theme: Theme; onTheme: (t: Theme) =
           <a href="#install">Install</a>
           <a href="#mcp">MCP</a>
           <a href={SB}>Storybook</a>
+          <X.MenuButton className="hp-nav-drop" label="Showcase" items={SHOWCASES.map((x) => ({ label: x.name, href: x.href }))} />
         </nav>
         <div className="hp-nav-tools">
           <button type="button" className="hp-search" onClick={onSearch} aria-haspopup="dialog">
@@ -61,16 +62,27 @@ function Nav({ theme, onTheme, onSearch }: { theme: Theme; onTheme: (t: Theme) =
             <span>Search components</span>
             <X.Kbd>Ctrl K</X.Kbd>
           </button>
-          <X.Segmented
-            label="Theme"
-            value={theme}
-            onChange={(v) => onTheme(v as Theme)}
-            options={[
-              { value: "dark", label: "Dark" },
-              { value: "light", label: "Light" },
-            ]}
-          />
+          <X.ThemeSwitch variant="icon" value={theme} onChange={(v) => onTheme(v === "light" ? "light" : "dark")} />
           <a className="hp-nav-gh" href={REPO}>GitHub</a>
+          {/* Below 1100px the links above are hidden: this menu holds them. */}
+          <span className="hp-nav-more">
+            <X.MenuButton
+              variant="icon"
+              icon="menu"
+              align="end"
+              label="Menu"
+              items={[
+                { label: "Components", href: "#components" },
+                { label: "Install", href: "#install" },
+                { label: "MCP", href: "#mcp" },
+                { label: "Storybook", href: SB },
+                { type: "group", label: "Showcase" },
+                ...SHOWCASES.map((x) => ({ label: x.name, href: x.href })),
+                { type: "separator" as const },
+                { label: "GitHub", href: REPO },
+              ]}
+            />
+          </span>
         </div>
       </div>
     </header>

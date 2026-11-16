@@ -18,4 +18,10 @@ describe("the rules audit on shipped apps", () => {
     const { findings } = audit(src, { manifest, i18n: resolve(src, "i18n") }) as { findings: Finding[] };
     expect(show(findings.filter((x) => x.level === "error" || x.rule !== "primary-count"))).toBe("");
   });
+
+  it("showcase/ai-sdlc has no errors and no warnings", () => {
+    const src = resolve(here, "../showcase/ai-sdlc/src");
+    const { findings } = audit(src, { manifest, i18n: resolve(src, "i18n") }) as { findings: Finding[] };
+    expect(show(findings)).toBe("");
+  });
 });
