@@ -11,6 +11,7 @@ import { ConfigRulesPage } from "./pages/ConfigRules";
 import { ConfigTemplatesPage } from "./pages/ConfigTemplates";
 import { DocumentsPage } from "./pages/Documents";
 import { HistoryPage, InboxPage } from "./pages/Inbox";
+import { KnowledgePage } from "./pages/Knowledge";
 import { NotFoundPage } from "./pages/NotFound";
 import { PairPage } from "./pages/Pair";
 import { ProjectsPage } from "./pages/Projects";
@@ -88,6 +89,7 @@ function Shell({ toasts }: { toasts: React.ReactNode }): JSX.Element {
     { id: "runs", label: t("nav.runs"), icon: "workflow" as const, href: href.runs, count: s.runs.filter((r) => inProject(s.project, r.project)).length },
     { id: "squads", label: t("nav.squads"), icon: "bot" as const, href: href.squads, count: s.squads.filter((q) => inProject(s.project, q.project)).length },
     { id: "documents", label: t("nav.documents"), icon: "docs" as const, href: href.documents, count: s.docs.filter((d) => inProject(s.project, d.project)).length },
+    { id: "knowledge", label: t("nav.knowledge"), icon: "layers" as const, href: href.knowledge, count: s.knowledge.filter((r) => inProject(s.project, r.project)).reduce((n, r) => n + r.files.length, 0) },
   ];
   const settingsPages = [
     { id: "projects", label: t("nav.projects"), icon: "folder-git" as const, href: href.projects },
@@ -139,6 +141,8 @@ function Shell({ toasts }: { toasts: React.ReactNode }): JSX.Element {
       <SquadsPage />
     ) : route === "documents" ? (
       <DocumentsPage />
+    ) : route === "knowledge" ? (
+      <KnowledgePage />
     ) : route === "projects" ? (
       <ProjectsPage />
     ) : route === "accounts" ? (

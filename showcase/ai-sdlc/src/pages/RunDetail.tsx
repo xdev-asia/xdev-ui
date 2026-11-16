@@ -3,6 +3,7 @@ import { AgentChip, Badge, Banner, Button, Card, DescriptionList, Dialog, DiffSt
 import { useI18n } from "../i18n";
 import { useNotify } from "../notify";
 import { CommentDialog, PendingComments } from "../parts/Comments";
+import { AiReview } from "../parts/AiReview";
 import { DiffView } from "../parts/DiffView";
 import { MdView } from "../parts/MdView";
 import { useGate } from "../parts/useGate";
@@ -190,7 +191,8 @@ export function RunDetail({ run }: { run: Run }): JSX.Element {
                     <Button variant="link" onClick={() => setAttemptId(a.id)} aria-current={a.id === attempt?.id ? "true" : undefined}>
                       {t("runs.attempt", { stage: t(STAGE_KEY[a.stage]), n: a.n })}
                     </Button>
-                    <Tag>{accountOf(a.stage)}</Tag>
+                    <Tag>{a.account ?? accountOf(a.stage)}</Tag>
+                    {a.switchedFrom ? <Tag tone="warn">{t("rot.switched", { from: a.switchedFrom, to: a.account ?? "" })}</Tag> : null}
                     {a.verdict ? <Badge tone={a.verdict === "fail" ? "danger" : undefined}>{t(a.verdict === "pass" ? "runs.verdictPass" : "runs.verdictFail")}</Badge> : null}
                     {a.stale ? <Badge status="foreign">{t("docs.basedOnOld")}</Badge> : null}
                   </span>
@@ -202,6 +204,7 @@ export function RunDetail({ run }: { run: Run }): JSX.Element {
 
         <div className="app-col-wide">
           <Stack gap={4}>
+            {atGate ? <AiReview run={run} /> : null}
             {atGate ? (
               <Card title={t("runs.gateTitle", { stage: t(STAGE_KEY[run.stage]) })} subtitle={t(final ? "runs.finalHint" : "runs.gateHint")} headingLevel={2}>
                 <Stack gap={3}>

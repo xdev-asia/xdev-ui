@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from "react";
 
-export type RouteName = "workspace" | "inbox" | "history" | "runs" | "squads" | "documents" | "projects" | "accounts" | "devices" | "agents" | "pipelines" | "templates" | "rules" | "settings" | "not-found";
+export type RouteName = "workspace" | "inbox" | "history" | "runs" | "squads" | "documents" | "knowledge" | "projects" | "accounts" | "devices" | "agents" | "pipelines" | "templates" | "rules" | "settings" | "not-found";
 
 /** Routes shown inside the settings area, in its tab order. */
 export const SETTINGS_ROUTES: RouteName[] = ["projects", "accounts", "devices", "agents", "pipelines", "templates", "rules", "settings"];
@@ -16,6 +16,7 @@ const STATIC: Record<string, RouteName> = {
   runs: "runs",
   squads: "squads",
   documents: "documents",
+  knowledge: "knowledge",
   projects: "projects",
   accounts: "accounts",
   devices: "devices",
@@ -39,6 +40,7 @@ export const href = {
   runs: "#runs",
   squads: "#squads",
   documents: "#documents",
+  knowledge: "#knowledge",
   projects: "#projects",
   accounts: "#accounts",
   devices: "#devices",

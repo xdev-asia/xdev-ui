@@ -1,6 +1,7 @@
 import { useState, type JSX } from "react";
 import { Button, Card, Checkbox, Drawer, Field, FieldMessage, IconButton, List, ListRow, PageHeader, SaveBar, Select, Stack, Switch, Tag } from "@xdev-asia/ui";
-import { pipelineProblems, type PipelineConfig, type StageConfig } from "../config";
+import { pipelineProblems, type GateBy, type PipelineConfig, type StageConfig } from "../config";
+import { GateTag } from "../parts/GateTag";
 import { useI18n } from "../i18n";
 import { useNotify } from "../notify";
 import { ConfigNote, move } from "../parts/ConfigNote";
@@ -40,7 +41,7 @@ export function ConfigPipelinesPage(): JSX.Element {
           <Card flush>
             <List>
               {s.pipelines.map((p) => (
-                <ListRow key={p.id} as="li" selected={p.id === draft.id} onClick={() => pick(p.id)} title={p.name} meta={t("cfg.stageCount", { n: p.stages.length, g: p.stages.filter((x) => x.gate === "human").length })} trailing={<Tag>{p.id}</Tag>} />
+                <ListRow key={p.id} as="li" selected={p.id === draft.id} onClick={() => pick(p.id)} title={p.name} meta={t("cfg.stageCount", { n: p.stages.length, g: p.stages.filter((x) => x.gate.by !== "none").length })} trailing={<Tag>{p.id}</Tag>} />
               ))}
             </List>
           </Card>
@@ -53,7 +54,7 @@ export function ConfigPipelinesPage(): JSX.Element {
                 {draft.stages.map((st) => (
                   <span key={st.id} className="app-row" role="listitem">
                     <Tag>{st.name}</Tag>
-                    {st.gate === "human" ? <Tag tone="warn">{t("cfg.gateHuman")}</Tag> : null}
+                    <GateTag by={st.gate.by} />
                   </span>
                 ))}
               </div>
@@ -75,7 +76,7 @@ export function ConfigPipelinesPage(): JSX.Element {
                       meta={[agentName(st.agent), st.output, st.verdict && st.onFail ? `${t("cfg.stageOnFail")} ${st.onFail}` : ""].filter(Boolean).join(" · ")}
                       trailing={
                         <span className="app-row">
-                          {st.gate === "human" ? <Tag tone="warn">{t("cfg.gateHuman")}</Tag> : null}
+                          <GateTag by={st.gate.by} />
                           <IconButton icon="arrow-up" size="sm" label={t("cfg.moveUp")} disabled={!admin || i === 0} onClick={(e) => {
                               e.stopPropagation();
                               edit({ stages: move(draft.stages, i, -1) });
@@ -97,7 +98,7 @@ export function ConfigPipelinesPage(): JSX.Element {
                     disabled={!admin}
                     onClick={() => {
                       const n = draft.stages.length + 1;
-                      edit({ stages: [...draft.stages, { id: `stage-${n}`, name: `Stage ${n}`, agent: "claude-code", role: `roles/stage-${n}.md`, reads: ["request"], output: `0${n}-stage.md`, gate: "human" }] });
+                      edit({ stages: [...draft.stages, { id: `stage-${n}`, name: `Stage ${n}`, agent: "claude-code", skill: `skills/stages/stage-${n}.md`, reads: ["request"], output: `0${n}-stage.md`, gate: { by: "human" } }] });
                       setStageAt(draft.stages.length);
                     }}
                   >
@@ -168,7 +169,7 @@ function StageForm({ stage, earlier, disabled, onChange }: { stage: StageConfig;
         </label>
         <Select id="stage-agent" value={stage.agent} disabled={disabled} onChange={(e) => onChange({ agent: e.target.value })} options={s.agentConfigs.map((a) => ({ value: a.id, label: `${a.name} (${a.id})` }))} />
       </div>
-      <Field label={t("cfg.stageRole")} value={stage.role} disabled={disabled} spellCheck={false} autoComplete="off" onChange={(e) => onChange({ role: e.target.value })} />
+      <Field label={t("cfg.stageSkill")} hint={t("cfg.skillHint")} value={stage.skill} disabled={disabled} spellCheck={false} autoComplete="off" onChange={(e) => onChange({ skill: e.target.value })} />
       <Field label={t("cfg.stageOutput")} value={stage.output} disabled={disabled} spellCheck={false} autoComplete="off" onChange={(e) => onChange({ output: e.target.value })} />
       <fieldset className="app-cfg-set">
         <legend className="app-label">{t("cfg.stageReads")}</legend>
@@ -176,7 +177,38 @@ function StageForm({ stage, earlier, disabled, onChange }: { stage: StageConfig;
           <Checkbox key={r.id} label={r.name} checked={stage.reads.includes(r.id)} disabled={disabled} onChange={(e) => onChange({ reads: e.target.checked ? [...stage.reads, r.id] : stage.reads.filter((x) => x !== r.id) })} />
         ))}
       </fieldset>
-      <Switch label={t("cfg.stageGate")} checked={stage.gate === "human"} disabled={disabled} onChange={(e) => onChange({ gate: e.target.checked ? "human" : "none", onChanges: e.target.checked ? stage.onChanges : undefined })} />
+      <div className="app-field">
+        <label className="app-label" htmlFor="stage-gate">
+          {t("cfg.gateBy")}
+        </label>
+        <Select
+          id="stage-gate"
+          value={stage.gate.by}
+          disabled={disabled}
+          onChange={(e) => {
+            const by = e.target.value as GateBy;
+            const graded = by === "ai" || by === "ai+human";
+            onChange({ gate: graded ? { by, agent: stage.gate.agent ?? s.agentConfigs.find((a) => a.id !== stage.agent)?.id, skill: stage.gate.skill ?? `skills/gates/${stage.id}.md` } : { by }, onChanges: by === "none" ? undefined : stage.onChanges });
+          }}
+          options={[
+            { value: "none", label: t("cfg.gateNone") },
+            { value: "human", label: t("cfg.gatePerson") },
+            { value: "ai", label: t("cfg.gateAi") },
+            { value: "ai+human", label: t("cfg.gateAiPerson") },
+          ]}
+        />
+      </div>
+      {stage.gate.by === "ai" || stage.gate.by === "ai+human" ? (
+        <div className="app-cfg-pair">
+          <div className="app-field">
+            <label className="app-label" htmlFor="stage-gate-agent">
+              {t("cfg.gateAgent")}
+            </label>
+            <Select id="stage-gate-agent" value={stage.gate.agent ?? ""} disabled={disabled} onChange={(e) => onChange({ gate: { ...stage.gate, agent: e.target.value } })} options={s.agentConfigs.map((a) => ({ value: a.id, label: `${a.name} (${a.id})` }))} />
+          </div>
+          <Field label={t("cfg.gateSkill")} hint={t("cfg.skillHint")} value={stage.gate.skill ?? ""} disabled={disabled} spellCheck={false} autoComplete="off" onChange={(e) => onChange({ gate: { ...stage.gate, skill: e.target.value } })} />
+        </div>
+      ) : null}
       <Switch label={t("cfg.stageWrites")} checked={Boolean(stage.writesCode)} disabled={disabled} onChange={(e) => onChange({ writesCode: e.target.checked || undefined })} />
       <Switch label={t("cfg.stageVerdict")} checked={Boolean(stage.verdict)} disabled={disabled} onChange={(e) => onChange({ verdict: e.target.checked || undefined, onFail: e.target.checked ? stage.onFail : undefined })} />
       {stage.verdict ? (
@@ -187,7 +219,7 @@ function StageForm({ stage, earlier, disabled, onChange }: { stage: StageConfig;
           <Select id="stage-fail" value={stage.onFail ?? ""} disabled={disabled} onChange={(e) => onChange({ onFail: e.target.value || undefined })} options={back} />
         </div>
       ) : null}
-      {stage.gate === "human" ? (
+      {stage.gate.by !== "none" ? (
         <div className="app-field">
           <label className="app-label" htmlFor="stage-changes">
             {t("cfg.stageOnChanges")}

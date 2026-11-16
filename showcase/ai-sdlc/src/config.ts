@@ -15,15 +15,32 @@ export interface GateRule {
   kind: GateKind;
 }
 
+/** "full": hooks report state and stop actions for approval, accounts have their own config folder, quota is
+ *  tracked. "basic": the agent runs in a terminal, reports a finished stage with `xdev stage done`, and is kept
+ *  safe by the sandbox and the list of allowed commands. */
+export type AgentLevel = "full" | "basic";
+
 export interface AgentConfig {
   id: string;
   name: string;
+  /** Who makes it, as shown in the catalog. */
+  vendor: string;
+  level: AgentLevel;
   profile: AgentProfile;
+  /** Letter on the chip when the library has no profile for the agent. */
+  letter?: string;
   command: string[];
   /** May hold `{hooks_file}`, filled in for each run. */
   args: string[];
-  hookProtocol: "claude-hooks-v1" | "codex-hooks-v1";
+  /** Null for an agent without hooks. */
+  hookProtocol: "claude-hooks-v1" | "codex-hooks-v1" | null;
   gates: GateRule[];
+  /** Commands that run without asking anyone. Everything stays inside the worktree's sandbox. */
+  allow: string[];
+  /** A file with the API key, for agents billed by key rather than by subscription. */
+  envFile?: string;
+  /** The command and its flags come from the vendor's docs and were not tried on this server. */
+  unverified?: boolean;
   timeoutSecs: number;
   hookTimeoutSecs: number;
   /** `xdevd` refuses to open a terminal whose args equal or contain one of these. */
@@ -45,9 +62,15 @@ const CODEX_GATES: GateRule[] = [
 const CLAUDE_FORBIDDEN = ["--dangerously-skip-permissions", "--permission-mode=bypassPermissions", "bypassPermissions"];
 const CODEX_FORBIDDEN = ["--dangerously-bypass-approvals-and-sandbox", "--yolo", "danger-full-access"];
 
+/** Commands any agent may run without asking: they read, build or test inside the worktree. */
+const READ_AND_TEST = ["git status", "git diff", "git log", "ls", "cat", "rg", "pnpm test", "pnpm build", "cargo test", "cargo build"];
+
 const claude = (id: string, name: string, extra: string[] = []): AgentConfig => ({
   id,
   name,
+  vendor: "Anthropic",
+  level: "full",
+  allow: READ_AND_TEST,
   profile: "claude",
   command: ["claude"],
   args: ["--settings", "{hooks_file}", "--permission-mode", "default", ...extra],
@@ -58,11 +81,36 @@ const claude = (id: string, name: string, extra: string[] = []): AgentConfig => 
   forbiddenArgs: CLAUDE_FORBIDDEN,
 });
 
+/** An agent of the catalog at the basic level: it runs in a terminal, with no hooks. Commands follow each vendor's
+ *  docs and were not tried here. */
+const basic = (id: string, name: string, vendor: string, letter: string, command: string[], envFile?: string): AgentConfig => ({
+  id,
+  name,
+  vendor,
+  level: "basic",
+  profile: "custom",
+  letter,
+  command,
+  args: [],
+  hookProtocol: null,
+  gates: [],
+  allow: READ_AND_TEST,
+  timeoutSecs: 540,
+  hookTimeoutSecs: 600,
+  forbiddenArgs: ["--yolo", "--dangerously-skip-permissions"],
+  envFile,
+  builtin: true,
+  unverified: true,
+});
+
 export const SEED_AGENT_CONFIGS: AgentConfig[] = [
   { ...claude("claude-code", "Claude Code"), builtin: true },
   {
     id: "codex",
     name: "Codex",
+    vendor: "OpenAI",
+    level: "full",
+    allow: READ_AND_TEST,
     profile: "codex",
     command: ["codex"],
     args: ["--profile", "xdev", "--sandbox", "workspace-write", "--ask-for-approval", "on-request"],
@@ -73,6 +121,16 @@ export const SEED_AGENT_CONFIGS: AgentConfig[] = [
     forbiddenArgs: CODEX_FORBIDDEN,
     builtin: true,
   },
+  basic("opencode", "OpenCode", "SST", "O", ["opencode"]),
+  basic("gemini-cli", "Gemini CLI", "Google", "G", ["gemini"]),
+  basic("hermes", "Hermes Agent", "Nous Research", "H", ["hermes"], "~/.xdev/keys/openrouter.env"),
+  basic("copilot-cli", "GitHub Copilot CLI", "GitHub", "P", ["copilot"]),
+  basic("cursor-cli", "Cursor CLI", "Cursor", "U", ["cursor-agent"]),
+  basic("qwen-code", "Qwen Code", "Alibaba", "Q", ["qwen"]),
+  basic("aider", "Aider", "Aider", "A", ["aider"], "~/.xdev/keys/openrouter.env"),
+  basic("goose", "Goose", "Block", "S", ["goose"]),
+  basic("amp", "Amp", "Sourcegraph", "M", ["amp"]),
+  basic("kimi", "Kimi CLI", "Moonshot AI", "K", ["kimi"]),
   claude("claude-code-writer", "Claude Code, writer"),
   claude("claude-code-coder", "Claude Code, coder"),
   { ...claude("claude-code-reader", "Claude Code, reader"), gates: [{ tools: "Bash", kind: "command" }, { tools: "Edit|Write|NotebookEdit", kind: "edit" }] },
@@ -80,18 +138,19 @@ export const SEED_AGENT_CONFIGS: AgentConfig[] = [
 ];
 
 /** Pure: what keeps a profile from being saved, as message keys with values; empty when it can be saved. */
-export function agentProblems(a: AgentConfig): { key: "cfg.errForbidden" | "cfg.errTimeout" | "cfg.errCommand" | "cfg.errPushOrder"; vars?: Record<string, string> }[] {
+export function agentProblems(a: AgentConfig): { key: "cfg.errForbidden" | "cfg.errTimeout" | "cfg.errCommand" | "cfg.errPushOrder" | "cfg.errAllowPush"; vars?: Record<string, string> }[] {
   const out: ReturnType<typeof agentProblems> = [];
   if (a.command.length === 0 || !a.command[0].trim()) out.push({ key: "cfg.errCommand" });
   for (const arg of a.args) {
     const hit = a.forbiddenArgs.find((f) => f && arg.includes(f));
     if (hit) out.push({ key: "cfg.errForbidden", vars: { arg: hit } });
   }
-  if (!(a.timeoutSecs < a.hookTimeoutSecs)) out.push({ key: "cfg.errTimeout" });
+  if (a.hookProtocol && !(a.timeoutSecs < a.hookTimeoutSecs)) out.push({ key: "cfg.errTimeout" });
   // A push line under a general Bash line never matches: the general line takes every command first.
   const general = a.gates.findIndex((g) => g.kind === "command" && !g.whenCommand);
   const push = a.gates.findIndex((g) => g.kind === "push");
   if (general >= 0 && push > general) out.push({ key: "cfg.errPushOrder" });
+  if (a.allow.some((c) => /^\s*git\s+push\b/.test(c))) out.push({ key: "cfg.errAllowPush" });
   return out;
 }
 
@@ -101,17 +160,29 @@ export interface StageConfig {
   /** Id of an agent profile. */
   agent: string;
   /** The role brief, relative to pipelines/. */
-  role: string;
+  /** How to do the stage: a skill in the knowledge repo. */
+  skill: string;
   /** "request" or ids of earlier stages. */
   reads: string[];
   output: string;
-  gate: "human" | "none";
+  gate: GateConfig;
   writesCode?: boolean;
   /** The stage ends with pass or fail; a fail sends the run back to `onFail`. */
   verdict?: boolean;
   onFail?: string;
   /** At this gate, "request changes" goes back to this stage instead of running this one again. */
   onChanges?: string;
+}
+
+/** Who decides at the gate after a stage. "ai+human": an agent grades first, a person confirms. */
+export type GateBy = "none" | "human" | "ai" | "ai+human";
+
+export interface GateConfig {
+  by: GateBy;
+  /** With "ai" and "ai+human": the agent that grades. It must not be the agent that wrote the stage. */
+  agent?: string;
+  /** With "ai" and "ai+human": the criteria, a skill in the knowledge repo. */
+  skill?: string;
 }
 
 export interface PipelineConfig {
@@ -123,11 +194,15 @@ export interface PipelineConfig {
   stages: StageConfig[];
 }
 
-const stage = (id: string, name: string, agent: string, reads: string[], output: string, gate: "human" | "none", extra: Partial<StageConfig> = {}): StageConfig => ({
+const ai = (stageId: string, agent = "codex", by: GateBy = "ai+human"): GateConfig => ({ by, agent, skill: `skills/gates/${stageId}.md` });
+const HUMAN: GateConfig = { by: "human" };
+const NONE: GateConfig = { by: "none" };
+
+const stage = (id: string, name: string, agent: string, reads: string[], output: string, gate: GateConfig, extra: Partial<StageConfig> = {}): StageConfig => ({
   id,
   name,
   agent,
-  role: `roles/${{ requirements: "analyst", design: "architect", plan: "planner", code: "implementer", review: "reviewer", test: "tester" }[id] ?? id}.md`,
+  skill: `skills/stages/${id}.md`,
   reads,
   output,
   gate,
@@ -142,12 +217,12 @@ export const SEED_PIPELINES: PipelineConfig[] = [
     commitArtifacts: false,
     exportDir: "",
     stages: [
-      stage("requirements", "Requirements", "claude-code-writer", ["request"], "01-requirements.md", "human"),
-      stage("design", "Design", "claude-code-writer", ["request", "requirements"], "02-design.md", "human"),
-      stage("plan", "Plan", "claude-code-writer", ["requirements", "design"], "03-plan.md", "human"),
-      stage("code", "Code", "claude-code-coder", ["requirements", "design", "plan"], "04-changes.md", "none", { writesCode: true }),
-      stage("review", "Review", "codex", ["requirements", "design", "plan", "code"], "05-review.md", "none", { verdict: true, onFail: "code" }),
-      stage("test", "Test", "claude-code-tester", ["requirements", "plan", "code"], "06-test.md", "human", { verdict: true, onFail: "code", onChanges: "code" }),
+      stage("requirements", "Requirements", "claude-code-writer", ["request"], "01-requirements.md", ai("requirements")),
+      stage("design", "Design", "claude-code-writer", ["request", "requirements"], "02-design.md", ai("design")),
+      stage("plan", "Plan", "claude-code-writer", ["requirements", "design"], "03-plan.md", ai("plan", "codex", "ai")),
+      stage("code", "Code", "claude-code-coder", ["requirements", "design", "plan"], "04-changes.md", NONE, { writesCode: true }),
+      stage("review", "Review", "codex", ["requirements", "design", "plan", "code"], "05-review.md", NONE, { verdict: true, onFail: "code" }),
+      stage("test", "Test", "claude-code-tester", ["requirements", "plan", "code"], "06-test.md", HUMAN, { verdict: true, onFail: "code", onChanges: "code" }),
     ],
   },
   {
@@ -157,17 +232,17 @@ export const SEED_PIPELINES: PipelineConfig[] = [
     commitArtifacts: false,
     exportDir: "",
     stages: [
-      stage("requirements", "Requirements", "claude-code-writer", ["request"], "01-requirements.md", "human"),
-      stage("plan", "Plan", "claude-code-writer", ["requirements"], "03-plan.md", "none"),
-      stage("code", "Code", "claude-code-coder", ["requirements", "plan"], "04-changes.md", "none", { writesCode: true }),
-      stage("review", "Review", "codex", ["requirements", "plan", "code"], "05-review.md", "none", { verdict: true, onFail: "code" }),
-      stage("test", "Test", "claude-code-tester", ["requirements", "plan", "code"], "06-test.md", "human", { verdict: true, onFail: "code", onChanges: "code" }),
+      stage("requirements", "Requirements", "claude-code-writer", ["request"], "01-requirements.md", ai("requirements")),
+      stage("plan", "Plan", "claude-code-writer", ["requirements"], "03-plan.md", NONE),
+      stage("code", "Code", "claude-code-coder", ["requirements", "plan"], "04-changes.md", NONE, { writesCode: true }),
+      stage("review", "Review", "codex", ["requirements", "plan", "code"], "05-review.md", NONE, { verdict: true, onFail: "code" }),
+      stage("test", "Test", "claude-code-tester", ["requirements", "plan", "code"], "06-test.md", HUMAN, { verdict: true, onFail: "code", onChanges: "code" }),
     ],
   },
 ];
 
 /** Pure: what keeps a pipeline from being saved. */
-export function pipelineProblems(p: PipelineConfig, agents: AgentConfig[]): { key: "cfg.errNoStage" | "cfg.errAgent" | "cfg.errOnFail" | "cfg.errReads" | "cfg.errLastGate" | "cfg.errAttempts" | "cfg.errOutput"; vars?: Record<string, string> }[] {
+export function pipelineProblems(p: PipelineConfig, agents: AgentConfig[]): { key: "cfg.errNoStage" | "cfg.errAgent" | "cfg.errOnFail" | "cfg.errReads" | "cfg.errLastGate" | "cfg.errAttempts" | "cfg.errOutput" | "cfg.errGateAgent" | "cfg.errGateSame" | "cfg.errGateSkill"; vars?: Record<string, string> }[] {
   const out: ReturnType<typeof pipelineProblems> = [];
   if (p.stages.length === 0) out.push({ key: "cfg.errNoStage" });
   if (!(p.maxAttempts >= 1 && p.maxAttempts <= 10)) out.push({ key: "cfg.errAttempts" });
@@ -180,7 +255,13 @@ export function pipelineProblems(p: PipelineConfig, agents: AgentConfig[]): { ke
   });
   // The last stage ends the run: a person always looks at it before it does.
   const last = p.stages[p.stages.length - 1];
-  if (last && last.gate !== "human") out.push({ key: "cfg.errLastGate" });
+  if (last && last.gate.by !== "human" && last.gate.by !== "ai+human") out.push({ key: "cfg.errLastGate" });
+  for (const st of p.stages) {
+    if (st.gate.by !== "ai" && st.gate.by !== "ai+human") continue;
+    if (!st.gate.agent || !agents.some((a) => a.id === st.gate.agent)) out.push({ key: "cfg.errGateAgent", vars: { stage: st.name } });
+    else if (st.gate.agent === st.agent) out.push({ key: "cfg.errGateSame", vars: { stage: st.name } });
+    if (!st.gate.skill?.trim()) out.push({ key: "cfg.errGateSkill", vars: { stage: st.name } });
+  }
   return out;
 }
 
@@ -266,3 +347,64 @@ export const SEED_APPROVAL_RULES: ApprovalRule[] = [
   { kind: "push", minRole: "approver" },
   { kind: "stage", minRole: "approver" },
 ];
+
+/** One file of a knowledge repo, with its commits newest last. */
+export interface KnowledgeFile {
+  path: string;
+  versions: { n: number; by: string; at: string; note: string; text: string }[];
+}
+
+/** A project's knowledge repo: a git repo of its own, read by the agents of every stage, edited by people. */
+export interface KnowledgeRepo {
+  project: string;
+  remote: string;
+  path: string;
+  files: KnowledgeFile[];
+}
+
+const file = (path: string, text: string, at = "Mon 09:12", by = "Chrome on Linux"): KnowledgeFile => ({ path, versions: [{ n: 1, by, at, note: "First version", text }] });
+
+export const SEED_KNOWLEDGE: KnowledgeRepo[] = [
+  {
+    project: "api",
+    remote: "git@build-box:knowledge/api.git",
+    path: "/srv/knowledge/api",
+    files: [
+      file("README.md", "## Knowledge of api\n- Read product.md first.\n- Standards live in standards/, decisions in adr/.\n- Skills for every stage and gate live in skills/."),
+      file("product.md", "## Product\n- An invoicing API for small shops.\n- Customers: shops with 1 to 50 staff."),
+      file("standards/code.md", "## Code standards\n- Rust 2024, clippy clean.\n- Every endpoint has an integration test.\n- No unwrap outside tests."),
+      file("adr/0001-database.md", "## ADR 1: D1 for state\n- Status: accepted.\n- Why: no new service to run."),
+      file("skills/stages/requirements.md", "## Write the requirements\n- One problem statement.\n- Acceptance criteria numbered AC-1, AC-2 and testable.\n- List what is out of scope.\n- End with open questions."),
+      file("skills/stages/design.md", "## Write the design\n- The chosen approach and why.\n- Code affected, file by file.\n- Risks, and what was rejected."),
+      file("skills/stages/plan.md", "## Write the plan\n- Tasks small enough for one commit each.\n- Each task names its files and its test."),
+      file("skills/stages/code.md", "## Write the code\n- Follow standards/code.md.\n- One commit per task of the plan."),
+      file("skills/stages/review.md", "## Review the change\n- Check every acceptance criterion.\n- Verdict pass or fail, with findings by file and line."),
+      file("skills/stages/test.md", "## Test the change\n- Run the whole suite.\n- Check each acceptance criterion and say how."),
+      file("skills/gates/requirements.md", "## Grade the requirements\n- Pass when: every criterion is testable; scope is stated; no solution is written as a requirement.\n- Ask for changes when: a criterion cannot be checked; the problem is missing."),
+      file("skills/gates/design.md", "## Grade the design\n- Pass when: it covers every acceptance criterion; it names the files; it states risks.\n- Ask for changes when: it adds a service without a reason; a criterion is not covered."),
+      file("skills/gates/plan.md", "## Grade the plan\n- Pass when: every task has a test; tasks follow the design.\n- Ask for changes when: a task is too big for one commit."),
+    ],
+  },
+  {
+    project: "demo",
+    remote: "git@build-box:knowledge/demo.git",
+    path: "/srv/knowledge/demo",
+    files: [file("README.md", "## Knowledge of demo\n- The demo app of the design system."), file("skills/stages/code.md", "## Write the code\n- Use @xdev-asia/ui components only.")],
+  },
+];
+
+/** Pure: where a skill is used: stages and gates of pipelines. */
+export function skillUsers(path: string, pipelines: PipelineConfig[]): string[] {
+  return pipelines.flatMap((p) => p.stages.flatMap((st) => [...(st.skill === path ? [`${p.name} · ${st.name}`] : []), ...(st.gate.skill === path ? [`${p.name} · ${st.name} (gate)`] : [])]));
+}
+
+/** What an agent may do without asking while AI runs the stages, and what happens to the rest. */
+export interface RunPolicy {
+  /** A command outside the allowed list: ask a person, or let an agent grade it. */
+  otherCommands: "ask" | "ai";
+  otherAgent: string;
+  /** When an account of an agent reaches its limit, the next attempt uses another account of the same agent. */
+  rotateAccounts: boolean;
+}
+
+export const SEED_POLICY: RunPolicy = { otherCommands: "ask", otherAgent: "codex", rotateAccounts: true };

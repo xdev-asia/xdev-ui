@@ -7,6 +7,7 @@ import { STAGE_KEY, STATE_KEY } from "../pages/run-keys";
 import { href, navigate } from "../router";
 import { canDecide, useStore } from "../store";
 import { PIPELINES, type Run, type Session, type StageId } from "../workspace";
+import { AiReview } from "./AiReview";
 import { useGate } from "./useGate";
 
 /** The run of the worktree: its stages, and the gate that waits, decided here. */
@@ -56,6 +57,7 @@ function RunDockBody({ run, onOpen, openPage }: { session: Session; run: Run; on
         ))}
       </ol>
       {run.state === "blocked" ? <Banner tone="warn" title={t("runs.blockedTitle")} /> : null}
+      {run.state === "waiting_gate" ? <AiReview run={run} /> : null}
       {run.state === "waiting_gate" ? (
         <Card title={t("dock.gateWaits", { stage: t(STAGE_KEY[run.stage]) })} subtitle={gate.doc && last ? t("dock.gateDoc", { file: gate.doc.file, n: last.n }) : undefined}>
           <Stack gap={3}>

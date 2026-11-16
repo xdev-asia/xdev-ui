@@ -135,3 +135,4 @@ button.app-diff-row:focus-visible { outline: 2px solid var(--x-color-focus); out
   .app-cfg-row > :not(.app-cfg-n) { grid-column: 2; }
   .app-cfg-tools { justify-self: end; }
 }
+.app-notes { margin: 0; padding-inline-start: var(--x-space-6); font: var(--type-body); color: var(--text-1); }

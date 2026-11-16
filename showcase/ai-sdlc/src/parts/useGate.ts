@@ -43,7 +43,7 @@ export function useGate(run: Run): Gate {
       const next = nextStage(run.pipeline, run.stage);
       if (doc) s.setDocs((list) => list.map((d) => (d.id === doc.id ? { ...d, status: "approved", versions: d.versions.map((v, i) => (i === d.versions.length - 1 ? { ...v, approvedBy: s.device, approvedAt: "now" } : v)) } : d)));
       logEvent(s, run.id, "gate_decided", s.device, "approve");
-      if (next) patch({ state: "running", stage: next, attempts: attempt(next) });
+      if (next) patch({ state: "running", stage: next, attempts: attempt(next), aiReview: undefined });
       else {
         patch({ state: "done" });
         logEvent(s, run.id, "run_done", "xdevd", run.branch);
@@ -58,7 +58,7 @@ export function useGate(run: Run): Gate {
       const reason = [text, ...comments.map((c) => `"${c.quote}": ${c.text}`)].filter(Boolean).join(" · ");
       if (doc) s.setDocs((list) => list.map((d) => (d.id === doc.id ? { ...d, status: "changes" } : d)));
       logEvent(s, run.id, "gate_decided", s.device, `changes: ${reason}`);
-      patch({ state: "running", stage: back, attempts: attempt(back, reason) });
+      patch({ state: "running", stage: back, attempts: attempt(back, reason), aiReview: undefined });
       settle("changes", text || undefined);
       return true;
     },

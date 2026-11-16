@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import type { AttentionItem } from "@xdev-asia/ui";
 import { SEED_ACCOUNTS, agentOf, type Account, type AgentId } from "./data";
 import { SEED_SQUADS, openEscalations, type Squad } from "./squads";
-import { SEED_AGENT_CONFIGS, SEED_APPROVAL_RULES, SEED_PIPELINES, SEED_TEMPLATES, type AgentConfig, type ApprovalRule, type PipelineConfig, type SquadTemplate } from "./config";
+import { SEED_AGENT_CONFIGS, SEED_APPROVAL_RULES, SEED_KNOWLEDGE, SEED_PIPELINES, SEED_POLICY, SEED_TEMPLATES, type AgentConfig, type ApprovalRule, type KnowledgeRepo, type PipelineConfig, type RunPolicy, type SquadTemplate } from "./config";
 import { initialLayout, openTab, tabKey, withTabs, type Layout } from "./layout";
 import { href, navigate } from "./router";
 import {
@@ -86,6 +86,8 @@ function useAppState() {
   const [pipelines, setPipelines] = useState<PipelineConfig[]>(SEED_PIPELINES);
   const [templates, setTemplates] = useState<SquadTemplate[]>(SEED_TEMPLATES);
   const [approvalRules, setApprovalRules] = useState<ApprovalRule[]>(SEED_APPROVAL_RULES);
+  const [policy, setPolicy] = useState<RunPolicy>(SEED_POLICY);
+  const [knowledge, setKnowledge] = useState<KnowledgeRepo[]>(SEED_KNOWLEDGE);
   const [squads, setSquads] = useState<Squad[]>(SEED_SQUADS);
   /** The squad the Squads page shows; null shows the list. */
   const [squadId, setSquadId] = useState<string | null>(null);
@@ -166,6 +168,10 @@ function useAppState() {
     setTemplates,
     approvalRules,
     setApprovalRules,
+    policy,
+    setPolicy,
+    knowledge,
+    setKnowledge,
     squads,
     setSquads,
     squadId,

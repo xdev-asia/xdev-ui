@@ -14,6 +14,8 @@ interface Row {
   title: string;
   where: string;
   kind?: MessageKey;
+  /** What an agent already said, for a gate that AI grades first. */
+  extra?: string;
   waitedMin?: number;
   open: () => void;
 }
@@ -31,6 +33,10 @@ export function InboxPage(): JSX.Element {
     const x = s.sessions.find((y) => y.id === sessionId);
     return x ? `${x.project} / ${x.branch}` : "";
   };
+  const aiNote = (runId: string): string | undefined => {
+    const review = s.runs.find((r) => r.id === runId)?.aiReview;
+    return review ? t("aigate.inbox", { verdict: t(review.verdict === "pass" ? "aigate.pass" : "aigate.changes") }) : undefined;
+  };
   const go = (sessionId: string, opts: { tab?: string; dock?: Dock }) => () => showInWorkspace(s, sessionId, opts);
 
   const needs: Row[] = [
@@ -40,6 +46,7 @@ export function InboxPage(): JSX.Element {
       title: a.title,
       where: a.session,
       kind: KIND[a.kind],
+      extra: a.runId ? aiNote(a.runId) : undefined,
       waitedMin: a.waitedMin,
       open: go(a.sessionId, a.termId ? { tab: tabKey({ kind: "term", id: a.termId }) } : { dock: a.kind === "push" ? "changes" : "run" }),
     })),
@@ -84,7 +91,7 @@ export function InboxPage(): JSX.Element {
                   onClick={r.open}
                   leading={<AgentChip profile={r.profile} letter={r.letter} />}
                   title={r.title}
-                  meta={[r.where, r.kind ? t(r.kind) : ""].filter(Boolean).join(" · ")}
+                  meta={[r.where, r.kind ? t(r.kind) : "", r.extra ?? ""].filter(Boolean).join(" · ")}
                   trailing={r.waitedMin !== undefined ? <span className="app-muted">{t("inbox.waited", { n: r.waitedMin })}</span> : undefined}
                 />
               ))}
