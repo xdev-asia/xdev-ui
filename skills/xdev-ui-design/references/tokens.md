@@ -49,7 +49,7 @@ Pick a token by what the thing *is*, not by the colour you want. The values belo
 | `--danger` / `--danger-bg` | failed, destructive | #ff7a7a | #b42318 |
 | `--violet` / `--violet-bg` | category colour (tabs, graph lanes, renamed files) | #b69cff | #5b3cc4 |
 | `--orange` / `--orange-bg` | category colour | #f0a070 | #a04a14 |
-| `--brand-agent` | the logo cursor, nothing else | #ff7a3d | #ff7a3d |
+| `--brand-agent` | the logo's agent blade, nothing else | #ff7a3d | #ff7a3d |
 
 The `-bg` tints are 10 to 12% of the state colour: use them as the ground behind state text, never as a full fill. Category colours for tabs and charts come from `--x-tab-color-1` to `--x-tab-color-10` and `--x-graph-lane-1` to `--x-graph-lane-5`.
 
@@ -70,7 +70,7 @@ The `-bg` tints are 10 to 12% of the state colour: use them as the ground behind
 | `--type-mono`, `--type-kbd` | 12px and 11px JetBrains Mono |
 | `--type-stat`, `--type-mono-stat` | 600 22px and 10px mono, numbers in tiles |
 
-Faces: `--font-body` (Be Vietnam Pro) and `--font-mono` (JetBrains Mono). Always set the whole shorthand: `font: var(--type-body)`.
+Faces: `--font-body` (Roboto) and `--font-mono` (JetBrains Mono). Always set the whole shorthand: `font: var(--type-body)`.
 
 ## Space, radius and size
 

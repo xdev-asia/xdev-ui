@@ -57,9 +57,9 @@ HIGH. The logo is the one place where xDev's own colours appear. Rules in `brand
 
 | ID | do | why | check |
 |---|---|---|---|
-| `brand-mark-v9` | use `BrandMark` from the library, `variant="mark"` in app chrome | one logo, one source | grep for `<svg` logos in the app |
-| `brand-agent-cursor` | the cursor stays `--brand-agent` in both themes | it is the mark's signature | screenshot both themes |
-| `brand-clear-space` | at least half the mark's height around it | crowded marks read as clutter | measure in the screenshot |
+| `brand-mark-v12` | use `BrandMark` from the library, `variant="mark"` in app chrome | one logo, one source | grep for `<svg` logos in the app |
+| `brand-agent-side` | the agent blade stays `--brand-agent` in both themes | it is the mark's signature | screenshot both themes |
+| `brand-clear-space` | at least one blade's width around the mark | crowded marks read as clutter | measure in the screenshot |
 | `brand-no-redraw` | never recolour the tile, outline the mark or change the wordmark face | consistency across products | compare with `assets/brand` |
 | `brand-app-name` | the app name sits beside the mark in text, in the body face, weight 600 or 700 | a name is read, a logo is seen | read the header |
 
@@ -93,7 +93,7 @@ MEDIUM. Two faces, a fixed scale of roles.
 | ID | do | why | check |
 |---|---|---|---|
 | `type-token-only` | `font: var(--type-*)`; never a raw size | the scale stays coherent | (audit `raw-font`) |
-| `type-two-faces` | Be Vietnam Pro for text, JetBrains Mono for code, IDs and numbers | Vietnamese diacritics, tabular digits | inspect computed fonts |
+| `type-two-faces` | Roboto for text, JetBrains Mono for code, IDs and numbers | Vietnamese diacritics, tabular digits | inspect computed fonts |
 | `type-scale-roles` | pick by role: page title, heading, body, control, label, status (`tokens.md`) | sizes mean things | one page title per page |
 | `type-mono-data` | keys, hashes, model IDs, counts in `--type-mono` or `--type-stat` | digits line up | read a table column |
 | `type-sentence-case` | sentence case labels; uppercase only through `--type-section` | calm and readable | (audit `label-voice`) |

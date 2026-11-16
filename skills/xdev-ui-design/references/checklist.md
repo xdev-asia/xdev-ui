@@ -16,7 +16,7 @@ Walk this in the running app before calling a screen done. Items marked (audit) 
 - [ ] One accent on screen: the primary action and the current place.
 - [ ] Cyan appears only as the focus ring.
 - [ ] Shadows only on menus, popovers and dialogs.
-- [ ] `BrandMark` v9 in the shell with the app name in text; the cursor is orange in both themes.
+- [ ] `BrandMark` (logo v12) in the shell with the app name in text; the agent side is orange in both themes.
 - [ ] Every thing in a collection has its own `Emblem`; no repeated grey circle.
 - [ ] (audit) No coloured left stripe on a rounded card or row.
 - [ ] Icons come from the library set; no emoji.
