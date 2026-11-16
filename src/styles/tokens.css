@@ -15,7 +15,7 @@
   --x-graph-lane-3: var(--signal);
   --x-graph-lane-4: var(--danger);
   --x-graph-lane-5: var(--text-2);
-  --font-body: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Roboto", "Segoe UI", system-ui, sans-serif;
   --x-font-body: var(--font-body);
   --font-body-fallback: system-ui, sans-serif;
   --x-font-body-fallback: var(--font-body-fallback);

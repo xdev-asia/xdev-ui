@@ -7,7 +7,7 @@ The xDev logo v12: two folded blades that cross into an `x`. As a bare mark, an 
 |---|---|---|
 | `mark` | bare `<svg class="x-mark">` named by `label` (default: the system's name; `label=""` makes it decorative); your blade follows `color`, the agent side is `--brand-agent`, the core is white | app chrome, inline |
 | `tile` | the mark on a dark ground; flat under 48 px, the lit icon (glow, blades lit from above, bright core) from 48 px up | favicon, avatar, social, app icon |
-| `lockup` | tile + the name in Be Vietnam Pro: `xDev` at 800, a sub-system name at 500 | site header, docs, README |
+| `lockup` | tile + the name in the body font (`--font-body`): `xDev` at 800, a sub-system name at 500 | site header, docs, README |
 
 `size` is the mark or tile edge in px; the lockup wordmark is `size × 25/32`.
 

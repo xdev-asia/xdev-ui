@@ -1,9 +1,9 @@
 /** Fonts offered as suggestions in a font field. Any installed family name is accepted too. */
 export const UI_FONT_SUGGESTIONS: readonly string[] = [
+  "Roboto",
   "Be Vietnam Pro",
   "Inter",
   "Segoe UI",
-  "Roboto",
   "Noto Sans",
   "Arial",
 ];

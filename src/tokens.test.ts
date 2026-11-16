@@ -57,6 +57,13 @@ describe("appearance tokens", () => {
     const grounds = (tokens.color.grounds ?? []).filter((g: { tokens: { name: string }[] }) => g.tokens.some((t) => t.name === "side-tint")).length;
     expect(tokensCss.match(/--side-tint:/g)).toHaveLength(2 + grounds * 2);
   });
+  it("sets interface text in Roboto, which carries Vietnamese diacritics, and loads it with fonts.css", () => {
+    expect(tokensCss).toMatch(/--font-body:\s*"Roboto", "Segoe UI", system-ui, sans-serif;/);
+    expect(tokensCss).not.toContain("Be Vietnam Pro");
+    const fonts = readFileSync(resolve(src, "styles/fonts.css"), "utf8");
+    expect(fonts).toContain("family=Roboto:wght@400;500;600;700;800");
+    expect(fonts).not.toContain("Be+Vietnam+Pro");
+  });
   it("emits the body fallback stack the font setting ends with", () => {
     expect(tokensCss).toMatch(/--font-body-fallback:\s*system-ui, sans-serif;/);
     expect(tokensCss).toMatch(/--x-font-body-fallback:\s*var\(--font-body-fallback\);/);
