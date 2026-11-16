@@ -121,6 +121,20 @@ corepack pnpm test       # SSR smoke test + MCP smoke test over dist
 
 `tokens/tokens.json` is the source of truth; `scripts/build-tokens.mjs` writes `src/styles/tokens.css`, `scripts/build-ai.mjs` writes `generated/` from the component READMEs, sources and docs. The repo's `.mcp.json` points at `dist/mcp.js` for local work.
 
+### Showcase
+
+`showcase/ai-sdlc` is a whole app built from the library with fake data: the xDev AI SDLC workspace (sessions and
+agent terminals, runs with approval gates, approvals, project documents, projects, accounts, devices). It is the
+layout the real app is coded from, and it is published with the demo site at `/showcase/ai-sdlc/`.
+
+```bash
+corepack pnpm showcase:ai-sdlc         # http://localhost:5175/showcase/ai-sdlc/
+corepack pnpm build:showcase:ai-sdlc   # dist-demo/showcase/ai-sdlc
+```
+
+`test/app-rules.test.ts` runs the rules audit on it, as it does on `examples/admin`. Its state is in
+`showcase/ai-sdlc/src/store.tsx`; an app that talks to a server replaces that file and keeps the pages.
+
 ## Release (automatic)
 
 Commits on `main` follow [Conventional Commits](https://www.conventionalcommits.org/). `release.yml` runs semantic-release:

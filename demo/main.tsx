@@ -54,6 +54,7 @@ function Nav({ theme, onTheme, onSearch }: { theme: Theme; onTheme: (t: Theme) =
           <a href="#install">Install</a>
           <a href="#mcp">MCP</a>
           <a href={SB}>Storybook</a>
+          <a href="./showcase/ai-sdlc/">Showcase</a>
         </nav>
         <div className="hp-nav-tools">
           <button type="button" className="hp-search" onClick={onSearch} aria-haspopup="dialog">
