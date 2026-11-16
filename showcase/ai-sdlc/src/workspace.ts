@@ -193,6 +193,9 @@ export interface Attempt {
   reason?: string;
   /** It ran with a document version that a person changed afterwards. */
   stale?: boolean;
+  /** The account it ran with, and the one it left because that account reached its limit. */
+  account?: string;
+  switchedFrom?: string;
 }
 
 export interface Run {
@@ -207,6 +210,8 @@ export interface Run {
   blocked?: BlockReason;
   attempts: Attempt[];
   diff: { add: number; del: number };
+  /** The grade of the agent at the gate that waits, when the gate is "ai" or "ai+human". */
+  aiReview?: { agent: string; verdict: "pass" | "changes"; notes: string[]; at: string };
 }
 
 const REQUIREMENTS = {
@@ -262,7 +267,7 @@ export const SEED_RUNS: Run[] = [
       { id: "r1-2", stage: "design", n: 1, status: "done", at: "09:14", durationMs: 420000 },
       { id: "r1-2b", stage: "design", n: 2, status: "done", at: "09:21", durationMs: 380000, reason: "Stream the rows instead of building the whole file in memory." },
       { id: "r1-3", stage: "plan", n: 1, status: "done", at: "09:31", durationMs: 300000 },
-      { id: "r1-4", stage: "code", n: 1, status: "running", at: "09:44" },
+      { id: "r1-4", stage: "code", n: 1, status: "running", at: "09:44", account: "Personal", switchedFrom: "Work" },
     ],
   },
   {
@@ -275,6 +280,12 @@ export const SEED_RUNS: Run[] = [
     state: "waiting_gate",
     stage: "design",
     diff: { add: 0, del: 0 },
+    aiReview: {
+      agent: "Codex",
+      verdict: "pass",
+      at: "08:34",
+      notes: ["Covers AC-1, AC-2 and AC-3.", "Names the three files it changes.", "States the risk of a shared office address and how the key limits it.", "Minor: the window length is written twice; keep it in one constant."],
+    },
     attempts: [
       { id: "r2-1", stage: "requirements", n: 1, status: "done", at: "08:10", durationMs: 200000, artifact: REQUIREMENTS },
       { id: "r2-2", stage: "design", n: 1, status: "done", at: "08:21", durationMs: 510000, artifact: DESIGN },
@@ -473,7 +484,7 @@ export const SEED_DOCS: Doc[] = [
 export interface RunEvent {
   at: string;
   /** One of a fixed list of event kinds. */
-  kind: "run_created" | "attempt_started" | "stage_done" | "verdict" | "gate_opened" | "gate_decided" | "doc_edited" | "approved_overwritten" | "stage_retried" | "run_stopped" | "run_cancelled" | "run_done";
+  kind: "run_created" | "attempt_started" | "stage_done" | "verdict" | "gate_opened" | "gate_decided" | "doc_edited" | "approved_overwritten" | "ai_graded" | "account_switched" | "stage_retried" | "run_stopped" | "run_cancelled" | "run_done";
   actor: string;
   detail: string;
 }
@@ -487,7 +498,8 @@ export const SEED_RUN_LOG: Record<string, RunEvent[]> = {
     { at: "08:16", kind: "gate_decided", actor: "Pixel", detail: "approve" },
     { at: "08:21", kind: "attempt_started", actor: "xdevd", detail: "Design, attempt 1, account work" },
     { at: "08:30", kind: "stage_done", actor: "claude-code", detail: "02-design.md" },
-    { at: "08:30", kind: "gate_opened", actor: "xdevd", detail: "after Design" },
+    { at: "08:30", kind: "gate_opened", actor: "xdevd", detail: "after Design, decided by AI then a person" },
+    { at: "08:34", kind: "ai_graded", actor: "codex", detail: "Design: pass, with skills/gates/design.md" },
   ],
 };
 

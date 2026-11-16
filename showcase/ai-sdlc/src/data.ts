@@ -16,6 +16,8 @@ export interface Account {
   terminals: number;
   maxTerminals?: number;
   checkedAt: string;
+  /** Share of the provider's 5 hour window used, 0 to 100, when the CLI reports it. */
+  usage?: number;
 }
 
 export interface AgentInfo {
@@ -44,10 +46,10 @@ const SHELL = { id: "shell", name: "Shell", profile: "custom" as AgentProfile, c
 export const agentOf = (id: TermAgent): Omit<AgentInfo, "id"> & { id: TermAgent } => (id === "shell" ? SHELL : (AGENTS.find((a) => a.id === id) ?? AGENTS[0])) as Omit<AgentInfo, "id"> & { id: TermAgent };
 
 export const SEED_ACCOUNTS: Account[] = [
-  { id: "work", name: "Work", agent: "claude-code", auth: "login", status: "signed_in", terminals: 2, maxTerminals: 4, checkedAt: "2026-11-16T07:40:00Z" },
+  { id: "work", name: "Work", agent: "claude-code", auth: "login", status: "signed_in", terminals: 2, maxTerminals: 4, checkedAt: "2026-11-16T07:40:00Z", usage: 42 },
   { id: "personal", name: "Personal", agent: "claude-code", auth: "login", status: "signed_out", terminals: 0, checkedAt: "2026-11-16T07:40:00Z" },
   { id: "ci", name: "Server", agent: "claude-code", auth: "env_file", envFile: "/run/secrets/xdev/ci.env", status: "signed_in", terminals: 0, checkedAt: "2026-11-16T07:40:00Z" },
-  { id: "codex-work", name: "Work", agent: "codex", auth: "login", status: "signed_in", terminals: 1, maxTerminals: 2, checkedAt: "2026-11-16T07:40:00Z" },
+  { id: "codex-work", name: "Work", agent: "codex", auth: "login", status: "signed_in", terminals: 1, maxTerminals: 2, checkedAt: "2026-11-16T07:40:00Z", usage: 81 },
   { id: "codex-team", name: "Team key", agent: "codex", auth: "env_file", envFile: "/home/you/keys/codex-team.env", status: "error", terminals: 0, checkedAt: "2026-11-16T07:40:00Z" },
 ];
 

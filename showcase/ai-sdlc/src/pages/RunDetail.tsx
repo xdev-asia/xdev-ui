@@ -3,11 +3,13 @@ import { AgentChip, Badge, Banner, Button, Card, DescriptionList, Dialog, DiffSt
 import { useI18n } from "../i18n";
 import { useNotify } from "../notify";
 import { CommentDialog, PendingComments } from "../parts/Comments";
+import { AiReview } from "../parts/AiReview";
 import { DiffView } from "../parts/DiffView";
 import { MdView } from "../parts/MdView";
 import { useGate } from "../parts/useGate";
 import { href, navigate } from "../router";
-import { can, logEvent, useStore } from "../store";
+import { can, logEvent, showInWorkspace, useStore } from "../store";
+import { tabKey } from "../layout";
 import { PIPELINES, attemptTerminal, md, sessionOfRun, type Run, type StageId } from "../workspace";
 import { STAGE_KEY, STATE_KEY, attemptsOf } from "./run-keys";
 
@@ -189,7 +191,8 @@ export function RunDetail({ run }: { run: Run }): JSX.Element {
                     <Button variant="link" onClick={() => setAttemptId(a.id)} aria-current={a.id === attempt?.id ? "true" : undefined}>
                       {t("runs.attempt", { stage: t(STAGE_KEY[a.stage]), n: a.n })}
                     </Button>
-                    <Tag>{accountOf(a.stage)}</Tag>
+                    <Tag>{a.account ?? accountOf(a.stage)}</Tag>
+                    {a.switchedFrom ? <Tag tone="warn">{t("rot.switched", { from: a.switchedFrom, to: a.account ?? "" })}</Tag> : null}
                     {a.verdict ? <Badge tone={a.verdict === "fail" ? "danger" : undefined}>{t(a.verdict === "pass" ? "runs.verdictPass" : "runs.verdictFail")}</Badge> : null}
                     {a.stale ? <Badge status="foreign">{t("docs.basedOnOld")}</Badge> : null}
                   </span>
@@ -201,6 +204,7 @@ export function RunDetail({ run }: { run: Run }): JSX.Element {
 
         <div className="app-col-wide">
           <Stack gap={4}>
+            {atGate ? <AiReview run={run} /> : null}
             {atGate ? (
               <Card title={t("runs.gateTitle", { stage: t(STAGE_KEY[run.stage]) })} subtitle={t(final ? "runs.finalHint" : "runs.gateHint")} headingLevel={2}>
                 <Stack gap={3}>
@@ -267,9 +271,7 @@ export function RunDetail({ run }: { run: Run }): JSX.Element {
                     variant="ghost"
                     icon="terminal"
                     onClick={() => {
-                      s.setSessionId(session.id);
-                      s.setTermId(attemptTerm.id);
-                      navigate(href.workspace);
+                      showInWorkspace(s, session.id, { tab: tabKey({ kind: "term", id: attemptTerm.id }) });
                     }}
                   >
                     {t("runs.openTerminal")}

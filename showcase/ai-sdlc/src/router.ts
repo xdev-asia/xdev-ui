@@ -1,17 +1,29 @@
 import { useSyncExternalStore } from "react";
 
-export type RouteName = "workspace" | "runs" | "documents" | "approvals" | "projects" | "accounts" | "devices" | "settings" | "not-found";
+export type RouteName = "workspace" | "inbox" | "history" | "runs" | "squads" | "documents" | "knowledge" | "projects" | "accounts" | "devices" | "agents" | "pipelines" | "templates" | "rules" | "settings" | "not-found";
+
+/** Routes shown inside the settings area, in its tab order. */
+export const SETTINGS_ROUTES: RouteName[] = ["projects", "accounts", "devices", "agents", "pipelines", "templates", "rules", "settings"];
 
 // Plain names with no slash, so a link to a screen works on any static host.
 const STATIC: Record<string, RouteName> = {
   "": "workspace",
   workspace: "workspace",
+  inbox: "inbox",
+  // The Approvals page became the inbox; old links land there.
+  approvals: "inbox",
+  history: "history",
   runs: "runs",
+  squads: "squads",
   documents: "documents",
-  approvals: "approvals",
+  knowledge: "knowledge",
   projects: "projects",
   accounts: "accounts",
   devices: "devices",
+  agents: "agents",
+  pipelines: "pipelines",
+  templates: "templates",
+  rules: "rules",
   preferences: "settings",
 };
 
@@ -23,12 +35,19 @@ export function matchRoute(hash: string): RouteName {
 
 export const href = {
   workspace: "#workspace",
+  inbox: "#inbox",
+  history: "#history",
   runs: "#runs",
+  squads: "#squads",
   documents: "#documents",
-  approvals: "#approvals",
+  knowledge: "#knowledge",
   projects: "#projects",
   accounts: "#accounts",
   devices: "#devices",
+  agents: "#agents",
+  pipelines: "#pipelines",
+  templates: "#templates",
+  rules: "#rules",
   settings: "#preferences",
 };
 
