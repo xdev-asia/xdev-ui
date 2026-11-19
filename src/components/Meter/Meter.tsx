@@ -14,9 +14,11 @@ export interface MeterProps {
   fill?: boolean;
   /** Text shown after the bar, and read by screen readers, instead of "NN%" (e.g. "750 / 1000 left"). */
   valueText?: string;
+  /** "lg": a thicker bar and larger value text, for the one progress a screen is about (the clip on air). Default "sm". */
+  size?: "sm" | "lg";
 }
 
-export function Meter({ value, label, warnAt, tone, fill, valueText }: MeterProps): JSX.Element {
+export function Meter({ value, label, warnAt, tone, fill, valueText, size }: MeterProps): JSX.Element {
   const v = Math.max(0, Math.min(100, value));
   const warn = tone === undefined && warnAt != null && v >= warnAt;
   return (
@@ -25,6 +27,7 @@ export function Meter({ value, label, warnAt, tone, fill, valueText }: MeterProp
       data-warn={warn ? "" : undefined}
       data-tone={tone}
       data-fill={fill ? "" : undefined}
+      data-size={size === "lg" ? "lg" : undefined}
       role="meter"
       aria-valuemin={0}
       aria-valuemax={100}

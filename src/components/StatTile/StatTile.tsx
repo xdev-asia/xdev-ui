@@ -27,13 +27,15 @@ export interface StatTileProps {
   children?: ReactNode;
   /** Override the English defaults (e.g. for vi). */
   labels?: Partial<StatTileLabels>;
+  /** "lg": the value in `--type-display` with tabular figures, for a wall clock or the one number a screen is about. Default "md". */
+  size?: "md" | "lg";
   className?: string;
 }
 
-export function StatTile({ label, value, delta, deltaTrend, deltaTone = "neutral", hint, loading, children, labels, className }: StatTileProps): JSX.Element {
+export function StatTile({ label, value, delta, deltaTrend, deltaTone = "neutral", hint, loading, children, labels, size, className }: StatTileProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
   return (
-    <div className={cx("x-stat", className)} aria-busy={loading ? true : undefined}>
+    <div className={cx("x-stat", className)} data-size={size === "lg" ? "lg" : undefined} aria-busy={loading ? true : undefined}>
       <p className="x-stat-label">{label}</p>
       {loading ? (
         <div className="x-stat-loading">

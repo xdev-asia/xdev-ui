@@ -30,4 +30,7 @@ describe("StatTile", () => {
   it("renders children under the value", () => {
     expect(renderToStaticMarkup(<StatTile label="a" value="1"><i>bar</i></StatTile>)).toContain('<div class="x-stat-extra"><i>bar</i></div>');
   });
+  it("size lg marks data-size for the display value", () => {
+    expect(renderToStaticMarkup(<StatTile label="Atlanta" value="14:05:32" size="lg" />)).toContain('<div class="x-stat" data-size="lg">');
+  });
 });

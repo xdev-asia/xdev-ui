@@ -40,6 +40,7 @@
   --type-mono: 400 12px var(--font-mono);
   --type-mono-stat: 400 10px var(--font-mono);
   --type-stat: 600 22px/1.2 var(--font-mono);
+  --type-display: 600 40px/1.1 var(--font-mono);
   --type-kbd: 400 11px var(--font-mono);
   --x-space-1: 4px;
   --x-space-2: 8px;
