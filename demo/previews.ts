@@ -648,6 +648,12 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     style: {"padding": "16px", "width": "280px", "minHeight": "400px"},
     render: (X, h) => h(X.DatePicker, { label: "Due date", value: "2026-11-12", onChange: () => {}, today: "2026-11-06", min: "2026-11-03", defaultOpen: true }),
   },
+  "TimeField": {
+    style: {"padding": "16px", "width": "360px", "display": "flex", "gap": "12px"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.TimeField, { label: "Starts at", value: "09:30", onChange: () => {} }),
+      h(X.TimeField, { label: "Length", value: "03:45", mode: "duration", onChange: () => {}, hint: "mm:ss" })),
+  },
   "DateRangePicker": {
     style: {"padding": "16px", "width": "420px", "minHeight": "420px", "display": "flex", "justifyContent": "flex-end"},
     render: (X, h) => h(X.DateRangePicker, { label: "Period", value: { start: "2026-11-02", end: "2026-11-12" }, onChange: () => {}, today: "2026-11-06", defaultOpen: true, presets: [{ label: "Last 7 days", range: { start: "2026-10-31", end: "2026-11-06" } }, { label: "This month", range: { start: "2026-11-01", end: "2026-11-30" } }] }),

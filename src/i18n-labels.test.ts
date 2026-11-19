@@ -13,6 +13,7 @@ import {
   DataTable,
   DatePicker,
   DateRangePicker,
+  TimeField,
   DiffStat,
   FacetFilter,
   Dialog,
@@ -334,5 +335,11 @@ describe("labels override every default English string", () => {
     );
     for (const k of ["oc", "cal", "pm", "nm", "td", "cl", "st", "en", "pr"]) expect(html).toContain(S(k));
     expectNoEnglish(html, ["Open calendar", "Choose dates", "Previous month", "Next month", "Today", "Clear", "Start date", "End date", "Presets"]);
+  });
+
+  it("TimeField", () => {
+    const html = renderToStaticMarkup(h(TimeField, { label: "L", value: "09:30", onChange() {}, labels: { invalid: S("inv") } }));
+    expect(html).toContain('value="09:30"');
+    expectNoEnglish(html, ["Enter a valid time"]);
   });
 });

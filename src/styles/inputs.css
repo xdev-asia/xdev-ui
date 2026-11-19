@@ -463,6 +463,9 @@
 .x-date-control input { flex: 1 1 auto; min-width: 0; width: 11ch; font-variant-numeric: tabular-nums; }
 .x-date-range-sep { color: var(--x-color-muted); font-weight: 400; }
 .x-date-picker[data-disabled] { opacity: 0.6; }
+/* TimeField (.x-time-field): typed time of day or duration in the mono face */
+.ws-field.x-time-field input { font: var(--type-mono); font-variant-numeric: tabular-nums; }
+.x-time-field[data-disabled] { opacity: 0.6; }
 .x-date-popover { padding: var(--x-space-3); font-weight: 400; }
 .x-date-range-body { display: flex; gap: var(--x-space-3); align-items: flex-start; }
 .x-calendar { position: relative; }
