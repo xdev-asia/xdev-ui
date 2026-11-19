@@ -13,3 +13,4 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 export const Warn: Story = { args: { tone: "warn", children: "stale" } };
 export const Removable: Story = { args: { children: "--yolo", onRemove: () => {}, removeLabel: "Remove flag" } };
+export const Swatch: Story = { args: { children: "News", swatch: "var(--accent)" } };
