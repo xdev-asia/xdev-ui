@@ -50,6 +50,8 @@ export interface DatePickerProps {
   /** "Today" as ISO; defaults to the local date. Pass it for SSR or tests. */
   today?: string;
   hint?: ReactNode;
+  /** Keep the label for screen readers only, e.g. a date picker in a table row whose column names it. */
+  hideLabel?: boolean;
   /** Replaces the hint and marks the field invalid. */
   error?: ReactNode;
   /** Name of a hidden input that carries the ISO value in a form. */
@@ -74,6 +76,7 @@ export function DatePicker({
   weekStartsOn = 1,
   today: todayProp,
   hint,
+  hideLabel,
   error,
   name,
   id,
@@ -138,7 +141,7 @@ export function DatePicker({
 
   return (
     <div className={cx("ws-field x-date-picker", className)} data-invalid={invalid ? "" : undefined} data-disabled={disabled ? "" : undefined}>
-      <label htmlFor={inputId}>{label}</label>
+      <label htmlFor={inputId} className={hideLabel ? "x-sr-only" : undefined}>{label}</label>
       <div className="x-date-control">
         <input
           id={inputId}

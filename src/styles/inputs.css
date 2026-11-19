@@ -455,6 +455,7 @@
 }
 .x-filedrop-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .x-filedrop-size { color: var(--x-color-muted); font-size: 12px; }
+.x-filedrop-status { color: var(--x-color-muted); font: var(--type-status); white-space: nowrap; }
 .x-filedrop-progress { width: 80px; accent-color: var(--x-color-accent); }
 .x-filedrop-error { color: var(--x-color-danger); font-size: 12px; }
 .x-filedrop-item[data-error] { border-color: var(--x-color-danger); }
@@ -543,6 +544,10 @@
   .x-date-range-body { flex-direction: column; }
   .x-calendar-presets { flex-direction: row; flex-wrap: wrap; }
 }
+
+/* Select with a label (.x-select-field): a .ws-field around it, the select fills the column */
+.x-select-field .lang-select, .x-select-field .x-select-wrap { width: 100%; }
+.x-select-field[data-invalid] .lang-select { border-color: var(--danger); }
 
 /* Select with a leading icon (.x-select-wrap) */
 .x-select-wrap { position: relative; display: inline-flex; align-items: center; color: var(--x-color-muted); }

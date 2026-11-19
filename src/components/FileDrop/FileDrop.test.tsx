@@ -66,4 +66,8 @@ describe("FileDrop", () => {
     expect(html).toContain("chọn tệp");
     expect(html).toContain("Tối đa 1.0 KB");
   });
+  it("shows an item's status text after the size", () => {
+    const html = renderToStaticMarkup(<FileDrop label="Files" onFiles={() => {}} items={[{ id: "1", name: "a.mp3", size: 2048, status: "Waiting" }]} />);
+    expect(html).toContain('<span class="x-filedrop-status">Waiting</span>');
+  });
 });
