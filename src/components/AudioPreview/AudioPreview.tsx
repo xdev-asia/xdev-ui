@@ -54,9 +54,9 @@ export function AudioPreview({ src, id, label, size = "sm", disabled, onError, l
   const cls = cx("x-audio-preview", className);
   if (label != null && label !== false && label !== "")
     return (
-      <Button variant="secondary" size={size} icon={icon} title={name} aria-pressed={playing} disabled={disabled} className={cls} onClick={onClick}>
+      <Button variant="secondary" size={size} icon={icon} title={name} aria-pressed={playing} data-playing={playing || undefined} disabled={disabled} className={cls} onClick={onClick}>
         {label}
       </Button>
     );
-  return <IconButton icon={icon} label={name} size={size} aria-pressed={playing} disabled={disabled} className={cls} onClick={onClick} />;
+  return <IconButton icon={icon} label={name} size={size} data-playing={playing || undefined} disabled={disabled} className={cls} onClick={onClick} />;
 }

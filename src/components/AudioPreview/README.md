@@ -3,11 +3,11 @@
 Round play/stop toggle for listening to a short clip in a list (library rows, pickers); only one clip plays on the whole page, so starting another stops the current one.
 
 ## Anatomy
-`button.ws-icon-btn.x-audio-preview[aria-pressed]` with the `play` or `stop` icon. With `label`, `button.btn-secondary.x-audio-preview[aria-pressed]` with the icon and the visible text. One hidden `HTMLAudioElement` (`preload="none"`) is created on the first play and shared by every preview on the page.
+`button.ws-icon-btn.x-audio-preview` with the `play` or `stop` icon, `[data-playing]` while its clip plays. With `label`, `button.btn-secondary.x-audio-preview[aria-pressed]` with the icon and the visible text. One hidden `HTMLAudioElement` (`preload="none"`) is created on the first play and shared by every preview on the page.
 
 ## Rules
 - One clip at a time: `play` on another clip stops the current one. `id` (default `src`) names the clip, so two rows with the same file show the same state unless they pass their own `id`.
-- `aria-pressed` is `true` while the button's clip plays; the icon turns from play to stop and the name from `labels.play` to `labels.stop` (aria-label and title). With a visible `label` the text stays the accessible name and the play/stop name goes in `title` only.
+- While the button's clip plays it has `data-playing` and the stop icon. Without `label` the name itself changes from `labels.play` to `labels.stop` (aria-label and title), so it carries no `aria-pressed` (a toggle whose name changes must not also be pressed, WAI-ARIA APG). With a visible `label` the text stays the accessible name, the play/stop name goes in `title`, and `aria-pressed` tells the state.
 - The button returns to play when the clip ends, fails to load, or `play()` is refused (autoplay policy, bad URL); `onError` runs on a failure so the app can say why.
 - Unmounting the playing button does not stop the sound. Call `stopAudioPreview()` when the surface that holds the list closes (a `Dialog`, a `Drawer`, a route change).
 - `useAudioPreview()` returns `{ playingId, play(id, src, onError?), stop() }` for a custom control or for highlighting the playing row; `audioPreviewStore` is the raw store for `useSyncExternalStore`.

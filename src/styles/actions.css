@@ -104,7 +104,7 @@ a.btn, a.btn-secondary, a.btn-danger, a.btn-ghost { text-decoration: none; }
 
 /* AudioPreview (.x-audio-preview): round play/stop toggle; the playing one is accent */
 .ws-icon-btn.x-audio-preview { border: 1px solid var(--x-color-line-strong); border-radius: 50%; }
-.x-audio-preview[aria-pressed="true"] { border-color: var(--x-color-accent); color: var(--x-color-accent); }
+.x-audio-preview[data-playing] { border-color: var(--x-color-accent); color: var(--x-color-accent); }
 .x-audio-preview:disabled { opacity: 0.6; cursor: default; }
 
 /* ActionTile (.x-action-tile) */

@@ -38,23 +38,24 @@ describe("AudioPreview markup", () => {
     playAudioPreview("/a.mp3", "/a.mp3");
     const html = renderToStaticMarkup(<AudioPreview src="/a.mp3" />);
     // the server snapshot is null even while a clip plays in this module
-    expect(html).toMatch(/^<button type="button" class="ws-icon-btn x-audio-preview" aria-label="Play preview" title="Play preview" data-size="sm" aria-pressed="false"><svg[^]*<\/svg><\/button>$/);
+    expect(html).toMatch(/^<button type="button" class="ws-icon-btn x-audio-preview" aria-label="Play preview" title="Play preview" data-size="sm"><svg[^]*<\/svg><\/button>$/);
     expect(html).toContain("<svg");
   });
-  it("renders the stop state with aria-pressed when its clip plays", () => {
+  it("renders the stop state with data-playing when its clip plays", () => {
     h.client = true;
     playAudioPreview("/a.mp3", "/a.mp3");
     const html = renderToStaticMarkup(<AudioPreview src="/a.mp3" />);
     expect(html).toContain('aria-label="Stop preview" title="Stop preview"');
-    expect(html).toContain('aria-pressed="true"');
+    expect(html).toContain('data-playing="true"');
+    expect(html).not.toContain("aria-pressed");
     const other = renderToStaticMarkup(<AudioPreview src="/b.mp3" />);
-    expect(other).toContain('aria-pressed="false"');
+    expect(other).not.toContain("data-playing");
   });
   it("uses id, not src, as the identity of the clip", () => {
     h.client = true;
     playAudioPreview("row-2", "/same.mp3");
-    expect(renderToStaticMarkup(<AudioPreview src="/same.mp3" id="row-1" />)).toContain('aria-pressed="false"');
-    expect(renderToStaticMarkup(<AudioPreview src="/same.mp3" id="row-2" />)).toContain('aria-pressed="true"');
+    expect(renderToStaticMarkup(<AudioPreview src="/same.mp3" id="row-1" />)).not.toContain("data-playing");
+    expect(renderToStaticMarkup(<AudioPreview src="/same.mp3" id="row-2" />)).toContain('data-playing="true"');
   });
   it("md size, disabled and className", () => {
     const html = renderToStaticMarkup(<AudioPreview src="/a.mp3" size="md" disabled className="row-play" />);
@@ -69,7 +70,7 @@ describe("AudioPreview markup", () => {
     expect(html).not.toContain("aria-label");
     h.client = true;
     playAudioPreview("/a.mp3", "/a.mp3");
-    expect(renderToStaticMarkup(<AudioPreview src="/a.mp3" label="Listen" size="md" />)).toMatch(/class="btn-secondary x-audio-preview" title="Stop preview" aria-pressed="true"/);
+    expect(renderToStaticMarkup(<AudioPreview src="/a.mp3" label="Listen" size="md" />)).toMatch(/class="btn-secondary x-audio-preview" title="Stop preview" aria-pressed="true" data-playing="true"/);
   });
   it("labels override the defaults", () => {
     const html = renderToStaticMarkup(<AudioPreview src="/a.mp3" labels={{ play: "Nghe thử" }} />);
