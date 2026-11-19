@@ -115,6 +115,7 @@ export function TimeField({
           setDraft(e.target.value);
           setBad(false);
         }}
+        onFocus={(e) => e.currentTarget.select()}
         onBlur={commit}
         onKeyDown={onKeyDown}
       />
