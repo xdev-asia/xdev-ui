@@ -14,6 +14,7 @@ Modal confirmation over a dimmed backdrop, for decisions that cannot be undone.
 - `labels` (`DialogLabels`: `confirm`, `cancel`) overrides the English defaults; pass translated strings from the app.
 - `description` renders one line in `p.dialog-desc` under the title and is linked with `aria-describedby`.
 - `tone="danger"` gives the confirm button the `danger` variant; pair it with `alert` for destructive confirms.
+- `secondaryActions` adds more choices between Cancel and the confirm button, as `Button variant="secondary"` ("Only this one" beside "Whole series"). Keep it to one or two; the confirm button stays the one primary, last. `busy` does not disable them: pass `disabled` yourself.
 - `busy` disables both actions, shows a spinner in the confirm button, sets `aria-busy` and ignores Esc until the work ends.
 
 ## Responsive

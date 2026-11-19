@@ -205,4 +205,9 @@ describe("Dialog", () => {
       expect((Dialog({ title: "x" }) as any).props.className).toBe("dialog-backdrop");
     });
   });
+  it("secondaryActions render between Cancel and the confirm button", () => {
+    const html = renderToStaticMarkup(<Dialog title="Move this event?" confirmLabel="Whole series" secondaryActions={<button type="button">Only this one</button>} />);
+    expect(html.indexOf("Cancel")).toBeLessThan(html.indexOf("Only this one"));
+    expect(html.indexOf("Only this one")).toBeLessThan(html.indexOf("Whole series"));
+  });
 });

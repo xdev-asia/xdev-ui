@@ -38,9 +38,11 @@ export interface DialogProps {
   busy?: boolean;
   /** With `modal`, render into `document.body` once mounted, so no parent's overflow, transform or z-index clips it. Default true. */
   portal?: boolean;
+  /** More choices between Cancel and the confirm button, as secondary `Button`s: "Only this one" next to "Whole series". */
+  secondaryActions?: ReactNode;
 }
 
-export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, onCancel, alert, modal, confirmDisabled, labels, size = "default", body, description, tone, busy, portal = true }: DialogProps): JSX.Element {
+export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, onCancel, alert, modal, confirmDisabled, labels, size = "default", body, description, tone, busy, portal = true, secondaryActions }: DialogProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
   const cancelText = cancelLabel === undefined ? l.cancel : cancelLabel;
   const id = useId();
@@ -93,6 +95,7 @@ export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, 
               {cancelText}
             </Button>
           ) : null}
+          {secondaryActions}
           <Button onClick={onConfirm} disabled={confirmDisabled || busy || undefined} variant={tone === "danger" ? "danger" : "primary"}>
             {busy ? (
               <span className="x-spinner" data-size="sm" aria-hidden="true">
