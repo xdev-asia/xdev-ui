@@ -6,6 +6,7 @@ import * as X from "../dist/index.js";
 const cases = {
   Button: [{}, "Create session"],
   IconButton: [{ icon: "search", label: "Search" }],
+  AudioPreview: [{ src: "/clip.mp3", label: "Listen" }],
   Segmented: [{ options: [{ value: "a", label: "A" }, { value: "b", label: "B" }] }],
   SwatchGroup: [{ "aria-label": "Colour", value: "red", onChange() {}, options: [{ value: "red", label: "Red", tone: "danger" }, { value: "blue", label: "Blue", tone: "accent" }] }],
   PairingCode: [{ value: "7K4QM-2XD9P", label: "Pairing code", copyLabel: "Copy code", onCopy() {} }],

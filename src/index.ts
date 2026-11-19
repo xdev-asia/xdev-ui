@@ -1,5 +1,7 @@
 export * from "./components/Button/Button";
 export * from "./components/IconButton/IconButton";
+export * from "./components/AudioPreview/AudioPreview";
+export * from "./components/AudioPreview/audio-preview-store";
 export * from "./components/Segmented/Segmented";
 export * from "./components/ColorField/ColorField";
 export * from "./components/ThemePreview/ThemePreview";

@@ -102,6 +102,11 @@ a.btn, a.btn-secondary, a.btn-danger, a.btn-ghost { text-decoration: none; }
 .ws-icon-btn[data-size="lg"] { width: 44px; height: 44px; }
 .ws-icon-btn[data-size="lg"] svg { width: 20px; height: 20px; }
 
+/* AudioPreview (.x-audio-preview): round play/stop toggle; the playing one is accent */
+.ws-icon-btn.x-audio-preview { border: 1px solid var(--x-color-line-strong); border-radius: 50%; }
+.x-audio-preview[aria-pressed="true"] { border-color: var(--x-color-accent); color: var(--x-color-accent); }
+.x-audio-preview:disabled { opacity: 0.6; cursor: default; }
+
 /* ActionTile (.x-action-tile) */
 .x-action-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: var(--x-space-2); }
 .x-action-tile {

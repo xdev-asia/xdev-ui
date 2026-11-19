@@ -301,6 +301,13 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     return el;
     },
   },
+  "AudioPreview": {
+    style: {"display": "flex", "gap": "12px", "alignItems": "center", "padding": "16px"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.AudioPreview, { src: "/clip.mp3" }),
+      h(X.AudioPreview, { src: "/clip.mp3", size: "md" }),
+      h(X.AudioPreview, { src: "/clip.mp3", label: "Listen" })),
+  },
   "IconButton": {
     style: {"display": "flex", "gap": "12px", "flexWrap": "wrap", "alignItems": "center", "padding": "16px"},
     render: (X, h) => {

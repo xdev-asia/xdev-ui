@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import {
   ActivityBar,
+  AudioPreview,
   AppShell,
   BulkBar,
   Breadcrumb,
@@ -341,5 +342,11 @@ describe("labels override every default English string", () => {
     const html = renderToStaticMarkup(h(TimeField, { label: "L", value: "09:30", onChange() {}, labels: { invalid: S("inv") } }));
     expect(html).toContain('value="09:30"');
     expectNoEnglish(html, ["Enter a valid time"]);
+  });
+
+  it("AudioPreview", () => {
+    const html = renderToStaticMarkup(h(AudioPreview, { src: "/a.mp3", labels: { play: S("pl"), stop: S("st") } }));
+    expect(html).toContain(S("pl"));
+    expectNoEnglish(html, ["Play preview", "Stop preview"]);
   });
 });
