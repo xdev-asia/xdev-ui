@@ -9,6 +9,7 @@ Previous and next buttons with a range text ("1–20 of 57") and an optional pag
 - Controlled: the parent owns `page` (1-based) and `pageSize` and slices the rows (see `paginateRows` in `DataTable`).
 - No numbered pages: previous and next plus the range fit 360px and read the same in every language.
 - Previous is disabled on the first page and next on the last; they are never hidden.
+- Cursor paging (the server returns a next cursor, not a count): leave out `total` and pass `hasNext`. The range text becomes `labels.page(page)` ("Page 3") and next is disabled when `hasNext` is false. The parent keeps the cursors of the pages it has seen to go back.
 - `pageSizeOptions` adds a native `Select` named by `labels.pageSize`; reset `page` to 1 when the size or a filter changes.
 - Place it under the table, end-aligned. Hide it when everything fits on one page only if the table is not filterable; otherwise keep the range text.
 - The range text is a polite live region, so a screen reader hears the new range after a page change.
