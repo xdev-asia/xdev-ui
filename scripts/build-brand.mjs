@@ -24,12 +24,10 @@ const SHAPE_FIT = "translate(735 512) scale(1.15) translate(-725 -512)";
 // What stands in for the agent blade in a sub-system mark. Shapes inherit their fill.
 // This package is public: a system is added here only once it is public too.
 const SHAPE = {
-  cleaner: `<path d="M722 527V412A115 115 0 1 0 837 527Z"/><path d="M744 505V390A115 115 0 0 1 859 505Z" opacity=".78"/>`,
   ui: `<rect x="608" y="391" width="110" height="110" rx="28"/><rect x="740" y="391" width="110" height="110" rx="28" opacity=".72"/><rect x="608" y="523" width="110" height="110" rx="28" opacity=".72"/><rect x="740" y="523" width="110" height="110" rx="28" opacity=".46"/>`,
 };
 const NAME = {
   xdev: ["xDev", ""],
-  cleaner: ["Cleaner", "for xDev"],
   ui: ["xDev", "UI"],
 };
 const shape = (key, fill) => `<g transform="${SHAPE_FIT}" fill="${fill}">${SHAPE[key]}</g>`;

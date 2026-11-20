@@ -142,9 +142,8 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.BrandMark, { variant: "tile", size: 32 }),
       h(X.BrandMark, { variant: "lockup", size: 28 }),
       h(X.BrandMark, { variant: "tile", size: 64 }),
-      h(X.BrandMark, { variant: "tile", size: 64, system: "cleaner" }),
       h(X.BrandMark, { variant: "tile", size: 64, system: "ui" }),
-      h(X.BrandMark, { variant: "lockup", size: 28, system: "cleaner" }));
+      h(X.BrandMark, { variant: "lockup", size: 28, system: "ui" }));
     return el;
     },
   },

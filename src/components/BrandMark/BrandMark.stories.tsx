@@ -7,7 +7,7 @@ const meta = {
   args: { variant: "tile", size: 64 },
   argTypes: {
     variant: { control: "inline-radio", options: ["mark", "tile", "lockup"] },
-    system: { control: "inline-radio", options: ["xdev", "cleaner", "ui"] },
+    system: { control: "inline-radio", options: ["xdev", "ui"] },
   },
 } satisfies Meta<typeof BrandMark>;
 export default meta;
@@ -18,4 +18,4 @@ export const Mark: Story = { args: { variant: "mark" } };
 export const Lockup: Story = { args: { variant: "lockup", size: 40 } };
 export const SmallTile: Story = { args: { size: 32 } };
 export const SubSystem: Story = { args: { system: "ui" } };
-export const SubSystemLockup: Story = { args: { variant: "lockup", size: 40, system: "cleaner" } };
+export const SubSystemLockup: Story = { args: { variant: "lockup", size: 40, system: "ui" } };

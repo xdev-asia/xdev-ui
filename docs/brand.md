@@ -16,7 +16,6 @@ Every system keeps your blade in the same place. Only the agent side changes. No
 | System | `system` | Agent side |
 |---|---|---|
 | xDev | `xdev` | the orange blade, crossing yours |
-| Cleaner for xDev | `cleaner` | a disk with one slice lifted out |
 | xDev UI | `ui` | four squares in four tones |
 
 This package is public. A system gets a mark here only once it is public too; `BrandMark.test.tsx` checks the list.
@@ -34,7 +33,7 @@ This package is public. A system gets a mark here only once it is public too; `B
 | `xdev-mark-lit.svg` | Lit mark without a ground, for dark surfaces. |
 | `xdev-mark-tile.svg` | Flat tile for 16 to 32 px (favicon, small avatars). |
 | `xdev-lockup-light.svg`, `xdev-lockup-dark.svg` | Icon plus wordmark for light and dark surfaces. Live text; bundle Be Vietnam Pro for the intended look. |
-| `systems/xdev-<system>-{icon,mark,mark-lit,lockup-light,lockup-dark}.svg` | The same set for `cleaner` and `ui`. |
+| `systems/xdev-<system>-{icon,mark,mark-lit,lockup-light,lockup-dark}.svg` | The same set for `ui`. |
 | `mobile/` | iOS (`ios-icon` on blue, `ios-icon-dark` on dark, both full-bleed) and Android adaptive (foreground, background, monochrome) sources, with 1024 px renders. |
 
 ## Sizes
