@@ -5,9 +5,6 @@ declare const __STORY_TITLES__: Record<string, string>;
 
 export const REPO = "https://github.com/xdev-asia/xdev-ui";
 
-/** Whole apps built from the library with sample data, published under /showcase/<id>/. */
-export const SHOWCASES = [{ id: "ai-sdlc", name: "xDev AI SDLC", href: "./showcase/ai-sdlc/" }];
-
 export interface Comp {
   name: string;
   group: string;
