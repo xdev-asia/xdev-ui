@@ -301,6 +301,13 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     return el;
     },
   },
+  "AudioPreview": {
+    style: {"display": "flex", "gap": "12px", "alignItems": "center", "padding": "16px"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.AudioPreview, { src: "/clip.mp3" }),
+      h(X.AudioPreview, { src: "/clip.mp3", size: "md" }),
+      h(X.AudioPreview, { src: "/clip.mp3", label: "Listen" })),
+  },
   "IconButton": {
     style: {"display": "flex", "gap": "12px", "flexWrap": "wrap", "alignItems": "center", "padding": "16px"},
     render: (X, h) => {
@@ -483,7 +490,8 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     el = h(React.Fragment, null,
       h(X.Tag, null, "worktree"), h(X.Tag, null, "main"), h(X.Tag, null, "detached"),
       h(X.Tag, { tone: "warn" }, "uncommitted"),
-      h(X.Tag, { onRemove: function () {}, removeLabel: "Remove flag" }, "--yolo"));
+      h(X.Tag, { onRemove: function () {}, removeLabel: "Remove flag" }, "--yolo"),
+      h(X.Tag, { swatch: "var(--accent)" }, "News"), h(X.Tag, { swatch: "var(--ok)" }, "Music"));
     return el;
     },
   },
@@ -646,6 +654,12 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
   "DatePicker": {
     style: {"padding": "16px", "width": "280px", "minHeight": "400px"},
     render: (X, h) => h(X.DatePicker, { label: "Due date", value: "2026-11-12", onChange: () => {}, today: "2026-11-06", min: "2026-11-03", defaultOpen: true }),
+  },
+  "TimeField": {
+    style: {"padding": "16px", "width": "360px", "display": "flex", "gap": "12px"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.TimeField, { label: "Starts at", value: "09:30", onChange: () => {} }),
+      h(X.TimeField, { label: "Length", value: "03:45", mode: "duration", onChange: () => {}, hint: "mm:ss" })),
   },
   "DateRangePicker": {
     style: {"padding": "16px", "width": "420px", "minHeight": "420px", "display": "flex", "justifyContent": "flex-end"},

@@ -42,4 +42,14 @@ describe("Pagination", () => {
     expect(html).toContain('aria-label="Rows per page"');
     expect(html).toContain('<option value="20" selected="">20</option>');
   });
+  it("cursor paging: no total, a page number and hasNext", () => {
+    const html = renderToStaticMarkup(<Pagination page={3} pageSize={50} onPageChange={noop} labels={{ page: (p) => `Trang ${p}` }} />);
+    expect(html).toContain(">Trang 3<");
+    const buttons = findAll(Pagination({ page: 3, pageSize: 50, onPageChange: noop }), (e) => e.type === IconButton);
+    expect(buttons[0]!.props.disabled).toBe(false);
+    expect(buttons[1]!.props.disabled).toBe(true);
+    const more = findAll(Pagination({ page: 1, pageSize: 50, hasNext: true, onPageChange: noop }), (e) => e.type === IconButton);
+    expect(more[0]!.props.disabled).toBe(true);
+    expect(more[1]!.props.disabled).toBe(false);
+  });
 });

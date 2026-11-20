@@ -86,7 +86,8 @@
   .x-table-wrap[data-stack] tbody tr { position: relative; padding: var(--x-space-2) var(--x-space-3); border-bottom: 1px solid var(--line); }
   .x-table-wrap[data-stack] tbody tr:last-child { border-bottom: 0; }
   .x-table-wrap[data-stack] tbody td { padding: var(--x-space-1) 0; border: 0; text-align: start; overflow-wrap: anywhere; }
-  .x-table-wrap[data-stack] tbody td[data-label] { display: grid; grid-template-columns: minmax(6rem, 35%) minmax(0, 1fr); gap: var(--x-space-3); }
+  /* justify-items: start keeps a Tag, Button or Badge at its own width instead of stretching across the value column. */
+  .x-table-wrap[data-stack] tbody td[data-label] { display: grid; grid-template-columns: minmax(6rem, 35%) minmax(0, 1fr); justify-items: start; gap: var(--x-space-3); }
   .x-table-wrap[data-stack] tbody td[data-label]::before { content: attr(data-label); font: var(--type-label); color: var(--text-2); }
   .x-table-wrap[data-stack] tbody td[data-width="min"] { width: auto; }
   .x-table-wrap[data-stack] :is(.x-table-check, [data-sticky]) { position: static; background: transparent; box-shadow: none; }

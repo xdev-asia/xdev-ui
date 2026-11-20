@@ -63,6 +63,8 @@ export interface FileDropItem {
   size?: number;
   /** 0 to 100 while uploading. */
   progress?: number;
+  /** Short state text after the size: "Waiting", "Done", "Duplicate". The progress bar still shows while uploading. */
+  status?: ReactNode;
   error?: ReactNode;
 }
 
@@ -173,6 +175,7 @@ export function FileDrop({ label, accept, maxSize, multiple, maxFiles, disabled,
               <Icon name="file" />
               <span className="x-filedrop-name">{it.name}</span>
               {it.size != null ? <span className="x-filedrop-size">{formatBytes(it.size)}</span> : null}
+              {it.status != null ? <span className="x-filedrop-status">{it.status}</span> : null}
               {it.progress != null && it.progress < 100 ? (
                 <progress className="x-filedrop-progress" max={100} value={it.progress} aria-label={l.uploading(Math.round(it.progress))} />
               ) : null}

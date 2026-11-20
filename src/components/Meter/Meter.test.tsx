@@ -27,4 +27,8 @@ describe("Meter", () => {
     expect(html).toContain('aria-valuetext="40 / 100 left"');
     expect(html).not.toContain(">40%<");
   });
+  it("size lg marks data-size for the thick bar", () => {
+    expect(renderToStaticMarkup(<Meter value={40} size="lg" fill valueText="01:20 / 03:20" />)).toContain('data-size="lg"');
+    expect(renderToStaticMarkup(<Meter value={40} />)).not.toContain("data-size");
+  });
 });

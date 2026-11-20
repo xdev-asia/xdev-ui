@@ -323,4 +323,8 @@ describe("calendarKey / monthStepAllowed", () => {
     expect(monthStepAllowed("2026-11-15", 1, "2026-10-31", "2026-12-01")).toEqual({ prev: true, next: true });
     expect(monthStepAllowed("2026-11-15", 2, null, "2026-12-31")).toEqual({ prev: true, next: false });
   });
+  it("hideLabel keeps the label for screen readers only", () => {
+    const html = renderToStaticMarkup(<DatePicker label="Air date" hideLabel value={null} onChange={() => {}} id="d" />);
+    expect(html).toContain('<label for="d" class="x-sr-only">Air date</label>');
+  });
 });

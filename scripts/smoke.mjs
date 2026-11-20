@@ -6,6 +6,7 @@ import * as X from "../dist/index.js";
 const cases = {
   Button: [{}, "Create session"],
   IconButton: [{ icon: "search", label: "Search" }],
+  AudioPreview: [{ src: "/clip.mp3", label: "Listen" }],
   Segmented: [{ options: [{ value: "a", label: "A" }, { value: "b", label: "B" }] }],
   SwatchGroup: [{ "aria-label": "Colour", value: "red", onChange() {}, options: [{ value: "red", label: "Red", tone: "danger" }, { value: "blue", label: "Blue", tone: "accent" }] }],
   PairingCode: [{ value: "7K4QM-2XD9P", label: "Pairing code", copyLabel: "Copy code", onCopy() {} }],
@@ -47,6 +48,7 @@ const cases = {
   RadioGroup: [{ name: "shell", value: "bash", onChange() {}, options: [{ value: "bash", label: "bash" }, { value: "pwsh", label: "PowerShell" }] }],
   Textarea: [{ label: "Commit message", mono: true }],
   SearchInput: [{ value: "auth", onChange() {}, onClear() {}, count: 4 }],
+  TimeField: [{ label: "Starts at", value: "09:30", onChange() {} }],
   DatePicker: [{ label: "Due date", value: "2026-11-06", onChange() {}, today: "2026-11-06" }],
   DateRangePicker: [{ label: "Period", value: { start: "2026-11-02", end: "2026-11-12" }, onChange() {}, today: "2026-11-06", presets: [{ label: "This month", range: { start: "2026-11-01", end: "2026-11-30" } }], defaultOpen: true }],
   SearchPicker: [{ label: "Find work", value: "da", onValueChange() {}, onPick() {}, items: [{ id: "1", title: "Dark theme", meta: "#1" }], status: "1 match" }],

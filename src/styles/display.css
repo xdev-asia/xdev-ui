@@ -35,6 +35,8 @@
 .ws-tag-removable { display: inline-flex; align-items: center; gap: 2px; padding-right: 0; }
 .ws-tag-remove { min-width: 1.5rem; min-height: 1.5rem; margin-block: -0.25rem; padding: 0; border-radius: var(--radius-s); }
 .ws-tag-remove svg { width: 10px; height: 10px; }
+.ws-tag-swatched { display: inline-flex; align-items: center; gap: var(--x-space-1); }
+.ws-tag-swatch { width: 7px; height: 7px; flex: none; border-radius: 50%; forced-color-adjust: none; }
 
 .ws-chip {
   display: inline-grid;

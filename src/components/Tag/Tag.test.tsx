@@ -37,4 +37,16 @@ describe("Tag", () => {
     el.props.onKeyDown(key({ key: "Delete" }));
     expect(onRemove).toHaveBeenCalledTimes(1);
   });
+  it("draws a decorative swatch dot before the text, coloured through the style prop", () => {
+    expect(renderToStaticMarkup(<Tag swatch="var(--accent)">News</Tag>)).toBe(
+      '<span class="ws-tag ws-tag-swatched"><span class="ws-tag-swatch" style="background:var(--accent)" aria-hidden="true"></span>News</span>',
+    );
+  });
+  it("keeps the swatch on a removable tag", () => {
+    const html = renderToStaticMarkup(<Tag swatch="tomato" onRemove={() => {}} removeLabel="Remove category">Sports</Tag>);
+    expect(html).toMatch(/^<span class="ws-tag ws-tag-swatched ws-tag-removable" tabindex="0"><span class="ws-tag-swatch" style="background:tomato" aria-hidden="true"><\/span>Sports<button/);
+  });
+  it("adds no swatch markup without swatch", () => {
+    expect(renderToStaticMarkup(<Tag swatch="">x</Tag>)).toBe('<span class="ws-tag">x</span>');
+  });
 });

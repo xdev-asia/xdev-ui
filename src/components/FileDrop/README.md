@@ -6,6 +6,7 @@ Drop zone and file chooser that checks type, size and count before handing files
 `div.x-filedrop` > `label.x-filedrop-zone[data-over]` (icon, text, limits, `input[type=file].x-sr-only`) + `ul.x-filedrop-errors[role=alert]` + `ul.x-filedrop-list` > `li.x-filedrop-item` (name, size, `progress`, error, remove).
 
 ## Rules
+- An item's `status` is a short state word after the size ("Waiting", "Done", "Duplicate"); `progress` draws the bar while uploading and `error` says why it failed.
 - The zone is a `label` for a real file input, so Tab, Enter and Space open the chooser; `label` names it for screen readers.
 - Say the limits: pass `accept` and `maxSize` (bytes) and the hint is built from them, or give `labels.limits`.
 - `onFiles` gets only the files that pass `checkFiles`; the rest are listed under the zone with the reason and passed to `onReject`.

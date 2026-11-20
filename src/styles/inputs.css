@@ -455,6 +455,7 @@
 }
 .x-filedrop-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .x-filedrop-size { color: var(--x-color-muted); font-size: 12px; }
+.x-filedrop-status { color: var(--x-color-muted); font: var(--type-status); white-space: nowrap; }
 .x-filedrop-progress { width: 80px; accent-color: var(--x-color-accent); }
 .x-filedrop-error { color: var(--x-color-danger); font-size: 12px; }
 .x-filedrop-item[data-error] { border-color: var(--x-color-danger); }
@@ -463,6 +464,9 @@
 .x-date-control input { flex: 1 1 auto; min-width: 0; width: 11ch; font-variant-numeric: tabular-nums; }
 .x-date-range-sep { color: var(--x-color-muted); font-weight: 400; }
 .x-date-picker[data-disabled] { opacity: 0.6; }
+/* TimeField (.x-time-field): typed time of day or duration in the mono face */
+.ws-field.x-time-field input { font: var(--type-mono); font-variant-numeric: tabular-nums; }
+.x-time-field[data-disabled] { opacity: 0.6; }
 .x-date-popover { padding: var(--x-space-3); font-weight: 400; }
 .x-date-range-body { display: flex; gap: var(--x-space-3); align-items: flex-start; }
 .x-calendar { position: relative; }
@@ -540,6 +544,10 @@
   .x-date-range-body { flex-direction: column; }
   .x-calendar-presets { flex-direction: row; flex-wrap: wrap; }
 }
+
+/* Select with a label (.x-select-field): a .ws-field around it, the select fills the column */
+.x-select-field .lang-select, .x-select-field .x-select-wrap { width: 100%; }
+.x-select-field[data-invalid] .lang-select { border-color: var(--danger); }
 
 /* Select with a leading icon (.x-select-wrap) */
 .x-select-wrap { position: relative; display: inline-flex; align-items: center; color: var(--x-color-muted); }

@@ -7,6 +7,7 @@ Flat tile with one headline number, its label and an optional change since a per
 
 ## Rules
 - One number per tile. The caller formats it (`Intl.NumberFormat(locale)`) and the delta.
+- `size="lg"` sets the value in `--type-display` with tabular figures, for a wall clock or the one number a screen is about. At most one or two per view.
 - `deltaTrend` draws the direction; `deltaTone` says whether it is good. Up is not always good (errors up is bad), so the caller sets the tone. `deltaTone` (`good`, `bad`, `neutral`) judges a change; `StatusDot` `tone` (`ok`, `warn`, `danger`, `accent`, `neutral`) names a state. They are separate on purpose. Colour never carries the meaning alone: the sign and the arrow stay.
 - `hint` names the basis of the delta ("vs last 7 days"); put a `Meter` or a short list in `children`, not a second number.
 - `loading` shows one `Spinner` and sets `aria-busy`; keep the label so the grid does not jump. On a failed load, show a `Banner` with a retry action above the tiles instead of zeros.
