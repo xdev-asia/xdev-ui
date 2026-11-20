@@ -7,7 +7,7 @@ export type BrandMarkSize = 16 | 18 | 20 | 64;
  * The parent brand and its sub-systems. Each keeps your blade and has its own agent shape.
  * This package is public: a system is added here only once it is public too.
  */
-export type BrandSystem = "xdev" | "cleaner" | "ui";
+export type BrandSystem = "xdev" | "ui";
 
 export interface BrandMarkProps {
   variant?: "mark" | "tile" | "lockup";
@@ -24,7 +24,6 @@ export interface BrandMarkProps {
 /** Wordmark parts: the bold lead and the lighter rest. */
 const NAME: Record<BrandSystem, readonly [lead: string, rest: string]> = {
   xdev: ["xDev", ""],
-  cleaner: ["Cleaner", "for xDev"],
   ui: ["xDev", "UI"],
 };
 const fullName = (system: BrandSystem): string => NAME[system].filter(Boolean).join(" ");
@@ -47,13 +46,6 @@ const SUB_SHIFT = "translate(-20 0)";
 /** What stands in for the agent blade in a sub-system mark. Shapes inherit their fill. */
 function AgentShape({ system }: { system: Exclude<BrandSystem, "xdev"> }): JSX.Element {
   switch (system) {
-    case "cleaner":
-      return (
-        <>
-          <path d="M722 527V412A115 115 0 1 0 837 527Z" />
-          <path d="M744 505V390A115 115 0 0 1 859 505Z" opacity={0.78} />
-        </>
-      );
     case "ui":
       return (
         <>

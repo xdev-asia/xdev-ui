@@ -12,7 +12,7 @@ The xDev logo v12: two folded blades that cross into an `x`. As a bare mark, an 
 `size` is the mark or tile edge in px; the lockup wordmark is `size × 25/32`.
 
 ## Systems
-`system` picks whose mark it is: `xdev` (default, the parent brand), `cleaner`, `ui`. Every system keeps your blade; only the agent side changes. A system is added only once it is public.
+`system` picks whose mark it is: `xdev` (default, the parent brand), `ui`. Every system keeps your blade; only the agent side changes. A system is added only once it is public.
 
 ## Rules
 - The agent side is always `--brand-agent` `#ff7a3d`. Only your blade follows the surface colour.

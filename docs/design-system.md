@@ -45,7 +45,7 @@ A product whose mark sits on another ground sets `data-ground="<id>"` next to `d
 - 16px in controls, 20px in banners, 22px in the activity bar.
 - The set: `docs changes tasks squads agents kit accounts terminal` (from ActivityBar.tsx) plus `warn close plus search more branch chevron-left chevron-right magnifier prompt folder file check alert warn-dash restore history bot download copy plug lock swap list-checks workflow`.
 - Shell icons: `board` (kanban columns), `automation` (loop with a play mark), `panel-right` (right-docked panel), `split` (two panes), `inbox`, and `zap` (the bolt) for quick actions.
-- The brand mark (logo v12) is two folded blades that cross into an `x`. Your blade follows the surface colour; the agent side is always `--brand-agent` `#ff7a3d`; the core where they overlap is white. Sub-systems keep your blade and swap the agent side for their own shape (`BrandMark system="cleaner"`).
+- The brand mark (logo v12) is two folded blades that cross into an `x`. Your blade follows the surface colour; the agent side is always `--brand-agent` `#ff7a3d`; the core where they overlap is white. Sub-systems keep your blade and swap the agent side for their own shape (`BrandMark system="ui"`).
 
 ## Layout
 

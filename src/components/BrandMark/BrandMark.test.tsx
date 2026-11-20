@@ -39,16 +39,16 @@ describe("BrandMark", () => {
     expect(html).toContain(`<path d="${CORE}"`);
   });
   it("mark of a sub-system keeps your blade and swaps the agent blade for its shape", () => {
-    const html = renderToStaticMarkup(<BrandMark system="cleaner" />);
+    const html = renderToStaticMarkup(<BrandMark system="ui" />);
     expect(html).toContain(`d="${YOU}"`);
     expect(html).not.toContain(AGENT);
     expect(html).not.toContain(CORE);
-    expect(html).toContain("M722 527V412");
-    expect(html).toContain('aria-label="Cleaner for xDev"');
+    expect(html).toContain('<rect x="608" y="391" width="110" height="110" rx="28"');
+    expect(html).toContain('aria-label="xDev UI"');
   });
   it("names every system", () => {
     const name = (system: Parameters<typeof BrandMark>[0]["system"]) => /aria-label="([^"]+)"/.exec(renderToStaticMarkup(<BrandMark system={system} />))?.[1];
-    expect([name("xdev"), name("cleaner"), name("ui")]).toEqual(["xDev", "Cleaner for xDev", "xDev UI"]);
+    expect([name("xdev"), name("ui")]).toEqual(["xDev", "xDev UI"]);
   });
   it("tile under 48 px is flat", () => {
     const html = renderToStaticMarkup(<BrandMark variant="tile" size={32} />);
@@ -87,25 +87,20 @@ describe("BrandMark", () => {
     expect(html).toContain('<span class="x-lockup-word" aria-hidden="true">xDev</span>');
     expect(html).toContain('<span class="x-lockup-sub" aria-hidden="true">UI</span>');
   });
-  it("lockup of Cleaner for xDev leads with Cleaner", () => {
-    const html = renderToStaticMarkup(<BrandMark variant="lockup" system="cleaner" />);
-    expect(html).toContain('<span class="x-lockup-word" aria-hidden="true">Cleaner</span>');
-    expect(html).toContain('<span class="x-lockup-sub" aria-hidden="true">for xDev</span>');
-  });
   it("the static mark in assets/brand has the same blades and core", () => {
     const svg = readFileSync(join(brandDir, "xdev-mark.svg"), "utf8");
     for (const d of [YOU, AGENT, CORE]) expect(svg).toContain(`d="${d}"`);
   });
-  it("the static cleaner mark in assets/brand has the same disk as the component", () => {
-    const svg = readFileSync(join(brandDir, "systems/xdev-cleaner-mark.svg"), "utf8");
-    const html = renderToStaticMarkup(<BrandMark system="cleaner" />);
-    const disk = /d="(M722 527[^"]+)"/.exec(html)?.[1];
-    expect(disk).toBeTruthy();
-    expect(svg).toContain(`d="${disk}"`);
+  it("the static ui mark in assets/brand has the same squares as the component", () => {
+    const svg = readFileSync(join(brandDir, "systems/xdev-ui-mark.svg"), "utf8");
+    const html = renderToStaticMarkup(<BrandMark system="ui" />);
+    const square = '<rect x="608" y="391" width="110" height="110" rx="28"';
+    expect(html).toContain(square);
+    expect(svg).toContain(square);
   });
   // This package is public. A system gets a mark here only once it is public too.
   it("assets/brand/systems holds files of public systems only", () => {
-    const other = readdirSync(join(brandDir, "systems")).filter((f) => !/^xdev-(cleaner|ui)-/.test(f));
+    const other = readdirSync(join(brandDir, "systems")).filter((f) => !/^xdev-ui-/.test(f));
     expect(other).toEqual([]);
   });
 });

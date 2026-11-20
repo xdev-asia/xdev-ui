@@ -16,7 +16,7 @@ The xDev logo is two folded blades that cross into an `x`: your blade on the lef
 | `tile` | the mark on a dark ground; flat under 48px, lit from 48px up | favicon, app icon, avatar of the product, social cards |
 | `lockup` | tile plus the name in the body font: `xDev` at 800, a sub-system name at 500 | site header, docs, README, slides |
 
-`size` is the mark or tile edge in px (the shell uses 18 or 20; sign-in uses 64). The lockup wordmark is `size × 25/32`. `system` picks whose mark it is (`xdev`, `cleaner`, `ui`): every system keeps your blade and only the agent side changes.
+`size` is the mark or tile edge in px (the shell uses 18 or 20; sign-in uses 64). The lockup wordmark is `size × 25/32`. `system` picks whose mark it is (`xdev`, `ui`): every system keeps your blade and only the agent side changes.
 
 ## In an app shell
 
