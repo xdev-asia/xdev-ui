@@ -33,6 +33,10 @@ describe("accessibility CSS", () => {
     expect(md).toMatch(/\.x-shell-title-text \{[^}]*white-space: normal;[^}]*-webkit-line-clamp: 2;/);
     expect(md).toMatch(/\.x-shell\[data-titled\] \.x-shell-top \{[^}]*height: auto;/);
   });
+  it("AppShell main is the containing block of what it scrolls, so an absolute child cannot stretch the page", () => {
+    // A visually hidden input (.x-sr-only, absolute) inside main once pushed the document 371px past the viewport.
+    expect(read("layout.css")).toMatch(/\.x-shell-main \{[^}]*overflow: auto;[^}]*position: relative;|\.x-shell-main \{[^}]*position: relative;[^}]*overflow: auto;/);
+  });
   it("wraps Card subtitles below md", () => {
     expect(media(responsive, "@media (max-width: 767.98px)")).toMatch(/\.x-card-sub \{[^}]*white-space: normal;/);
   });
