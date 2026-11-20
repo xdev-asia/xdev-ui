@@ -42,7 +42,7 @@
 .x-shell[data-titled] .x-shell-actions .ws-icon-btn { width: calc(var(--x-space-8) + var(--x-space-2)); height: calc(var(--x-space-8) + var(--x-space-2)); border-radius: var(--radius-l); }
 .x-shell[data-titled] .x-shell-actions .ws-icon-btn svg { width: 20px; height: 20px; }
 .x-shell-actions .x-theme-toggle, .x-shell[data-titled] .x-shell-actions .x-theme-toggle { border-radius: 50%; }
-.x-shell-main { flex: 1; min-height: 0; overflow: auto; padding: var(--x-space-6); }
+.x-shell-main { position: relative; flex: 1; min-height: 0; overflow: auto; padding: var(--x-space-6); }
 .x-shell-main:focus:not(:focus-visible) { outline: none; }
 .x-shell-menu { display: none; }
 .x-shell-backdrop { display: none; }
