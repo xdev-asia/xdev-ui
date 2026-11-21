@@ -92,6 +92,7 @@
   .x-table-wrap[data-stack] tbody td[data-width="min"] { width: auto; }
   .x-table-wrap[data-stack] :is(.x-table-check, [data-sticky]) { position: static; background: transparent; box-shadow: none; }
   .x-table-wrap[data-stack] tbody tr:hover > :is(.x-table-check, [data-sticky]) { background: transparent; }
+  .x-table-wrap[data-stack] > .x-table-stack-sort { display: block; }
 }
 
 /* ---- Below md (767.98px): tab rows and segmented controls scroll inside themselves ---- */

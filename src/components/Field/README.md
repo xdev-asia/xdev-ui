@@ -13,3 +13,4 @@ Labelled text input with an optional hint or error line.
 - For the single input inside a `Dialog` use the bare `.dialog-input` class.
 - `ref` is a plain prop (React 19) typed `Ref<HTMLInputElement>`; it reaches the `input`.
 - `hideLabel` keeps the label in the DOM for screen readers and hides it visually (`.x-sr-only`); use it where the surrounding UI already names the input, instead of a bare `aria-label`.
+- `mono` sets the value in the mono face (ids, codes, IPA, paths, keys), as `Textarea mono` does; the label and hint stay in the body face.

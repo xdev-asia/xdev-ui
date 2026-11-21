@@ -26,6 +26,8 @@
 /* DataTable (.x-table) */
 .x-table-wrap { position: relative; container-type: inline-size; max-width: 100%; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-l); background: var(--bg-1); }
 .x-table-wrap[data-loading] .x-table tbody { opacity: 0.6; }
+/* The sort select of a `stack` table; shown only while its rows are stacked (responsive.css). */
+.x-table-stack-sort { display: none; padding: var(--x-space-2) var(--x-space-3); border-bottom: 1px solid var(--line); }
 .x-table { width: 100%; border-collapse: collapse; font: var(--type-body); color: var(--text-1); }
 .x-table th, .x-table td { padding: var(--x-space-2) var(--x-space-3); border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
 .x-table tbody tr:last-child td { border-bottom: 0; }
@@ -63,6 +65,8 @@
 /* SortableList (.x-sortable) */
 .x-sortable { display: flex; flex-direction: column; gap: var(--x-space-1); margin: 0; padding: 0; list-style: none; }
 .x-sortable-item { display: flex; align-items: center; gap: var(--x-space-2); padding: var(--x-space-1) var(--x-space-2); border: 1px solid var(--line); border-radius: var(--radius-m); background: var(--bg-2); }
+/* A row rendered as one element (a form row with its own handle) takes the full width instead of shrinking to its content. */
+.x-sortable-item > :only-child { flex: 1 1 auto; min-width: 0; }
 .x-sortable-item[data-lifted], .x-sortable-item[data-dragging] { background: var(--bg-3); }
 .x-sortable-item[data-drop="before"] { box-shadow: 0 -2px 0 var(--accent); }
 .x-sortable-item[data-drop="after"] { box-shadow: 0 2px 0 var(--accent); }

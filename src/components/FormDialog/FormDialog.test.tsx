@@ -1,16 +1,20 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it, vi } from "vitest";
+import { createElement } from "react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { findAll } from "../../test-utils";
 import { Button } from "../Button/Button";
 
+const h = vi.hoisted(() => ({ client: false }));
 vi.mock("react", async (orig) => ({
   ...(await orig<typeof import("react")>()),
   useId: () => "id",
   useEffect: () => {},
   useRef: (v: unknown) => ({ current: v }),
+  useSyncExternalStore: (_s: unknown, client: () => boolean, server: () => boolean) => (h.client ? client() : server()),
 }));
+vi.mock("react-dom", () => ({ createPortal: (node: unknown, target: unknown) => createElement("x-portal", { target }, node as never) }));
 const { FormDialog } = await import("./FormDialog");
 const noop = (): void => {};
 
@@ -71,5 +75,30 @@ describe("FormDialog", () => {
   it("grid children can shrink (min-width: 0)", () => {
     const css = readFileSync(resolve(__dirname, "../../styles/overlays.css"), "utf8");
     expect(css).toMatch(/\.x-form-dialog-fields > \* \{[^}]*min-width: 0/);
+  });
+  describe("portal", () => {
+    afterEach(() => {
+      h.client = false;
+      vi.unstubAllGlobals();
+    });
+    const mounted = () => {
+      h.client = true;
+      const body = { tag: "body" };
+      vi.stubGlobal("document", { body });
+      return body;
+    };
+    it("renders into document.body once mounted", () => {
+      const body = mounted();
+      const tree = FormDialog({ title: "x", onSubmit: noop, onCancel: noop }) as any;
+      expect(tree.type).toBe("x-portal");
+      expect(tree.props.target).toBe(body);
+      expect(tree.props.children.props.className).toBe("dialog-backdrop");
+    });
+    it("portal={false}, the server render and a non-modal preview stay in place", () => {
+      expect(renderToStaticMarkup(<FormDialog title="x" onSubmit={noop} onCancel={noop} />)).toMatch(/^<div class="dialog-backdrop"/);
+      mounted();
+      expect((FormDialog({ title: "x", onSubmit: noop, onCancel: noop, portal: false }) as any).props.className).toBe("dialog-backdrop");
+      expect((FormDialog({ title: "x", onSubmit: noop, onCancel: noop, modal: false }) as any).props.className).toBe("dialog-backdrop");
+    });
   });
 });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { nextTableSort, paginateRows, sortTableRows } from "./table-helpers";
+import { nextTableSort, paginateRows, sortTableRows, tableSortFromParam, tableSortToParam } from "./table-helpers";
 
 describe("nextTableSort", () => {
   it("cycles asc, desc, off", () => {
@@ -53,5 +53,25 @@ describe("paginateRows", () => {
   it("handles empty rows and a bad page size", () => {
     expect(paginateRows([], 1, 10)).toEqual([]);
     expect(paginateRows(rows, 1, 0)).toEqual([1]);
+  });
+});
+
+describe("tableSortToParam and tableSortFromParam", () => {
+  it("round-trips field:dir", () => {
+    expect(tableSortToParam({ key: "points", dir: "desc" })).toBe("points:desc");
+    expect(tableSortToParam(null)).toBeNull();
+    expect(tableSortFromParam("points:desc")).toEqual({ key: "points", dir: "desc" });
+    expect(tableSortFromParam(tableSortToParam({ key: "createdAt", dir: "asc" }))).toEqual({ key: "createdAt", dir: "asc" });
+  });
+  it("reads a bare field as ascending", () => {
+    expect(tableSortFromParam("name")).toEqual({ key: "name", dir: "asc" });
+  });
+  it("rejects empty, malformed and unknown keys", () => {
+    expect(tableSortFromParam("")).toBeNull();
+    expect(tableSortFromParam(null)).toBeNull();
+    expect(tableSortFromParam("name:sideways")).toBeNull();
+    expect(tableSortFromParam("a b:asc")).toBeNull();
+    expect(tableSortFromParam("email:asc", ["name", "points"])).toBeNull();
+    expect(tableSortFromParam("points:asc", ["name", "points"])).toEqual({ key: "points", dir: "asc" });
   });
 });

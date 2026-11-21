@@ -58,4 +58,12 @@ describe("searchPickerKey", () => {
     expect(searchPickerKey(items, "a", "Escape", "al").clear).toBe(true);
     expect(searchPickerKey(items, "a", "Escape", "").clear).toBe(false);
   });
+  it("showLabel draws a real label tied to the box instead of an aria-label", () => {
+    const html = renderToStaticMarkup(<SearchPicker label="Learner" showLabel value="" onValueChange={() => {}} items={[]} onPick={() => {}} />);
+    const id = /<label class="x-search-picker-label" for="([^"]+)">Learner<\/label>/.exec(html)?.[1];
+    expect(id).toBeTruthy();
+    expect(html).toContain(`id="${id}"`);
+    expect(html).not.toMatch(/<input[^>]*aria-label="Learner"/);
+    expect(renderToStaticMarkup(<SearchPicker label="Learner" value="" onValueChange={() => {}} items={[]} onPick={() => {}} />)).toMatch(/<input[^>]*aria-label="Learner"/);
+  });
 });

@@ -3,9 +3,10 @@
 Titled group of fields on a page, with an optional description and end-aligned Save and Cancel actions.
 
 ## Anatomy
-`section.x-form-section` > optional `.x-form-section-head` (`h2.x-form-section-title`, `p.x-form-section-desc`) + `.x-form-section-fields[data-columns]` + optional `.x-form-section-actions`.
+`section.x-form-section` > optional `.x-form-section-head` (`h2.x-form-section-title`, `p.x-form-section-desc`) + `.x-form-section-fields[data-columns]` (a `fieldset[disabled]` when `disabled`) + optional `.x-form-section-actions`.
 
 ## Rules
+- `disabled` is the read-only view for a role that may see but not change the form: the fields render in a native `<fieldset disabled>` (every control in it is disabled and leaves the tab order), and `actions` are dropped. Put a `Banner` above that says why. Hide the section instead when the role may not see it at all.
 - One topic per section ("Profile", "Access"); a page may hold several sections, each with its own actions.
 - Fields are `Field`, `Select`, `Textarea`, `RadioGroup`, `Switch`. A field that needs the full width (a `Textarea`) goes in a section with `columns={1}`.
 - `columns={2}` gives two columns only when the section is wider than 480px (container query); below that it is one column, in source order.

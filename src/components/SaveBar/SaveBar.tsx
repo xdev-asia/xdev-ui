@@ -51,11 +51,46 @@ export interface UnsavedGuard {
   confirmLeave: () => boolean;
 }
 
+export interface UnsavedGuardOptions {
+  /**
+   * Also ask before following a same-page link while dirty: a click on an `<a href>` whose target is in this
+   * document (a `#/route` hash link from `NavList` or `Breadcrumb`, or a same-origin path). The click is cancelled
+   * when the user says no. Off by default, so a router that already calls `confirmLeave()` does not ask twice.
+   */
+  guardLinks?: boolean;
+}
+
+/**
+ * Pure: whether a click on a link with `href` leaves the current view inside the same document (and so needs
+ * `confirmLeave`). `here` is the current URL. Hash-only links that keep the current hash, other origins, `target`
+ * other than `_self`, `download` links and modified clicks are not in-app navigations.
+ */
+export function isInAppNavigation(
+  link: { href: string; target?: string | null; download?: boolean },
+  here: string,
+  click: { button?: number; metaKey?: boolean; ctrlKey?: boolean; shiftKey?: boolean; altKey?: boolean } = {},
+): boolean {
+  if ((click.button ?? 0) !== 0 || click.metaKey || click.ctrlKey || click.shiftKey || click.altKey) return false;
+  if (link.download || (link.target && link.target !== "_self")) return false;
+  let to: URL;
+  let from: URL;
+  try {
+    from = new URL(here);
+    to = new URL(link.href, from);
+  } catch {
+    return false;
+  }
+  if (to.origin !== from.origin) return false;
+  return to.pathname !== from.pathname || to.search !== from.search || to.hash !== from.hash;
+}
+
 /**
  * While `dirty`, the browser asks before the tab is closed or reloaded (beforeunload). In-app links are the router's
- * job: call `confirmLeave()` before navigating.
+ * job: call `confirmLeave()` before navigating, or pass `{ guardLinks: true }` to have same-page link clicks
+ * (hash routes included) ask first.
  */
-export function useUnsavedGuard(dirty: boolean, message = "Leave this page? Your changes are not saved."): UnsavedGuard {
+export function useUnsavedGuard(dirty: boolean, message = "Leave this page? Your changes are not saved.", options: UnsavedGuardOptions = {}): UnsavedGuard {
+  const { guardLinks = false } = options;
   useEffect(() => {
     if (!dirty || typeof window === "undefined") return;
     const onBeforeUnload = (e: BeforeUnloadEvent): void => {
@@ -65,6 +100,22 @@ export function useUnsavedGuard(dirty: boolean, message = "Leave this page? Your
     window.addEventListener("beforeunload", onBeforeUnload);
     return () => window.removeEventListener("beforeunload", onBeforeUnload);
   }, [dirty]);
+  useEffect(() => {
+    if (!dirty || !guardLinks || typeof document === "undefined") return;
+    const onClick = (e: MouseEvent): void => {
+      if (e.defaultPrevented) return;
+      const target = e.target as Element | null;
+      const a = target && typeof target.closest === "function" ? (target.closest("a[href]") as HTMLAnchorElement | null) : null;
+      if (!a) return;
+      if (!isInAppNavigation({ href: a.href, target: a.target, download: a.hasAttribute("download") }, window.location.href, e)) return;
+      if (!window.confirm(message)) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+    document.addEventListener("click", onClick, true);
+    return () => document.removeEventListener("click", onClick, true);
+  }, [dirty, guardLinks, message]);
   const confirmLeave = useCallback(() => !dirty || (typeof window !== "undefined" && window.confirm(message)), [dirty, message]);
   return { confirmLeave };
 }

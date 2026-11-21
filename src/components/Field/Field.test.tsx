@@ -37,4 +37,10 @@ describe("Field", () => {
     expect(html).toContain('<label for="s" class="x-sr-only">Search</label>');
     expect(renderToStaticMarkup(<Field label="Search" id="s" />)).toContain('<label for="s">Search</label>');
   });
+  it("mono sets the value in the mono face only", () => {
+    const html = renderToStaticMarkup(<Field label="Id" mono id="m" />);
+    expect(html).toContain('<input id="m" class="ws-mono"');
+    expect(html).toContain('<label for="m">Id</label>');
+    expect(renderToStaticMarkup(<Field label="Id" id="m" />)).not.toContain("ws-mono");
+  });
 });

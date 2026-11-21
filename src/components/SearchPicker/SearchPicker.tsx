@@ -34,6 +34,11 @@ export interface SearchPickerProps {
   placeholder?: string;
   /** Accessible name of the box and of the list. */
   label: string;
+  /**
+   * Show `label` above the box as a real `<label>`, like `Field` and `Combobox`. Use it when the picker sits in a form
+   * next to labelled fields; leave it off where a heading or a dialog title already names the search.
+   */
+  showLabel?: boolean;
   /** Override the English defaults (e.g. for vi). */
   labels?: Partial<SearchPickerLabels>;
   className?: string;
@@ -65,10 +70,11 @@ export function searchPickerKey(items: SearchPickerItem[], active: string | null
   return { active: current, pick: null, clear: false };
 }
 
-export function SearchPicker({ value, onValueChange, items, onPick, status, placeholder, label, labels, className }: SearchPickerProps): JSX.Element {
+export function SearchPicker({ value, onValueChange, items, onPick, status, placeholder, label, showLabel, labels, className }: SearchPickerProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
   const base = `x-search-picker-${useId()}`;
   const listId = `${base}-list`;
+  const inputId = `${base}-input`;
   const [chosen, setChosen] = useState<string | null>(null);
   // An active option that left the list falls back to the first enabled one.
   const active = items.some((i) => i.id === chosen && !i.disabled) ? chosen : firstEnabled(items);
@@ -88,13 +94,19 @@ export function SearchPicker({ value, onValueChange, items, onPick, status, plac
 
   return (
     <div className={cx("x-search-picker", className)}>
+      {showLabel ? (
+        <label className="x-search-picker-label" htmlFor={inputId}>
+          {label}
+        </label>
+      ) : null}
       <SearchInput
+        id={showLabel ? inputId : undefined}
         role="combobox"
         aria-expanded={items.length > 0}
         aria-controls={listId}
         aria-autocomplete="list"
         aria-activedescendant={active === null ? undefined : optionId(active)}
-        aria-label={label}
+        aria-label={showLabel ? undefined : label}
         placeholder={placeholder}
         value={value}
         onChange={(e) => onValueChange(e.target.value)}

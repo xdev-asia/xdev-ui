@@ -49,6 +49,7 @@
   font: 400 13px var(--font-body);
 }
 .ws-field input::placeholder { color: var(--text-3); }
+.ws-field input.ws-mono { font-family: var(--font-mono); font-size: 12px; }
 .ws-field small { font-size: 11.5px; font-weight: 400; color: var(--text-2); }
 .ws-field[data-invalid] input { border-color: var(--danger); }
 .ws-field[data-invalid] small { color: var(--danger); }
@@ -171,6 +172,7 @@
 }
 /* SearchPicker (.x-search-picker): a SearchInput over a listbox drawn like ListRow */
 .x-search-picker { display: flex; flex-direction: column; gap: var(--x-space-2); min-width: 0; }
+.x-search-picker-label { font: 600 12px var(--font-body); color: var(--text-1); }
 .x-search-picker-list {
   display: flex;
   flex-direction: column;
