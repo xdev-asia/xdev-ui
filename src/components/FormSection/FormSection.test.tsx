@@ -21,4 +21,15 @@ describe("FormSection", () => {
     expect(html).toContain('<div class="x-form-section-actions"><button type="button">Save</button></div>');
     expect(html).not.toContain("aria-labelledby");
   });
+  it("disabled puts the fields in a disabled fieldset and drops the actions", () => {
+    const html = renderToStaticMarkup(
+      <FormSection title="Roles" disabled actions={<button type="button">Save</button>}>
+        <input aria-label="x" />
+      </FormSection>,
+    );
+    expect(html).toContain('<fieldset class="x-form-section-fields" data-columns="1" disabled="">');
+    expect(html).toContain('data-disabled=""');
+    expect(html).not.toContain("x-form-section-actions");
+    expect(renderToStaticMarkup(<FormSection title="R"><input aria-label="x" /></FormSection>)).not.toContain("fieldset");
+  });
 });

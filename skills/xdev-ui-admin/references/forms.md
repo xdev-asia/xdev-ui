@@ -52,6 +52,7 @@ const { confirmLeave } = useUnsavedGuard(dirty, t("form.leave"));
 <SaveBar dirty={dirty} busy={saving} error={saveError} onSave={save} onDiscard={() => setDraft(saved)} labels={ui.saveBar} />
 ```
 `SaveBar` goes last in the scrolling content and replaces any Save in the page header.
+With a hash router, `NavList` and `Breadcrumb` links are plain `#/…` hrefs that skip your router: pass `useUnsavedGuard(dirty, t("form.leave"), { guardLinks: true })` so a click on any same-page link asks first.
 
 ## Files and images
 - `FileDrop` checks `accept` and `maxSize`, lists rejected files with the reason and never uploads: the caller uploads and passes `items` with `progress` and `error`.

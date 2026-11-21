@@ -9,6 +9,7 @@ Controlled table for lists of records: sortable headers, optional row selection,
 - `nextTableSort(current, key)` returns the next `TableSort | null`: a new column starts `asc`, the same column goes `asc`, `desc`, off.
 - `sortTableRows(rows, sort, value)` returns a stable sorted copy; `value(row, key)` gives a string or number. Numbers compare numerically, strings with `localeCompare` (numeric).
 - `paginateRows(rows, page, pageSize)` returns the rows of a 1-based page; the page is clamped into range.
+- `tableSortToParam(sort)` and `tableSortFromParam(param, allowed?)` turn a `TableSort` into the `field:dir` text a URL or a server-paged API takes, and back (unknown or malformed gives null). Use them to keep the sort in the URL.
 - `moveItem(array, from, to)` returns a copy with one item moved (`to` clamped); use it in `onReorder`.
 - `reorderKeyStep(state, key, index, count)` is the keyboard reorder reducer: it returns the next lift state, the event to announce (`lift`, `move`, `drop`, `cancel`) and whether the key was handled. `reorderSlot(y, mids)` and `slotToIndex(from, slot)` map a pointer position to the drop index.
 
@@ -24,10 +25,10 @@ Controlled table for lists of records: sortable headers, optional row selection,
 - Sortable headers are buttons with `aria-sort` on the `th`. Only one column is sorted at a time. Each sort button (`.x-table-sort`) has a hit area of at least 24 x 24 px (WCAG 2.5.8) without changing the header height.
 - `reorderable` adds a leading drag handle per row, named `labels.reorderHandle(rowLabel)`. Pointer: drag the handle; a 2px accent line shows where the row lands. Keyboard: Space or Enter lifts the row, ArrowUp/ArrowDown (Home/End) move it, Space or Enter drops it, Escape cancels; each step is announced politely. `onReorder(fromIndex, toIndex)` gets indexes into `rows`; apply them with `moveItem` and save the order.
 - Reorder is disabled while a sort is active (`sort` set), while `loading`, and with fewer than two rows: the handles stay in place, disabled. A manual order and a sorted view do not mix; clear the sort to reorder. Reorder the full list, not one page of it, or map the page indexes back yourself.
-- `labels` (`DataTableLabels`: `selectAll`, `selectRow(rowLabel)`, `sortedAsc`, `sortedDesc`, `loading`, `reorderColumn`, `reorderHandle(rowLabel)`, `lifted(rowLabel)`, `moved(pos, total)`, `dropped(pos, total)`, `cancelled`) overrides the English defaults.
+- `labels` (`DataTableLabels`: `selectAll`, `selectRow(rowLabel)`, `sortedAsc`, `sortedDesc`, `loading`, `reorderColumn`, `reorderHandle(rowLabel)`, `lifted(rowLabel)`, `moved(pos, total)`, `dropped(pos, total)`, `cancelled`, `sortBy`, `sortNone`, `sortOption(column, dir)`) overrides the English defaults.
 
 ## Responsive
 - The table scrolls inside `.x-table-wrap`, never the page. The select column stays pinned at the start while it scrolls.
 - `columns[].sticky` (`"start"` or `"end"`) pins a column the same way; use `sticky="end"` on the row-actions column so the actions stay in view on a phone.
-- `stack` turns each row into a card of "label: value" lines when the table container is under 480px (a container query, so it also works in a narrow panel). Each cell takes its label from `columns[].label`, or from `header` when that is a string. Sort headers are hidden in stack mode, so offer sorting elsewhere (a `Select`) when it matters on a phone.
+- `stack` turns each row into a card of "label: value" lines when the table container is under 480px (a container query, so it also works in a narrow panel). Each cell takes its label from `columns[].label`, or from `header` when that is a string. Sort headers are hidden in stack mode; with `onSortChange` and at least one sortable column the table shows its own "Sort by" `Select` there instead (`labels.sortBy`, `sortNone`, `sortOption(column, dir)`), and hides it again at wider sizes. Option names come from `columns[].label`, else a string `header`, else the key.
 - With `stack` the table gets explicit `table`, `rowgroup`, `row`, `columnheader` and `cell` roles, because `display: block` drops the native table semantics in some browsers.

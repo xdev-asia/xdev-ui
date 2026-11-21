@@ -28,3 +28,21 @@ export function paginateRows<Row>(rows: Row[], page: number, pageSize: number): 
   const p = Math.min(Math.max(1, Math.floor(page)), pages);
   return rows.slice((p - 1) * size, p * size);
 }
+
+/**
+ * `TableSort` as the `field:dir` text a URL or an API takes (`sort=name:asc`); null for no sort.
+ */
+export function tableSortToParam(sort: TableSort | null | undefined): string | null {
+  return sort ? `${sort.key}:${sort.dir}` : null;
+}
+
+/**
+ * Reads `field:dir` (or a bare `field`, read as `asc`) back into a `TableSort`. Empty, malformed or a key not in
+ * `allowed` (when given) gives null, so a hand-edited URL cannot sort by an unknown column.
+ */
+export function tableSortFromParam(param: string | null | undefined, allowed?: readonly string[]): TableSort | null {
+  const m = /^([A-Za-z0-9_.-]+)(?::(asc|desc))?$/.exec((param ?? "").trim());
+  if (!m) return null;
+  if (allowed && !allowed.includes(m[1])) return null;
+  return { key: m[1], dir: (m[2] as TableSort["dir"] | undefined) ?? "asc" };
+}

@@ -8,10 +8,12 @@ export interface FieldProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: ReactNode;
   /** Keeps the label for screen readers only (visually hidden), for inputs that would otherwise carry just an aria-label. */
   hideLabel?: boolean;
+  /** Monospace value, for ids, codes, IPA, paths and keys (like `Textarea mono`). */
+  mono?: boolean;
   ref?: Ref<HTMLInputElement>;
 }
 
-export function Field({ label, hint, error, hideLabel, id, className, ...rest }: FieldProps): JSX.Element {
+export function Field({ label, hint, error, hideLabel, mono, id, className, ...rest }: FieldProps): JSX.Element {
   const auto = useId();
   const inputId = id ?? `x-field-${auto}`;
   const note = error ?? hint;
@@ -19,7 +21,7 @@ export function Field({ label, hint, error, hideLabel, id, className, ...rest }:
   return (
     <div className={cx("ws-field", className)} data-invalid={error ? "" : undefined}>
       <label htmlFor={inputId} className={hideLabel ? "x-sr-only" : undefined}>{label}</label>
-      <input id={inputId} aria-describedby={hintId} aria-invalid={error ? true : undefined} {...rest} />
+      <input id={inputId} className={mono ? "ws-mono" : undefined} aria-describedby={hintId} aria-invalid={error ? true : undefined} {...rest} />
       {note ? <small id={hintId}>{note}</small> : null}
     </div>
   );

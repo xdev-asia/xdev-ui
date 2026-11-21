@@ -29,3 +29,4 @@ Vertical list the user reorders by dragging a grip handle, or with the keyboard.
 - `disabled`, or fewer than two items, disables every handle. Do not offer reorder on a sorted or filtered view.
 - Uses the same helpers as `DataTable` reorder: `moveItem`, `reorderKeyStep`, `reorderSlot`, `slotToIndex`.
 - `labels` (`SortableListLabels`: `handle(name)`, `lifted(name)`, `moved(pos, total)`, `dropped(pos, total)`, `cancelled`) overrides the English defaults.
+- A row that `renderItem` returns as one element (a form row with fields and its own `handle`) stretches to the full width of the item, so its fields are not squeezed to their content. Give that element its own layout (grid or flex).

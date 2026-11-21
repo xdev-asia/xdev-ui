@@ -18,6 +18,8 @@ export function filterUsers(users: User[], f: UserFilters): User[] {
 
 Slice after sorting with `sortTableRows(rows, sort, valueOf)` and `paginateRows(rows, page, pageSize)`.
 
+Server-paged lists (`?q=&page=&pageSize=&sort=field:dir`) do not slice: keep the same state in the URL and send it. `tableSortToParam(sort)` gives `field:dir` and `tableSortFromParam(param, allowedKeys)` reads it back (unknown columns give null), so a hand-edited URL cannot sort by a column the table does not offer. While the next page loads keep the old rows and pass `loading`, which dims them.
+
 ## Table
 
 ```tsx
@@ -39,6 +41,7 @@ Slice after sorting with `sortTableRows(rows, sort, valueOf)` and `paginateRows(
 ```
 
 - Columns: `{ key, header, cell, sortable, mono, hideNarrow }`. Mark long columns `hideNarrow` so 360px keeps name and status.
+- A `stack` table with `onSortChange` shows its own "Sort by" select when the rows stack on a phone; pass `labels.sortBy`, `sortNone` and `sortOption` in both languages.
 - Show status with `StatusDot` and a label, a role with `Tag`, a person with `Avatar` and a link.
 - Chips: `FilterChip` with `pressed` and `count`; count each status with the other filters applied.
 - More than five values, or little room: `FacetFilter` (`label`, `options` with `count`, controlled `selected`). Keep it next to the search box.

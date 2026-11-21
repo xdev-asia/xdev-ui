@@ -1,5 +1,6 @@
 import { useId, useRef, type FormEvent, type JSX, type ReactNode, type RefObject } from "react";
 import { useModal } from "../../internal/modal";
+import { usePortal } from "../../internal/portal";
 import { Button } from "../Button/Button";
 
 export interface FormDialogLabels {
@@ -34,6 +35,8 @@ export interface FormDialogProps {
   /** false renders the markup only (previews). Default true. */
   modal?: boolean;
   labels?: Partial<FormDialogLabels>;
+  /** With `modal`, render into `document.body` once mounted, so no parent's overflow, transform or z-index clips it. Default true. */
+  portal?: boolean;
 }
 
 /** FormDialog around a `<form id={formId}>` you render in `children` (e.g. one owned by a form library). */
@@ -43,7 +46,7 @@ export interface FormDialogExternalFormProps extends Omit<FormDialogProps, "onSu
   onSubmit?: undefined;
 }
 
-export function FormDialog({ title, description, children, onSubmit, formId, onCancel, busy, error, submitDisabled, submitLabel, size = "default", modal = true, labels }: FormDialogProps | FormDialogExternalFormProps): JSX.Element {
+export function FormDialog({ title, description, children, onSubmit, formId, onCancel, busy, error, submitDisabled, submitLabel, size = "default", modal = true, labels, portal = true }: FormDialogProps | FormDialogExternalFormProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
   const id = useId();
   const titleId = `x-fdialog-${id}`;
@@ -53,7 +56,8 @@ export function FormDialog({ title, description, children, onSubmit, formId, onC
   const cancel = (): void => {
     if (!busy) onCancel();
   };
-  const onKeyDown = useModal(modal, root, panel, cancel);
+  const inPortal = usePortal(modal && portal);
+  const onKeyDown = useModal(modal, root, panel, cancel, inPortal.active);
   const submit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     if (!busy) onSubmit?.(e);
@@ -99,7 +103,7 @@ export function FormDialog({ title, description, children, onSubmit, formId, onC
         </div>
     </>
   );
-  return (
+  return inPortal(
     <div className="dialog-backdrop" ref={root} data-modal={modal ? "true" : undefined} onKeyDown={onKeyDown}>
       {formId ? (
         <div ref={panel as RefObject<HTMLDivElement | null>} {...panelProps}>
@@ -110,6 +114,6 @@ export function FormDialog({ title, description, children, onSubmit, formId, onC
           {content}
         </form>
       )}
-    </div>
-  );
+    </div>,
+  ) as JSX.Element;
 }

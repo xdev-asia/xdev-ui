@@ -118,4 +118,38 @@ describe("DataTable", () => {
     expect(html.match(/data-label="Actions"/g)).toHaveLength(2);
     expect(html.match(/data-label=/g)).toHaveLength(6);
   });
+  describe("stack sort select", () => {
+    it("replaces the sort headers in stack mode with a select of every sortable column and direction", () => {
+      const html = renderToStaticMarkup(<DataTable {...base} stack sort={{ key: "name", dir: "desc" }} onSortChange={() => {}} />);
+      expect(html).toContain('class="x-table-stack-sort"');
+      expect(html).toContain(">Sort by<");
+      expect(html).toMatch(/<option value="">Default order<\/option><option value="name:asc">Name, ascending<\/option><option value="name:desc" selected="">Name, descending<\/option><\/select>/);
+      expect(html).not.toContain("role:asc");
+    });
+    it("is left out without stack, without onSortChange or without a sortable column", () => {
+      expect(renderToStaticMarkup(<DataTable {...base} sort={null} onSortChange={() => {}} />)).not.toContain("x-table-stack-sort");
+      expect(renderToStaticMarkup(<DataTable {...base} stack />)).not.toContain("x-table-stack-sort");
+      expect(renderToStaticMarkup(<DataTable {...base} stack onSortChange={() => {}} columns={[{ key: "role", header: "Role", cell: (r: Row) => r.role }]} />)).not.toContain("x-table-stack-sort");
+    });
+    it("calls onSortChange with the picked sort, or null for the default order", () => {
+      const onSortChange = vi.fn();
+      const tree = DataTable({ ...base, stack: true, sort: null, onSortChange });
+      const select = findAll(tree, (e) => typeof e.props?.onChange === "function" && Array.isArray(e.props?.options))[0];
+      select.props.onChange({ target: { value: "name:desc" } });
+      select.props.onChange({ target: { value: "" } });
+      select.props.onChange({ target: { value: "role:asc" } });
+      expect(onSortChange.mock.calls).toEqual([[{ key: "name", dir: "desc" }], [null], [null]]);
+    });
+    it("names options from label, then a string header, then the key, in the given language", () => {
+      const cols: DataTableColumn<Row>[] = [
+        { key: "name", header: <b>N</b>, label: "Tên", cell: (r) => r.name, sortable: true },
+        { key: "role", header: <i>R</i>, cell: (r) => r.role, sortable: true },
+      ];
+      const labels = { sortBy: "Sắp xếp theo", sortNone: "Mặc định", sortOption: (c: string, d: "asc" | "desc") => `${c} ${d === "asc" ? "tăng" : "giảm"}` };
+      const html = renderToStaticMarkup(<DataTable {...base} columns={cols} stack onSortChange={() => {}} labels={labels} />);
+      expect(html).toContain(">Sắp xếp theo<");
+      expect(html).toContain(">Tên tăng<");
+      expect(html).toContain(">role giảm<");
+    });
+  });
 });

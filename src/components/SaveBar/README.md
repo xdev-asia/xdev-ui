@@ -12,6 +12,7 @@ Bar pinned to the bottom of a long edit form that appears when there are unsaved
 - The page's own primary button is Save here; do not add a second Save in the page header.
 - On failure pass `error` (announced as an alert) and keep the changes; never discard them on error.
 - Call `useUnsavedGuard(dirty, message)` in the same page: it covers closing or reloading the tab. Before an in-app navigation or closing a drawer, call `confirmLeave()`.
+- With a hash router (`#/route` links in `NavList` and `Breadcrumb`), pass `{ guardLinks: true }` as the third argument: a click on a same-page link asks first and is cancelled when the user says no. `isInAppNavigation(link, here, click)` is the pure check behind it. Leave it off when your router already calls `confirmLeave()` on every navigation, or it asks twice.
 - Translate every string with `labels` and the hook's `message`.
 
 ## Responsive

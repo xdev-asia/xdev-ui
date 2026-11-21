@@ -2,8 +2,9 @@ import { useEffect, useRef, useState, type JSX, type KeyboardEvent, type Pointer
 import { cx } from "../../internal/cx";
 import { Checkbox } from "../Checkbox/Checkbox";
 import { Icon } from "../Icon/Icon";
+import { Select } from "../Select/Select";
 import { Spinner } from "../Spinner/Spinner";
-import { nextTableSort } from "./table-helpers";
+import { nextTableSort, tableSortFromParam, tableSortToParam } from "./table-helpers";
 import { moveItem, reorderKeyStep, reorderSlot, slotToIndex, type ReorderKeyState } from "./table-reorder";
 
 export type TableSortDir = "asc" | "desc";
@@ -48,6 +49,12 @@ export interface DataTableLabels {
   dropped: (pos: number, total: number) => string;
   /** Announced when Escape puts the row back. */
   cancelled: string;
+  /** Label of the sort select that replaces the sort headers in `stack` mode. */
+  sortBy: string;
+  /** The sort select's option for no sort. */
+  sortNone: string;
+  /** One sort select option: a column name and a direction ("Name, ascending"). */
+  sortOption: (column: string, dir: TableSortDir) => string;
 }
 
 const DEFAULT_LABELS: DataTableLabels = {
@@ -62,6 +69,9 @@ const DEFAULT_LABELS: DataTableLabels = {
   moved: (pos, total) => `Moved to position ${pos} of ${total}.`,
   dropped: (pos, total) => `Dropped at position ${pos} of ${total}.`,
   cancelled: "Reorder cancelled. The row is back in its place.",
+  sortBy: "Sort by",
+  sortNone: "Default order",
+  sortOption: (column, dir) => `${column}, ${dir === "asc" ? "ascending" : "descending"}`,
 };
 
 export interface DataTableProps<Row> {
@@ -86,7 +96,11 @@ export interface DataTableProps<Row> {
   onReorder?: (fromIndex: number, toIndex: number) => void;
   /** Override the English defaults (e.g. for vi). */
   labels?: Partial<DataTableLabels>;
-  /** Below a 480px-wide container, show each row as a card of "label: value" lines instead of a sideways-scrolling table. Header cells stay for screen readers; sorting needs its own control there. */
+  /**
+   * Below a 480px-wide container, show each row as a card of "label: value" lines instead of a sideways-scrolling
+   * table. Header cells stay for screen readers. With `onSortChange` and sortable columns, a "Sort by" select takes the
+   * place of the sort headers there (it is hidden at wider sizes).
+   */
   stack?: boolean;
   className?: string;
 }
@@ -150,8 +164,24 @@ function renderTable<Row>({
   // A table whose rows or cells are display:block can lose its table role in some browsers; stack mode states the roles.
   const role = (r: string): string | undefined => (stack ? r : undefined);
   const labelOf = (c: DataTableColumn<Row>): string | undefined => (stack ? (c.label ?? (typeof c.header === "string" ? c.header : undefined)) : undefined);
+  // Stack mode hides the sort headers, so the sort moves into a select shown only while the rows are stacked.
+  const sortable = stack && onSortChange ? columns.filter((c) => c.sortable) : [];
+  const sortName = (c: DataTableColumn<Row>): string => c.label ?? (typeof c.header === "string" ? c.header : c.key);
   return (
     <div className={cx("x-table-wrap", className)} aria-busy={loading ? true : undefined} data-loading={loading && rows.length ? "" : undefined} data-stack={stack ? "" : undefined}>
+      {sortable.length ? (
+        <div className="x-table-stack-sort">
+          <Select
+            label={l.sortBy}
+            value={tableSortToParam(sort) ?? ""}
+            onChange={(e) => onSortChange?.(tableSortFromParam(e.target.value, sortable.map((c) => c.key)))}
+            options={[
+              { value: "", label: l.sortNone },
+              ...sortable.flatMap((c) => (["asc", "desc"] as const).map((dir) => ({ value: `${c.key}:${dir}`, label: l.sortOption(sortName(c), dir) }))),
+            ]}
+          />
+        </div>
+      ) : null}
       <table className="x-table" role={role("table")}>
         <caption className="x-sr-only">{caption}</caption>
         <thead role={role("rowgroup")}>

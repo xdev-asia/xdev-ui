@@ -246,6 +246,10 @@ describe("labels override every default English string", () => {
     const desc = renderToStaticMarkup(h(DT, { ...props, rows: [{ id: "x" }], sort: { key: "a", dir: "desc" } }));
     expect(desc).toContain(S("ds"));
     expect(renderToStaticMarkup(h(DT, { ...props, rows: [], loading: true }))).toContain(S("ld"));
+    const stackLabels = { ...labels, sortBy: S("sb"), sortNone: S("sn"), sortOption: (c: string, d: string) => `${S("so")}${c}${d}` };
+    const stacked = renderToStaticMarkup(h(DT, { ...props, labels: stackLabels, rows: [{ id: "x" }], stack: true, onSortChange() {} }));
+    for (const v of [S("sb"), S("sn"), `${S("so")}Aasc`]) expect(stacked).toContain(v);
+    expectNoEnglish(stacked, ["Sort by", "Default order", "ascending", "descending"]);
   });
 
   it("Pagination", () => {
