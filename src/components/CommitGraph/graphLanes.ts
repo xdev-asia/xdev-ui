@@ -56,7 +56,8 @@ export function graphRows(items: GraphItem[], refs: GraphRefs = {}): GraphRow[] 
     const input = previous.map((l) => ({ ...l }));
     const index = input.findIndex((l) => l.id === item.id);
     const lane = index === -1 ? input.length : index;
-    const color: LaneColor = index === -1 ? (refColor(item.id, item.refIds) ?? rotate()) : input[index].color;
+    const color: LaneColor = index === -1 ? (refColor(item.id, item.refIds) ?? rotate()) : input[index]!.color;
+    const firstParent = item.parents[0];
 
     const output: Lane[] = [];
     let placed = false;
@@ -65,11 +66,11 @@ export function graphRows(items: GraphItem[], refs: GraphRefs = {}): GraphRow[] 
         output.push({ ...l });
       } else if (!placed) {
         placed = true;
-        if (item.parents.length > 0) output.push({ id: item.parents[0], color: l.color });
+        if (firstParent !== undefined) output.push({ id: firstParent, color: l.color });
       }
     }
     // A commit that starts its own lane hands its colour to its first parent.
-    if (!placed && item.parents.length > 0) output.push({ id: item.parents[0], color });
+    if (!placed && firstParent !== undefined) output.push({ id: firstParent, color });
     for (const parent of item.parents.slice(1)) {
       output.push({ id: parent, color: refColor(parent) ?? rotate() });
     }
@@ -114,9 +115,10 @@ export function laneLinks(row: GraphRow): LaneLinks {
     }
   });
   const first = matched && forkCount > 0 ? 1 : 0;
-  if (first) forks.push({ to: spot, color: row.output[spot].color });
+  const spotLane = row.output[spot];
+  if (first && spotLane) forks.push({ to: spot, color: spotLane.color });
   for (let to = passCount + first; to < row.output.length; to++) {
-    forks.push({ to, color: row.output[to].color });
+    forks.push({ to, color: row.output[to]!.color });
   }
   return { passes, joins, forks };
 }

@@ -40,12 +40,12 @@ describe("Drawer", () => {
   it("close button and Esc call onClose, but not while busy", () => {
     const onClose = vi.fn();
     const tree = Drawer({ title: "x", onClose });
-    findAll(tree, (e) => e.type === IconButton)[0].props.onClick();
+    findAll(tree, (e) => e.type === IconButton)[0]!.props.onClick();
     tree.props.onKeyDown({ key: "Escape", stopPropagation() {} });
     expect(onClose).toHaveBeenCalledTimes(2);
     const busy = Drawer({ title: "x", onClose, busy: true });
     busy.props.onKeyDown({ key: "Escape", stopPropagation() {} });
-    findAll(busy, (e) => e.type === IconButton)[0].props.onClick();
+    findAll(busy, (e) => e.type === IconButton)[0]!.props.onClick();
     expect(onClose).toHaveBeenCalledTimes(2);
   });
   it("takes translated labels", () => {

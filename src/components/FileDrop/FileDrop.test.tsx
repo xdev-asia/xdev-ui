@@ -27,7 +27,7 @@ describe("checkFiles", () => {
   it("multiple honours maxFiles", () => {
     const r = checkFiles([f("a"), f("b"), f("c")], { multiple: true, maxFiles: 2 });
     expect(r.accepted).toHaveLength(2);
-    expect(r.rejected[0].reason).toBe("count");
+    expect(r.rejected[0]!.reason).toBe("count");
     expect(checkFiles([f("a"), f("b"), f("c")], { multiple: true }).accepted).toHaveLength(3);
   });
 });

@@ -5,7 +5,7 @@ const STATIC: Record<string, RouteName> = { "/": "home", "/settings": "settings"
 
 /** Pure: turns "#/settings" into a route name; unknown paths are "not-found". */
 export function matchRoute(hash: string): RouteName {
-  const path = "/" + hash.replace(/^#/, "").split("?")[0].replace(/^\/+|\/+$/g, "");
+  const path = "/" + hash.replace(/^#/, "").split("?")[0]!.replace(/^\/+|\/+$/g, "");
   return STATIC[path] ?? "not-found";
 }
 

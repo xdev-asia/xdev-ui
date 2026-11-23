@@ -19,7 +19,7 @@ it("imports nothing from the app side (tauri, bindings, @/ aliases)", () => {
     if (file.endsWith("boundaries.test.ts")) continue;
     const text = readFileSync(file, "utf8");
     for (const m of text.matchAll(/(?:from|import)\s*\(?\s*["']([^"']+)["']/g)) {
-      if (FORBIDDEN.test(m[1])) bad.push(`${relative(src, file)}: ${m[1]}`);
+      if (FORBIDDEN.test(m[1]!)) bad.push(`${relative(src, file)}: ${m[1]}`);
     }
   }
   expect(bad).toEqual([]);

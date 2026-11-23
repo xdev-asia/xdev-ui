@@ -42,11 +42,12 @@ export function Tabs({ items, value, defaultValue, onChange, variant = "underlin
   const currentIndex = Math.max(0, items.findIndex((t) => t.id === current));
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>): void => {
     const from = refs.current.findIndex((b) => b === e.target);
-    const next = rovingIndex(e.key, from < 0 ? currentIndex : from, items.length, "horizontal", (i) => Boolean(items[i].disabled));
+    const next = rovingIndex(e.key, from < 0 ? currentIndex : from, items.length, "horizontal", (i) => Boolean(items[i]?.disabled));
     if (next == null) return;
     e.preventDefault();
     refs.current[next]?.focus();
-    select(items[next].id);
+    const target = items[next];
+    if (target) select(target.id);
   };
   return (
     <div className={cx("kit-tabs", className)} role="tablist" aria-label={label} data-variant={variant} data-size={size === "sm" ? "sm" : undefined} onKeyDown={onKeyDown} ref={scrollFadeRef}>

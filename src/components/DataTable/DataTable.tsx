@@ -278,7 +278,7 @@ function ReorderableTable<Row>(props: DataTableProps<Row>): JSX.Element {
   // A lift is dropped silently if the rows change under it.
   const lift = liftState && liftState.from < total && liftState.at < total && !disabled ? liftState : null;
   const shown = lift ? moveItem(rows, lift.from, lift.at) : rows;
-  const liftedKey = lift ? rowKey(rows[lift.from]) : null;
+  const liftedKey = lift ? rowKey(rows[lift.from]!) : null;
   const nameOf = (row: Row): string => (rowLabel ? rowLabel(row) : rowKey(row));
 
   // Moving a row moves its DOM node, which can drop focus; put it back on the lifted handle.
@@ -293,7 +293,7 @@ function ReorderableTable<Row>(props: DataTableProps<Row>): JSX.Element {
     setLift(step.state);
     const ev = step.event;
     if (!ev) return;
-    if (ev.type === "lift") setMessage(l.lifted(nameOf(rows[ev.from])));
+    if (ev.type === "lift") setMessage(l.lifted(nameOf(rows[ev.from]!)));
     else if (ev.type === "move") setMessage(l.moved(ev.to + 1, total));
     else if (ev.type === "drop") {
       setMessage(l.dropped(ev.to + 1, total));

@@ -31,9 +31,10 @@ export function SwatchGroup({ value, onChange, options, size = "md", "aria-label
     // Up/Down move like Left/Right, as native radios do.
     const key = e.key === "ArrowDown" ? "ArrowRight" : e.key === "ArrowUp" ? "ArrowLeft" : e.key;
     const next = rovingIndex(key, stop, options.length);
-    if (next == null) return;
+    const option = next == null ? undefined : options[next];
+    if (next == null || !option) return;
     e.preventDefault();
-    onChange(options[next].value);
+    onChange(option.value);
     (e.currentTarget.querySelectorAll<HTMLElement>('[role="radio"]')[next])?.focus();
   };
   return (

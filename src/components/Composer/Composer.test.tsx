@@ -10,7 +10,7 @@ const key = (k: string, extra: Record<string, unknown> = {}) => ({
   preventDefault: vi.fn(),
   ...extra,
 });
-const textarea = (el: ReturnType<typeof Composer>) => findAll(el, (e) => e.type === "textarea")[0];
+const textarea = (el: ReturnType<typeof Composer>) => findAll(el, (e) => e.type === "textarea")[0]!;
 
 describe("Composer", () => {
   it("renders the box, one primary Send, and omits model and attach by default", () => {
@@ -33,7 +33,7 @@ describe("Composer", () => {
     const onSend = vi.fn();
     const ta = textarea(Composer({ value: "hi", onChange: () => {}, onSend }));
     const e = key("Enter");
-    ta.props.onKeyDown(e);
+    ta!.props.onKeyDown(e);
     expect(onSend).toHaveBeenCalledTimes(1);
     expect(e.preventDefault).toHaveBeenCalled();
   });
@@ -41,9 +41,9 @@ describe("Composer", () => {
     const onSend = vi.fn();
     const ta = textarea(Composer({ value: "hi", onChange: () => {}, onSend }));
     const shift = key("Enter", { shiftKey: true });
-    ta.props.onKeyDown(shift);
-    ta.props.onKeyDown(key("a"));
-    ta.props.onKeyDown(key("Enter", { nativeEvent: { isComposing: true } }));
+    ta!.props.onKeyDown(shift);
+    ta!.props.onKeyDown(key("a"));
+    ta!.props.onKeyDown(key("Enter", { nativeEvent: { isComposing: true } }));
     expect(onSend).not.toHaveBeenCalled();
     expect(shift.preventDefault).not.toHaveBeenCalled();
   });

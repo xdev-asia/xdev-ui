@@ -11,7 +11,7 @@ function enter(text: string, props: Partial<CodeInputProps> = {}) {
   const onChange = vi.fn();
   const onComplete = vi.fn();
   const root = CodeInput({ ...base, onChange, onComplete, ...props });
-  findAll(root, (e) => e.type === "input")[0].props.onChange({ target: { value: text } });
+  findAll(root, (e) => e.type === "input")[0]!.props.onChange({ target: { value: text } });
   return { onChange, onComplete };
 }
 

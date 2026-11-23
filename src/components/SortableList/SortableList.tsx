@@ -53,7 +53,7 @@ export function SortableList<T>({ items, getKey, getLabel, renderItem, onReorder
   // A lift is dropped silently if the items change under it.
   const lift = liftState && liftState.from < total && liftState.at < total && !off ? liftState : null;
   const shown = lift ? moveItem(items, lift.from, lift.at) : items;
-  const liftedKey = lift ? getKey(items[lift.from]) : null;
+  const liftedKey = lift ? getKey(items[lift.from]!) : null;
   const nameOf = (item: T): string => (getLabel ? getLabel(item) : getKey(item));
 
   // Moving an item moves its DOM node, which can drop focus; put it back on the lifted handle.
@@ -69,7 +69,7 @@ export function SortableList<T>({ items, getKey, getLabel, renderItem, onReorder
     setLift(step.state);
     const ev = step.event;
     if (!ev) return;
-    if (ev.type === "lift") setMessage(l.lifted(nameOf(items[ev.from])));
+    if (ev.type === "lift") setMessage(l.lifted(nameOf(items[ev.from]!)));
     else if (ev.type === "move") setMessage(l.moved(ev.to + 1, total));
     else if (ev.type === "drop") {
       setMessage(l.dropped(ev.to + 1, total));

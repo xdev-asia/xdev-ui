@@ -33,14 +33,14 @@ export function pathRows(files: { path: string; mark?: TreeMark }[], closed: Rea
       const path = `${parts.slice(0, i + 1).join("/")}/`;
       let next = dir.dirs.get(path);
       if (!next) {
-        next = { path, name: parts[i], dirs: new Map(), files: [], changed: false, total: 0 };
+        next = { path, name: parts[i]!, dirs: new Map(), files: [], changed: false, total: 0 };
         dir.dirs.set(path, next);
       }
       if (f.mark) next.changed = true;
       next.total += 1;
       dir = next;
     }
-    dir.files.push({ path: f.path, name: parts[parts.length - 1], mark: f.mark });
+    dir.files.push({ path: f.path, name: parts[parts.length - 1] ?? "", mark: f.mark });
   }
   const rows: TreeRow[] = [];
   const walk = (dir: Dir, depth: number): void => {
@@ -48,7 +48,9 @@ export function pathRows(files: { path: string; mark?: TreeMark }[], closed: Rea
       let d = first;
       const names = [d.name];
       while (options.compact && d.files.length === 0 && d.dirs.size === 1) {
-        d = [...d.dirs.values()][0];
+        const only = [...d.dirs.values()][0];
+        if (!only) break;
+        d = only;
         names.push(d.name);
       }
       const open = !closed.has(d.path);

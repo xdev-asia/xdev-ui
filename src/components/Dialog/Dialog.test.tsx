@@ -58,12 +58,12 @@ describe("Dialog", () => {
     const onCancel = vi.fn();
     const buttons = findAll(Dialog({ title: "x", onConfirm, onCancel }), (e) => e.type === Button);
     expect(buttons).toHaveLength(2);
-    buttons[0].props.onClick();
-    buttons[1].props.onClick();
+    buttons[0]!.props.onClick();
+    buttons[1]!.props.onClick();
     expect(onCancel).toHaveBeenCalledOnce();
     expect(onConfirm).toHaveBeenCalledOnce();
-    expect(buttons[0].props.variant).toBe("secondary");
-    expect(buttons[1].props.variant).toBe("primary");
+    expect(buttons[0]!.props.variant).toBe("secondary");
+    expect(buttons[1]!.props.variant).toBe("primary");
   });
   it("modal sets data-modal on the backdrop", () => {
     expect(renderToStaticMarkup(<Dialog title="x" modal />)).toContain('class="dialog-backdrop" data-modal="true"');
@@ -77,16 +77,16 @@ describe("Dialog", () => {
   });
   it("confirmDisabled disables the confirm button", () => {
     const buttons = findAll(Dialog({ title: "x", confirmDisabled: true }), (e) => e.type === Button);
-    expect(buttons[1].props.disabled).toBe(true);
-    expect(buttons[0].props.disabled).toBeUndefined();
+    expect(buttons[1]!.props.disabled).toBe(true);
+    expect(buttons[0]!.props.disabled).toBeUndefined();
   });
   it("Escape calls onCancel when modal", () => {
     const onCancel = vi.fn();
     const [backdrop] = findAll(Dialog({ title: "x", modal: true, onCancel }), (e) => e.props.className === "dialog-backdrop");
     const other = { key: "a", stopPropagation: vi.fn() };
-    backdrop.props.onKeyDown(other);
+    backdrop!.props.onKeyDown(other);
     expect(onCancel).not.toHaveBeenCalled();
-    backdrop.props.onKeyDown({ key: "Escape", stopPropagation: vi.fn() });
+    backdrop!.props.onKeyDown({ key: "Escape", stopPropagation: vi.fn() });
     expect(onCancel).toHaveBeenCalledOnce();
   });
 
@@ -98,14 +98,14 @@ describe("Dialog", () => {
   });
   it("tone danger gives the confirm button the danger variant", () => {
     const buttons = findAll(Dialog({ title: "x", tone: "danger" }), (e) => e.type === Button);
-    expect(buttons[1].props.variant).toBe("danger");
+    expect(buttons[1]!.props.variant).toBe("danger");
   });
   it("busy disables both actions, shows a spinner, sets aria-busy and ignores Escape", () => {
     const onCancel = vi.fn();
     const tree = Dialog({ title: "x", modal: true, busy: true, onCancel });
     const buttons = findAll(tree, (e) => e.type === Button);
-    expect(buttons[0].props.disabled).toBe(true);
-    expect(buttons[1].props.disabled).toBe(true);
+    expect(buttons[0]!.props.disabled).toBe(true);
+    expect(buttons[1]!.props.disabled).toBe(true);
     const html = renderToStaticMarkup(<Dialog title="x" busy confirmLabel="Delete" />);
     expect(html).toContain('aria-busy="true"');
     expect(html).toMatch(/<span class="x-spinner" data-size="sm" aria-hidden="true"><span class="x-spinner-ring"><\/span><\/span>Delete<\/button>/);
@@ -122,12 +122,12 @@ describe("Dialog", () => {
       const [dialogRef, backdropRef] = h.refs;
       const first = fake("first");
       const last = fake("last");
-      dialogRef.current = { focus: vi.fn(), querySelectorAll: () => [first, last] };
+      dialogRef!.current = { focus: vi.fn(), querySelectorAll: () => [first, last] };
       const siblingOutside = { inert: false, tagName: "DIV" };
       const parent = { children: [] as unknown[], parentElement: null as unknown, inert: false };
       const backdrop = { parentElement: parent, children: [], inert: false };
       parent.children = [backdrop, siblingOutside];
-      backdropRef.current = backdrop;
+      backdropRef!.current = backdrop;
       return { tree, first, last, siblingOutside };
     };
     const withDocument = (active: unknown, fn: () => void) => {
@@ -142,7 +142,7 @@ describe("Dialog", () => {
       const { first, siblingOutside } = setup();
       const trigger = fake("trigger");
       withDocument(trigger, () => {
-        const cleanup = h.effects[0]() as () => void;
+        const cleanup = h.effects[0]!() as () => void;
         expect(first.focus).toHaveBeenCalledOnce();
         expect(siblingOutside.inert).toBe(true);
         cleanup();
@@ -153,7 +153,7 @@ describe("Dialog", () => {
     it("does nothing in the effect when not modal", () => {
       h.effects.length = 0;
       Dialog({ title: "x" });
-      expect(h.effects[0]()).toBeUndefined();
+      expect(h.effects[0]!()).toBeUndefined();
     });
     it("Tab on the last control wraps to the first; Shift+Tab on the first wraps to the last", () => {
       const { tree, first, last } = setup();

@@ -25,7 +25,7 @@ describe("Disclosure", () => {
   });
   it("toggles from the current state", () => {
     const onToggle = vi.fn();
-    findAll(Disclosure({ title: "Staged", defaultExpanded: false, onToggle }), (e) => e.type === "button")[0].props.onClick();
+    findAll(Disclosure({ title: "Staged", defaultExpanded: false, onToggle }), (e) => e.type === "button")[0]!.props.onClick();
     expect(onToggle).toHaveBeenCalledWith(true);
     expect(setInner).toHaveBeenCalledWith(true);
   });

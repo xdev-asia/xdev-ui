@@ -47,10 +47,10 @@ describe("BottomNav", () => {
     const out = render();
     expect(out).toContain('<span class="x-bottom-nav-badge" aria-hidden="true">3</span>');
     expect(out).toContain('<span class="x-sr-only">3 new</span>');
-    expect(render({ items: [{ ...items[0], badge: 0 }] })).not.toContain("x-bottom-nav-badge");
+    expect(render({ items: [{ ...items[0]!, badge: 0 }] })).not.toContain("x-bottom-nav-badge");
   });
   it("caps the badge at 99+", () => {
-    expect(render({ items: [{ ...items[0], badge: 120 }] })).toContain(">99+<");
+    expect(render({ items: [{ ...items[0]!, badge: 120 }] })).toContain(">99+<");
   });
   it("the more tab is a closed dialog trigger that carries the summed badge", () => {
     const out = render({ more });

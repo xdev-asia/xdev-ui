@@ -38,8 +38,8 @@ export const seedItems = (): Item[] =>
   Array.from({ length: 25 }, (_, i) => ({
     id: `i${i + 1}`,
     name: `${NAMES[i % NAMES.length]} ${Math.floor(i / NAMES.length) + 1}`,
-    owner: OWNERS[i % OWNERS.length],
-    status: STATUSES[i % STATUSES.length],
+    owner: OWNERS[i % OWNERS.length]!,
+    status: STATUSES[i % STATUSES.length]!,
     updated: new Date(NOW - i * 5 * 3_600_000).toISOString(),
   }));
 

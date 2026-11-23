@@ -83,10 +83,10 @@ export function onToolbarKeyDown(e: KeyboardEvent<HTMLElement>, setActive: (i: n
   const buttons = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>("[data-x-tool]"));
   const index = buttons.indexOf(target as HTMLButtonElement);
   if (index < 0) return;
-  const next = rovingIndex(e.key, index, buttons.length, "horizontal", (i) => buttons[i].disabled);
+  const next = rovingIndex(e.key, index, buttons.length, "horizontal", (i) => buttons[i]?.disabled ?? false);
   if (next == null) return;
   e.preventDefault();
-  buttons[next].focus();
+  buttons[next]?.focus();
   setActive(next);
 }
 

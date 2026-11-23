@@ -22,7 +22,7 @@ describe("sortTableRows", () => {
     { id: 3, n: "c", k: 1 },
     { id: 4, n: "a", k: 2 },
   ];
-  const value = (r: (typeof rows)[number], key: string) => (r as Record<string, string | number>)[key];
+  const value = (r: (typeof rows)[number], key: string) => (r as Record<string, string | number>)[key]!;
   it("returns a copy in the same order without a sort", () => {
     const out = sortTableRows(rows, null, value);
     expect(out).toEqual(rows);

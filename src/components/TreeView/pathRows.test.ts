@@ -21,17 +21,17 @@ describe("pathRows", () => {
   it("hides the children of a closed folder", () => {
     const rows = pathRows([{ path: "src/a.ts" }, { path: "src/lib/b.ts" }, { path: "z.ts" }], new Set(["src/"]));
     expect(rows.map((r) => r.id)).toEqual(["src/", "z.ts"]);
-    expect(rows[0].open).toBe(false);
+    expect(rows[0]!.open).toBe(false);
   });
 
   it("marks a folder as changed when it holds a marked file", () => {
     const rows = pathRows([{ path: "a/b/c.ts", mark: "modified" }, { path: "a/d.ts" }, { path: "e/f.ts" }], new Set());
     const by = Object.fromEntries(rows.map((r) => [r.id, r]));
-    expect(by["a/"].changed).toBe(true);
-    expect(by["a/b/"].changed).toBe(true);
-    expect(by["e/"].changed).toBeFalsy();
-    expect(by["a/b/c.ts"].mark).toBe("modified");
-    expect(by["a/d.ts"].mark).toBeUndefined();
+    expect(by["a/"]!.changed).toBe(true);
+    expect(by["a/b/"]!.changed).toBe(true);
+    expect(by["e/"]!.changed).toBeFalsy();
+    expect(by["a/b/c.ts"]!.mark).toBe("modified");
+    expect(by["a/d.ts"]!.mark).toBeUndefined();
   });
 
   it("draws one file at the root", () => {

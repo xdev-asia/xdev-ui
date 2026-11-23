@@ -64,7 +64,7 @@ export function TimeSeriesChart({ points, label, ticks = [], maxLabel, zeroLabel
     .join("");
   const area = segs
     .filter((s) => s.length > 1)
-    .map((s) => `M${r2(x(s[0][0]))} ${H}` + s.map(([i, v]) => `L${r2(x(i))} ${r2(y(v))}`).join("") + `L${r2(x(s[s.length - 1][0]))} ${H}Z`)
+    .map((s) => `M${r2(x(s[0]![0]))} ${H}` + s.map(([i, v]) => `L${r2(x(i))} ${r2(y(v))}`).join("") + `L${r2(x(s[s.length - 1]![0]))} ${H}Z`)
     .join("");
   return (
     <figure className="x-tschart" aria-label={label}>

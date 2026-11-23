@@ -68,7 +68,7 @@ describe("CommandPalette", () => {
     expect(html).not.toContain("aria-activedescendant");
   });
   it("ArrowUp/ArrowDown/Home/End move the active option without moving the caret", () => {
-    const input = findAll(CommandPalette({ sections }), (e) => e.type === "input")[0];
+    const input = findAll(CommandPalette({ sections }), (e) => e.type === "input")[0]!;
     for (const [key, want] of [["ArrowDown", 1], ["ArrowUp", 1], ["Home", 0], ["End", 1]] as const) {
       const ev = { key, preventDefault: vi.fn() };
       input.props.onKeyDown(ev);
@@ -86,7 +86,7 @@ describe("CommandPalette", () => {
       { title: "gamma", id: "c" },
     ];
     const two = [{ title: "One", rows: rows.slice(0, 1) }, { title: "Two", rows: rows.slice(1) }];
-    const input = (el: ReturnType<typeof CommandPalette>) => findAll(el, (e) => e.type === "input")[0];
+    const input = (el: ReturnType<typeof CommandPalette>) => findAll(el, (e) => e.type === "input")[0]!;
     const key = (k: string) => ({ key: k, preventDefault: vi.fn() });
 
     it("renders nothing when open is false and a backdrop when open is true", () => {
@@ -99,22 +99,22 @@ describe("CommandPalette", () => {
     it("focuses the input when the host opens it, and leaves focus alone inline", () => {
       const isInput = (e: { props: { role?: string } }) => e.props.role === "combobox";
       const [framed] = findAll(CommandPalette({ sections: two, open: true, onClose: vi.fn() })!, isInput);
-      expect(framed.props.autoFocus).toBe(true);
+      expect(framed!.props.autoFocus).toBe(true);
       const [inline] = findAll(CommandPalette({ sections: two })!, isInput);
-      expect(inline.props.autoFocus).toBe(false);
+      expect(inline!.props.autoFocus).toBe(false);
     });
     it("calls onClose on Escape and on a backdrop click only", () => {
       const onClose = vi.fn();
       const el = CommandPalette({ sections: two, open: true, onClose })!;
       const [backdrop] = findAll(el, (e) => e.props.className === "pal-backdrop");
-      backdrop.props.onMouseDown({ target: 1, currentTarget: 2 });
+      backdrop!.props.onMouseDown({ target: 1, currentTarget: 2 });
       expect(onClose).not.toHaveBeenCalled();
-      backdrop.props.onMouseDown({ target: 1, currentTarget: 1 });
+      backdrop!.props.onMouseDown({ target: 1, currentTarget: 1 });
       expect(onClose).toHaveBeenCalledTimes(1);
       const [dialog] = findAll(el, (e) => e.props.role === "dialog");
-      dialog.props.onKeyDown(key("a"));
+      dialog!.props.onKeyDown(key("a"));
       expect(onClose).toHaveBeenCalledTimes(1);
-      dialog.props.onKeyDown(key("Escape"));
+      dialog!.props.onKeyDown(key("Escape"));
       expect(onClose).toHaveBeenCalledTimes(2);
     });
     it("selects the active row on Enter and on click, never a disabled row", () => {
@@ -125,10 +125,10 @@ describe("CommandPalette", () => {
       expect(ev.preventDefault).toHaveBeenCalled();
       expect(onSelect).toHaveBeenLastCalledWith(rows[0]);
       const opts = findAll(el, (e) => e.props.role === "option");
-      opts[2].props.onClick();
+      opts[2]!.props.onClick();
       expect(onSelect).toHaveBeenLastCalledWith(rows[2]);
       onSelect.mockClear();
-      opts[1].props.onClick();
+      opts[1]!.props.onClick();
       expect(onSelect).not.toHaveBeenCalled();
     });
     it("leaves Enter alone without onSelect", () => {
@@ -155,7 +155,7 @@ describe("CommandPalette", () => {
     it("keeps focus on the input when a row is pressed", () => {
       const el = CommandPalette({ sections: two })!;
       const ev = { preventDefault: vi.fn() };
-      findAll(el, (e) => e.props.role === "option")[0].props.onMouseDown(ev);
+      findAll(el, (e) => e.props.role === "option")[0]!.props.onMouseDown(ev);
       expect(ev.preventDefault).toHaveBeenCalled();
     });
     it("is controlled by query and reports changes", () => {
@@ -176,7 +176,7 @@ describe("CommandPalette", () => {
       expect(html).toMatch(/aria-pressed="true"[^>]*>Files/);
       const onScopeChange = vi.fn();
       const el = CommandPalette({ sections: two, scopes, onScopeChange })!;
-      findAll(el, (e) => typeof e.props.onChange === "function" && "options" in e.props)[0].props.onChange("files");
+      findAll(el, (e) => typeof e.props.onChange === "function" && "options" in e.props)[0]!.props.onChange("files");
       expect(onScopeChange).toHaveBeenCalledWith("files");
       expect(renderToStaticMarkup(<CommandPalette sections={two} />)).not.toContain("pal-scopes");
     });

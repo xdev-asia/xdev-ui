@@ -22,7 +22,7 @@ function Signed({ session, theme, onThemeChange }: { session: Session; theme: Re
   return (
     <NotifyContext.Provider value={notify}>
       <Shell route={route} session={session} toasts={toasts} onSignOut={signOut}>
-        {route.name === "dashboard" ? <DashboardPage /> : route.name === "items" ? <ItemsPage session={session} /> : route.name === "item" ? <ItemDetailPage key={route.params.id} id={route.params.id} session={session} /> : route.name === "settings" ? <SettingsPage theme={theme} onThemeChange={onThemeChange} /> : <NotFoundPage />}
+        {route.name === "dashboard" ? <DashboardPage /> : route.name === "items" ? <ItemsPage session={session} /> : route.name === "item" ? <ItemDetailPage key={route.params.id} id={route.params.id ?? ""} session={session} /> : route.name === "settings" ? <SettingsPage theme={theme} onThemeChange={onThemeChange} /> : <NotFoundPage />}
       </Shell>
     </NotifyContext.Provider>
   );

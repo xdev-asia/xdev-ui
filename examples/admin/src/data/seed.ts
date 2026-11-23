@@ -92,12 +92,12 @@ export function seedAudit(users: User[]): AuditEvent[] {
   const events: AuditEvent[] = [];
   for (let i = 0; i < 120; i++) {
     const actor = users[Math.floor(rnd() * 12)];
-    const kind = KINDS[Math.floor(rnd() * KINDS.length)];
-    const target = kind === "signIn" ? "console" : kind === "roleUpdate" ? ROLE_IDS[Math.floor(rnd() * 4)] : users[Math.floor(rnd() * users.length)].email;
+    const kind = KINDS[Math.floor(rnd() * KINDS.length)] ?? "signIn";
+    const target = kind === "signIn" ? "console" : kind === "roleUpdate" ? (ROLE_IDS[Math.floor(rnd() * 4)] ?? "viewer") : (users[Math.floor(rnd() * users.length)]?.email ?? "");
     events.push({
       id: `e${i + 1}`,
       time: new Date(NOW - i * 2.2 * 3_600_000).toISOString(),
-      actor: actor.name,
+      actor: actor?.name ?? "",
       kind,
       target,
       ip: `10.0.${Math.floor(rnd() * 255)}.${Math.floor(rnd() * 255)}`,

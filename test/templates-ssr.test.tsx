@@ -23,7 +23,7 @@ describe("app template", () => {
       it(`${page} renders in ${locale}`, async () => {
         const { I18nProvider } = await load<{ I18nProvider: Provider }>("app", "src/i18n/index.tsx");
         const mod = await load<Record<string, () => React.JSX.Element>>("app", `src/pages/${page}.tsx`);
-        const Page = mod[`${page}Page`];
+        const Page = mod[`${page}Page`]!;
         const html = renderToStaticMarkup(<I18nProvider locale={locale}><Page /></I18nProvider>);
         expect(html.length).toBeGreaterThan(50);
         expect(html).not.toMatch(/\b(undefined|\[object Object\])\b/);
@@ -49,7 +49,7 @@ describe("admin template", () => {
   const html = async (locale: "en" | "vi", page: string, exportName: string, props: P): Promise<string> => {
     const { I18nProvider } = await load<{ I18nProvider: Provider }>("admin", "src/i18n/index.tsx");
     const mod = await load<Record<string, (p: P) => React.JSX.Element>>("admin", `src/pages/${page}.tsx`);
-    const View = mod[exportName];
+    const View = mod[exportName]!;
     return renderToStaticMarkup(<I18nProvider locale={locale}><View {...props} /></I18nProvider>);
   };
   const store = async () => {

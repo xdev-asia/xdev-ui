@@ -36,7 +36,7 @@ describe("Tabs", () => {
   });
   it("wires click", () => {
     const onChange = vi.fn();
-    findAll(Tabs({ items, onChange }), (e) => e.type === "button")[1].props.onClick();
+    findAll(Tabs({ items, onChange }), (e) => e.type === "button")[1]!.props.onClick();
     expect(onChange).toHaveBeenCalledWith("checks");
     expect(setInner).toHaveBeenCalledWith("checks");
   });

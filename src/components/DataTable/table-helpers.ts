@@ -43,6 +43,8 @@ export function tableSortToParam(sort: TableSort | null | undefined): string | n
 export function tableSortFromParam(param: string | null | undefined, allowed?: readonly string[]): TableSort | null {
   const m = /^([A-Za-z0-9_.-]+)(?::(asc|desc))?$/.exec((param ?? "").trim());
   if (!m) return null;
-  if (allowed && !allowed.includes(m[1])) return null;
-  return { key: m[1], dir: (m[2] as TableSort["dir"] | undefined) ?? "asc" };
+  const key = m[1];
+  if (key === undefined) return null;
+  if (allowed && !allowed.includes(key)) return null;
+  return { key, dir: (m[2] as TableSort["dir"] | undefined) ?? "asc" };
 }

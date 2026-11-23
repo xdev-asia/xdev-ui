@@ -38,7 +38,7 @@ describe("Dashboard", () => {
   }
   it("names the recent events and their actors", () => {
     const html = render("en", { status: "ready", data });
-    expect(html).toContain(data.recent[0].actor);
+    expect(html).toContain(data.recent[0]!.actor);
   });
   it("uses a good tone for growth and a bad tone for failed sign-ins", () => {
     const html = render("en", { status: "ready", data });

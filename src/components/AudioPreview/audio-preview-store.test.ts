@@ -47,7 +47,7 @@ describe("audio preview store", () => {
     expect(s.audioPreviewStore.getSnapshot()).toBeNull();
     s.playAudioPreview("a", "/a.mp3");
     expect(FakeAudio.all).toHaveLength(1);
-    const el = FakeAudio.all[0];
+    const el = FakeAudio.all[0]!;
     expect(el.preload).toBe("none");
     expect(el.src).toBe("/a.mp3");
     expect(s.audioPreviewStore.getSnapshot()).toBe("a");
@@ -59,7 +59,7 @@ describe("audio preview store", () => {
     const off = s.audioPreviewStore.subscribe(() => seen.push(s.audioPreviewStore.getSnapshot()));
     s.playAudioPreview("a", "/a.mp3");
     s.playAudioPreview("b", "/b.mp3");
-    const el = FakeAudio.all[0];
+    const el = FakeAudio.all[0]!;
     expect(el.pause).toHaveBeenCalledTimes(2);
     expect(el.src).toBe("/b.mp3");
     expect(seen).toEqual(["a", "b"]);
@@ -69,7 +69,7 @@ describe("audio preview store", () => {
   });
   it("stopAudioPreview pauses, drops the source and goes idle", () => {
     s.playAudioPreview("a", "/a.mp3");
-    const el = FakeAudio.all[0];
+    const el = FakeAudio.all[0]!;
     s.stopAudioPreview();
     expect(el.pause).toHaveBeenCalled();
     expect(el.removeAttribute).toHaveBeenCalledWith("src");
@@ -83,13 +83,13 @@ describe("audio preview store", () => {
   });
   it("goes idle when the clip ends", () => {
     s.playAudioPreview("a", "/a.mp3");
-    FakeAudio.all[0].emit("ended");
+    FakeAudio.all[0]!.emit("ended");
     expect(s.audioPreviewStore.getSnapshot()).toBeNull();
   });
   it("goes idle and calls onError when play() is refused", async () => {
     const onError = vi.fn();
     s.playAudioPreview("a", "/a.mp3", onError);
-    FakeAudio.all[0].plays[0].reject(new Error("NotAllowedError"));
+    FakeAudio.all[0]!.plays[0]!.reject(new Error("NotAllowedError"));
     await flush();
     expect(s.audioPreviewStore.getSnapshot()).toBeNull();
     expect(onError).toHaveBeenCalledOnce();
@@ -97,10 +97,10 @@ describe("audio preview store", () => {
   it("goes idle and calls onError on a load error", () => {
     const onError = vi.fn();
     s.playAudioPreview("a", "/a.mp3", onError);
-    FakeAudio.all[0].emit("error");
+    FakeAudio.all[0]!.emit("error");
     expect(s.audioPreviewStore.getSnapshot()).toBeNull();
     expect(onError).toHaveBeenCalledOnce();
-    FakeAudio.all[0].emit("error");
+    FakeAudio.all[0]!.emit("error");
     expect(onError).toHaveBeenCalledOnce();
   });
   it("ignores a late rejection of a clip that was replaced or stopped", async () => {
@@ -108,21 +108,21 @@ describe("audio preview store", () => {
     const onB = vi.fn();
     s.playAudioPreview("a", "/a.mp3", onA);
     s.playAudioPreview("b", "/b.mp3", onB);
-    const el = FakeAudio.all[0];
-    el.plays[0].reject(new DOMException("interrupted", "AbortError"));
+    const el = FakeAudio.all[0]!;
+    el.plays[0]!.reject(new DOMException("interrupted", "AbortError"));
     await flush();
     expect(s.audioPreviewStore.getSnapshot()).toBe("b");
     expect(onA).not.toHaveBeenCalled();
     expect(onB).not.toHaveBeenCalled();
     s.stopAudioPreview();
-    el.plays[1].reject(new DOMException("interrupted", "AbortError"));
+    el.plays[1]!.reject(new DOMException("interrupted", "AbortError"));
     el.emit("error");
     await flush();
     expect(onB).not.toHaveBeenCalled();
   });
   it("handles play() throwing synchronously", () => {
     s.playAudioPreview("a", "/a.mp3");
-    const el = FakeAudio.all[0];
+    const el = FakeAudio.all[0]!;
     el.play = () => {
       throw new Error("boom");
     };

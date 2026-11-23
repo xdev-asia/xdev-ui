@@ -20,7 +20,7 @@ describe("Breadcrumb", () => {
     expect(html).toContain('<button type="button" class="ws-crumb">xdev</button>');
   });
   it("wires button crumbs", () => {
-    findAll(Breadcrumb({ items }), (e) => e.type === "button")[0].props.onClick();
+    findAll(Breadcrumb({ items }), (e) => e.type === "button")[0]!.props.onClick();
     expect(onClick).toHaveBeenCalled();
   });
 });

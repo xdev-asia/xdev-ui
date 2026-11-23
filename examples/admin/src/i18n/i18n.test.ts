@@ -23,7 +23,7 @@ describe("dictionaries", () => {
   });
   it("uses the same {placeholders} in both languages", () => {
     const names = (s: string) => [...s.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort();
-    for (const k of Object.keys(a)) expect(names(b[k]), k).toEqual(names(a[k]));
+    for (const k of Object.keys(a)) expect(names(b[k]!), k).toEqual(names(a[k]!));
   });
   it("labels exist for both languages with the same shape", () => {
     expect(Object.keys(uiLabels.vi)).toEqual(Object.keys(uiLabels.en));

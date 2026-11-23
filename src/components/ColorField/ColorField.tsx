@@ -8,7 +8,8 @@ const HEX = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i;
 export function normalizeHex(text: string): string | null {
   const m = HEX.exec(text.trim());
   if (!m) return null;
-  const d = m[1].toLowerCase();
+  const d = m[1]?.toLowerCase();
+  if (!d) return null;
   const full = d.length === 3 ? [...d].map((c) => c + c).join("") : d;
   return `#${full}`;
 }

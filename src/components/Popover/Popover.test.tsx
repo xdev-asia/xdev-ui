@@ -46,7 +46,7 @@ describe("Popover", () => {
   });
   it("closes on an outside click", () => {
     const onClose = vi.fn();
-    findAll(Popover({ open: true, onClose }), (e) => e.props.className === "ws-menu-backdrop")[0].props.onClick();
+    findAll(Popover({ open: true, onClose }), (e) => e.props.className === "ws-menu-backdrop")[0]!.props.onClick();
     expect(onClose).toHaveBeenCalled();
   });
 
@@ -65,8 +65,8 @@ describe("Popover", () => {
       const body = mounted();
       const tree = Popover({ open: true, onClose() {}, trigger: <button type="button">t</button>, children: "x" });
       const [portal] = findAll(tree, (e) => e.type === "x-portal");
-      expect(portal.props.target).toBe(body);
-      expect(findAll(portal, (e) => e.props.className === "x-popover")[0].props["data-portal"]).toBe("");
+      expect(portal!.props.target).toBe(body);
+      expect(findAll(portal, (e) => e.props.className === "x-popover")[0]!.props["data-portal"]).toBe("");
       expect(findAll(portal, (e) => e.props.className === "ws-menu-backdrop")).toHaveLength(1);
       expect(findAll(portal, (e) => e.type === "button")).toHaveLength(0);
     });
@@ -74,7 +74,7 @@ describe("Popover", () => {
       mounted();
       const tree = Popover({ open: true, onClose() {}, portal: false, children: "x" });
       expect(findAll(tree, (e) => e.type === "x-portal")).toHaveLength(0);
-      expect(findAll(tree, (e) => e.props.className === "x-popover")[0].props["data-portal"]).toBeUndefined();
+      expect(findAll(tree, (e) => e.props.className === "x-popover")[0]!.props["data-portal"]).toBeUndefined();
     });
     it("renders inline on the server, so SSR markup is unchanged", () => {
       expect(

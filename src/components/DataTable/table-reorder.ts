@@ -5,8 +5,7 @@ export function moveItem<T>(array: readonly T[], from: number, to: number): T[] 
   const out = [...array];
   if (!Number.isInteger(from) || from < 0 || from >= out.length) return out;
   const target = Math.min(Math.max(0, Math.trunc(to)), out.length - 1);
-  const [item] = out.splice(from, 1);
-  out.splice(target, 0, item);
+  out.splice(target, 0, ...out.splice(from, 1));
   return out;
 }
 
