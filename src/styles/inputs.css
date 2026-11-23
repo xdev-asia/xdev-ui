@@ -337,6 +337,30 @@
 }
 .task-chip[aria-pressed="true"] .task-chip-count { background: var(--x-color-accent-soft); color: var(--x-color-ink); }
 
+/* ToggleButton (.x-toggle) */
+.x-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--x-space-1);
+  min-height: 24px;
+  padding: 2px var(--x-space-2);
+  border: 1px solid var(--x-color-line-strong);
+  border-radius: var(--x-radius-md);
+  background: var(--x-color-surface);
+  color: var(--x-color-muted);
+  font: 600 12px var(--font-body);
+  cursor: pointer;
+}
+.x-toggle[data-size="md"] { min-height: 32px; padding: 4px var(--x-space-3); font-size: 13px; }
+.x-toggle:hover { color: var(--x-color-ink); background: var(--x-color-surface-2); }
+.x-toggle:focus-visible { outline: 2px solid var(--x-color-focus); outline-offset: 2px; }
+.x-toggle-check { display: none; flex: none; }
+.x-toggle[aria-pressed="true"] { background: var(--bg-3); border-color: var(--accent); color: var(--x-color-ink); }
+.x-toggle[aria-pressed="true"] .x-toggle-check { display: inline-block; }
+.x-toggle[data-tone="warning"] { border-color: var(--x-color-warn-line); }
+.x-toggle[data-tone="warning"][aria-pressed="true"] { border-color: var(--x-color-warn); background: var(--x-color-warn-soft); }
+.x-toggle:disabled { opacity: 0.6; cursor: default; }
+
 .font-field { position: relative; display: inline-flex; align-items: center; min-width: 200px; }
 .font-field-input {
   flex: 1;

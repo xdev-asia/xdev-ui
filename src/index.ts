@@ -67,6 +67,7 @@ export * from "./components/DateRangePicker/DateRangePicker";
 export * from "./components/TimeField/TimeField";
 export * from "./components/TimeField/time-text";
 export * from "./components/FilterChip/FilterChip";
+export * from "./components/ToggleButton/ToggleButton";
 export * from "./components/ActionTile/ActionTile";
 export * from "./components/ListRow/ListRow";
 export * from "./components/ResourceCard/ResourceCard";
