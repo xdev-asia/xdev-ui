@@ -3,6 +3,7 @@
 Native `<select>` styled as `.lang-select`, for choosing one of many options such as the UI language.
 
 ## Rules
+- With `label`, `error` replaces the hint, marks the select invalid and is announced when it appears (`role="alert"`).
 - With `label`, `required` draws an asterisk after the label (`aria-hidden`; the select's own `required` is what assistive tech reads).
 - Always native: the OS list handles keyboard and screen readers.
 - Give it an `aria-label` or wrap it in a visible label.

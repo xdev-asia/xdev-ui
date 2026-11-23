@@ -32,7 +32,7 @@ describe("Field", () => {
     expect(html).toMatch(/^<div class="ws-field extra"><label for="b" class="x-label">Branch<\/label><input id="b" aria-describedby="b-hint"\/><small id="b-hint">kebab-case<\/small><\/div>$/);
     const err = renderToStaticMarkup(<Field label="Branch" error="Required" id="b" />);
     expect(err).toContain('<label for="b" class="x-label">Branch</label>');
-    expect(err).toMatch(/<\/label><input[^>]*aria-invalid="true"[^>]*\/><small id="b-hint">Required<\/small><\/div>$/);
+    expect(err).toMatch(/<\/label><input[^>]*aria-invalid="true"[^>]*\/><small id="b-hint" role="alert">Required<\/small><\/div>$/);
   });
   it("passes ref to the input", () => {
     const ref = { current: null };

@@ -37,7 +37,7 @@ describe("Select", () => {
     expect(bad).toContain('<div class="ws-field x-select-field c" data-invalid="">');
     expect(bad).toContain('<label for="h" class="x-sr-only">Hour</label>');
     expect(bad).toContain('aria-invalid="true"');
-    expect(bad).toContain('<small id="h-hint">Pick one</small>');
+    expect(bad).toContain('<small id="h-hint" role="alert">Pick one</small>');
   });
   it("takes native option and optgroup children when there are no options", () => {
     const html = renderToStaticMarkup(

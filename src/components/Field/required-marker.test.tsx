@@ -31,3 +31,12 @@ describe("Textarea hideLabel", () => {
     expect(html).toContain(">Message<");
   });
 });
+
+describe("error line", () => {
+  it("is announced (role=alert) when it is an error, and silent when it is a hint", () => {
+    expect(renderToStaticMarkup(<Field label="Name" error="Required" />)).toMatch(/<small[^>]*role="alert"[^>]*>Required</);
+    expect(renderToStaticMarkup(<Textarea label="Notes" error="Too long" />)).toMatch(/<small[^>]*role="alert"[^>]*>Too long</);
+    expect(renderToStaticMarkup(<Select label="Role" error="Pick one" options={[]} />)).toMatch(/<small[^>]*role="alert"[^>]*>Pick one</);
+    expect(renderToStaticMarkup(<Field label="Name" hint="Shown" />)).not.toContain('role="alert"');
+  });
+});
