@@ -71,3 +71,16 @@ describe("FileDrop", () => {
     expect(html).toContain('<span class="x-filedrop-status">Waiting</span>');
   });
 });
+
+describe("FileDrop inputProps", () => {
+  it("passes name, id and data attributes to the file input, keeping its own type", () => {
+    const html = renderToStaticMarkup(
+      <FileDrop label="Files" onFiles={() => {}} inputProps={{ name: "docs", id: "pick", "data-field": "upload" }} />,
+    );
+    expect(html).toMatch(/<input[^>]*name="docs"/);
+    expect(html).toMatch(/<input[^>]*id="pick"/);
+    expect(html).toMatch(/<input[^>]*data-field="upload"/);
+    expect(html).toMatch(/<input[^>]*type="file"/);
+    expect(html).toContain('for="pick"');
+  });
+});
