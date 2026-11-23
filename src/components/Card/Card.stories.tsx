@@ -41,3 +41,16 @@ export const DiffFile: Story = {
   },
 };
 export const Bare: Story = { args: { title: undefined, subtitle: undefined } };
+export const BodyLayout: Story = {
+  args: {
+    id: "card-usage",
+    bodyClassName: "card-story-body",
+    children: (
+      <>
+        <style>{".card-story-body { display: grid; gap: 8px; }"}</style>
+        <p style={{ margin: 0 }}>Body class sets the grid and gap.</p>
+        <p style={{ margin: 0 }}>Section attributes pass through.</p>
+      </>
+    ),
+  },
+};

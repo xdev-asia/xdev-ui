@@ -116,7 +116,11 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.Badge, { status: "unchanged" }, "unchanged"),
       h(X.Badge, { status: "foreign" }, "foreign"),
       h(X.Badge, { tone: "danger" }, "failed"),
-      h(X.Badge, null, "neutral"));
+      h(X.Badge, null, "neutral"),
+      h(X.Badge, { tone: "neutral", title: "Not published yet" }, "draft"),
+      h(X.Badge, { tone: "accent" }, "internal"),
+      h(X.Badge, { tone: "ok" }, "active"),
+      h(X.Badge, { tone: "warn" }, "pending"));
     return el;
     },
   },
@@ -481,7 +485,8 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     el = h(React.Fragment, null,
       row("session", ["working", "waiting", "failed", "done", "idle", "exited"].map(function (s) { return h(X.StatusDot, { key: s, state: s, label: s, pulse: s === "working" }); })),
       row("PR", ["open", "draft", "merged", "closed"].map(function (s) { return h(X.StatusDot, { key: s, pr: s, label: s }); })),
-      row("check", ["pass", "pending", "fail", "skipping", "cancel"].map(function (s) { return h(X.StatusDot, { key: s, check: s, label: s }); })));
+      row("check", ["pass", "pending", "fail", "skipping", "cancel"].map(function (s) { return h(X.StatusDot, { key: s, check: s, label: s }); })),
+      row("tone", ["ok", "warn", "danger", "accent", "neutral"].map(function (s) { return h(X.StatusDot, { key: s, tone: s, label: s }); })));
     return el;
     },
   },

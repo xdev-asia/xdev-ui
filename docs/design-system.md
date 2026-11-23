@@ -105,6 +105,7 @@ Media queries cannot read `var()`, so the CSS writes 639.98px and 767.98px; `tes
 - **Forms.** Validate in a pure function and show the message through `Field` `error`, which replaces the hint. Save stays disabled until the form changes and is `busy` while it saves; Cancel is secondary and comes first. A `Switch` applies at once and does not belong in a form with Save.
 - **Destructive actions.** A modal `Dialog` with `alert` names the thing removed and has the primary confirm button last.
 - **Three states per page.** Loading (`Spinner`, or `loading` on `DataTable` and `StatTile`), error (`Banner` with a secondary "Try again") and empty (`EmptyState` naming the search text when filters match nothing). Confirm saves with a `Toast`.
+- **State words.** A record's state (active, draft, failed, pending, internal) is a `Badge` with `tone` (`ok`, `neutral`, `danger`, `warn`, `accent`); map the word to the tone in the app. A live state (running, online) is a `StatusDot` with a visible `label`. The word is always there; the colour only repeats it.
 - **Permissions.** Hide an action the role can never use; disable one the role may see but not use now, and say why. The server checks again.
 
 ## Agent skills
