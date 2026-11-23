@@ -67,7 +67,7 @@ function SelectField({ label, hint, error, hideLabel, id, className, ...rest }: 
         {rest.required ? <span className="x-label-required" aria-hidden="true">*</span> : null}
       </label>
       <SelectControl id={selectId} aria-describedby={noteId} aria-invalid={error ? true : undefined} {...rest} />
-      {note ? <small id={noteId}>{note}</small> : null}
+      {note ? <small id={noteId} role={error ? "alert" : undefined}>{note}</small> : null}
     </div>
   );
 }

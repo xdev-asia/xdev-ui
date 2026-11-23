@@ -35,7 +35,7 @@ export function Textarea({ label, hint, error, mono, hideLabel, resize = "vertic
         aria-invalid={error ? true : undefined}
         {...rest}
       />
-      {note ? <small id={hintId}>{note}</small> : null}
+      {note ? <small id={hintId} role={error ? "alert" : undefined}>{note}</small> : null}
     </div>
   );
 }

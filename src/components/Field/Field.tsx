@@ -75,7 +75,7 @@ export function Field({ label, hint, error, hideLabel, mono, action, end, reveal
         labelEl
       )}
       {control}
-      {note ? <small id={hintId}>{note}</small> : null}
+      {note ? <small id={hintId} role={error ? "alert" : undefined}>{note}</small> : null}
     </div>
   );
 }
