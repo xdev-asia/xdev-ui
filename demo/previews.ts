@@ -159,7 +159,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.Button, { variant: "ghost" }, "Show more"),
       h(X.Button, { variant: "link", href: "#" }, "Read the docs"),
       h(X.Button, { size: "sm", variant: "secondary" }, "Small"),
-      h(X.Button, { variant: "secondary", disabled: true }, "Disabled"));
+      h(X.Button, { variant: "secondary", disabled: true }, "Disabled"),
+      h(X.Button, { variant: "primary", icon: "save", busy: true }, "Save"),
+      h(X.Button, { variant: "secondary", iconEnd: "chevron" }, "More filters"),
+      h(X.Button, { variant: "link", href: "#", iconEnd: "external" }, "Status page"));
     return el;
     },
   },
@@ -316,7 +319,9 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.IconButton, { icon: "search", label: "Search" }),
       h(X.IconButton, { icon: "more", label: "More actions" }),
       h(X.IconButton, { icon: "close", label: "Close panel" }),
-      h(X.IconButton, { icon: "plus", label: "Add (touch size)", size: "lg" }));
+      h(X.IconButton, { icon: "plus", label: "Add (touch size)", size: "lg" }),
+      h(X.IconButton, { icon: "save", label: "Save row", busy: true }),
+      h(X.IconButton, { icon: "trash", label: "Delete row", tone: "danger" }));
     return el;
     },
   },

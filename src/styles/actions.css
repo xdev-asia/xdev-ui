@@ -101,6 +101,17 @@ a.btn, a.btn-secondary, a.btn-danger, a.btn-ghost { text-decoration: none; }
 .ws-icon-btn[data-size="sm"] svg { width: 14px; height: 14px; }
 .ws-icon-btn[data-size="lg"] { width: 44px; height: 44px; }
 .ws-icon-btn[data-size="lg"] svg { width: 20px; height: 20px; }
+.ws-icon-btn:disabled { cursor: default; }
+.ws-icon-btn[data-tone="danger"] { color: var(--x-color-danger); }
+.ws-icon-btn[data-tone="danger"]:hover { background: var(--x-color-danger-soft); color: var(--x-color-danger); }
+
+/* Busy (Button and IconButton busy): the spinner takes the icon's box and follows the text colour */
+.x-btn-busy { display: inline-grid; place-items: center; flex: none; width: 16px; height: 16px; }
+.ws-icon-btn[data-size="sm"] .x-btn-busy { width: 14px; height: 14px; }
+.ws-icon-btn[data-size="lg"] .x-btn-busy { width: 20px; height: 20px; }
+.x-btn-busy .x-spinner { color: inherit; }
+.x-btn-busy .x-spinner-ring { border-color: color-mix(in srgb, currentColor 30%, transparent); border-top-color: currentColor; }
+:is(.btn, .btn-secondary, .btn-danger, .btn-ghost, .btn-link, .ws-icon-btn)[aria-busy="true"] { opacity: 1; cursor: progress; }
 
 /* AudioPreview (.x-audio-preview): round play/stop toggle; the playing one is accent */
 .ws-icon-btn.x-audio-preview { border: 1px solid var(--x-color-line-strong); border-radius: 50%; }

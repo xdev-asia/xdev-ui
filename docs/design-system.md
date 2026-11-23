@@ -45,6 +45,7 @@ A product whose mark sits on another ground sets `data-ground="<id>"` next to `d
 - 16px in controls, 20px in banners, 22px in the activity bar.
 - The set: `docs changes tasks squads agents kit accounts terminal` (from ActivityBar.tsx) plus `warn close plus search more branch chevron-left chevron-right magnifier prompt folder file check alert warn-dash restore history bot download copy plug lock swap list-checks workflow`.
 - Shell icons: `board` (kanban columns), `automation` (loop with a play mark), `panel-right` (right-docked panel), `split` (two panes), `inbox`, and `zap` (the bolt) for quick actions.
+- Forms, feedback, media and tools: `save`, `thumbs-up`, `thumbs-down`, `volume`, `mic`, `paperclip`, `palette`, `hand` (pan), `cursor` (select), `wrench`, `building`, `pip` (picture-in-picture, a floating window). A group of people is `squads`.
 - The brand mark (logo v12) is two folded blades that cross into an `x`. Your blade follows the surface colour; the agent side is always `--brand-agent` `#ff7a3d`; the core where they overlap is white. Sub-systems keep your blade and swap the agent side for their own shape (`BrandMark system="ui"`).
 
 ## Layout
@@ -101,7 +102,7 @@ Media queries cannot read `var()`, so the CSS writes 639.98px and 767.98px; `tes
 
 - **Lists.** A `DataTable` has a `caption`, sortable columns, optional row selection and a `labels` object for each language. Pair it with `SearchInput`, `FilterChip` (with counts) and `Pagination`; reset to page 1 when a filter changes. Put filtering, sorting and paging in pure functions (`sortTableRows`, `paginateRows`) and test them. A facet with many values (status, role, tag) is a `FacetFilter`; actions on the selected rows go in a `BulkBar` that appears while rows are selected. `reorderable` adds drag handles for lists with a manual order; it is off while a sort is active.
 - **Summaries.** `StatTile` shows one number with an optional delta; the caller decides whether up is good (`deltaTone`). Use `Meter` for a share of a limit and `DescriptionList` for the facts of one record.
-- **Forms.** Validate in a pure function and show the message through `Field` `error`, which replaces the hint. Save stays disabled until the form changes and while it saves; Cancel is secondary and comes first. A `Switch` applies at once and does not belong in a form with Save.
+- **Forms.** Validate in a pure function and show the message through `Field` `error`, which replaces the hint. Save stays disabled until the form changes and is `busy` while it saves; Cancel is secondary and comes first. A `Switch` applies at once and does not belong in a form with Save.
 - **Destructive actions.** A modal `Dialog` with `alert` names the thing removed and has the primary confirm button last.
 - **Three states per page.** Loading (`Spinner`, or `loading` on `DataTable` and `StatTile`), error (`Banner` with a secondary "Try again") and empty (`EmptyState` naming the search text when filters match nothing). Confirm saves with a `Toast`.
 - **Permissions.** Hide an action the role can never use; disable one the role may see but not use now, and say why. The server checks again.
