@@ -64,6 +64,7 @@ function SelectField({ label, hint, error, hideLabel, id, className, ...rest }: 
     <div className={cx("ws-field x-select-field", className)} data-invalid={error ? "" : undefined}>
       <label htmlFor={selectId} className={hideLabel ? "x-sr-only" : undefined}>
         {label}
+        {rest.required ? <span className="x-label-required" aria-hidden="true">*</span> : null}
       </label>
       <SelectControl id={selectId} aria-describedby={noteId} aria-invalid={error ? true : undefined} {...rest} />
       {note ? <small id={noteId}>{note}</small> : null}

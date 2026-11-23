@@ -39,6 +39,8 @@ export function Field({ label, hint, error, hideLabel, mono, action, end, reveal
   const labelEl = (
     <label htmlFor={inputId} className={cx("x-label", hideLabel && "x-sr-only")}>
       {label}
+      {/* The control's own `required` already tells assistive tech; the asterisk is for the eye. */}
+      {rest.required ? <span className="x-label-required" aria-hidden="true">*</span> : null}
     </label>
   );
   const inputProps: InputHTMLAttributes<HTMLInputElement> & { ref?: Ref<HTMLInputElement> } = {
