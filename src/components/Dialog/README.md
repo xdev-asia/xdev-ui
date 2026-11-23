@@ -16,6 +16,8 @@ Modal confirmation over a dimmed backdrop, for decisions that cannot be undone.
 - `tone="danger"` gives the confirm button the `danger` variant; pair it with `alert` for destructive confirms.
 - `secondaryActions` adds more choices between Cancel and the confirm button, as `Button variant="secondary"` ("Only this one" beside "Whole series"). Keep it to one or two; the confirm button stays the one primary, last. `busy` does not disable them: pass `disabled` yourself.
 - `busy` disables both actions, shows a spinner in the confirm button, sets `aria-busy` and ignores Esc until the work ends.
+- `actions` replaces the built-in Cancel and confirm buttons with your own row: a form's submit with `form="…"`, a single Close for a read-only dialog, or a footer with a status line. `actions={null}` renders no action row. Keep one primary button, last.
+- `dismissible` adds a close button (×) beside the title that calls `onCancel`; use it when the dialog has no Cancel of its own (a details or share dialog). `labels.close` names it. It is disabled while `busy`.
 
 ## Responsive
 - Below 640px a modal dialog opens as a bottom sheet: full width, rounded top corners, safe-area padding. The actions stack, primary on top.
