@@ -561,6 +561,15 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.FilterChip, { pressed: false, count: 2 }, "Waiting"),
       h(X.FilterChip, { pressed: false, count: 9 }, "Done")),
   },
+  "ToggleButton": {
+    style: {"display": "flex", "gap": "6px", "flexWrap": "wrap", "padding": "16px"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.ToggleButton, { pressed: true }, "apps:read"),
+      h(X.ToggleButton, { pressed: false }, "apps:write"),
+      h(X.ToggleButton, { pressed: false, tone: "warning", title: "Only an owner can grant this" }, "workspace:delete"),
+      h(X.ToggleButton, { pressed: true, tone: "warning" }, "members:remove"),
+      h(X.ToggleButton, { pressed: true, disabled: true }, "apps:share")),
+  },
   "ListRow": {
     style: {"padding": "16px", "width": "340px"},
     render: (X, h) => h(React.Fragment, null,
