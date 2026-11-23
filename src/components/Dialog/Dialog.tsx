@@ -2,13 +2,16 @@ import { useEffect, useId, useRef, type JSX, type KeyboardEvent, type ReactNode 
 import { focusFirst, focusableIn, inertOutside, restoreFocus, trapTarget } from "../../internal/focus";
 import { usePortal } from "../../internal/portal";
 import { Button } from "../Button/Button";
+import { IconButton } from "../IconButton/IconButton";
 
 export interface DialogLabels {
   confirm: string;
   cancel: string;
+  /** Accessible name of the close button (`dismissible`). */
+  close: string;
 }
 
-const DEFAULT_LABELS: DialogLabels = { confirm: "OK", cancel: "Cancel" };
+const DEFAULT_LABELS: DialogLabels = { confirm: "OK", cancel: "Cancel", close: "Close" };
 
 export interface DialogProps {
   title: ReactNode;
@@ -40,9 +43,13 @@ export interface DialogProps {
   portal?: boolean;
   /** More choices between Cancel and the confirm button, as secondary `Button`s: "Only this one" next to "Whole series". */
   secondaryActions?: ReactNode;
+  /** Replaces the built-in Cancel and confirm buttons with your own row (a form's submit, a single Close). `null` renders no action row. */
+  actions?: ReactNode;
+  /** Adds a close button (×) beside the title that calls onCancel. Use it when the dialog has no Cancel button of its own. */
+  dismissible?: boolean;
 }
 
-export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, onCancel, alert, modal, confirmDisabled, labels, size = "default", body, description, tone, busy, portal = true, secondaryActions }: DialogProps): JSX.Element {
+export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, onCancel, alert, modal, confirmDisabled, labels, size = "default", body, description, tone, busy, portal = true, secondaryActions, actions, dismissible }: DialogProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
   const cancelText = cancelLabel === undefined ? l.cancel : cancelLabel;
   const id = useId();
@@ -80,15 +87,36 @@ export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, 
   return inPortal(
     <div className="dialog-backdrop" ref={backdropRef} data-modal={modal ? "true" : undefined} onKeyDown={onKeyDown}>
       <div className="dialog" data-size={size} ref={ref} tabIndex={modal ? -1 : undefined} role={alert ? "alertdialog" : "dialog"} aria-modal={modal ? "true" : undefined} aria-labelledby={titleId} aria-describedby={[description ? descId : null, alert && children ? bodyId : null].filter(Boolean).join(" ") || undefined} aria-busy={busy ? "true" : undefined}>
-        <h2 className="dialog-title" id={titleId}>
-          {title}
-        </h2>
-        {description ? (
-          <p className="dialog-desc" id={descId}>
-            {description}
-          </p>
-        ) : null}
+        {dismissible ? (
+          <div className="dialog-head">
+            <div className="dialog-head-text">
+              <h2 className="dialog-title" id={titleId}>
+                {title}
+              </h2>
+              {description ? (
+                <p className="dialog-desc" id={descId}>
+                  {description}
+                </p>
+              ) : null}
+            </div>
+            <IconButton icon="close" label={l.close} onClick={onCancel} disabled={busy || undefined} />
+          </div>
+        ) : (
+          <>
+            <h2 className="dialog-title" id={titleId}>
+              {title}
+            </h2>
+            {description ? (
+              <p className="dialog-desc" id={descId}>
+                {description}
+              </p>
+            ) : null}
+          </>
+        )}
         {!children ? null : asText ? <p className="dialog-body" id={alert ? bodyId : undefined}>{children}</p> : <div className="dialog-body" id={alert ? bodyId : undefined}>{children}</div>}
+        {actions !== undefined ? (
+          actions === null ? null : <div className="dialog-actions">{actions}</div>
+        ) : (
         <div className="dialog-actions">
           {cancelText !== null ? (
             <Button variant="secondary" onClick={onCancel} disabled={busy || undefined}>
@@ -105,6 +133,7 @@ export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, 
             {confirmLabel ?? l.confirm}
           </Button>
         </div>
+        )}
       </div>
     </div>,
   ) as JSX.Element;

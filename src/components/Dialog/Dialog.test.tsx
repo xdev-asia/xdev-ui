@@ -3,6 +3,7 @@ import { createElement } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { findAll } from "../../test-utils";
 import { Button } from "../Button/Button";
+import { IconButton } from "../IconButton/IconButton";
 
 const h = vi.hoisted(() => ({ client: false, effects: [] as Array<() => void | (() => void)>, refs: [] as Array<{ current: unknown }> }));
 vi.mock("react", async (orig) => ({
@@ -209,5 +210,25 @@ describe("Dialog", () => {
     const html = renderToStaticMarkup(<Dialog title="Move this event?" confirmLabel="Whole series" secondaryActions={<button type="button">Only this one</button>} />);
     expect(html.indexOf("Cancel")).toBeLessThan(html.indexOf("Only this one"));
     expect(html.indexOf("Only this one")).toBeLessThan(html.indexOf("Whole series"));
+  });
+  it("actions replace the built-in Cancel and confirm buttons", () => {
+    const html = renderToStaticMarkup(<Dialog title="Details" actions={<button type="button">Close</button>} />);
+    expect(html).toContain('<div class="dialog-actions"><button type="button">Close</button></div>');
+    expect(html).not.toContain("Cancel");
+    expect(html).not.toContain(">OK<");
+  });
+  it("actions={null} renders no action row", () => {
+    expect(renderToStaticMarkup(<Dialog title="x" actions={null} />)).not.toContain("dialog-actions");
+  });
+  it("dismissible adds a labelled close button that calls onCancel, disabled while busy", () => {
+    const onCancel = vi.fn();
+    const [close] = findAll(Dialog({ title: "x", dismissible: true, onCancel, labels: { close: "Đóng" } }), (e) => e.type === IconButton);
+    expect(close.props.label).toBe("Đóng");
+    expect(close.props.icon).toBe("close");
+    close.props.onClick();
+    expect(onCancel).toHaveBeenCalledOnce();
+    const [busyClose] = findAll(Dialog({ title: "x", dismissible: true, busy: true }), (e) => e.type === IconButton);
+    expect(busyClose.props.disabled).toBe(true);
+    expect(renderToStaticMarkup(<Dialog title="x" />)).not.toContain("dialog-head");
   });
 });
