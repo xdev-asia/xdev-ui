@@ -164,7 +164,7 @@ describe("Dialog", () => {
       const auto = fake("auto");
       const { first } = setup({ trigger, inside: true });
       withDocument(auto, () => {
-        const cleanup = h.effects[0]() as () => void;
+        const cleanup = h.effects[0]!() as () => void;
         expect(first.focus).not.toHaveBeenCalled();
         cleanup();
       });
@@ -173,7 +173,7 @@ describe("Dialog", () => {
     it("starts on the first control of the body, not the close button in the header", () => {
       const field = fake("field");
       const { first } = setup({ body: { querySelectorAll: () => [field] } });
-      withDocument(null, () => void h.effects[0]());
+      withDocument(null, () => void h.effects[0]!());
       expect(field.focus).toHaveBeenCalledOnce();
       expect(first.focus).not.toHaveBeenCalled();
     });
@@ -248,12 +248,12 @@ describe("Dialog", () => {
   });
   it("dismissible adds a labelled close button that calls onCancel, disabled while busy", () => {
     const onCancel = vi.fn();
-    const [close] = findAll(Dialog({ title: "x", dismissible: true, onCancel, labels: { close: "Đóng" } }), (e) => e.type === IconButton);
+    const close = findAll(Dialog({ title: "x", dismissible: true, onCancel, labels: { close: "Đóng" } }), (e) => e.type === IconButton)[0]!;
     expect(close.props.label).toBe("Đóng");
     expect(close.props.icon).toBe("close");
     close.props.onClick();
     expect(onCancel).toHaveBeenCalledOnce();
-    const [busyClose] = findAll(Dialog({ title: "x", dismissible: true, busy: true }), (e) => e.type === IconButton);
+    const busyClose = findAll(Dialog({ title: "x", dismissible: true, busy: true }), (e) => e.type === IconButton)[0]!;
     expect(busyClose.props.disabled).toBe(true);
     expect(renderToStaticMarkup(<Dialog title="x" />)).not.toContain("dialog-head");
   });
