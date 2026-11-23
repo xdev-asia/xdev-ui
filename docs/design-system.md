@@ -136,7 +136,7 @@ The library targets WCAG 2.2 level AA on macOS, Windows and Linux. The `xdev-ui-
 | group | components |
 |---|---|
 | Actions | Button, IconButton, ActionTile, ZoomBar, AudioPreview |
-| Inputs | Segmented, ColorField, SwatchGroup, CodeInput, ThemeSwitch, Select, FontField, Field, Switch, Checkbox, RadioGroup, Textarea, SearchInput, SearchPicker, FilterChip, FileDrop, Combobox, DatePicker, DateRangePicker, TimeField |
+| Inputs | Segmented, ColorField, SwatchGroup, CodeInput, ThemeSwitch, Select, FontField, Field, Label, Switch, Checkbox, RadioGroup, Textarea, SearchInput, SearchPicker, FilterChip, FileDrop, Combobox, DatePicker, DateRangePicker, TimeField |
 | Display | Kbd, PairingCode, ThemePreview, Avatar, Emblem, Identity, List, Prose, Badge, Tag, AgentChip, DiffStat, Comment, ReactionBar, ListRow, ResourceCard, ModelChip, Card, EmptyState, SettingRow, CodeBlock, Heatmap, TimeSeriesChart, BarChart, CommitGraph, PanZoom, FlowMap, RouteDiagram, EndpointPanel, WorktreeRow, UsageMeterRow, ReviewComment, AgentRow |
 | Status | StatusDot, ServiceStatus, Meter, Banner, Toast, Spinner, FieldMessage, StepDots, Toaster, Skeleton, RunTimeline |
 | Navigation | TabStrip, ActivityBar, StatusBar, Tabs, NavList, Breadcrumb, TreeView, Disclosure, SplitHandle, Toolbar, BottomNav |

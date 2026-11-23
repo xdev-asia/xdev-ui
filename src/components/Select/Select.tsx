@@ -3,8 +3,18 @@ import { cx } from "../../internal/cx";
 import type { IconName } from "../../icons";
 import { Icon } from "../Icon/Icon";
 
-export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
-  options: { value: string; label: string }[];
+export interface SelectOption {
+  value: string;
+  label: string;
+}
+
+export interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, "size"> {
+  /** Flat list of choices. Use this or `children`, never both: `options` wins when both are set. */
+  options?: SelectOption[];
+  /** Native `<option>` and `<optgroup>` elements, for grouped or computed lists. Use this or `options`, never both. */
+  children?: ReactNode;
+  /** "md" (32px, forms) by default; "sm" (26px, the height of `SearchInput size="sm"`) for toolbars and table filters. */
+  size?: "sm" | "md";
   ref?: Ref<HTMLSelectElement>;
   /** Leading icon inside the control, such as "globe" for a language picker. Decorative: the select still needs a label. */
   icon?: IconName;
@@ -23,20 +33,23 @@ export function Select(props: SelectProps): JSX.Element {
   return props.label != null ? <SelectField {...props} /> : SelectControl(props);
 }
 
-function SelectControl({ options, className, icon, label: _label, hint: _hint, error: _error, hideLabel: _hide, ...rest }: SelectProps): JSX.Element {
+function SelectControl({ options, children, size = "md", className, icon, label: _label, hint: _hint, error: _error, hideLabel: _hide, ...rest }: SelectProps): JSX.Element {
+  const sm = size === "sm" ? "sm" : undefined;
   const select = (
-    <select className={cx("lang-select", className)} data-icon={icon ? "" : undefined} {...rest}>
-      {options.map((o) => (
-        <option key={o.value} value={o.value}>
-          {o.label}
-        </option>
-      ))}
+    <select className={cx("lang-select", className)} data-icon={icon ? "" : undefined} data-size={sm} {...rest}>
+      {options
+        ? options.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))
+        : children}
     </select>
   );
   if (!icon) return select;
   return (
-    <span className="x-select-wrap">
-      <Icon name={icon} className="x-select-icon" />
+    <span className="x-select-wrap" data-size={sm}>
+      <Icon name={icon} className="x-select-icon" size={sm ? 14 : 16} />
       {select}
     </span>
   );

@@ -551,12 +551,17 @@ export function audit(dir, opts = {}) {
     });
     if (!opts.i18n || !labelled) return;
     // Parts whose built-in words show only with one prop set; ShellTitle's default is built from the app's own words.
-    const shownWith = { EmptyState: "steps" };
+    const shownWith = { EmptyState: "steps", Label: "required" };
     for (const name of labelled) {
       if (name === "ShellTitle") continue;
       each(name, (t, p) => {
         if (p.has("labels")) return;
-        if (shownWith[name] && !p.has(shownWith[name])) return;
+        if (shownWith[name] && !isOn(p, shownWith[name])) return;
+        // Field's only words are the password toggle: a literal type other than "password", or reveal={false}, has none.
+        if (name === "Field") {
+          const type = String(p.get("type") ?? "");
+          if (!p.has("type") || (/^["']/.test(type) && !/^["']password["']$/.test(type)) || !isOn(p, "reveal") && p.has("reveal")) return;
+        }
         if (name === "Dialog" && p.has("confirmLabel") && p.has("cancelLabel")) return;
         if (name === "Spinner" && p.has("label")) return;
         add(file, t.line, "i18n-labels", "warn", `${name} has no labels; its built-in words are English, pass them from the strings files.`);

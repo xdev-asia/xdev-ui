@@ -18,6 +18,7 @@ const cases = {
   ThemeEditor: [{ mode: "dark", onMode() {}, name: "T", onName() {}, groups: [{ id: "a", title: "A", keys: [{ key: "k", label: "K" }] }], colors: { k: "#000000" }, overridden: new Set(), onColor() {}, onReset() {}, issues: [], labels: { name: "Name", mode: "Mode", dark: "Dark", light: "Light", reset: "Reset", picker: "Pick", invalid: "Bad", preview: { title: "P", sample: "S", hint: "H", button: "B" }, issuesTitle: "Issues", noIssues: "None" } }],
   FontField: [{ value: "Inter", onChange() {} }],
   Field: [{ label: "Branch", hint: "kebab-case" }],
+  Label: [{ htmlFor: "owner", required: true }, "Owner"],
   Switch: [{ label: "Auto-commit" }],
   Kbd: [{}, "Ctrl"],
   Avatar: [{ name: "Duy Tran" }],
