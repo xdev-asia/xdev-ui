@@ -287,7 +287,25 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     var el;
     el = h(React.Fragment, null,
       h(X.Field, { label: "Session name", placeholder: "fix-auth-redirect", hint: "Becomes the branch name." }),
-      h(X.Field, { label: "Port", defaultValue: "80", error: "Pick a port above 1024." }));
+      h(X.Field, { label: "Port", defaultValue: "80", error: "Pick a port above 1024." }),
+      h(X.Field, { label: "Timeout", defaultValue: "500", inputMode: "numeric", end: "ms", hint: "Time limit in milliseconds." }),
+      h(X.Field, { label: "Webhook secret", type: "password", defaultValue: "whsec_1234", mono: true, action: h(X.Button, { variant: "link" }, "Generate") }));
+    return el;
+    },
+  },
+  "Label": {
+    style: {"display": "flex", "flexDirection": "column", "gap": "12px", "alignItems": "flex-start", "padding": "16px", "width": "320px"},
+    render: (X, h) => {
+    var el;
+    el = h(React.Fragment, null,
+      h("div", { style: { display: "flex", flexDirection: "column", gap: 4 } },
+        h(X.Label, { htmlFor: "pv-label-model" }, "Default model"),
+        h(X.Select, { id: "pv-label-model", defaultValue: "b" },
+          h("optgroup", { label: "Fast" }, h("option", { value: "a" }, "Small")),
+          h("optgroup", { label: "Large" }, h("option", { value: "b" }, "Medium"), h("option", { value: "c" }, "Large")))),
+      h("div", { style: { display: "flex", flexDirection: "column", gap: 4 } },
+        h(X.Label, { htmlFor: "pv-label-owner", required: true }, "Owner"),
+        h(X.Button, { id: "pv-label-owner", variant: "secondary" }, "Choose a person")));
     return el;
     },
   },
@@ -422,7 +440,12 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     var el;
     el = h(React.Fragment, null,
       h(X.Select, { "aria-label": "Language", defaultValue: "en", options: [{ value: "en", label: "English" }, { value: "vi", label: "Tiếng Việt" }] }),
-      h(X.Select, { "aria-label": "Profile", options: [{ value: "claude", label: "Claude" }, { value: "codex", label: "Codex" }, { value: "custom", label: "Custom" }] }));
+      h(X.Select, { "aria-label": "Profile", options: [{ value: "claude", label: "Claude" }, { value: "codex", label: "Codex" }, { value: "custom", label: "Custom" }] }),
+      h(X.Select, { "aria-label": "Status filter", size: "sm", defaultValue: "all" },
+        h("option", { value: "all" }, "All statuses"),
+        h("optgroup", { label: "Open" }, h("option", { value: "running" }, "Running"), h("option", { value: "waiting" }, "Waiting")),
+        h("optgroup", { label: "Closed" }, h("option", { value: "done" }, "Done"), h("option", { value: "failed" }, "Failed"))),
+      h(X.SearchInput, { size: "sm", placeholder: "Filter", "aria-label": "Filter" }));
     return el;
     },
   },
@@ -469,7 +492,9 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     el = h(React.Fragment, null,
       h(X.Switch, { label: "Auto-accept edits", defaultChecked: true }),
       h(X.Switch, { label: "Notify when an agent waits" }),
-      h(X.Switch, { label: "Disabled", disabled: true }));
+      h(X.Switch, { label: "Disabled", disabled: true }),
+      h(X.Switch, { label: "Weekly digest", hint: "A summary every Monday at 09:00." }),
+      h(X.Switch, { label: "Enabled", hideLabel: true, defaultChecked: true }));
     return el;
     },
   },

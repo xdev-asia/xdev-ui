@@ -54,6 +54,45 @@
 .ws-field[data-invalid] input { border-color: var(--danger); }
 .ws-field[data-invalid] small { color: var(--danger); }
 
+/* Label (.x-label): the Field label, also on its own for custom controls */
+.x-label { font: 600 12px var(--font-body); color: var(--text-1); }
+.x-label-required { margin-inline-start: var(--x-space-1); color: var(--danger); }
+/* Field label row with an action (.x-field-label-row) */
+.x-field-label-row { display: flex; align-items: center; justify-content: space-between; gap: var(--x-space-2); min-width: 0; }
+.x-field-label-row > .x-label { min-width: 0; }
+.x-field-action { display: inline-flex; align-items: center; flex: none; font-weight: 400; }
+/* Field control with content at its end (.x-field-control > input + .x-field-end): the box moves from the input to
+   the wrapper, so the text stops before the end content instead of running under it */
+.x-field-control {
+  display: flex;
+  align-items: center;
+  height: 30px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-m);
+  background: var(--bg-0);
+}
+.ws-field .x-field-control input {
+  flex: 1 1 auto;
+  align-self: stretch;
+  min-width: 0;
+  height: auto;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+}
+.ws-field .x-field-control input:focus-visible { outline: 0.125rem solid transparent; }
+.x-field-control:has(> input:focus-visible) { outline: 2px solid var(--x-color-signal); outline-offset: 2px; }
+.ws-field[data-invalid] .x-field-control { border-color: var(--danger); }
+.x-field-end {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--x-space-1);
+  flex: none;
+  padding-inline: var(--x-space-1);
+  color: var(--text-2);
+  font: 400 12px var(--font-body);
+}
+
 .dialog-input {
   padding: var(--x-space-2) var(--x-space-3);
   border: 1px solid var(--x-color-line-strong);
@@ -90,6 +129,8 @@
 .agent-switch:checked::after { left: 16px; background: var(--x-color-on-accent); }
 .agent-switch:disabled { opacity: 0.6; cursor: default; }
 .x-switch-row { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-1); }
+.x-switch-field { display: inline-flex; flex-direction: column; gap: 2px; }
+.x-switch-hint { padding-inline-start: calc(30px + var(--x-space-2)); font-size: 11.5px; color: var(--x-color-muted); }
 
 /* Checkbox (settings .ws-tick, .dialog-option) */
 .ws-tick {
@@ -555,3 +596,7 @@
 .x-select-wrap { position: relative; display: inline-flex; align-items: center; color: var(--x-color-muted); }
 .x-select-icon { position: absolute; inset-inline-start: var(--x-space-3); pointer-events: none; }
 .lang-select[data-icon] { padding-inline-start: calc(var(--x-space-3) + 16px + var(--x-space-2)); cursor: pointer; }
+/* Compact select (data-size="sm"): the height of SearchInput size="sm", for toolbars and table filters */
+.lang-select[data-size="sm"] { height: 26px; min-height: 26px; padding: 0 var(--x-space-2); border-radius: var(--radius-m); font-size: 12px; }
+.x-select-wrap[data-size="sm"] .x-select-icon { inset-inline-start: var(--x-space-2); }
+.lang-select[data-size="sm"][data-icon] { padding-inline-start: calc(var(--x-space-2) + 14px + var(--x-space-1)); }
