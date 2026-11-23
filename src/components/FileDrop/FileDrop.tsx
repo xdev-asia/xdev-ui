@@ -1,4 +1,4 @@
-import { useId, useState, type ChangeEvent, type DragEvent, type JSX, type ReactNode } from "react";
+import { useId, useState, type ChangeEvent, type DragEvent, type InputHTMLAttributes, type JSX, type ReactNode } from "react";
 import { cx } from "../../internal/cx";
 import { Icon } from "../Icon/Icon";
 import { IconButton } from "../IconButton/IconButton";
@@ -107,11 +107,14 @@ export interface FileDropProps {
   onRemove?: (id: string) => void;
   labels?: Partial<FileDropLabels>;
   className?: string;
+  /** Extra attributes for the hidden file input: `name`, `id`, `data-*`, `aria-describedby`. FileDrop owns type, accept, multiple, disabled and onChange. */
+  inputProps?: Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "accept" | "multiple" | "disabled" | "onChange"> & { [data: `data-${string}`]: string | undefined };
 }
 
-export function FileDrop({ label, accept, maxSize, multiple, maxFiles, disabled, onFiles, onReject, items, onRemove, labels, className }: FileDropProps): JSX.Element {
+export function FileDrop({ label, accept, maxSize, multiple, maxFiles, disabled, onFiles, onReject, items, onRemove, labels, className, inputProps }: FileDropProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
-  const inputId = `x-filedrop-${useId()}`;
+  const autoId = `x-filedrop-${useId()}`;
+  const inputId = inputProps?.id ?? autoId;
   const [over, setOver] = useState(false);
   const [rejected, setRejected] = useState<FileRejection[]>([]);
   const take = (list: FileList | null): void => {
@@ -148,6 +151,7 @@ export function FileDrop({ label, accept, maxSize, multiple, maxFiles, disabled,
         </span>
         {limits ? <small>{limits}</small> : null}
         <input
+          {...inputProps}
           id={inputId}
           className="x-sr-only"
           type="file"
