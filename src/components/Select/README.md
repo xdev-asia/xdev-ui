@@ -3,6 +3,7 @@
 Native `<select>` styled as `.lang-select`, for choosing one of many options such as the UI language.
 
 ## Rules
+- With `label`, `required` draws an asterisk after the label (`aria-hidden`; the select's own `required` is what assistive tech reads).
 - Always native: the OS list handles keyboard and screen readers.
 - Give it an `aria-label` or wrap it in a visible label.
 - `label` (with optional `hint`, `error`, `hideLabel`) renders it like a `Field`: a `.ws-field.x-select-field` column with the label above, the select full width, and the note under it linked by `aria-describedby`. `className` then goes on the wrapper.

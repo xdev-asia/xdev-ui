@@ -8,19 +8,24 @@ export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElemen
   error?: ReactNode;
   /** Monospace text, for prompts, commands, JSON or paths. */
   mono?: boolean;
+  /** Keep the label for screen readers only, when the surrounding UI already names the box. */
+  hideLabel?: boolean;
   /** Default "vertical". */
   resize?: "vertical" | "none" | "both";
   ref?: Ref<HTMLTextAreaElement>;
 }
 
-export function Textarea({ label, hint, error, mono, resize = "vertical", id, className, rows = 4, ...rest }: TextareaProps): JSX.Element {
+export function Textarea({ label, hint, error, mono, hideLabel, resize = "vertical", id, className, rows = 4, ...rest }: TextareaProps): JSX.Element {
   const auto = useId();
   const inputId = id ?? `x-textarea-${auto}`;
   const note = error ?? hint;
   const hintId = note ? `${inputId}-hint` : undefined;
   return (
     <div className={cx("ws-field", className)} data-invalid={error ? "" : undefined}>
-      <label htmlFor={inputId}>{label}</label>
+      <label htmlFor={inputId} className={cx("x-label", hideLabel && "x-sr-only")}>
+        {label}
+        {rest.required ? <span className="x-label-required" aria-hidden="true">*</span> : null}
+      </label>
       <textarea
         id={inputId}
         rows={rows}
