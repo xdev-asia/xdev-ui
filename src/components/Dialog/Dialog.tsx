@@ -59,11 +59,23 @@ export function Dialog({ title, children, confirmLabel, cancelLabel, onConfirm, 
   const ref = useRef<HTMLDivElement | null>(null);
   const backdropRef = useRef<HTMLDivElement | null>(null);
   const inPortal = usePortal(Boolean(modal) && portal);
+  // The trigger is read during the first render, before React commits: a child with `autoFocus`
+  // has already taken focus by the time an effect runs, and reading it there would "restore" focus
+  // into the closed dialog.
+  const triggerRef = useRef<HTMLElement | null>(typeof document === "undefined" ? null : (document.activeElement as HTMLElement | null));
   useEffect(() => {
     if (!modal) return;
-    const trigger = document.activeElement as HTMLElement | null;
+    const trigger = triggerRef.current;
     const release = inertOutside(backdropRef.current);
-    focusFirst(ref.current);
+    const root = ref.current;
+    // Keep focus a child already took (`autoFocus`); otherwise start on the first control of the
+    // body, so the close button in the header is not the first stop.
+    if (!root || !root.contains(document.activeElement)) {
+      const body = root?.querySelector?.(".dialog-body") as HTMLElement | null | undefined;
+      const first = body ? focusableIn(body)[0] : undefined;
+      if (first) first.focus();
+      else focusFirst(root);
+    }
     return () => {
       release();
       restoreFocus(trigger);

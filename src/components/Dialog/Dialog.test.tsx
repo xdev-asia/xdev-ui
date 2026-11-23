@@ -116,14 +116,22 @@ describe("Dialog", () => {
 
   describe("modal focus", () => {
     const fake = (name: string, extra: object = {}) => ({ name, focus: vi.fn(), ...extra });
-    const setup = () => {
+    const setup = (opts: { trigger?: unknown; inside?: boolean; body?: unknown } = {}) => {
       h.effects.length = 0;
       h.refs.length = 0;
-      const tree = Dialog({ title: "x", modal: true, onCancel: vi.fn() }) as any;
+      let tree: any;
+      withDocument(opts.trigger ?? null, () => {
+        tree = Dialog({ title: "x", modal: true, onCancel: vi.fn() });
+      });
       const [dialogRef, backdropRef] = h.refs;
       const first = fake("first");
       const last = fake("last");
-      dialogRef.current = { focus: vi.fn(), querySelectorAll: () => [first, last] };
+      dialogRef.current = {
+        focus: vi.fn(),
+        querySelectorAll: () => [first, last],
+        querySelector: () => opts.body ?? null,
+        contains: () => Boolean(opts.inside),
+      };
       const siblingOutside = { inert: false, tagName: "DIV" };
       const parent = { children: [] as unknown[], parentElement: null as unknown, inert: false };
       const backdrop = { parentElement: parent, children: [], inert: false };
@@ -140,8 +148,8 @@ describe("Dialog", () => {
       }
     };
     it("moves focus in, makes the page inert and restores both on close", () => {
-      const { first, siblingOutside } = setup();
       const trigger = fake("trigger");
+      const { first, siblingOutside } = setup({ trigger });
       withDocument(trigger, () => {
         const cleanup = h.effects[0]() as () => void;
         expect(first.focus).toHaveBeenCalledOnce();
@@ -150,6 +158,24 @@ describe("Dialog", () => {
       });
       expect(siblingOutside.inert).toBe(false);
       expect(trigger.focus).toHaveBeenCalledOnce();
+    });
+    it("keeps focus a child already took with autoFocus, and still restores the trigger read at render", () => {
+      const trigger = fake("trigger");
+      const auto = fake("auto");
+      const { first } = setup({ trigger, inside: true });
+      withDocument(auto, () => {
+        const cleanup = h.effects[0]() as () => void;
+        expect(first.focus).not.toHaveBeenCalled();
+        cleanup();
+      });
+      expect(trigger.focus).toHaveBeenCalledOnce();
+    });
+    it("starts on the first control of the body, not the close button in the header", () => {
+      const field = fake("field");
+      const { first } = setup({ body: { querySelectorAll: () => [field] } });
+      withDocument(null, () => void h.effects[0]());
+      expect(field.focus).toHaveBeenCalledOnce();
+      expect(first.focus).not.toHaveBeenCalled();
     });
     it("does nothing in the effect when not modal", () => {
       h.effects.length = 0;
