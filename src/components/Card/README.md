@@ -5,6 +5,12 @@ Flat bordered surface that groups one topic, with an optional head of title, sub
 ## Anatomy
 `section.x-card` > optional `.x-card-head` (`.x-card-heading` > `h3.x-card-title` or `.x-card-title-row` (title + `titleAside`), `p.x-card-sub`; `.x-card-actions`) + `.x-card-body`.
 
+## Props
+- Every `section` attribute except `title` (`id`, `role`, `aria-*`, `data-*`, `onClick`) goes on the `section`; `className` is added to `x-card`.
+- With a `title` the section is named by it (`aria-labelledby` points at the heading, over one you pass). Without a `title` a passed `aria-labelledby` stays.
+- `bodyClassName` is added to `.x-card-body`, e.g. a grid or gap utility for the content.
+- The head renders only when there is a `title`, `subtitle` or `actions`. With none of them the card is the body alone.
+
 ## Rules
 - Flat: `--x-color-surface`, a 1px `--x-color-line` border, `--x-radius-lg`. No shadow at rest and no coloured stripe.
 - One topic per card. Do not nest cards; use a `Disclosure` or plain rows inside.
