@@ -624,3 +624,27 @@
 .lang-select[data-size="sm"] { height: 26px; min-height: 26px; padding: 0 var(--x-space-2); border-radius: var(--radius-m); font-size: 12px; }
 .x-select-wrap[data-size="sm"] .x-select-icon { inset-inline-start: var(--x-space-2); }
 .lang-select[data-size="sm"][data-icon] { padding-inline-start: calc(var(--x-space-2) + 14px + var(--x-space-1)); }
+/* Closed select drawn by the kit, not the OS: the platform arrow (and on some systems a grey bevel) made a
+   styled Select read as an unstyled browser control next to SearchInput and Button. The list that opens is
+   still the native one, so keyboard and screen-reader behaviour do not change. The chevron is two gradient
+   strokes in --x-color-muted; forced-colors mode gets the system control back so the arrow stays visible. */
+.lang-select:not([multiple]) {
+  appearance: none;
+  padding-inline-end: calc(var(--x-space-3) + 14px);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--x-color-muted) 50%),
+    linear-gradient(135deg, var(--x-color-muted) 50%, transparent 50%);
+  background-position: calc(100% - 15px) 50%, calc(100% - 11px) 50%;
+  background-size: 4px 4px, 4px 4px;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+.lang-select[data-size="sm"]:not([multiple]) {
+  padding-inline-end: calc(var(--x-space-2) + 12px);
+  background-position: calc(100% - 12px) 50%, calc(100% - 8px) 50%;
+}
+.lang-select:disabled { cursor: not-allowed; opacity: 0.6; }
+[dir="rtl"] .lang-select:not([multiple]) { background-position: 11px 50%, 15px 50%; }
+@media (forced-colors: active) {
+  .lang-select:not([multiple]) { appearance: auto; background-image: none; }
+}

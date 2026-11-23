@@ -5,7 +5,7 @@ Native `<select>` styled as `.lang-select`, for choosing one of many options suc
 ## Rules
 - With `label`, `error` replaces the hint, marks the select invalid and is announced when it appears (`role="alert"`).
 - With `label`, `required` draws an asterisk after the label (`aria-hidden`; the select's own `required` is what assistive tech reads).
-- Always native: the OS list handles keyboard and screen readers.
+- Always native: the OS list handles keyboard and screen readers. Only the closed box is drawn by the kit (`appearance: none` plus a `--x-color-muted` chevron) so it matches `SearchInput` and `Button`; forced-colors mode falls back to the system control.
 - Give it an `aria-label` or wrap it in a visible label.
 - `label` (with optional `hint`, `error`, `hideLabel`) renders it like a `Field`: a `.ws-field.x-select-field` column with the label above, the select full width, and the note under it linked by `aria-describedby`. `className` then goes on the wrapper.
 - Two to four short options that benefit from being seen together: use `Segmented`.
