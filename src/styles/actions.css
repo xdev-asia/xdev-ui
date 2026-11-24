@@ -71,7 +71,8 @@
   padding: 0;
   border: 0;
   background: transparent;
-  color: var(--x-color-accent);
+  /* Link text: the accent pulled toward the text colour, so it reads at 4.5:1 or more on every surface in both themes. */
+  color: color-mix(in srgb, var(--x-color-accent) 70%, var(--text-1));
   font: 600 13px var(--font-body);
   text-decoration: underline;
   text-underline-offset: 2px;
@@ -116,7 +117,7 @@ a.btn, a.btn-secondary, a.btn-danger, a.btn-ghost { text-decoration: none; }
 
 /* AudioPreview (.x-audio-preview): round play/stop toggle; the playing one is accent */
 .ws-icon-btn.x-audio-preview { border: 1px solid var(--x-color-line-strong); border-radius: 50%; }
-.x-audio-preview[data-playing] { border-color: var(--x-color-accent); color: var(--x-color-accent); }
+.x-audio-preview[data-playing] { border-color: var(--x-color-accent); color: color-mix(in srgb, var(--x-color-accent) 70%, var(--text-1)); }
 .x-audio-preview:disabled { opacity: 0.6; cursor: default; }
 
 /* ActionTile (.x-action-tile) */

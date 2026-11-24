@@ -513,7 +513,7 @@
 .x-filedrop-zone:focus-within { outline: 2px solid var(--x-color-focus); outline-offset: 2px; }
 .x-filedrop-zone[data-disabled] { opacity: 0.5; cursor: not-allowed; }
 .x-filedrop-zone small { font-size: 12px; }
-.x-filedrop-browse { color: var(--x-color-accent); font-weight: 600; text-decoration: underline; }
+.x-filedrop-browse { color: color-mix(in srgb, var(--x-color-accent) 70%, var(--text-1)); font-weight: 600; text-decoration: underline; }
 .x-filedrop-errors { margin: 0; padding: 0; list-style: none; color: var(--x-color-danger); font-size: 13px; }
 .x-filedrop-list { display: grid; gap: var(--x-space-1); margin: 0; padding: 0; list-style: none; }
 .x-filedrop-item {
