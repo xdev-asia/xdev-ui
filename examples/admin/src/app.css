@@ -147,3 +147,8 @@
 .ill-badge-text { fill: var(--x-color-on-accent); font-family: var(--font-body); font-weight: 700; }
 .ill-badge-fill { fill: var(--x-color-on-accent); }
 .ill-badge-stroke { stroke: var(--x-color-on-accent); }
+/* Below the drawer breakpoint main's padding is --x-space-4, so the full-width tab bar and the fixed footer cancel that instead. */
+@media (max-width: 767.98px) {
+  .app-tabs { margin: calc(-1 * var(--x-space-4)) calc(-1 * var(--x-space-4)) var(--x-space-4); }
+  .app-footer[data-fixed] { bottom: calc(-1 * var(--x-space-4)); margin-bottom: calc(-1 * var(--x-space-4)); }
+}
