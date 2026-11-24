@@ -171,7 +171,7 @@
     inset-block: 0;
     left: 0;
     z-index: var(--x-z-nav);
-    width: min(var(--w-side), 85vw);
+    width: min(max(var(--w-side), 17.5rem), 85vw); /* the drawer keeps room for long labels even when the desktop sidebar is narrow */
     transform: translateX(-100%);
     visibility: hidden;
     transition: transform 0.18s ease, visibility 0s linear 0.18s;
@@ -197,7 +197,7 @@
     inset-block: 0;
     left: 0;
     z-index: var(--x-z-nav);
-    width: min(var(--w-side), 85vw);
+    width: min(max(var(--w-side), 17.5rem), 85vw); /* the drawer keeps room for long labels even when the desktop sidebar is narrow */
     transform: translateX(-100%);
     visibility: hidden;
     transition: transform 0.18s ease, visibility 0s linear 0.18s;

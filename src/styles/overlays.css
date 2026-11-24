@@ -144,6 +144,8 @@ a.x-menu-item { text-decoration: none; }
 /* Popover (.x-popover) */
 .ws-menu-backdrop { position: fixed; inset: 0; z-index: calc(var(--x-z-dropdown) - 1); }
 .x-popover-anchor { position: relative; display: inline-flex; }
+/* A Menu inside a Popover is the popover's content, not a second card. */
+.x-popover > .x-menu { border: 0; box-shadow: none; background: transparent; }
 .x-popover {
   position: absolute;
   z-index: var(--x-z-dropdown);
@@ -253,6 +255,7 @@ a.x-menu-item { text-decoration: none; }
 .x-drawer:focus { outline: none; }
 .x-drawer[data-size="wide"] { width: min(640px, 100vw); }
 .x-drawer[data-side="start"] { margin-left: 0; margin-right: auto; border-left: 0; border-right: 1px solid var(--x-color-line); animation-name: x-drawer-in-start; }
+.x-drawer-head > .ws-icon-btn, .x-drawer-head > button { flex: none; }
 .x-drawer-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--x-space-3); padding: var(--x-space-4) var(--x-space-6); border-bottom: 1px solid var(--x-color-line); }
 .x-drawer-title { margin: 0; font-size: 16px; font-weight: 700; }
 .x-drawer-desc { margin: var(--x-space-1) 0 0; color: var(--x-color-muted); font-size: 13px; }
@@ -347,6 +350,9 @@ a.x-menu-item { text-decoration: none; }
 .x-palette-trigger:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: 2px; }
 .x-palette-trigger-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .x-palette-trigger-key { flex: none; }
+/* A shortcut hint means nothing on a phone; give the room to the label. */
+@media (max-width: 767.98px) /* below --x-bp-md */ { .x-palette-trigger-key { display: none; } }
+@media (pointer: coarse) { .x-palette-trigger-key { display: none; } }
 
 /* Scrolling inside a layer never scrolls (or pull-refreshes) the page behind it. :where keeps specificity at 0. */
 :where(.dialog, .dialog-backdrop[data-modal], .x-drawer-body, .x-attention-list, .x-date-popover, .x-combobox-list, .x-search-picker-list, .pal-list) {

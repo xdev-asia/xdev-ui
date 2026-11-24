@@ -36,6 +36,8 @@
   border-radius: var(--radius-s);
   font: 400 10px/16px var(--font-body);
   color: var(--text-2);
+  /* A tag is one short value; it never breaks inside ("Biên tập viên"). */
+  white-space: nowrap;
 }
 .ws-tag-warn { border-color: transparent; background: var(--warn-bg); color: var(--warn); font-weight: 600; }
 .ws-tag-removable { display: inline-flex; align-items: center; gap: 2px; padding-right: 0; }

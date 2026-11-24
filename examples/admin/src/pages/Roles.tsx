@@ -72,7 +72,7 @@ export function RolesView(p: RolesViewProps): JSX.Element {
   ];
 
   const roleRows: DataTableColumn<RoleId>[] = [
-    { key: "name", header: t("roles.list"), cell: (id) => t(`roles.names.${id}`) },
+    { key: "name", header: t("roles.role"), cell: (id) => t(`roles.names.${id}`) },
     { key: "code", header: t("roles.code"), mono: true, cell: (id) => <span translate="no">{id}</span> },
     { key: "status", header: t("roles.status"), cell: () => <StatusDot tone="ok" label={t("roles.active")} /> },
     { key: "people", header: t("roles.people"), align: "end", mono: true, width: "min", cell: (id) => num(p.state.status === "ready" ? p.state.data.counts[id] : 0) },

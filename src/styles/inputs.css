@@ -152,7 +152,9 @@
 
 /* RadioGroup (terminal .term-radios) */
 .term-radios { display: flex; flex-wrap: wrap; gap: var(--x-space-4); border: 0; margin: 0; padding: 0; }
-.term-radios[data-orientation="vertical"] { flex-direction: column; gap: var(--x-space-2); }
+/* Vertical: one column. Wrapping would read the label's 100% basis as a height and push options into a second column. */
+.term-radios[data-orientation="vertical"] { flex-direction: column; flex-wrap: nowrap; gap: var(--x-space-2); }
+.term-radios[data-orientation="vertical"] .term-radios-label { flex-basis: auto; }
 .term-radios-label { flex-basis: 100%; font: 600 12px var(--font-body); color: var(--x-color-ink); }
 .term-radio {
   display: flex;
@@ -163,7 +165,7 @@
   cursor: pointer;
 }
 .term-radio input { margin: 2px 0 0; accent-color: var(--accent); flex: none; cursor: inherit; }
-.term-radio-text { display: flex; flex-direction: column; gap: 2px; }
+.term-radio-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .term-radio-hint { font-size: 11.5px; color: var(--x-color-muted); }
 .term-radio[data-disabled] { opacity: 0.6; cursor: default; }
 

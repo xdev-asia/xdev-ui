@@ -7,6 +7,7 @@ import { LOCALES, useI18n, type Locale } from "../i18n";
 import { hrefFor, navigate, type Route } from "../router";
 import { AccountMenu } from "./AccountMenu";
 import { GlobalSearch } from "./GlobalSearch";
+import { useStore } from "../data/context";
 import { currentOf, fitSections, leaves, navFor, toItems, type NavNode } from "./nav";
 import { buildId, ROOT_VARS, rootStyle, watermarkUrl } from "./appearance";
 import { Notifications } from "./Notifications";
@@ -155,8 +156,26 @@ export function Shell(p: ShellProps): JSX.Element {
   const topId = here ? (here.trail[0]?.id ?? here.entry.id) : null;
   const section = tree.find((n) => n.id === topId);
   const sideless = wide && (!prefs.sidebar || layout === "top" || (layout === "mixed" && !section?.children));
+  // Settings sections share one tab, the way a page's own sub-views do.
+  const tabPath = route.name === "settings" ? hrefFor.settings().slice(1) : route.path;
   const iconOf = (path: string) => leaves(tree).find((l) => l.entry.href === `#${path}`)?.entry.icon;
-  const title = route.name === "user" ? (route.params.id ?? "") : here ? t(here.entry.label) : t("app.notFoundTitle");
+  // A user's page is titled with their name once the store answers; the id stands in until then.
+  const store = useStore();
+  const [userNames, setUserNames] = useState<Record<string, string>>({});
+  const userId = route.name === "user" ? (route.params.id ?? "") : "";
+  useEffect(() => {
+    if (!userId || userNames[userId]) return;
+    store.getUser(userId).then((u) => setUserNames((m) => ({ ...m, [userId]: u.name })), () => {});
+  }, [userId, store, userNames]);
+  const title = userId ? (userNames[userId] ?? userId) : here ? t(here.entry.label) : t("app.notFoundTitle");
+  /** A tab's title in the current language: menu pages are translated again on every render, users keep their name. */
+  const tabTitle = (tab: OpenPage): string => {
+    if (tab.path === HOME) return t("nav.dashboard");
+    const leaf = leaves(tree).find((l) => l.entry.href === `#${tab.path}`);
+    if (leaf) return t(leaf.entry.label);
+    const id = /^\/users\/(.+)$/.exec(tab.path)?.[1];
+    return (id && userNames[id]) || tab.title;
+  };
   const homeTitle = t("nav.dashboard");
 
   // Page tabs survive a reload within this browser tab (sessionStorage) while "keep tabs" is on.
@@ -177,7 +196,7 @@ export function Shell(p: ShellProps): JSX.Element {
       const withHome = list.some((x) => x.path === HOME) ? list : visitTab(list, { path: HOME, title: homeTitle });
       return visitTab(
         withHome.map((x) => (x.path === HOME ? { ...x, title: homeTitle } : x)),
-        { path: route.path, title },
+        { path: tabPath, title },
       );
     });
   }, [route.path, route.name, title, homeTitle]);
@@ -221,9 +240,20 @@ export function Shell(p: ShellProps): JSX.Element {
     return () => ro?.disconnect();
   }, [layout, topIndex, tree.length, locale]);
 
+  // Keep the current page's tab in view when the strip is wider than the screen (no scrollIntoView: it would move the page).
+  useEffect(() => {
+    const strip = stripRef.current?.querySelector<HTMLElement>(".ws-tabstrip");
+    const tab = strip?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')?.closest<HTMLElement>(".ws-tab");
+    if (!strip || !tab) return;
+    const s = strip.getBoundingClientRect();
+    const r = tab.getBoundingClientRect();
+    if (r.left < s.left) strip.scrollLeft -= s.left - r.left;
+    else if (r.right > s.right) strip.scrollLeft += r.right - s.right;
+  }, [route.path, tabs.length]);
+
   const act = (action: TabAction, target: string): void => {
     setTabMenu(null);
-    const next = closeTabs(tabs, action, target, route.path);
+    const next = closeTabs(tabs, action, target, tabPath);
     setTabs(next.tabs);
     if (next.go) navigate(`#${next.go}`);
   };
@@ -240,7 +270,7 @@ export function Shell(p: ShellProps): JSX.Element {
   const menuFor = (path: string) => {
     const at = tabs.findIndex((x) => x.path === path);
     return [
-      { label: t("shell.reloadPage"), disabled: path !== route.path, onSelect: () => { setTabMenu(null); setReload((n) => n + 1); } },
+      { label: t("shell.reloadPage"), disabled: path !== tabPath, onSelect: () => { setTabMenu(null); setReload((n) => n + 1); } },
       { type: "separator" as const },
       { label: t("shell.closeTab"), disabled: at < 0 || path === HOME, onSelect: () => act("close", path) },
       { label: t("shell.closeLeft"), disabled: !tabs.slice(0, Math.max(at, 0)).some((x) => x.path !== HOME), onSelect: () => act("left", path) },
@@ -360,10 +390,10 @@ export function Shell(p: ShellProps): JSX.Element {
           />
         </span>
       }
-      crumbs={topNav ?? (prefs.crumbs && crumbs.length ? <Breadcrumb className="app-wide-only" items={crumbs} labels={ui.breadcrumb} /> : undefined)}
+      crumbs={topNav ?? (prefs.crumbs && crumbs.length ? <Breadcrumb className="app-wide-only app-crumbs" items={crumbs} labels={ui.breadcrumb} /> : undefined)}
       actions={
         <>
-          <GlobalSearch tree={tree} recent={tabs.filter((x) => x.path !== route.path)} />
+          <GlobalSearch tree={tree} recent={tabs.filter((x) => x.path !== tabPath)} />
           <IconButton icon="settings" label={t("shell.preferences")} aria-haspopup="dialog" onClick={() => setPrefsOpen(true)} />
           {/* Theme, language and full screen are also in preferences, so a phone's top bar keeps only four controls. */}
           <span className="app-wide-only">
@@ -397,10 +427,10 @@ export function Shell(p: ShellProps): JSX.Element {
             <TabStrip
               label={t("shell.openPages")}
               labels={ui.tabStrip}
-              tabs={tabs.map((tab) => ({ id: tab.path, name: tab.title, pinned: tab.path === HOME, icon: prefs.tabsIcons ? iconOf(tab.path) : undefined }))}
+              tabs={tabs.map((tab) => ({ id: tab.path, name: tabTitle(tab), pinned: tab.path === HOME, icon: prefs.tabsIcons ? iconOf(tab.path) : undefined }))}
               variant={prefs.tabsStyle}
               onReorder={prefs.tabsDraggable ? (ids) => setTabs((list) => ids.flatMap((id) => list.filter((x) => x.path === id))) : undefined}
-              selected={route.path}
+              selected={tabPath}
               onSelect={(path) => navigate(`#${path}`)}
               onClose={(path) => act("close", path)}
               onAdd={false}
@@ -417,9 +447,9 @@ export function Shell(p: ShellProps): JSX.Element {
                 onClose={() => setTabMenu(null)}
                 placement="bottom-end"
                 label={t("shell.tabActions")}
-                trigger={(a) => <IconButton icon="chevron" label={t("shell.tabActions")} onClick={() => setTabMenu(tabMenu === null ? route.path : null)} {...a} />}
+                trigger={(a) => <IconButton icon="chevron" label={t("shell.tabActions")} onClick={() => setTabMenu(tabMenu === null ? tabPath : null)} {...a} />}
               >
-                <Menu label={t("shell.tabActions")} items={menuFor(tabMenu ?? route.path)} onClose={() => setTabMenu(null)} />
+                <Menu label={t("shell.tabActions")} items={menuFor(tabMenu ?? tabPath)} onClose={() => setTabMenu(null)} />
               </Popover>
             ) : null}
           </div>
@@ -429,6 +459,8 @@ export function Shell(p: ShellProps): JSX.Element {
       <div key={`${route.path}-${reload}`} className="app-page" data-transition={prefs.transition ? prefs.transitionName : undefined}>
         <Suspense fallback={prefs.loading ? <div className="app-pane"><Spinner size="md" label={t("shell.loadingPage")} /></div> : null}>{p.children}</Suspense>
       </div>
+      {/* Room at the end of the page, so the back-to-top button never sits on the last row or the pagination. */}
+      {prefs.backToTop ? <div className="app-back-top-room" aria-hidden="true" /> : null}
       {prefs.footer && !focusView ? (
         <footer className="app-footer" data-fixed={prefs.fixedFooter ? "" : undefined}>
           {year || prefs.company ? (

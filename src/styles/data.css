@@ -26,6 +26,8 @@
 .x-stat-extra { margin-top: var(--x-space-2); }
 
 /* DataTable (.x-table) */
+/* Codes, paths and emails (mono cells) never break mid-value; a wide table scrolls in its wrapper instead. */
+.x-table td.ws-mono { white-space: nowrap; }
 .x-table-wrap { position: relative; container-type: inline-size; max-width: 100%; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-l); background: var(--bg-1); }
 .x-table-wrap[data-loading] .x-table tbody { opacity: 0.6; }
 /* The sort select of a `stack` table; shown only while its rows are stacked (responsive.css). */

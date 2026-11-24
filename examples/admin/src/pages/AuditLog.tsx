@@ -69,11 +69,10 @@ export function AuditLogView(p: AuditLogViewProps): JSX.Element {
     { key: "time", header: t("audit.columns.time"), mono: true, cell: (e) => date(e.time, true) },
     { key: "actor", header: t("audit.columns.actor"), cell: (e) => e.actor },
     { key: "action", header: t("audit.columns.action"), cell: (e) => t(`audit.actions.${e.kind}`) },
-    { key: "target", header: t("audit.columns.target"), mono: true, hideNarrow: true, cell: (e) => e.target },
+    { key: "target", header: t("audit.columns.target"), mono: true, cell: (e) => e.target },
     {
       key: "details",
       header: t("audit.details"),
-      hideNarrow: true,
       cell: (e) => (
         <Disclosure title={t("audit.details")} defaultExpanded={false}>
           <DescriptionList items={[{ term: t("audit.ip"), value: e.ip, mono: true }, { term: "ID", value: e.id, mono: true }]} />
@@ -126,7 +125,7 @@ export function AuditLogView(p: AuditLogViewProps): JSX.Element {
               </FilterChip>
             ))}
           </div>
-          <DataTable caption={t("audit.table")} columns={columns} rows={rows} rowKey={(e) => e.id} loading={p.state.status === "loading"} empty={empty} labels={ui.dataTable} />
+          <DataTable caption={t("audit.table")} columns={columns} rows={rows} rowKey={(e) => e.id} loading={p.state.status === "loading"} empty={empty} labels={ui.dataTable} stack />
           <Pagination
             page={p.page}
             pageSize={p.pageSize}
