@@ -16,7 +16,7 @@ export function LegalView({ page, signedIn }: { page: LegalPage; signedIn: boole
   }, [page, t]);
   return (
     <main className="app-legal">
-      <Container size="md">
+      <Container size="sm">
         <div className="app-stack">
           <a className="app-legal-brand" href={hrefFor.dashboard()}>
             <BrandMark size={24} label="" />

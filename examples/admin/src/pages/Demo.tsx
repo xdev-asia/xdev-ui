@@ -1,5 +1,5 @@
-import type { JSX } from "react";
-import { Button, Card, PageHeader } from "@xdev-asia/ui";
+import { useState, type JSX } from "react";
+import { Button, Card, PageHeader, Spinner } from "@xdev-asia/ui";
 import { useI18n } from "../i18n";
 import { EMBEDS, type EmbedId, type NESTED } from "../router";
 
@@ -13,6 +13,8 @@ export function NestedPage({ leaf }: { leaf: (typeof NESTED)[number] }): JSX.Ele
 
 /** Another site inside the console (Outside pages, Embedded), with a way out to a full tab. */
 export function EmbedPage({ id }: { id: EmbedId }): JSX.Element {
+  // Until the embedded site answers, the card shows a spinner instead of an empty frame.
+  const [loaded, setLoaded] = useState(false);
   const { t } = useI18n();
   const url = EMBEDS[id];
   const name = t(id === "docs" ? "nav.docs" : "nav.storybook");
@@ -28,7 +30,14 @@ export function EmbedPage({ id }: { id: EmbedId }): JSX.Element {
         }
       />
       <Card flush>
-        <iframe className="app-frame" src={url} title={name} loading="lazy" referrerPolicy="no-referrer" />
+        <div className="app-frame-wrap">
+          {loaded ? null : (
+            <div className="app-frame-loading">
+              <Spinner size="md" label={t("shell.loadingPage")} />
+            </div>
+          )}
+          <iframe className="app-frame" src={url} title={name} loading="lazy" referrerPolicy="no-referrer" onLoad={() => setLoaded(true)} />
+        </div>
       </Card>
     </>
   );
