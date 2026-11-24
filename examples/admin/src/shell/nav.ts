@@ -119,17 +119,20 @@ export const NAV: NavNode[] = [
   { id: "about", label: "nav.about", icon: "info", href: hrefFor.about(), current: is("about") },
 ];
 
-/** Pure: true when the role may see the entry. */
-export function allowed(n: NavNode, roles: Role[], role: RoleId): boolean {
+const pathOf = (href: string | undefined): string => (href ?? "").replace(/^#/, "");
+
+/** Pure: true when the role may see the entry; `hidden` holds paths the back-end menu switched off. */
+export function allowed(n: NavNode, roles: Role[], role: RoleId, hidden?: ReadonlySet<string>): boolean {
   if (n.roles && !n.roles.includes(role)) return false;
+  if (hidden?.has(pathOf(n.href))) return false;
   return !n.resource || canRead(roles, role, n.resource);
 }
 
 /** Pure: the tree a role sees; branches left empty are dropped. */
-export function navFor(roles: Role[], role: RoleId, tree: NavNode[] = NAV): NavNode[] {
+export function navFor(roles: Role[], role: RoleId, tree: NavNode[] = NAV, hidden?: ReadonlySet<string>): NavNode[] {
   return tree.flatMap((n) => {
-    if (!n.children) return allowed(n, roles, role) ? [n] : [];
-    const children = navFor(roles, role, n.children);
+    if (!n.children) return allowed(n, roles, role, hidden) ? [n] : [];
+    const children = navFor(roles, role, n.children, hidden);
     return children.length ? [{ ...n, children }] : [];
   });
 }
@@ -151,9 +154,9 @@ export function currentOf(route: Route, tree: NavNode[] = NAV): NavLeaf | null {
 }
 
 /** Pure: true when the role may open the route; a page outside the menu (sign-in, not found) is open to all. */
-export function canOpen(route: Route, roles: Role[], role: RoleId): boolean {
+export function canOpen(route: Route, roles: Role[], role: RoleId, hidden?: ReadonlySet<string>): boolean {
   const hit = currentOf(route);
-  return !hit || allowed(hit.entry, roles, role);
+  return !hit || allowed(hit.entry, roles, role, hidden);
 }
 
 /** Pure: the tree as NavList items, labels translated. */

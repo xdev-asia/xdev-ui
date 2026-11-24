@@ -2,7 +2,7 @@ import { useMemo, useRef, useState, type JSX } from "react";
 import { Button, DataTable, Drawer, EmptyState, Field, IconButton, PageHeader, SearchInput, Select, StatusDot, Switch, Tag, type DataTableColumn } from "@xdev-asia/ui";
 import { can } from "../auth/permissions";
 import type { Session } from "../auth/session";
-import { branchIds, countNodes, filterTree, seedMenus, updateNode, visibleRows, type MenuItem, type MenuKind, type TreeNode, type TreeRow } from "../data/catalog";
+import { addNode, branchIds, countNodes, filterTree, updateNode, visibleRows, type MenuItem, type MenuKind, type TreeNode, type TreeRow } from "../data/catalog";
 import type { Role } from "../data/seed";
 import { useI18n } from "../i18n";
 import { TreeName, toggled } from "../parts/TreeName";
@@ -22,6 +22,8 @@ export interface MenusViewProps {
   initialEditing?: string;
   /** The filter changed; the page writes it to the URL. */
   onQueryChange?: (q: string) => void;
+  /** "Add menu": a new item at the root. Omitted for a role that cannot edit. */
+  onAdd?: (data: MenuItem) => void;
 }
 
 /** Pure: menu form errors. */
@@ -29,7 +31,7 @@ export function validateMenu(m: MenuItem): { name?: "menus.nameRequired" } {
   return m.name.trim() ? {} : { name: "menus.nameRequired" };
 }
 
-export function MenusView({ tree, canEdit, onSave, initialExpanded, initialQuery = "", initialEditing, onQueryChange }: MenusViewProps): JSX.Element {
+export function MenusView({ tree, canEdit, onSave, initialExpanded, initialQuery = "", initialEditing, onQueryChange, onAdd }: MenusViewProps): JSX.Element {
   const { t, ui, num } = useI18n();
   const [query, setQueryState] = useState(initialQuery);
   const setQuery = (q: string): void => {
@@ -38,6 +40,7 @@ export function MenusView({ tree, canEdit, onSave, initialExpanded, initialQuery
   };
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set(initialExpanded ?? branchIds(tree).slice(0, 2)));
   const [editing, setEditing] = useState<string | null>(initialEditing ?? null);
+  const [adding, setAdding] = useState(false);
   const q = query.trim().toLowerCase();
   const shown = useMemo(() => (q ? filterTree(tree, (m) => `${m.name} ${m.path} ${m.code}`.toLowerCase().includes(q)) : tree), [tree, q]);
   // While filtering, every branch that holds a match is open, so matches are never hidden.
@@ -60,7 +63,12 @@ export function MenusView({ tree, canEdit, onSave, initialExpanded, initialQuery
 
   return (
     <>
-      <PageHeader title={t("menus.title")} description={t("menus.description")} meta={<Tag>{t("menus.count", { n: num(countNodes(tree)) })}</Tag>} />
+      <PageHeader
+        title={t("menus.title")}
+        description={t("menus.description")}
+        meta={<Tag>{t("menus.count", { n: num(countNodes(tree)) })}</Tag>}
+        actions={canEdit && onAdd ? <Button variant="primary" icon="plus" onClick={() => setAdding(true)}>{t("menus.add")}</Button> : undefined}
+      />
       <div className="app-stack">
         <div className="app-filters">
           <div className="app-filters-search">
@@ -83,6 +91,17 @@ export function MenusView({ tree, canEdit, onSave, initialExpanded, initialQuery
           empty={<EmptyState title={t("menus.empty")} hint={t("menus.emptyHint")} actions={<Button variant="secondary" onClick={() => setQuery("")}>{t("app.clearFilter")}</Button>} />}
         />
       </div>
+      {adding && onAdd ? (
+        <MenuDrawer
+          title={t("menus.addTitle")}
+          item={{ name: "", kind: "page", path: "/", order: tree.length + 1, enabled: true, code: "" }}
+          onClose={() => setAdding(false)}
+          onSave={(data) => {
+            onAdd(data);
+            setAdding(false);
+          }}
+        />
+      ) : null}
       {current ? (
         <MenuDrawer
           key={current.id}
@@ -98,7 +117,7 @@ export function MenusView({ tree, canEdit, onSave, initialExpanded, initialQuery
   );
 }
 
-function MenuDrawer({ item, onClose, onSave }: { item: MenuItem; onClose: () => void; onSave: (data: MenuItem) => void }): JSX.Element {
+function MenuDrawer({ item, title, onClose, onSave }: { item: MenuItem; title?: string; onClose: () => void; onSave: (data: MenuItem) => void }): JSX.Element {
   const { t, ui } = useI18n();
   const [draft, setDraft] = useState(item);
   const [tried, setTried] = useState(false);
@@ -107,7 +126,7 @@ function MenuDrawer({ item, onClose, onSave }: { item: MenuItem; onClose: () => 
   const set = (patch: Partial<MenuItem>): void => setDraft((d) => ({ ...d, ...patch }));
   return (
     <Drawer
-      title={t("menus.editTitle")}
+      title={title ?? t("menus.editTitle")}
       description={t("menus.editHint")}
       onClose={onClose}
       labels={ui.drawer}
@@ -141,18 +160,21 @@ function MenuDrawer({ item, onClose, onSave }: { item: MenuItem; onClose: () => 
   );
 }
 
-export function MenusPage({ session, roles }: { session: Session; roles: Role[] }): JSX.Element {
+export function MenusPage({ session, roles, tree, onTree }: { session: Session; roles: Role[]; tree: TreeNode<MenuItem>[]; onTree: (next: TreeNode<MenuItem>[]) => void }): JSX.Element {
   const { t } = useI18n();
   const notify = useNotify();
-  const [tree, setTree] = useState(seedMenus);
   return (
     <MenusView
       tree={tree}
+      onAdd={(data) => {
+        onTree(addNode(tree, { id: `m-new-${Date.now()}`, data }));
+        notify(t("menus.added"));
+      }}
       initialQuery={initialParam("q") ?? ""}
       onQueryChange={(q) => replaceQuery({ q })}
       canEdit={can(roles, session.role, "settings.update")}
       onSave={(id, data) => {
-        setTree((x) => updateNode(x, id, data));
+        onTree(updateNode(tree, id, data));
         notify(t("menus.saved"));
       }}
     />

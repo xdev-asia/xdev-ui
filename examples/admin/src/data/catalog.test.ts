@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { branchIds, categoryShare, countNodes, filterTree, updateNode, seedDepartments, seedMenus, visibleRows, visitSeries, type TreeNode } from "./catalog";
+import { addNode, branchIds, disabledPaths, categoryShare, countNodes, filterTree, updateNode, seedDepartments, seedMenus, visibleRows, visitSeries, type TreeNode } from "./catalog";
 
 const tree: TreeNode<string>[] = [
   { id: "a", data: "Alpha", children: [{ id: "a1", data: "Alpha one" }, { id: "a2", data: "Beta two", children: [{ id: "a2x", data: "Gamma" }] }] },
@@ -66,5 +66,17 @@ describe("updateNode and countNodes", () => {
   });
   it("counts every node", () => {
     expect(countNodes(tree)).toBe(5);
+  });
+  it("adds a node at the root without touching the input", () => {
+    const next = addNode(tree, { id: "z", data: tree[0]!.data });
+    expect(countNodes(next)).toBe(6);
+    expect(countNodes(tree)).toBe(5);
+  });
+});
+
+describe("disabledPaths", () => {
+  it("collects switched-off paths, and everything under a switched-off branch", () => {
+    expect([...disabledPaths(seedMenus())]).toEqual(["/nested/menu2"]);
+    expect(disabledPaths([{ id: "a", data: { name: "A", kind: "group", path: "/a", order: 1, enabled: false, code: "" }, children: [{ id: "b", data: { name: "B", kind: "page", path: "/a/b", order: 1, enabled: true, code: "" } }] }]).has("/a/b")).toBe(true);
   });
 });

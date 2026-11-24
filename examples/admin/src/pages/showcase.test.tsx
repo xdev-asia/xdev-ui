@@ -40,6 +40,8 @@ describe("Menus", () => {
   it("hides the edit column from a role that cannot change settings", () => {
     expect(render(<MenusView tree={tree} canEdit={false} onSave={() => {}} />)).not.toContain("Edit Dashboard");
     expect(render(<MenusView tree={tree} canEdit onSave={() => {}} />)).toContain("Edit Dashboard");
+    expect(render(<MenusView tree={tree} canEdit onSave={() => {}} onAdd={() => {}} />)).toContain("Add menu");
+    expect(render(<MenusView tree={tree} canEdit={false} onSave={() => {}} onAdd={() => {}} />)).not.toContain("Add menu");
   });
   it("needs a name", () => {
     expect(validateMenu({ ...tree[0]!.data, name: " " })).toEqual({ name: "menus.nameRequired" });
@@ -79,6 +81,9 @@ describe("Access demo", () => {
   });
   it("mode names both ways and marks the one in use; the role pages explain who sees them", () => {
     expect(view("mode")).toContain("In use");
+    const back = render(<AccessView page="mode" session={owner} roles={roles} onSwitch={() => {}} mode="back" onModeChange={() => {}} />);
+    expect(back).toMatch(/aria-pressed="true"[^>]*>Back-end/);
+    expect(back.indexOf("Not in use")).toBeLessThan(back.indexOf("In use<"));
     expect(view("admin")).toContain("Only owners and admins see this page");
     expect(view("common")).toContain("Only editors and viewers see this page");
   });

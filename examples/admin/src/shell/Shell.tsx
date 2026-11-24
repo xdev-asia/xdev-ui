@@ -32,6 +32,8 @@ export interface ShellProps {
   initialPrefsOpen?: boolean;
   initialFocusView?: boolean;
   notices?: Notice[];
+  /** Paths the back-end access mode switched off; their entries leave the menu. */
+  hidden?: ReadonlySet<string>;
 }
 
 function useFullscreen(): [boolean, () => void] {
@@ -81,7 +83,7 @@ export function Shell(p: ShellProps): JSX.Element {
   const far = useScrolledFar(prefs.backToTop);
   const stripRef = useRef<HTMLDivElement | null>(null);
 
-  const tree = navFor(roles, session.role);
+  const tree = navFor(roles, session.role, undefined, p.hidden);
   const here = currentOf(route);
   const title = route.name === "user" ? (route.params.id ?? "") : here ? t(here.entry.label) : t("app.notFoundTitle");
   const homeTitle = t("nav.dashboard");

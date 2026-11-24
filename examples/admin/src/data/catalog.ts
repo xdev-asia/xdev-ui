@@ -176,3 +176,19 @@ export function updateNode<T>(tree: readonly TreeNode<T>[], id: string, data: T)
 export function countNodes<T>(tree: readonly TreeNode<T>[]): number {
   return tree.reduce((n, x) => n + 1 + (x.children ? countNodes(x.children) : 0), 0);
 }
+
+/** Pure: the paths of menu items switched off, with everything under them; the back-end access mode hides these pages. */
+export function disabledPaths(tree: readonly TreeNode<MenuItem>[], off = false): Set<string> {
+  const out = new Set<string>();
+  for (const n of tree) {
+    const hidden = off || !n.data.enabled;
+    if (hidden && n.data.path.startsWith("/")) out.add(n.data.path);
+    if (n.children) for (const p of disabledPaths(n.children, hidden)) out.add(p);
+  }
+  return out;
+}
+
+/** Pure: the tree with a new node added at the root, last. */
+export function addNode<T>(tree: readonly TreeNode<T>[], node: TreeNode<T>): TreeNode<T>[] {
+  return [...tree, node];
+}

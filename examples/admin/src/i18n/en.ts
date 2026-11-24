@@ -259,6 +259,9 @@ export const en = {
     editTitle: "Edit {role}",
     editHint: "What this role may read, create, change and delete.",
     close: "Close",
+    filter: "Filter roles",
+    placeholder: "Name or code…",
+    empty: "No roles match",
   },
   settings: {
     title: "Settings",
@@ -437,6 +440,9 @@ export const en = {
     empty: "No menus match",
     emptyHint: "Clear the filter to see every menu.",
     count: "{n} items",
+    add: "Add menu",
+    addTitle: "Add menu",
+    added: "Menu added",
   },
   departments: {
     title: "Departments",
@@ -529,7 +535,7 @@ export const en = {
     back: "Back-end",
     backHint: "The server sends the menu the account may open; the pages stay the same.",
     inUse: "In use",
-    notInUse: "Not in this demo",
+    notInUse: "Not in use",
     serverNote: "Either way, the server checks every request again.",
     pagesTitle: "Page control",
     pagesDescription: "Switch the demo account and the menu changes with it.",
@@ -548,6 +554,9 @@ export const en = {
     adminHint: "The menu leaves it out for editors and viewers, and a link to it shows the not-found page.",
     commonTitle: "Only editors and viewers see this page",
     commonHint: "Sign in as the viewer account to find it in the menu.",
+    mode: "Permission mode",
+    modeHint: "Back-end: the menu follows System, Menus, and items switched off there leave the sidebar.",
+    modeSwitched: "Permission mode: {mode}",
   },
   legal: {
     privacy: "Privacy policy",

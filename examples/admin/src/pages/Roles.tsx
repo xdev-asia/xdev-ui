@@ -1,5 +1,5 @@
 import { useState, type JSX } from "react";
-import { Banner, Button, Checkbox, DataTable, Drawer, IconButton, PageHeader, Spinner, StatusDot, Tag, type DataTableColumn } from "@xdev-asia/ui";
+import { Banner, Button, Checkbox, DataTable, Drawer, EmptyState, IconButton, PageHeader, SearchInput, Spinner, StatusDot, Tag, type DataTableColumn } from "@xdev-asia/ui";
 import { can } from "../auth/permissions";
 import type { Session } from "../auth/session";
 import { useStore } from "../data/context";
@@ -36,6 +36,14 @@ export interface RolesViewProps {
   onSave: () => void;
   onDiscard: () => void;
   onRetry: () => void;
+  /** Starting filter, for tests and shared links. */
+  initialQuery?: string;
+}
+
+/** Pure: roles whose name (in the active language) or code contains the query. */
+export function matchRoles(q: string, name: (id: RoleId) => string): RoleId[] {
+  const s = q.trim().toLowerCase();
+  return s ? ROLE_IDS.filter((id) => id.includes(s) || name(id).toLowerCase().includes(s)) : [...ROLE_IDS];
 }
 
 export function RolesView(p: RolesViewProps): JSX.Element {
@@ -43,6 +51,8 @@ export function RolesView(p: RolesViewProps): JSX.Element {
   const locked = p.roleId === "owner";
   const editable = p.canEdit && !locked;
   const roleName = t(`roles.names.${p.roleId}`);
+  const [query, setQuery] = useState(p.initialQuery ?? "");
+  const shown = matchRoles(query, (id) => t(`roles.names.${id}`));
 
   const columns: DataTableColumn<Resource>[] = [
     { key: "resource", header: t("roles.resource"), cell: (r) => t(`roles.resources.${r}`) },
@@ -76,7 +86,7 @@ export function RolesView(p: RolesViewProps): JSX.Element {
   ];
   return (
     <>
-      <PageHeader title={t("roles.title")} description={t("roles.description")} meta={<Tag>{num(ROLE_IDS.length)}</Tag>} />
+      <PageHeader title={t("roles.title")} description={t("roles.description")} meta={<Tag>{query.trim() ? `${num(shown.length)} / ${num(ROLE_IDS.length)}` : num(ROLE_IDS.length)}</Tag>} />
       {p.state.status === "error" ? (
         <Banner title={t("app.loadFailed")} action={<Button variant="secondary" onClick={p.onRetry}>{t("app.retry")}</Button>}>
           {t("app.loadFailedHint")}
@@ -84,7 +94,14 @@ export function RolesView(p: RolesViewProps): JSX.Element {
       ) : p.state.status === "loading" ? (
         <div className="app-pane"><Spinner size="md" label={ui.spinner.loading} /></div>
       ) : (
-        <DataTable caption={t("roles.list")} columns={roleRows} rows={ROLE_IDS} rowKey={(id) => id} labels={ui.dataTable} stack />
+        <div className="app-stack">
+          <div className="app-filters">
+            <div className="app-filters-search">
+              <SearchInput value={query} onChange={(e) => setQuery(e.target.value)} onClear={() => setQuery("")} placeholder={t("roles.placeholder")} aria-label={t("roles.filter")} autoComplete="off" spellCheck={false} labels={ui.searchInput} />
+            </div>
+          </div>
+          <DataTable caption={t("roles.list")} columns={roleRows} rows={shown} rowKey={(id) => id} labels={ui.dataTable} stack empty={<EmptyState icon="search" title={t("roles.empty")} />} />
+        </div>
       )}
       {p.editing && p.state.status === "ready" ? (
         <Drawer
