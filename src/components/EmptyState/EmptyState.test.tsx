@@ -59,4 +59,9 @@ describe("EmptyState", () => {
       expect(html).not.toMatch(/>Done<|Step 2/);
     });
   });
+  it("figure shows a large status code above the title, only in a centred view", () => {
+    const html = renderToStaticMarkup(<EmptyState size="center" figure="404" title="Page not found" />);
+    expect(html).toContain('<p class="x-empty-figure">404</p><p class="x-empty-title">Page not found</p>');
+    expect(renderToStaticMarkup(<EmptyState figure="404" title="x" />)).not.toContain("x-empty-figure");
+  });
 });

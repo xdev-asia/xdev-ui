@@ -9,6 +9,7 @@ export function NotFoundPage(): JSX.Element {
     <EmptyState
       size="center"
       icon="search"
+      figure="404"
       title={t("app.notFoundTitle")}
       hint={t("app.notFoundHint")}
       actions={<Button variant="primary" href={hrefFor.dashboard()}>{t("app.goDashboard")}</Button>}

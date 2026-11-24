@@ -252,6 +252,7 @@ button.x-list-row-main:disabled { cursor: default; }
   background: var(--x-color-signal-soft);
   color: var(--x-color-signal);
 }
+.x-empty-figure { margin: 0; font-size: 4rem; font-weight: 700; line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: var(--x-color-ink); }
 .x-empty-title { margin: 0; font-size: 13px; font-weight: 600; color: var(--x-color-ink); }
 .x-empty[data-size="inline"] .x-empty-title { font-weight: 400; color: var(--x-color-muted); }
 .x-empty-hint { max-width: 360px; margin: 0; font-size: 12px; line-height: 1.5; }
