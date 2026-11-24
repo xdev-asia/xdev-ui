@@ -600,8 +600,6 @@ export const en = {
     forbiddenHint: "Your role does not include it. Ask an owner for access.",
     serverTitle: "Something went wrong on our side",
     serverHint: "Try again in a minute. If it keeps happening, tell the team.",
-    unknownTitle: "This page is not built yet",
-    unknownHint: "The menu points to a page the console does not have. Check its path in System, Menus.",
   },
   nested: {
     hint: "A page three levels down the menu. The breadcrumb and the open group in the sidebar show where it is.",

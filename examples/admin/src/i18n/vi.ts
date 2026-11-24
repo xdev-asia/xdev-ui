@@ -602,8 +602,6 @@ export const vi: Dict = {
     forbiddenHint: "Vai trò của bạn không có quyền này. Hãy nhờ chủ sở hữu cấp quyền.",
     serverTitle: "Có lỗi ở phía hệ thống",
     serverHint: "Thử lại sau một phút. Nếu vẫn lỗi, hãy báo cho nhóm.",
-    unknownTitle: "Trang này chưa được xây dựng",
-    unknownHint: "Menu trỏ tới một trang chưa có. Kiểm tra đường dẫn trong Hệ thống, Menu.",
   },
   nested: {
     hint: "Một trang nằm sâu ba cấp trong menu. Đường dẫn và nhóm đang mở trên thanh bên cho biết vị trí của nó.",
