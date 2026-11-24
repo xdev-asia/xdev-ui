@@ -7,6 +7,7 @@ import { useI18n, type MessageKey } from "../i18n";
 import type { AccessPage } from "../router";
 import { leaves, navFor, NAV } from "../shell/nav";
 import { useNotify } from "../shell/notify";
+import { SpotArt } from "../parts/SpotArt";
 
 const BUTTONS: { cap: Capability; label: MessageKey }[] = [
   { cap: "users.create", label: "permissions.createUsers" },
@@ -90,6 +91,13 @@ export function AccessView({ page, session, roles, onSwitch, mode = "front", onM
       <>
         <PageHeader title={t("access.modeTitle")} description={t("access.modeDescription")} />
         <div className="app-stack">
+          {/* As react-antd-admin's access mode page: one picture and a line saying which mode the page is shown in. */}
+          <EmptyState
+            size="center"
+            art={<SpotArt icon="cloud" badge={mode === "back" ? "server" : "check"} tone="ok" />}
+            title={t("access.modeHero", { mode: t(mode === "front" ? "access.front" : "access.back") })}
+            hint={t(mode === "front" ? "access.frontHint" : "access.backHint")}
+          />
           <Card headingLevel={2}>
             <DescriptionList
               items={[
@@ -108,6 +116,7 @@ export function AccessView({ page, session, roles, onSwitch, mode = "front", onM
       <EmptyState
         size="center"
         icon="eye"
+        art={<SpotArt icon="shield" badge="check" tone="ok" />}
         title={t(page === "admin" ? "access.adminTitle" : "access.commonTitle")}
         hint={t(page === "admin" ? "access.adminHint" : "access.commonHint")}
       />

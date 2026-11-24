@@ -64,4 +64,10 @@ describe("EmptyState", () => {
     expect(html).toContain('<p class="x-empty-figure">404</p><p class="x-empty-title">Page not found</p>');
     expect(renderToStaticMarkup(<EmptyState figure="404" title="x" />)).not.toContain("x-empty-figure");
   });
+  it("art replaces the icon tile in a centred view and is hidden from assistive tech", () => {
+    const html = renderToStaticMarkup(<EmptyState size="center" icon="lock" art={<i>pic</i>} title="No access" />);
+    expect(html).toContain('<div class="x-empty-art" aria-hidden="true"><i>pic</i></div>');
+    expect(html).not.toContain("x-empty-icon");
+    expect(renderToStaticMarkup(<EmptyState art={<i>pic</i>} title="x" />)).not.toContain("x-empty-art");
+  });
 });
