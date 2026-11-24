@@ -368,6 +368,7 @@ export const vi: Dict = {
     recent: "Gần đây",
     backToTop: "Lên đầu trang",
     topNav: "Menu chính",
+    more: "Thêm",
     sections: "Nhóm",
     updateTitle: "Đã có phiên bản mới",
     updateHint: "Tải lại để dùng; thẻ trang và tùy chỉnh vẫn giữ nguyên.",
