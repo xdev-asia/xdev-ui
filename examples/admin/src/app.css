@@ -14,7 +14,7 @@
 .app-grid-wide { grid-template-columns: repeat(auto-fit, minmax(min(100%, 36ch), 1fr)); }
 .app-pane { display: grid; place-items: center; padding: var(--x-space-8) var(--x-space-4); }
 .app-list { margin: 0; padding: 0; list-style: none; }
-.app-filters { display: flex; flex-wrap: wrap; gap: var(--x-space-3); align-items: center; }
+.app-filters { display: flex; flex-wrap: wrap; gap: var(--x-space-3); align-items: flex-end; } /* labelled date fields and an unlabelled search line up on their inputs */
 .app-filters-search { flex: 1 1 24ch; min-width: 0; }
 .app-chips { display: flex; flex-wrap: wrap; gap: var(--x-space-2); }
 .app-person { display: inline-flex; align-items: center; gap: var(--x-space-2); }
@@ -171,3 +171,9 @@
 /* A bulk bar or save bar owns the bottom edge while it shows; the fixed footer scrolls with the page meanwhile. */
 .x-shell-main:has(.x-bulk-bar) .app-footer[data-fixed] { position: static; margin-bottom: 0; }
 .app-footer a:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: 2px; }
+.app-frame-wrap { position: relative; }
+.app-frame-loading { position: absolute; inset: 0; display: grid; place-items: center; background: var(--bg-1); }
+/* Notification titles get two lines before they are cut, so an IP address or a name is not lost. */
+.app-notices .x-list-row-title { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; white-space: normal; overflow-wrap: anywhere; }
+/* On phones the settings sections sit above the form: no divider on their right. */
+@media (max-width: 767.98px) { .app-roles .settings-nav { width: auto; border-right: 0; } }

@@ -99,7 +99,7 @@ a.btn, a.btn-secondary, a.btn-danger, a.btn-ghost { text-decoration: none; }
 }
 .ws-icon-btn:hover { background: var(--bg-3); color: var(--text-1); }
 .ws-icon-btn svg { width: 16px; height: 16px; }
-.ws-icon-btn[data-size="sm"] { width: 22px; height: 22px; }
+.ws-icon-btn[data-size="sm"] { width: 24px; height: 24px; } /* the WCAG 2.5.8 minimum target */
 .ws-icon-btn[data-size="sm"] svg { width: 14px; height: 14px; }
 .ws-icon-btn[data-size="lg"] { width: 44px; height: 44px; }
 .ws-icon-btn[data-size="lg"] svg { width: 20px; height: 20px; }
