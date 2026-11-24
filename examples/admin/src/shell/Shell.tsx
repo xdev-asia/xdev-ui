@@ -356,9 +356,11 @@ export function Shell(p: ShellProps): JSX.Element {
     >
       {prefs.progress ? <div key={`progress-${route.path}-${reload}`} className="app-progress" aria-hidden="true" /> : null}
       {stale ? (
-        <Banner tone="info" title={t("shell.updateTitle")} action={<Button variant="secondary" icon="refresh" onClick={() => window.location.reload()}>{t("shell.reload")}</Button>}>
-          {t("shell.updateHint")}
-        </Banner>
+        <div className="app-update">
+          <Banner tone="info" title={t("shell.updateTitle")} action={<Button variant="secondary" icon="refresh" onClick={() => window.location.reload()}>{t("shell.reload")}</Button>}>
+            {t("shell.updateHint")}
+          </Banner>
+        </div>
       ) : null}
       {prefs.tabs && tabs.length ? (
         <div className="app-tabs">

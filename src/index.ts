@@ -33,6 +33,7 @@ export * from "./components/Meter/Meter";
 export * from "./components/Heatmap/Heatmap";
 export * from "./components/TimeSeriesChart/TimeSeriesChart";
 export * from "./components/BarChart/BarChart";
+export * from "./components/DonutChart/DonutChart";
 export * from "./components/Banner/Banner";
 export * from "./components/Toast/Toast";
 export * from "./components/Toast/Toaster";

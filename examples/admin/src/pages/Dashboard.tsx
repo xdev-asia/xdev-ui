@@ -1,5 +1,5 @@
 import { useState, type JSX } from "react";
-import { Banner, BarChart, Button, Card, EmptyState, ListRow, Meter, PageHeader, Segmented, Spinner, StatTile, TimeSeriesChart } from "@xdev-asia/ui";
+import { Banner, BarChart, Button, Card, DonutChart, EmptyState, ListRow, Meter, PageHeader, Segmented, Spinner, StatTile, TimeSeriesChart } from "@xdev-asia/ui";
 import { categoryShare, visitSeries, visitsBySource, type Channel, type Period } from "../data/catalog";
 import { useStore } from "../data/context";
 import type { DashboardData } from "../data/store";
@@ -88,9 +88,11 @@ export function DashboardView({ state, onRetry, initialPeriod = "week", initialC
               subtitle={t("dashboard.shareHint")}
               titleAside={<Segmented label={t("dashboard.channel")} value={channel} onChange={(v) => setChannel(v as Channel)} options={CHANNELS.map((c) => ({ value: c, label: t(`channels.${c}`) }))} />}
             >
-              <BarChart
+              {/* A ring, as react-antd-admin's category share: the parts of one whole. */}
+              <DonutChart
                 label={`${t("dashboard.share")}, ${t(`channels.${channel}`)}`}
-                bars={categoryShare(channel).map((c) => ({ key: c.category, label: t(`categories.${c.category}`), value: c.value, valueLabel: `${num(c.value)}%` }))}
+                center={<strong>{t(`channels.${channel}`)}</strong>}
+                slices={categoryShare(channel).map((c) => ({ key: c.category, label: t(`categories.${c.category}`), value: c.value, valueLabel: `${num(c.value)}%` }))}
               />
             </Card>
           </div>

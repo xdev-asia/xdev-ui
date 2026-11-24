@@ -101,3 +101,4 @@
 /* Fixed footer: stays at the bottom edge of main while the page scrolls under it. */
 .app-footer[data-fixed] { position: sticky; bottom: calc(-1 * var(--x-space-6)); z-index: var(--x-z-raised); margin-bottom: calc(-1 * var(--x-space-6)); padding-bottom: var(--x-space-4); background: var(--bg-0); }
 .app-watermark { position: fixed; inset: 0; z-index: var(--x-z-toast); background: var(--text-3); opacity: 0.18; mask-repeat: repeat; -webkit-mask-repeat: repeat; pointer-events: none; }
+.app-update { margin-bottom: var(--x-space-6); }
