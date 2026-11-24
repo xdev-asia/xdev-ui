@@ -6,6 +6,7 @@ Flat tile with one headline number, its label and an optional change since a per
 `div.x-stat` > `p.x-stat-label`, `p.x-stat-value` (`font: var(--type-stat)`), optional `p.x-stat-foot` (`span.x-stat-delta[data-tone]`, `span.x-stat-hint`), optional `div.x-stat-extra`. While `loading`, the value is replaced by a `Spinner`.
 
 ## Rules
+- `icon` puts a glyph in a soft accent tile at the top right, naming what is counted; it is decorative (`aria-hidden`), the label carries the meaning.
 - One number per tile. The caller formats it (`Intl.NumberFormat(locale)`) and the delta.
 - `size="lg"` sets the value in `--type-display` with tabular figures, for a wall clock or the one number a screen is about. At most one or two per view.
 - `deltaTrend` draws the direction; `deltaTone` says whether it is good. Up is not always good (errors up is bad), so the caller sets the tone. `deltaTone` (`good`, `bad`, `neutral`) judges a change; `StatusDot` `tone` (`ok`, `warn`, `danger`, `accent`, `neutral`) names a state. They are separate on purpose. Colour never carries the meaning alone: the sign and the arrow stay.

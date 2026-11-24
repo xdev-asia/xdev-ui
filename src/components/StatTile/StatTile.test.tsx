@@ -33,4 +33,9 @@ describe("StatTile", () => {
   it("size lg marks data-size for the display value", () => {
     expect(renderToStaticMarkup(<StatTile label="Atlanta" value="14:05:32" size="lg" />)).toContain('<div class="x-stat" data-size="lg">');
   });
+  it("icon shows in a decorative tile before the label", () => {
+    const html = renderToStaticMarkup(<StatTile label="Users" value="39" icon="accounts" />);
+    expect(html).toMatch(/<span class="x-stat-icon" aria-hidden="true"><svg[^>]*>.*<\/svg><\/span><p class="x-stat-label">Users<\/p>/);
+    expect(renderToStaticMarkup(<StatTile label="Users" value="39" />)).not.toContain("x-stat-icon");
+  });
 });

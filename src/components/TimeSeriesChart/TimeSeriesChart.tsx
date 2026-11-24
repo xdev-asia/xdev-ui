@@ -27,6 +27,8 @@ export interface TimeSeriesChartProps {
   maxLabel?: string;
   /** Formatted value of the baseline, usually "0". */
   zeroLabel?: string;
+  /** Mark every point with a dot, not only on hover; suits a short series (a week of days). */
+  dots?: boolean;
 }
 
 /** Plot box in viewBox units; the SVG stretches to its container. */
@@ -51,7 +53,7 @@ function runs(points: readonly TimeSeriesPoint[]): [number, number][][] {
   return out;
 }
 
-export function TimeSeriesChart({ points, label, ticks = [], maxLabel, zeroLabel }: TimeSeriesChartProps): JSX.Element {
+export function TimeSeriesChart({ points, label, ticks = [], maxLabel, zeroLabel, dots }: TimeSeriesChartProps): JSX.Element {
   const n = points.length;
   const max = points.reduce((m, p) => (p.value !== null && Number.isFinite(p.value) && p.value > m ? p.value : m), 0);
   const x = (i: number) => ((i + 0.5) / Math.max(1, n)) * W;
@@ -67,7 +69,7 @@ export function TimeSeriesChart({ points, label, ticks = [], maxLabel, zeroLabel
     .map((s) => `M${r2(x(s[0]![0]))} ${H}` + s.map(([i, v]) => `L${r2(x(i))} ${r2(y(v))}`).join("") + `L${r2(x(s[s.length - 1]![0]))} ${H}Z`)
     .join("");
   return (
-    <figure className="x-tschart" aria-label={label}>
+    <figure className="x-tschart" aria-label={label} data-dots={dots ? "" : undefined}>
       <div className="x-tschart-plot">
         <svg className="x-tschart-svg" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true" focusable="false">
           <line className="x-tschart-grid" x1="0" x2={W} y1="0" y2="0" />

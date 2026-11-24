@@ -11,7 +11,9 @@
 @container (max-width: 480px) { .x-dl[data-layout="rows"] .x-dl-item { grid-template-columns: minmax(0, 1fr); gap: var(--x-space-1); } }
 
 /* StatTile (.x-stat) */
-.x-stat { display: flex; flex-direction: column; gap: var(--x-space-1); min-width: 0; padding: var(--x-space-4); border: 1px solid var(--line); border-radius: var(--radius-l); background: var(--bg-1); }
+.x-stat { position: relative; display: flex; flex-direction: column; gap: var(--x-space-1); min-width: 0; padding: var(--x-space-4); border: 1px solid var(--line); border-radius: var(--radius-l); background: var(--bg-1); }
+.x-stat-icon { position: absolute; top: var(--x-space-4); right: var(--x-space-4); display: grid; place-items: center; width: var(--x-space-8); height: var(--x-space-8); border-radius: var(--radius-m); background: var(--x-color-accent-soft); color: var(--accent); }
+.x-stat:has(> .x-stat-icon) > .x-stat-label { padding-right: calc(var(--x-space-8) + var(--x-space-2)); }
 .x-stat-label { margin: 0; font: var(--type-label); color: var(--text-2); }
 .x-stat-value { margin: 0; font: var(--type-stat); color: var(--text-1); overflow-wrap: anywhere; }
 .x-stat[data-size="lg"] .x-stat-value { font: var(--type-display); font-variant-numeric: tabular-nums; }

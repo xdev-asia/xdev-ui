@@ -3,6 +3,7 @@
 A single-series line and area over evenly spaced time buckets, with a crosshair and tooltip on hover, for how one measure moved over a period.
 
 ## Rules
+- `dots` marks every point, not only the hovered one; use it for a short series (7 to 12 points).
 - One series only, drawn in `--accent`; no legend, the card or `label` names the measure. Two measures of different scale are two charts, never two axes.
 - `points` is one entry per bucket, oldest first. A `null` value leaves a gap (no data); `0` draws on the baseline.
 - Every `label`, tick and axis text is written by the consumer, already translated and formatted; the library ships no text.

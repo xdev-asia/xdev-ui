@@ -1,8 +1,8 @@
-import type { JSX } from "react";
+import type { JSX, ReactNode } from "react";
 import { Banner, Button, Card, DescriptionList, EmptyState, PageHeader, Segmented, StatusDot, Tag } from "@xdev-asia/ui";
 import { can, type Capability } from "../auth/permissions";
 import { demoAccounts, signIn, type Session } from "../auth/session";
-import type { Role } from "../data/seed";
+import type { Role, RoleId } from "../data/seed";
 import { useI18n, type MessageKey } from "../i18n";
 import type { AccessPage } from "../router";
 import { leaves, navFor, NAV } from "../shell/nav";
@@ -31,6 +31,22 @@ export interface AccessViewProps {
 }
 
 export type AccessMode = "front" | "back";
+
+/** Buttons gated by role, as react-antd-admin's "Admin visible" and "Admin & Common visible". */
+const ROLE_BUTTONS: { roles: RoleId[]; label: MessageKey }[] = [
+  { roles: ["owner", "admin"], label: "access.adminButton" },
+  { roles: ["owner", "admin", "editor", "viewer"], label: "access.everyoneButton" },
+];
+
+/** Component form: renders its children only when the role holds the permission code. */
+function Can({ roles, role, cap, children }: { roles: Role[]; role: RoleId; cap: Capability; children: ReactNode }): JSX.Element | null {
+  return can(roles, role, cap) ? <>{children}</> : null;
+}
+
+/** Component form: renders its children only for the listed roles. */
+function HasRole({ role, roles, children }: { role: RoleId; roles: RoleId[]; children: ReactNode }): JSX.Element | null {
+  return roles.includes(role) ? <>{children}</> : null;
+}
 
 /** The account card shared by page and button control: who is signed in, and a button per other demo account. */
 function AccountCard({ session, onSwitch }: Pick<AccessViewProps, "session" | "onSwitch">): JSX.Element {
@@ -122,26 +138,39 @@ export function AccessView({ page, session, roles, onSwitch, mode = "front", onM
       </>
     );
   }
+  // Function form: the page asks can() / a role check while it builds the list.
   const allowedButtons = BUTTONS.filter((b) => can(roles, session.role, b.cap));
+  const roleButtons = ROLE_BUTTONS.filter((b) => b.roles.includes(session.role));
+  const none = <EmptyState title={t("access.noButtons")} />;
   return (
     <>
       <PageHeader title={t("access.buttonsTitle")} description={t("access.buttonsDescription")} />
       <div className="app-stack">
         <AccountCard session={session} onSwitch={onSwitch} />
-        <Card headingLevel={2} title={t("access.byRole")} subtitle={t("access.byRoleHint")}>
+        {/* Component form: each button sits in a gate that renders it or nothing. */}
+        <Card headingLevel={2} title={t("access.componentCode")} subtitle={t("access.componentCodeHint")}>
           {allowedButtons.length ? (
             <div className="app-chips">
-              {allowedButtons.map((b) => (
-                <Button key={b.cap} variant="secondary">
-                  {t(b.label)}
-                </Button>
+              {BUTTONS.map((b) => (
+                <Can key={b.cap} roles={roles} role={session.role} cap={b.cap}>
+                  <Button variant="secondary">{t(b.label)}</Button>
+                </Can>
               ))}
             </div>
           ) : (
-            <EmptyState title={t("access.noButtons")} />
+            none
           )}
         </Card>
-        <Card headingLevel={2} title={t("access.byCode")} subtitle={t("access.byCodeHint")}>
+        <Card headingLevel={2} title={t("access.componentRole")} subtitle={t("access.componentRoleHint")}>
+          <div className="app-chips">
+            {ROLE_BUTTONS.map((b) => (
+              <HasRole key={b.label} role={session.role} roles={b.roles}>
+                <Button variant="secondary">{t(b.label)}</Button>
+              </HasRole>
+            ))}
+          </div>
+        </Card>
+        <Card headingLevel={2} title={t("access.functionCode")} subtitle={t("access.functionCodeHint")}>
           {allowedButtons.length ? (
             <div className="app-chips">
               {allowedButtons.map((b) => (
@@ -151,8 +180,15 @@ export function AccessView({ page, session, roles, onSwitch, mode = "front", onM
               ))}
             </div>
           ) : (
-            <EmptyState title={t("access.noButtons")} />
+            none
           )}
+        </Card>
+        <Card headingLevel={2} title={t("access.functionRole")} subtitle={t("access.functionRoleHint")}>
+          <div className="app-chips">
+            {roleButtons.map((b) => (
+              <Tag key={b.label}>{t(b.label)}</Tag>
+            ))}
+          </div>
         </Card>
       </div>
     </>
