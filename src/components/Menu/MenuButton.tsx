@@ -15,8 +15,8 @@ export interface MenuButtonProps {
   label: string;
   /** Leading icon of the button; the glyph with `variant="icon"` (default "more"). */
   icon?: IconName;
-  /** "icon" renders an IconButton. Default "secondary". */
-  variant?: "primary" | "secondary" | "icon";
+  /** "icon" renders an IconButton; "ghost" a borderless button (a row of top-bar menus). Default "secondary". */
+  variant?: "primary" | "secondary" | "ghost" | "icon";
   /** Which trigger edge the menu lines up with. Default "start". */
   align?: "start" | "end";
   /** aria-label of the menu. Default: `label`. */

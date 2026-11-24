@@ -16,7 +16,7 @@ Context and dropdown menu with chords, checks, colour swatches, groups and a dan
 
 `MenuButton` is the trigger that opens a `Menu` (WAI-ARIA menu button pattern).
 
-- Props: `items`, `label` (button text; aria-label with `variant="icon"`), `icon`, `variant` (`primary`, `secondary` default, `icon`), `align` (`start` default, `end`), `menuLabel`, `renderLink`, `disabled`, `portal`.
+- Props: `items`, `label` (button text; aria-label with `variant="icon"`), `icon`, `variant` (`primary`, `secondary` default, `ghost` for a row of top-bar menus, `icon`), `align` (`start` default, `end`), `menuLabel`, `renderLink`, `disabled`, `portal`.
 - The trigger has `aria-haspopup="menu"` and `aria-expanded`. Enter, Space, a click or ArrowDown open the menu on the first item; ArrowUp on the last.
 - Inside: ArrowUp and ArrowDown move and wrap, Home and End jump, typing a letter jumps to the next item starting with it. Esc and a click outside close it and return focus to the trigger; Tab closes it and moves on.
 - Choosing an item closes the menu. The menu renders into `document.body` (flips above when there is no room below); `portal={false}` keeps it inside the trigger's wrapper.

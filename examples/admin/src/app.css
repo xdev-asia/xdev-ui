@@ -69,3 +69,35 @@
 .app-legal-brand { display: inline-flex; align-items: center; gap: var(--x-space-2); font-weight: 600; text-decoration: none; color: var(--text-1); }
 /* After .app-nav-fold, so the phone drawer (no rail there) hides the fold button. */
 @media (max-width: 767.98px) { .app-nav-fold { display: none; } }
+/* Layouts from the preferences (react-antd-admin's navigation styles). Top and mixed: sections in the top bar. */
+.app-topnav { position: relative; display: flex; align-items: center; gap: var(--x-space-1); overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; }
+.app-topnav > * { flex: none; }
+/* Two columns: sections in a narrow first column, the section's pages beside it. */
+.app-twocol { display: grid; min-height: 100%; }
+.app-twocol-sections { display: flex; flex-direction: column; gap: var(--x-space-1); margin: 0; padding: var(--x-space-2) var(--x-space-1); list-style: none; border-right: 1px solid var(--line); }
+.app-twocol-section { display: flex; flex-direction: column; align-items: center; gap: var(--x-space-1); padding: var(--x-space-2) var(--x-space-1); border-radius: var(--radius-m); color: var(--text-2); font: var(--type-status); text-align: center; text-decoration: none; overflow-wrap: anywhere; }
+.app-twocol-section:hover { background: var(--bg-3); color: var(--text-1); }
+.app-twocol-section[aria-current] { background: var(--x-color-accent-soft); color: var(--accent); }
+.app-twocol-section:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: -2px; }
+/* Progress: a thin accent bar that runs once when a page opens. Decorative, so hidden from assistive tech. */
+.app-progress { position: fixed; inset: 0 0 auto; z-index: var(--x-z-toast); height: 0.125rem; background: var(--accent); transform-origin: 0 50%; pointer-events: none; animation: app-progress 0.6s ease-out forwards; }
+@keyframes app-progress { 0% { transform: scaleX(0); opacity: 1; } 70% { transform: scaleX(1); opacity: 1; } 100% { transform: scaleX(1); opacity: 0; } }
+/* Page transitions, named as in react-antd-admin. */
+.app-page[data-transition] { animation: 0.3s ease-out both; }
+.app-page[data-transition="fade"] { animation-name: app-fade; }
+.app-page[data-transition="fade-slide"] { animation-name: app-fade-slide; }
+.app-page[data-transition="fade-up"] { animation-name: app-fade-up; }
+.app-page[data-transition="fade-down"] { animation-name: app-fade-down; }
+.app-page[data-transition="fade-zoom"] { animation-name: app-fade-zoom; }
+@keyframes app-fade { from { opacity: 0; } }
+@keyframes app-fade-slide { from { opacity: 0; transform: translateX(-30px); } }
+@keyframes app-fade-up { from { opacity: 0; transform: translateY(10%); } }
+@keyframes app-fade-down { from { opacity: 0; transform: translateY(-10%); } }
+@keyframes app-fade-zoom { from { opacity: 0; transform: scale(0.96); } }
+@media (prefers-reduced-motion: reduce) {
+  .app-page[data-transition] { animation: none; }
+  .app-progress { display: none; }
+}
+/* Fixed footer: stays at the bottom edge of main while the page scrolls under it. */
+.app-footer[data-fixed] { position: sticky; bottom: calc(-1 * var(--x-space-6)); z-index: var(--x-z-raised); margin-bottom: calc(-1 * var(--x-space-6)); padding-bottom: var(--x-space-4); background: var(--bg-0); }
+.app-watermark { position: fixed; inset: 0; z-index: var(--x-z-toast); background: var(--text-3); opacity: 0.18; mask-repeat: repeat; -webkit-mask-repeat: repeat; pointer-events: none; }
