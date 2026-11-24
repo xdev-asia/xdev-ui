@@ -82,8 +82,8 @@
 /* Progress: a thin accent bar that runs once when a page opens. Decorative, so hidden from assistive tech. */
 .app-progress { position: fixed; inset: 0 0 auto; z-index: var(--x-z-toast); height: 0.125rem; background: var(--accent); transform-origin: 0 50%; pointer-events: none; animation: app-progress 0.6s ease-out forwards; }
 @keyframes app-progress { 0% { transform: scaleX(0); opacity: 1; } 70% { transform: scaleX(1); opacity: 1; } 100% { transform: scaleX(1); opacity: 0; } }
-/* Page transitions, named as in react-antd-admin. */
-.app-page[data-transition] { animation: 0.3s ease-out both; }
+/* Page transitions with react-antd-admin's names and values (keep-alive.css): 0.3s ease-in-out enter. */
+.app-page[data-transition] { animation: 0.3s ease-in-out both; }
 .app-page[data-transition="fade"] { animation-name: app-fade; }
 .app-page[data-transition="fade-slide"] { animation-name: app-fade-slide; }
 .app-page[data-transition="fade-up"] { animation-name: app-fade-up; }
@@ -93,7 +93,7 @@
 @keyframes app-fade-slide { from { opacity: 0; transform: translateX(-30px); } }
 @keyframes app-fade-up { from { opacity: 0; transform: translateY(10%); } }
 @keyframes app-fade-down { from { opacity: 0; transform: translateY(-10%); } }
-@keyframes app-fade-zoom { from { opacity: 0; transform: scale(0.96); } }
+@keyframes app-fade-zoom { from { transform: scale(0.8); } }
 @media (prefers-reduced-motion: reduce) {
   .app-page[data-transition] { animation: none; }
   .app-progress { display: none; }
