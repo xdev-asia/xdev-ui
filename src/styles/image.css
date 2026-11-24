@@ -43,7 +43,7 @@
 .x-image-field[data-disabled] .x-image-field-zone { opacity: 0.5; cursor: not-allowed; }
 .x-image-field[data-invalid] .x-image-field-zone { border-color: var(--x-color-danger); }
 .x-image-field-zone small { font-size: 12px; }
-.x-image-field-browse { color: var(--x-color-accent); font-weight: 600; text-decoration: underline; }
+.x-image-field-browse { color: color-mix(in srgb, var(--x-color-accent) 70%, var(--text-1)); font-weight: 600; text-decoration: underline; }
 .x-image-field-preview {
   position: relative;
   overflow: hidden;

@@ -82,7 +82,7 @@
   background: var(--bg-1);
   color: var(--text-2);
 }
-.x-editor-content a { color: var(--x-color-accent); text-decoration: underline; }
+.x-editor-content a { color: color-mix(in srgb, var(--x-color-accent) 70%, var(--text-1)); text-decoration: underline; }
 .x-editor-content strong { font-weight: 700; }
 .x-editor-content p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
