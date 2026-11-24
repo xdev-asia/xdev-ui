@@ -9,6 +9,7 @@ Horizontal strip of terminal-session tabs with state, agent, colour and close co
 - `color` 1–10 picks `--x-tab-color-N` for the selected underline and the menu swatch. Colours 5, 7 and 9 are `color-mix` blends defined in bundle.css.
 - `unread` marks output the user has not seen; it clears on select.
 - `dirty` replaces the close button with a dot, so a click cannot discard work.
+- `pinned` drops the close button and ignores Delete, for a tab that must stay (a console's home page).
 - Names are the session or branch name, never "Terminal 1".
 - `labels` (`TabStripLabels`: `skipped`, `unsaved`, `newTab`, `close(name)`) overrides the English defaults.
 

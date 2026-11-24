@@ -79,4 +79,9 @@ describe("TabStrip", () => {
     expect(onClose).toHaveBeenCalledWith("a");
     expect(onAdd).toHaveBeenCalledOnce();
   });
+  it("gives a pinned tab no close button", () => {
+    const html = renderToStaticMarkup(<TabStrip tabs={[{ id: "home", name: "Dashboard", pinned: true }, { id: "b", name: "Users" }]} onClose={() => {}} onAdd={false} />);
+    expect(html).not.toContain("Close Dashboard");
+    expect(html).toContain("Close Users");
+  });
 });

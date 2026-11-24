@@ -6,7 +6,7 @@ export interface SpinnerLabels {
   loading: string;
 }
 
-const DEFAULT_LABELS: SpinnerLabels = { loading: "Loading" };
+const DEFAULT_LABELS: SpinnerLabels = { loading: "Loading…" };
 
 export interface SpinnerProps {
   /** "sm" is 10px for inline use next to text, "md" is 16px. Default "sm". */

@@ -6,6 +6,7 @@ Text box for one calendar date, typed as `dd/mm/yyyy` or picked from a month cal
 `div.ws-field.x-date-picker` > `label`, `div.x-date-control` (text `input` + calendar `IconButton` in a `Popover` `div.x-popover.x-date-popover[role=dialog]`), optional hidden `input[name]`, `small` hint or error. The panel holds `div.x-calendar` (month buttons, `h2.x-calendar-title`, `table.x-calendar-grid[role=grid]` of `td.x-calendar-day`) and `div.x-calendar-footer` (Clear, Today).
 
 ## Rules
+- `portal={false}` keeps the calendar inside the field instead of `document.body`: for an inline preview, or a panel that scrolls on its own.
 - `hideLabel` keeps the label for screen readers only, for a picker in a table row whose column header names it.
 - `value` and `onChange` use ISO `YYYY-MM-DD` or `null`, never a `Date`, so no time zone can shift the day. A malformed `value` shows an empty box.
 - Typing: `format` (default `dd/mm/yyyy`) sets the field order; one-digit day and month and `/`, `-` or `.` separators are accepted. The text commits on blur or Enter; an impossible date (31/02), a day outside `min`/`max` or one `isDateDisabled` rejects keeps the text and shows `labels.invalid`. An empty box commits `null`.

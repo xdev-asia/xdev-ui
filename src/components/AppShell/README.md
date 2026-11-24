@@ -15,7 +15,9 @@ Page frame for a generic app or an admin console: a sidebar for navigation, a to
 - The skip link is the first focusable element and focuses `main` without changing `location.hash`, so hash-routed apps keep their route; `mainId` changes the target id.
 - Landmarks: the sidebar is `aside` named by `labels.nav`, `header`, `main`. Each `NavList` is its own `nav` with its own name.
 - `toasts` render in a fixed bottom-right `.ws-toasts` region; pass `Toast` elements, not a `Toaster`. The region and its two live regions (`.x-toast-live`: assertive for `danger` toasts, polite for the rest) are always mounted, even with no toasts, so the first toast is announced; the empty region lets clicks through.
-- `labels` (`AppShellLabels`: `openNav`, `closeNav`, `skipToContent`, `nav`) overrides the English defaults; pass translated strings from the app.
+- **Rail.** `navCollapsed` folds the sidebar to its icons from 768px up (1024px with `drawerBelow="lg"`); with `onNavCollapsedChange` the top bar gets a `sidebar` `IconButton` (`aria-expanded`, `aria-controls`) that folds and unfolds it. Labels, counts and group titles stay in the DOM for screen readers; each item shows its label as a hover title; only the first child of `brand` (the mark) shows. The width changes at once, without a transition. Store the choice with the app's other preferences.
+- **Focus view.** `chromeHidden` hides the sidebar and the top bar so the page fills the window (a "maximize content" button). The app keeps a visible way back in the page (the same button) and binds Esc to leave it.
+- `labels` (`AppShellLabels`: `openNav`, `closeNav`, `skipToContent`, `nav`, `collapseNav`, `expandNav`) overrides the English defaults; pass translated strings from the app.
 - The shell scrolls `main`, not the page. Wide content scrolls inside its own wrapper, never the whole page.
 
 ## Responsive

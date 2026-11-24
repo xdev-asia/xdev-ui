@@ -696,7 +696,7 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
   },
   "DatePicker": {
     style: {"padding": "16px", "width": "280px", "minHeight": "400px"},
-    render: (X, h) => h(X.DatePicker, { label: "Due date", value: "2026-11-12", onChange: () => {}, today: "2026-11-06", min: "2026-11-03", defaultOpen: true }),
+    render: (X, h) => h(X.DatePicker, { label: "Due date", value: "2026-11-12", onChange: () => {}, today: "2026-11-06", min: "2026-11-03", defaultOpen: true, portal: false }),
   },
   "TimeField": {
     style: {"padding": "16px", "width": "360px", "display": "flex", "gap": "12px"},
@@ -706,7 +706,7 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
   },
   "DateRangePicker": {
     style: {"padding": "16px", "width": "420px", "minHeight": "420px", "display": "flex", "justifyContent": "flex-end"},
-    render: (X, h) => h(X.DateRangePicker, { label: "Period", value: { start: "2026-11-02", end: "2026-11-12" }, onChange: () => {}, today: "2026-11-06", defaultOpen: true, presets: [{ label: "Last 7 days", range: { start: "2026-10-31", end: "2026-11-06" } }, { label: "This month", range: { start: "2026-11-01", end: "2026-11-30" } }] }),
+    render: (X, h) => h(X.DateRangePicker, { label: "Period", value: { start: "2026-11-02", end: "2026-11-12" }, onChange: () => {}, today: "2026-11-06", defaultOpen: true, portal: false, presets: [{ label: "Last 7 days", range: { start: "2026-10-31", end: "2026-11-06" } }, { label: "This month", range: { start: "2026-11-01", end: "2026-11-30" } }] }),
   },
   "SettingRow": {
     style: {"padding": "16px", "width": "420px"},
@@ -807,7 +807,7 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
   "FacetFilter": {
     style: {"padding": "16px", "minHeight": "300px", "width": "420px", "maxWidth": "100%"},
     render: (X, h) => h("div", { style: { display: "flex", gap: "8px" } },
-      h(X.FacetFilter, { label: "Status", defaultOpen: true, searchable: true, selected: ["invited"], onChange() {},
+      h(X.FacetFilter, { label: "Status", defaultOpen: true, portal: false, searchable: true, selected: ["invited"], onChange() {},
         options: [{ value: "active", label: "Active", count: 40 }, { value: "invited", label: "Invited", count: 9 }, { value: "suspended", label: "Suspended", count: 8 }] }),
       h(X.FacetFilter, { label: "Role", selected: [], onChange() {}, options: [{ value: "admin", label: "Admin" }, { value: "viewer", label: "Viewer" }] })),
   },

@@ -1,6 +1,28 @@
 import { useSyncExternalStore } from "react";
 
-export type RouteName = "dashboard" | "users" | "user" | "roles" | "settings" | "audit" | "sign-in" | "not-found";
+export type RouteName =
+  | "dashboard"
+  | "users"
+  | "user"
+  | "roles"
+  | "permissions"
+  | "menus"
+  | "departments"
+  | "settings"
+  | "audit"
+  | "profile"
+  | "about"
+  | "exception"
+  | "nested"
+  | "docs"
+  | "sign-in"
+  | "not-found";
+
+/** Status pages the console can show; 404 is also what an unknown path renders. */
+export const EXCEPTIONS = ["403", "404", "500"] as const;
+export type ExceptionCode = (typeof EXCEPTIONS)[number];
+/** Leaves of the nested-menu demo. */
+export const NESTED = ["menu1-1", "menu1-2", "menu2"] as const;
 export interface Route {
   name: RouteName;
   params: Record<string, string>;
@@ -13,6 +35,12 @@ const STATIC: Record<string, RouteName> = {
   "/roles": "roles",
   "/settings": "settings",
   "/audit": "audit",
+  "/permissions": "permissions",
+  "/menus": "menus",
+  "/departments": "departments",
+  "/profile": "profile",
+  "/about": "about",
+  "/docs": "docs",
   "/sign-in": "sign-in",
 };
 
@@ -35,6 +63,10 @@ export function matchRoute(input: string): Route {
   const section = /^\/settings\/([^/]+)$/.exec(path)?.[1];
   const sectionId = section !== undefined ? decode(section) : null;
   if (sectionId !== null) return { name: "settings", params: { section: sectionId }, path };
+  const code = /^\/exception\/(\d{3})$/.exec(path)?.[1];
+  if (code !== undefined && (EXCEPTIONS as readonly string[]).includes(code)) return { name: "exception", params: { code }, path };
+  const leaf = /^\/nested\/([\w-]+)$/.exec(path)?.[1];
+  if (leaf !== undefined && (NESTED as readonly string[]).includes(leaf)) return { name: "nested", params: { leaf }, path };
   return { name: "not-found", params: {}, path };
 }
 
@@ -44,6 +76,14 @@ export const hrefFor = {
   user: (id: string) => `#/users/${encodeURIComponent(id)}`,
   roles: () => "#/roles",
   audit: () => "#/audit",
+  permissions: () => "#/permissions",
+  menus: () => "#/menus",
+  departments: () => "#/departments",
+  profile: () => "#/profile",
+  about: () => "#/about",
+  docs: () => "#/docs",
+  exception: (code: ExceptionCode) => `#/exception/${code}`,
+  nested: (leaf: (typeof NESTED)[number]) => `#/nested/${leaf}`,
   settings: (section?: string) => (section ? `#/settings/${section}` : "#/settings"),
   signIn: () => "#/sign-in",
 };
@@ -51,6 +91,27 @@ export const hrefFor = {
 /** Query parameters of a hash such as "#/users?q=ada". */
 export function queryOf(hash: string): URLSearchParams {
   return new URLSearchParams(hash.split("?")[1] ?? "");
+}
+
+/**
+ * Writes view state (a filter, a period, a previewed role) into the query of the current hash without a new history
+ * entry, so reload and a shared link keep it. Empty values are dropped.
+ */
+export function replaceQuery(patch: Record<string, string | null | undefined>): void {
+  if (typeof window === "undefined") return;
+  const [path, query = ""] = window.location.hash.replace(/^#/, "").split("?");
+  const params = new URLSearchParams(query);
+  for (const [k, v] of Object.entries(patch)) {
+    if (v) params.set(k, v);
+    else params.delete(k);
+  }
+  const q = params.toString();
+  window.history.replaceState(window.history.state, "", `#${path || "/"}${q ? `?${q}` : ""}`);
+}
+
+/** One query parameter of the current hash, read once (pages pass it as the view's starting state). */
+export function initialParam(key: string): string | null {
+  return typeof window === "undefined" ? null : queryOf(window.location.hash).get(key);
 }
 
 export function navigate(href: string): void {

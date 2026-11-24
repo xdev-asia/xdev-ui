@@ -4,6 +4,7 @@ System, Dark and Light as one segmented control, or (`variant="icon"`) one round
 
 ## Rules
 - Controlled only: `value` is a `ThemePreference` and `onChange` gets the new one.
+- `variant="icons"`: the same three choices as icon segments (`monitor`, `moon`, `sun`), each with its label as `aria-label` and `title`. Use it where words crowd the row: a preferences drawer, a sign-in footer.
 - Order is System, Dark, Light. Built on `Segmented`, so it has the same classes and `aria-pressed` segments.
 - `variant="icon"` shows the sun on a dark page and the moon on a light one; its label says what a click does (`toLight`, `toDark`). Pass `resolved` while `value` is `system`. It cannot pick System, so keep System in a menu (the account or ⋯ menu).
 - In a titled `AppShell` top bar the icon button is 40px and round, like the other header icon buttons.

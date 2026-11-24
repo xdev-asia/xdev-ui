@@ -61,6 +61,17 @@ body {
 }
 .ws-tree-row:focus-visible, .x-list-row-main:focus-visible { outline-offset: -2px; }
 
+/* Headings balance their lines; prose avoids a lone last word; numbers that change keep their width.
+   :where() keeps the specificity at 0 so an app can override any of them. */
+:where(.x-page-title, .dialog-title, .x-drawer-title, .x-card-title, .x-form-section-title, .x-empty-title) { text-wrap: balance; }
+:where(.x-page-desc, .dialog-desc, .x-form-dialog-desc, .x-empty-hint, .banner-text) { text-wrap: pretty; }
+:where(.x-stat-value, .x-stat-delta, .ws-meter-pct) { font-variant-numeric: tabular-nums; }
+
+/* Taps act at once (no double-tap zoom wait); drag handles keep their own touch-action: none. */
+:where(button, a[href], input, select, textarea, label, summary, [role="button"], [role="tab"], [role="option"], [role="menuitem"], [role="switch"]) {
+  touch-action: manipulation;
+}
+
 .x-sr-only {
   position: absolute;
   width: 1px;

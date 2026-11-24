@@ -174,12 +174,15 @@ describe("DateRangePicker behaviour", () => {
     expect(html).toContain("Enter a valid date");
     expect(html.match(/aria-invalid="true"/g)).toHaveLength(1);
   });
-  it("focus effect moves into the grid once after opening", () => {
+  it("focus effect leaves a mounted-open grid alone and moves in once after the person opens it", () => {
     reset();
     DateRangePicker({ ...base, value: range, defaultOpen: true });
-    const [gridRef] = h.refs;
+    const [gridRef, moveFocus] = h.refs;
     const day = { focus: vi.fn() };
     gridRef!.current = { querySelector: () => day };
+    h.effects[0]!();
+    expect(day.focus).not.toHaveBeenCalled();
+    moveFocus!.current = true;
     h.effects[0]!();
     h.effects[0]!();
     expect(day.focus).toHaveBeenCalledOnce();

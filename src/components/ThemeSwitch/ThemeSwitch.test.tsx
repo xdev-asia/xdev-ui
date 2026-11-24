@@ -41,4 +41,11 @@ describe("ThemeSwitch", () => {
     ThemeSwitch({ variant: "icon", value: "system", onChange }).props.onClick();
     expect(onChange.mock.calls).toEqual([["dark"], ["light"]]);
   });
+  it("icons: three named icon segments, the current one pressed", () => {
+    const html = renderToStaticMarkup(<ThemeSwitch variant="icons" value="light" onChange={() => {}} labels={{ system: "Theo hệ thống" }} />);
+    expect(html).toContain("x-theme-icons");
+    expect(html.match(/<button/g)).toHaveLength(3);
+    expect(html).toContain('aria-label="Theo hệ thống"');
+    expect(html).toMatch(/aria-pressed="true"[^>]*aria-label="Light"/);
+  });
 });

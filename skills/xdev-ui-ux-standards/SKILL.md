@@ -25,7 +25,7 @@ Skip it for layout, tokens and page patterns (use `xdev-ui-admin`) and for the p
 | `xdev-ui-ux-standards` | what the result must satisfy, with the source for each rule |
 | `xdev-ui-review` | how to check it: `audit.mjs`, the fix order and the pre-delivery checklist, the only one |
 
-The review audit rules `focus-outline`, `forced-colors`, `positive-tabindex`, `icon-button-name`, `target-size`, `reduced-motion` and `contrast` are the automated part of this skill. Their rule IDs are in [standards map](references/standards-map.md).
+The review audit rules `focus-outline`, `forced-colors`, `positive-tabindex`, `icon-button-name`, `target-size`, `reduced-motion`, `paste-block` and `contrast` are the automated part of this skill. Their rule IDs are in [standards map](references/standards-map.md).
 
 ## 1. Design
 
@@ -73,14 +73,12 @@ The review audit rules `focus-outline`, `forced-colors`, `positive-tabindex`, `i
 
 ## Known gaps in the library
 
-These are listed so a review does not blame the app for them. Fix them in `@xdev-asia/ui`, not in the app.
+These are listed so a review does not blame the app for them. Fix them in `@xdev-asia/ui`, not in the app. Checked against the source on 2026-11-24; re-check a gap in the component before you report it.
 
-- `Menu`: `role="menu"` without arrow keys, Home, End, typeahead or roving focus.
-- `TabStrip`: `role="tablist"` without arrow keys; close buttons sit inside the tablist.
-- `CommandPalette`: a listbox with options but no `combobox` role, no `aria-activedescendant` and no arrow keys.
-- `Toolbar` and `ZoomBar`: arrow keys work, but every control is also a Tab stop.
-- `Dialog` with `alert`: no `aria-describedby` on the message.
-- No component ships a `forced-colors` or `prefers-contrast` rule.
+- `TabStrip`: each close button sits inside the tablist next to its tab (it is out of the Tab order; Delete closes the selected tab).
+- Forced colours: only the focus rings of `SearchInput`, `CommandPalette`, `TabStrip`, `SplitHandle` and the scroll fade of `Segmented` and `Tabs` ship a `forced-colors` rule. Selection and state drawn with a background elsewhere is untested in a contrast theme.
+
+`Menu` (arrows, Home, End, typeahead), `CommandPalette` (`combobox` with `aria-activedescendant`), `Toolbar` and `ZoomBar` (one Tab stop, arrow keys) and `Dialog` with `alert` (`aria-describedby` on the body) are no longer gaps.
 
 ## References
 

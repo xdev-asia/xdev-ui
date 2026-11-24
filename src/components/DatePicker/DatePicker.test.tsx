@@ -167,12 +167,15 @@ describe("DatePicker behaviour", () => {
     expect(e.preventDefault).toHaveBeenCalled();
     expect(setOpen).toHaveBeenCalledWith(true);
   });
-  it("the focus effect focuses the roving day after opening", () => {
+  it("mounted open leaves focus alone; an open the person asks for focuses the roving day once", () => {
     reset();
     DatePicker({ ...base, value: "2026-11-06", defaultOpen: true });
-    const [gridRef] = h.refs;
+    const [gridRef, moveFocus] = h.refs;
     const day = { focus: vi.fn() };
     gridRef!.current = { querySelector: (s: string) => (s === '[tabindex="0"]' ? day : null) };
+    h.effects[0]!();
+    expect(day.focus).not.toHaveBeenCalled(); // a page that loads with it open does not scroll to it
+    moveFocus!.current = true; // what opening it from the field sets
     h.effects[0]!();
     expect(day.focus).toHaveBeenCalledOnce();
     h.effects[0]!();

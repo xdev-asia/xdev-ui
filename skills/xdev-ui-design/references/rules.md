@@ -51,6 +51,7 @@ HIGH. Tokens keep every screen in both themes and every app in one family.
 | `tok-hairline-not-shadow` | separate regions with 1px `--line`; shadows only on floating layers | flat, calm surfaces | look for `box-shadow` in app CSS |
 | `tok-tint-not-fill` | state backgrounds use the soft tints (`--ok-bg`, `--warn-bg`, `--danger-bg`) | full fills shout and fail contrast | look for solid state fills |
 | `tok-both-themes` | check every new colour pair in dark and light | light values differ from dark ones | screenshots in both |
+| `tok-z-scale` | stack with `--x-z-*` (raised, sticky, dropdown, nav, modal, toast, skip); 0, 1 and -1 only inside a part | a `9999` lands above the modal or under the toast | (audit `raw-z-index`) |
 
 ## 4 Brand
 HIGH. The logo is the one place where xDev's own colours appear. Rules in `brand.md`.
@@ -75,6 +76,7 @@ HIGH. Structure first, then colour.
 | `lay-control-width` | header controls are as wide as their content | stretched tabs look broken | 1440px screenshot |
 | `lay-top-bar-surface` | the top bar has the page's surface and no rule under it until the page scrolls | a lighter band with a border reads as a separate box; cut-off cards show their corners | read `.x-shell-top` background and border at scroll 0 and after |
 | `lay-shell` | console apps use `AppShell`; public pages use `SiteShell` | one frame per kind of app | read the root component |
+| `lay-dvh` | a full-height surface sets `100vh` then `100dvh`; Tailwind `h-dvh`, never `h-screen` | on a phone `100vh` runs under the address bar and hides the bottom actions | (audit `viewport-height`) |
 
 ## 6 States and feedback
 HIGH. A region is not done until each state has a design.
@@ -95,7 +97,8 @@ MEDIUM. Two faces, a fixed scale of roles.
 | `type-token-only` | `font: var(--type-*)`; never a raw size | the scale stays coherent | (audit `raw-font`) |
 | `type-two-faces` | Roboto for text, JetBrains Mono for code, IDs and numbers | Vietnamese diacritics, tabular digits | inspect computed fonts |
 | `type-scale-roles` | pick by role: page title, heading, body, control, label, status (`tokens.md`) | sizes mean things | one page title per page |
-| `type-mono-data` | keys, hashes, model IDs, counts in `--type-mono` or `--type-stat` | digits line up | read a table column |
+| `type-mono-data` | keys, hashes, model IDs, counts in `--type-mono` or `--type-stat`; a number that updates in body text gets `font-variant-numeric: tabular-nums` | digits line up and do not jitter | read a table column |
+| `type-wrap` | headings `text-wrap: balance`, paragraphs `text-wrap: pretty` (library titles and descriptions already do) | no lone last word, even heading lines | read headings at 375px |
 | `type-sentence-case` | sentence case labels; uppercase only through `--type-section` | calm and readable | (audit `label-voice`) |
 
 ## 8 Navigation and information
@@ -114,7 +117,9 @@ MEDIUM. Motion confirms; it never carries meaning on its own.
 | ID | do | why | check |
 |---|---|---|---|
 | `mot-short` | only short positional transitions (about 0.12s); other state changes are instant | the tool feels immediate | read transitions |
-| `mot-transform-only` | animate `transform` and `opacity`, not layout | smooth and cheap | read transitions |
+| `mot-transform-only` | animate `transform` and `opacity`; never `width`, `height`, `top`, `left`, `margin`, `padding` or `transition: all` | layout every frame janks | (audit `layout-motion`) |
+| `mot-will-change` | `will-change` only under the state that animates (a `[data-*]` set during the gesture) | a layer kept for good holds memory and blurs scaled text | (audit `will-change`) |
+| `mot-no-blur-motion` | never animate `filter: blur()` or `backdrop-filter`; a static backdrop blur stays at 2px | blur repaints the whole layer each frame | read animated properties |
 | `mot-reduced` | wrap movement in a `prefers-reduced-motion` guard | vestibular disorders | (audit `reduced-motion`) |
 | `mot-pulse-working-only` | only the working `StatusDot` pulses, and not under reduced motion | a pulse means "busy" | look for other loops |
 

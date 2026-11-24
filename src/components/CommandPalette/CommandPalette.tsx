@@ -6,6 +6,7 @@ import { Icon } from "../Icon/Icon";
 import { Kbd } from "../Kbd/Kbd";
 import { Segmented } from "../Segmented/Segmented";
 import { StatusDot } from "../StatusDot/StatusDot";
+import { reveal } from "../../internal/reveal";
 
 export interface PaletteRow {
   /** Stable id of the row; used as the React key and as `data-row-id`. */
@@ -118,11 +119,6 @@ function highlight(text: string, query: string): ReactNode {
       {text.slice(i + query.length)}
     </>
   );
-}
-
-/** Ref callback of the active row. Stable, so it fires only when the active row changes and keeps it inside the scrolled list. */
-function reveal(el: HTMLElement | null): void {
-  el?.scrollIntoView?.({ block: "nearest" });
 }
 
 export function CommandPalette({

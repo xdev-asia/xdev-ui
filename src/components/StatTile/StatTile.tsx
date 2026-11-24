@@ -8,7 +8,7 @@ export interface StatTileLabels {
   loading: string;
 }
 
-const DEFAULT_LABELS: StatTileLabels = { loading: "Loading" };
+const DEFAULT_LABELS: StatTileLabels = { loading: "Loading…" };
 
 export interface StatTileProps {
   label: ReactNode;

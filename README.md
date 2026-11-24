@@ -100,7 +100,7 @@ Resources: `xdev-ui://components/{name}`, `xdev-ui://guidelines/{topic}`, `xdev-
 
 ## Agent skills
 
-Five skills teach a coding agent to build with the library: `xdev-ui-build-app` (app shell, theme, i18n, routing, states), `xdev-ui-admin` (dashboards, lists, forms, roles, settings, audit log), `xdev-ui-design` (design rules by priority, tokens by role, logo, screen recipes, porting, pre-delivery checklist), `xdev-ui-review` (rules audit) and `xdev-ui-ux-standards` (WCAG 2.2 AA, APG patterns, platform guidelines, usability heuristics). They live in `skills/` and ship in the package.
+Seven skills teach a coding agent to build with the library: `xdev-ui-build-app` (app shell, theme, i18n, routing, states), `xdev-ui-admin` (dashboards, lists, forms, roles, settings, audit log), `xdev-ui-design` (design rules by priority, tokens by role, logo, screen recipes, porting, pre-delivery checklist), `xdev-ui-review` (rules audit), `xdev-ui-ux-standards` (WCAG 2.2 AA, APG patterns, platform guidelines, usability heuristics), `xdev-ui-motion` (motion budget and rendering performance) and `xdev-ui-improve` (evidence-based improvement plans for an existing screen). They live in `skills/` and ship in the package.
 
 ```bash
 npx xdev-ui-skills install                 # .claude/skills in this project
@@ -120,6 +120,17 @@ corepack pnpm test       # SSR smoke test + MCP smoke test over dist
 ```
 
 `tokens/tokens.json` is the source of truth; `scripts/build-tokens.mjs` writes `src/styles/tokens.css`, `scripts/build-ai.mjs` writes `generated/` from the component READMEs, sources and docs. The repo's `.mcp.json` points at `dist/mcp.js` for local work.
+
+### Showcase
+
+`examples/admin` is a whole admin console built from the library with sample data, rebuilt after react-antd-admin: dashboard, users, roles, a permissions preview, menus and departments as tree lists, audit log, settings, profile, status pages, four ways to sign in, and the console chrome (Ctrl+K search, notifications, page tabs, icon sidebar, focus view, preferences). The demo site publishes it at `/showcase/admin/` (Showcase menu).
+
+```bash
+corepack pnpm example:admin        # http://localhost:5174
+corepack pnpm build:demo           # dist-demo, with the console in dist-demo/showcase/admin
+```
+
+Sign in with `admin@example.com` / `admin-demo` (owner) or `viewer@example.com` / `viewer-demo`. `test/app-rules.test.ts` runs the rules audit on it.
 
 ## Release (automatic)
 

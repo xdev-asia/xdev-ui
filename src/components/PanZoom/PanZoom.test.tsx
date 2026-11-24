@@ -11,7 +11,14 @@ vi.mock("react", async (orig) => ({
 const { PanZoom } = await import("./PanZoom");
 
 const base = { zoom: 2, x: 10, y: -5, label: "Image" };
-const el = { getBoundingClientRect: () => ({ left: 0, top: 0, width: 200, height: 100 }), setPointerCapture() {}, releasePointerCapture() {} };
+const attrs = new Set<string>();
+const el = {
+  getBoundingClientRect: () => ({ left: 0, top: 0, width: 200, height: 100 }),
+  setPointerCapture() {},
+  releasePointerCapture() {},
+  setAttribute: (n: string) => void attrs.add(n),
+  removeAttribute: (n: string) => void attrs.delete(n),
+};
 const props = (over: Record<string, unknown>) =>
   findAll(PanZoom({ ...base, onZoom() {}, onPan() {}, ...over } as never), (e) => e.type === "div" && e.props.role === "group")[0]!.props;
 
@@ -120,9 +127,11 @@ describe("PanZoom", () => {
     p.onPointerMove({ clientX: 99, clientY: 99 });
     expect(onPan).not.toHaveBeenCalled();
     p.onPointerDown({ button: 0, clientX: 100, clientY: 100, pointerId: 1, currentTarget: el });
+    expect(attrs.has("data-panning")).toBe(true);
     p.onPointerMove({ clientX: 130, clientY: 90 });
     expect(onPan).toHaveBeenCalledWith(40, 10);
     p.onPointerUp({ pointerId: 1, currentTarget: el });
+    expect(attrs.has("data-panning")).toBe(false);
     p.onPointerMove({ clientX: 200, clientY: 200 });
     expect(onPan).toHaveBeenCalledTimes(1);
   });

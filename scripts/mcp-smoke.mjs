@@ -50,11 +50,16 @@ for (const topic of ["layout", "data-and-forms", "agent-skills"]) {
   const g = await call("xdevui_get_guidelines", { topic });
   assert.ok(!g.isError && g.body.length > 200, `guideline ${topic} missing`);
 }
+const patterns = await call("xdevui_search_docs", { query: "page tabs", scope: "skills" });
+assert.ok(patterns.body.includes("skill:xdev-ui-admin/references/console-chrome.md"), "skill references missing from search");
+assert.ok(!patterns.body.includes("component:"), "scope skills should leave components out");
+const menuButton = await call("xdevui_get_component", { name: "MenuButton" });
+assert.ok(!menuButton.isError && menuButton.body.includes("MenuButtonProps"), "a part that shares a folder should be found by name");
 const invalid = await call("xdevui_search_docs", { query: "x" });
 assert.equal(invalid.isError, true, "one-character query should be rejected");
 
 const skills = await call("xdevui_get_skill");
-assert.ok(["xdev-ui-admin", "xdev-ui-build-app", "xdev-ui-design", "xdev-ui-review", "xdev-ui-ux-standards"].every((n) => skills.body.includes(n)), "skill list incomplete");
+assert.ok(["xdev-ui-admin", "xdev-ui-build-app", "xdev-ui-design", "xdev-ui-improve", "xdev-ui-motion", "xdev-ui-review", "xdev-ui-ux-standards"].every((n) => skills.body.includes(n)), "skill list incomplete");
 const skill = await call("xdevui_get_skill", { name: "xdev-ui-admin" });
 assert.ok(!skill.isError && skill.body.includes("references/resource-list.md"));
 const skillFile = await call("xdevui_get_skill", { name: "xdev-ui-admin", file: "references/resource-list.md" });

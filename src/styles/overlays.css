@@ -347,3 +347,8 @@ a.x-menu-item { text-decoration: none; }
 .x-palette-trigger:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: 2px; }
 .x-palette-trigger-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .x-palette-trigger-key { flex: none; }
+
+/* Scrolling inside a layer never scrolls (or pull-refreshes) the page behind it. :where keeps specificity at 0. */
+:where(.dialog, .dialog-backdrop[data-modal], .x-drawer-body, .x-attention-list, .x-date-popover, .x-combobox-list, .x-search-picker-list, .pal-list) {
+  overscroll-behavior: contain;
+}

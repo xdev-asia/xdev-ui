@@ -29,7 +29,7 @@ describe("SaveBar", () => {
   it("busy keeps it visible, disables both and says saving", () => {
     const html = renderToStaticMarkup(<SaveBar dirty={false} busy onSave={noop} onDiscard={noop} />);
     expect(html.match(/disabled=""/g)).toHaveLength(2);
-    expect(html).toContain(">Saving</button>");
+    expect(html).toContain(">Saving…</button>");
   });
   it("an error replaces the message as an alert", () => {
     expect(renderToStaticMarkup(<SaveBar dirty error="Network error" onSave={noop} onDiscard={noop} />)).toContain('<p class="x-savebar-msg" role="alert">Network error</p>');

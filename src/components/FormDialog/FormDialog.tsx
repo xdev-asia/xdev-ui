@@ -10,7 +10,7 @@ export interface FormDialogLabels {
   saving: string;
 }
 
-const DEFAULT_LABELS: FormDialogLabels = { submit: "Save", cancel: "Cancel", saving: "Saving" };
+const DEFAULT_LABELS: FormDialogLabels = { submit: "Save", cancel: "Cancel", saving: "Saving…" };
 
 export interface FormDialogProps {
   title: ReactNode;

@@ -28,7 +28,9 @@ const fail = (t: string): Result => ({ content: [{ type: "text", text: t }], isE
 
 function findComponent(name: string): ComponentDoc | undefined {
   const n = name.trim().toLowerCase().replace(/[^a-z]/g, "");
-  return M.components.find((c) => c.name.toLowerCase() === n);
+  // A part that shares its folder (MenuButton in Menu, GridItem in Grid) is found by its exported function or Props.
+  const own = (c: ComponentDoc): boolean => new RegExp(`export (?:function|interface) ${n}(?:props)?\\b`, "i").test(c.types);
+  return M.components.find((c) => c.name.toLowerCase() === n) ?? (n ? M.components.find(own) : undefined);
 }
 
 function suggest(name: string, options: string[]): string {
@@ -228,23 +230,28 @@ Use topic="all" only when you need everything at once.`,
     "xdevui_search_docs",
     {
       title: "Search docs",
-      description: `Full-text search over every component README and guideline. Returns matching lines with their source, so you can find which component or rule covers a topic.
+      description: `Full-text search over every component README, guideline and skill page (SKILL.md and references). Returns matching lines with their source, so you can find which component, rule or screen pattern covers a topic.
 
 Examples:
   - "which component shows keyboard shortcuts?" -> query="shortcut"
   - "rules for destructive actions" -> query="danger"
-Use xdevui_get_component or xdevui_get_guidelines to read a whole source.`,
+  - "how do I build page tabs or a tree list?" -> query="page tabs", scope="skills"
+  - "what replaces an Ant Design Table?" -> query="Table", scope="skills"
+Use xdevui_get_component, xdevui_get_guidelines or xdevui_get_skill (with file) to read a whole source.`,
       inputSchema: z.strictObject({
         query: z.string().min(2).max(80).describe("Word or phrase, case-insensitive"),
         limit: z.number().int().min(1).max(50).default(20).describe("Maximum matching lines"),
+        scope: z.enum(["all", "components", "guidelines", "skills"]).default("all").describe("Where to search; skills covers screen patterns and porting maps"),
       }),
       annotations: READ_ONLY,
     },
-    async ({ query, limit }) => {
+    async ({ query, limit, scope }) => {
       const q = query.toLowerCase();
+      const want = (s: typeof scope): boolean => scope === "all" || scope === s;
       const sources: [string, string][] = [
-        ...M.components.map((c): [string, string] => [`component:${c.name}`, c.readme]),
-        ...Object.entries(M.guidelines).map(([k, v]): [string, string] => [`guideline:${k}`, v]),
+        ...(want("components") ? M.components.map((c): [string, string] => [`component:${c.name}`, c.readme]) : []),
+        ...(want("guidelines") ? Object.entries(M.guidelines).map(([k, v]): [string, string] => [`guideline:${k}`, v]) : []),
+        ...(want("skills") ? M.skills.flatMap((s) => s.files.filter((f) => f.path.endsWith(".md")).map((f): [string, string] => [`skill:${s.name}/${f.path}`, f.text])) : []),
       ];
       const hits: string[] = [];
       for (const [src, body] of sources) {

@@ -13,6 +13,8 @@ export interface TabItem {
   unread?: boolean;
   dirty?: boolean;
   skipped?: boolean;
+  /** Cannot be closed: no close button and Delete does nothing (a home page tab). */
+  pinned?: boolean;
 }
 
 export interface TabStripLabels {
@@ -54,7 +56,7 @@ export function TabStrip({ tabs, selected, defaultSelected, onSelect, onClose, o
     const list = Array.from(e.currentTarget.closest(".ws-tabstrip")?.querySelectorAll<HTMLElement>('[role="tab"]') ?? []);
     const at = list.indexOf(e.currentTarget);
     if (e.key === "Delete") {
-      if (!onClose || t.dirty) return;
+      if (!onClose || t.dirty || t.pinned) return;
       e.preventDefault();
       list[at + 1 < list.length ? at + 1 : at - 1]?.focus();
       onClose(t.id);
@@ -101,7 +103,7 @@ export function TabStrip({ tabs, selected, defaultSelected, onSelect, onClose, o
               <span className="ws-tab-name">{t.name}</span>
               {t.skipped ? <span className="ws-tab-skip">{l.skipped}</span> : null}
             </button>
-            {t.dirty ? (
+            {t.pinned ? null : t.dirty ? (
               <span className="ws-tab-dirty" aria-label={l.unsaved} />
             ) : (
               <button type="button" className="ws-tab-close" aria-label={l.close(t.name)} tabIndex={-1} onClick={() => onClose?.(t.id)}>

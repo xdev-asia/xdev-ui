@@ -47,6 +47,8 @@ export interface FacetFilterProps {
   searchable?: boolean;
   /** Open on first render (previews, docs). */
   defaultOpen?: boolean;
+  /** Render the list into `document.body` (default true). false keeps it inside the filter, for an inline preview. */
+  portal?: boolean;
   placement?: "bottom-start" | "bottom-end";
   /** Override the English defaults (e.g. for vi). */
   labels?: Partial<FacetFilterLabels>;
@@ -60,6 +62,7 @@ export function FacetFilter({
   onChange,
   searchable,
   defaultOpen = false,
+  portal = true,
   placement = "bottom-start",
   labels,
   className,
@@ -81,6 +84,7 @@ export function FacetFilter({
       onClose={close}
       placement={placement}
       label={label}
+      portal={portal}
       className={cx("x-facet", className)}
       trigger={(t) => (
         <button type="button" className="task-chip x-facet-trigger" data-active={count ? "" : undefined} onClick={() => (open ? close() : setOpen(true))} {...t}>

@@ -55,7 +55,12 @@ const components = readdirSync(resolve(root, "src/components"), { withFileTypes:
   .filter((d) => d.isDirectory() && !d.name.startsWith("."))
   .map(({ name }) => {
     const readme = read(`src/components/${name}/README.md`);
-    const tsx = read(`src/components/${name}/${name}.tsx`);
+    // The main file, then the other parts the folder exports (MenuButton lives in Menu/), so their props are documented too.
+    const siblings = readdirSync(resolve(root, `src/components/${name}`))
+      .filter((f) => f.endsWith(".tsx") && f !== `${name}.tsx` && !/\.(test|stories)\.tsx$/.test(f))
+      .sort()
+      .map((f) => read(`src/components/${name}/${f}`));
+    const tsx = [read(`src/components/${name}/${name}.tsx`), ...siblings].join("\n");
     const summary = readme.split("\n").find((l) => l.trim() && !l.startsWith("#"))?.trim() ?? "";
     const classes = [
       ...new Set([

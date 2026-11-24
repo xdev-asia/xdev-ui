@@ -6,7 +6,7 @@ export interface SkeletonLabels {
   loading: string;
 }
 
-const DEFAULT_LABELS: SkeletonLabels = { loading: "Loading" };
+const DEFAULT_LABELS: SkeletonLabels = { loading: "Loading…" };
 
 export interface SkeletonProps {
   /** "line" is one line of text, "block" a card or image, "circle" an avatar. Default "line". */
@@ -17,7 +17,7 @@ export interface SkeletonProps {
   height?: string;
   /** Width, any CSS length. Default 100% (circle: same as height). */
   width?: string;
-  /** Announce "Loading" to screen readers. Set on one skeleton per region; the rest stay silent. */
+  /** Announce "Loading…" to screen readers. Set on one skeleton per region; the rest stay silent. */
   announce?: boolean;
   labels?: Partial<SkeletonLabels>;
   className?: string;

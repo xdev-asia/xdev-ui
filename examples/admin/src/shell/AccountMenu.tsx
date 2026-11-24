@@ -3,7 +3,7 @@ import { Avatar, Menu, Popover } from "@xdev-asia/ui";
 import type { Session } from "../auth/session";
 import { useI18n } from "../i18n";
 
-export function AccountMenu({ session, onSettings, onSignOut }: { session: Session; onSettings: () => void; onSignOut: () => void }): JSX.Element {
+export function AccountMenu({ session, onProfile, onSettings, onSignOut }: { session: Session; onProfile?: () => void; onSettings: () => void; onSignOut: () => void }): JSX.Element {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const pick = (fn: () => void) => () => {
@@ -26,6 +26,7 @@ export function AccountMenu({ session, onSettings, onSignOut }: { session: Sessi
       <Menu
         label={t("account.menu")}
         items={[
+          ...(onProfile ? [{ label: t("nav.profile"), onSelect: pick(onProfile) }] : []),
           { label: t("nav.settings"), onSelect: pick(onSettings) },
           { type: "separator" },
           { label: t("account.signOut"), onSelect: pick(onSignOut) },

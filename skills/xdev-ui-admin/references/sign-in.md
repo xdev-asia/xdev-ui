@@ -37,3 +37,11 @@ From 1024px the showcase takes five eighths of the width: the art centred, the h
 - Headline and tagline are two short translated lines that say what the product does. No marketing paragraph.
 - Art is the product's own picture (a diagram of what it does) or the built-in pattern; never a stock illustration from another product.
 - Check it at 375px (only the form pane shows) and at 1440px, in dark and light.
+
+## Other ways in
+
+- **Email code.** A `Segmented` above the form switches between password and code. Code: the email, "Send code", then `CodeInput` (`length={6}`, `alphabet="digits"`, `groupSize={3}`) with a visible label and a line naming the address. `onComplete` submits; a wrong code shows a `Banner` and keeps the email. Offer "Use another email".
+- **Forgot password.** Its own `h1` ("Reset your password"), the email and "Send reset link". The answer is the same whether or not the address has an account: "If name@example.com has an account, a reset link is on its way."
+- **Create an account.** Name, email and a password with `autoComplete="new-password"` and its minimum length as the hint; errors show after the first submit. Say who approves new accounts.
+- Each mode keeps one `h1` and one primary button; the links to the other modes are `link` buttons under the form, and "Back to sign in" returns.
+

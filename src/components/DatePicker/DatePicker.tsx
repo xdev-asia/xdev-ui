@@ -59,6 +59,8 @@ export interface DatePickerProps {
   id?: string;
   /** Opens the calendar on mount (previews). */
   defaultOpen?: boolean;
+  /** Render the calendar into `document.body` (default true). false keeps it inside the field, for an inline preview or a scrolling panel. */
+  portal?: boolean;
   labels?: Partial<DatePickerLabels>;
   className?: string;
 }
@@ -81,6 +83,7 @@ export function DatePicker({
   name,
   id,
   defaultOpen = false,
+  portal = true,
   labels,
   className,
 }: DatePickerProps): JSX.Element {
@@ -94,7 +97,8 @@ export function DatePicker({
   const [draft, setDraft] = useState<string | null>(null);
   const [bad, setBad] = useState(false);
   const gridRef = useRef<HTMLDivElement | null>(null);
-  const moveFocus = useRef(defaultOpen);
+  // Only an open the person asks for moves focus into the grid; mounted open (defaultOpen) leaves focus and scroll alone.
+  const moveFocus = useRef(false);
 
   // Runs after Popover's own effect (a child), so the day wins over the panel for focus.
   useEffect(() => {
@@ -166,6 +170,7 @@ export function DatePicker({
           placement="bottom-end"
           label={l.calendar}
           className="x-date-popover"
+          portal={portal}
           trigger={(t) => <IconButton icon="calendar" label={l.openCalendar} disabled={disabled} onClick={() => (open ? setOpen(false) : show())} {...t} />}
         >
           <Calendar
