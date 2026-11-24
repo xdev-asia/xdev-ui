@@ -431,7 +431,7 @@ export const en = {
     collapse: "Collapse {name}",
     edit: "Edit {name}",
     editTitle: "Edit menu",
-    editHint: "Changes show in the sidebar after the next sign-in.",
+    editHint: "In back-end permission mode, an item you switch off leaves the sidebar at once.",
     show: "Show in the sidebar",
     save: "Save menu",
     cancel: "Cancel",
