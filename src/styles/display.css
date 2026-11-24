@@ -409,6 +409,20 @@ button.x-list-row-main:disabled { cursor: default; }
 .x-barchart[data-orientation="vertical"] .x-barchart-bar { width: 100%; border-radius: var(--radius-s) var(--radius-s) 0 0; }
 .x-barchart[data-orientation="vertical"] .x-barchart-label { grid-row: 3; }
 
+/* DonutChart (.x-donut): parts of one whole, a ring plus a legend that writes each value */
+.x-donut { display: flex; flex-wrap: wrap; align-items: center; gap: var(--x-space-4) var(--x-space-6); margin: 0; min-width: 0; }
+.x-donut-ring { position: relative; flex: none; }
+.x-donut-ring svg { display: block; }
+.x-donut-track { fill: none; stroke: var(--bg-3); stroke-width: 6; }
+.x-donut-slice { fill: none; stroke-width: 6; }
+.x-donut-center { position: absolute; inset: 18%; display: grid; place-content: center; text-align: center; font: var(--type-status); color: var(--text-2); overflow-wrap: anywhere; }
+.x-donut-center strong { display: block; font-weight: 600; color: var(--text-1); font-variant-numeric: tabular-nums; }
+.x-donut-legend { display: grid; flex: 1 1 12rem; gap: var(--x-space-2); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.x-donut-item { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--x-space-2); }
+.x-donut-swatch { width: var(--x-space-2); height: var(--x-space-2); border-radius: 50%; }
+.x-donut-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: var(--type-status); color: var(--text-2); }
+.x-donut-value { font: var(--type-status); color: var(--text-1); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
 /* CommitGraph: one row of lanes and a node */
 .x-commit-graph { display: block; flex: none; overflow: visible; }
 
