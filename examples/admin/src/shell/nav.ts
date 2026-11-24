@@ -163,3 +163,31 @@ export function canOpen(route: Route, roles: Role[], role: RoleId, hidden?: Read
 export function toItems(tree: NavNode[], t: (key: MessageKey) => string): NavListItem[] {
   return tree.map((n) => ({ id: n.id, label: t(n.label), icon: n.icon, href: n.href, children: n.children ? toItems(n.children, t) : undefined }));
 }
+
+/**
+ * Pure: which top-bar sections fit in `avail` px, in order, with room kept for a "More" button when some do not.
+ * The current section stays when it can: when it would overflow, it takes the place of the last one that fits. When not
+ * even it fits beside "More", only "More" shows.
+ */
+export function fitSections(widths: readonly number[], avail: number, more: number, gap: number, current = -1): number[] {
+  const total = widths.reduce((s, w) => s + w, 0) + gap * Math.max(widths.length - 1, 0);
+  if (total <= avail) return widths.map((_, i) => i);
+  const room = avail - more - gap;
+  const shown: number[] = [];
+  let used = 0;
+  for (let i = 0; i < widths.length; i++) {
+    const w = (widths[i] ?? 0) + (shown.length ? gap : 0);
+    if (used + w > room) break;
+    used += w;
+    shown.push(i);
+  }
+  if (current >= 0 && !shown.includes(current)) {
+    // Drop from the end until the current section fits beside the rest.
+    while (shown.length && used + gap + (widths[current] ?? 0) > room) {
+      const out = shown.pop() as number;
+      used -= (widths[out] ?? 0) + (shown.length ? gap : 0);
+    }
+    if ((widths[current] ?? 0) + (shown.length ? used + gap : 0) <= room) shown.push(current);
+  }
+  return shown;
+}

@@ -4,7 +4,7 @@ import { seedNotices } from "../data/catalog";
 import { seedRoles } from "../data/seed";
 import { I18nProvider } from "../i18n";
 import { matchRoute } from "../router";
-import { canOpen, currentOf, leaves, NAV, navFor, toItems } from "./nav";
+import { canOpen, currentOf, fitSections, leaves, NAV, navFor, toItems } from "./nav";
 import { disabledPaths, seedMenus } from "../data/catalog";
 import { Notifications } from "./Notifications";
 import { PreferencesDrawer } from "./PreferencesDrawer";
@@ -198,5 +198,21 @@ describe("Shell layouts", () => {
     expect(html).not.toContain("app-progress");
     expect(html).not.toContain("Tab actions");
     expect(html).not.toContain("Focus view");
+  });
+});
+
+describe("fitSections", () => {
+  const w = [100, 100, 100, 100];
+  it("keeps every section when they fit, with no More button", () => {
+    expect(fitSections(w, 412, 60, 4)).toEqual([0, 1, 2, 3]);
+  });
+  it("leaves room for More and stops before the first section that would be cut", () => {
+    expect(fitSections(w, 300, 60, 4)).toEqual([0, 1]);
+    expect(fitSections(w, 100, 60, 4)).toEqual([]);
+  });
+  it("always keeps the current section, in place of the last that fit", () => {
+    expect(fitSections(w, 300, 60, 4, 3)).toEqual([0, 3]);
+    expect(fitSections(w, 300, 60, 4, 1)).toEqual([0, 1]);
+    expect(fitSections(w, 120, 60, 4, 3)).toEqual([]);
   });
 });

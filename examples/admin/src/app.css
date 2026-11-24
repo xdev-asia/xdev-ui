@@ -70,8 +70,12 @@
 /* After .app-nav-fold, so the phone drawer (no rail there) hides the fold button. */
 @media (max-width: 767.98px) { .app-nav-fold { display: none; } }
 /* Layouts from the preferences (react-antd-admin's navigation styles). Top and mixed: sections in the top bar. */
-.app-topnav { position: relative; display: flex; align-items: center; gap: var(--x-space-1); overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; }
+/* The console's top bar is 48px, so the 36px search and icon buttons sit inside it with room (the token's 38px is the workspace bar). */
+.x-shell { --h-header: 3rem; }
+/* Top menu: fits what it can; the rest moves into "More" (see Shell). Hidden items keep their width for measuring. */
+.app-topnav { position: relative; display: flex; align-items: center; gap: var(--x-space-1); min-width: 0; overflow: hidden; }
 .app-topnav > * { flex: none; }
+.app-topnav-item[data-off] { position: absolute; visibility: hidden; pointer-events: none; }
 /* Two columns: sections in a narrow first column, the section's pages beside it. */
 .app-twocol { display: grid; min-height: 100%; }
 .app-twocol-sections { display: flex; flex-direction: column; gap: var(--x-space-1); margin: 0; padding: var(--x-space-2) var(--x-space-1); list-style: none; border-right: 1px solid var(--line); }

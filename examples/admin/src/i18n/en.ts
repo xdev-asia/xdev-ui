@@ -366,6 +366,7 @@ export const en = {
     recent: "Recent",
     backToTop: "Back to top",
     topNav: "Main menu",
+    more: "More",
     sections: "Sections",
     updateTitle: "A new version is available",
     updateHint: "Reload to use it; your tabs and preferences stay.",

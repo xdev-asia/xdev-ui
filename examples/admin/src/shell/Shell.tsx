@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef, useState, type JSX, type MouseEvent, type ReactNode } from "react";
+import { Suspense, useEffect, useLayoutEffect, useRef, useState, type JSX, type MouseEvent, type ReactNode } from "react";
 import { AppShell, Banner, Breadcrumb, BrandMark, Button, Icon, IconButton, Menu, MenuButton, NavList, Popover, Spinner, TabStrip, ThemeSwitch, type MenuEntry, type ThemePreference } from "@xdev-asia/ui";
 import type { Session } from "../auth/session";
 import { seedNotices, type Notice } from "../data/catalog";
@@ -7,7 +7,7 @@ import { LOCALES, useI18n, type Locale } from "../i18n";
 import { hrefFor, navigate, type Route } from "../router";
 import { AccountMenu } from "./AccountMenu";
 import { GlobalSearch } from "./GlobalSearch";
-import { currentOf, leaves, navFor, toItems, type NavNode } from "./nav";
+import { currentOf, fitSections, leaves, navFor, toItems, type NavNode } from "./nav";
 import { buildId, ROOT_VARS, rootStyle, watermarkUrl } from "./appearance";
 import { Notifications } from "./Notifications";
 import { PreferencesDrawer } from "./PreferencesDrawer";
@@ -203,13 +203,23 @@ export function Shell(p: ShellProps): JSX.Element {
     return () => document.removeEventListener("keydown", onKey);
   }, [focusView]);
 
-  // The top menu scrolls sideways when the sections do not fit; keep the current one in view (no scrollIntoView: it would move the page).
-  useEffect(() => {
+  // Top menu: sections that do not fit go into a "More" menu, so no label is ever cut. Items stay in the DOM while
+  // hidden (visibility, not display) so their widths can be measured again when the bar grows.
+  const [fit, setFit] = useState<number[] | null>(null);
+  const topIndex = tree.findIndex((n) => n.id === topId);
+  useLayoutEffect(() => {
     const nav = topNavRef.current;
-    const cur = nav?.querySelector<HTMLElement>(".btn-secondary");
-    if (!nav || !cur) return;
-    if (cur.offsetLeft < nav.scrollLeft || cur.offsetLeft + cur.offsetWidth > nav.scrollLeft + nav.clientWidth) nav.scrollLeft = cur.offsetLeft - (nav.clientWidth - cur.offsetWidth) / 2;
-  }, [topId, layout]);
+    if (!nav) return setFit(null);
+    const measure = (): void => {
+      const items = Array.from(nav.querySelectorAll<HTMLElement>("[data-topnav-item]"));
+      const more = nav.querySelector<HTMLElement>("[data-topnav-more]")?.offsetWidth || 36;
+      setFit(fitSections(items.map((el) => el.offsetWidth), nav.clientWidth, more, 4, topIndex));
+    };
+    measure();
+    const ro = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(measure);
+    ro?.observe(nav);
+    return () => ro?.disconnect();
+  }, [layout, topIndex, tree.length, locale]);
 
   const act = (action: TabAction, target: string): void => {
     setTabMenu(null);
@@ -263,16 +273,35 @@ export function Shell(p: ShellProps): JSX.Element {
   const topNav =
     layout === "top" || layout === "mixed" ? (
       <nav className="app-topnav" aria-label={t("shell.topNav")} ref={topNavRef}>
-        {tree.map((n) => {
+        {tree.map((n, i) => {
           const current = n.id === topId;
-          // The current section is the one with a border; the rest are borderless so eight sections fit beside the search.
-          if (layout === "top" && n.children) return <MenuButton key={n.id} label={t(n.label)} variant={current ? "secondary" : "ghost"} items={menuOf(n.children)} />;
+          const off = fit !== null && !fit.includes(i);
+          // The current section is the one with a border; the rest are borderless.
           return (
-            <Button key={n.id} href={firstPage(n)?.href} variant={current ? "secondary" : "ghost"} aria-current={current ? (n.children ? "true" : "page") : undefined}>
-              {t(n.label)}
-            </Button>
+            <span key={n.id} className="app-topnav-item" data-topnav-item="" data-off={off ? "" : undefined} aria-hidden={off || undefined}>
+              {layout === "top" && n.children ? (
+                <MenuButton label={t(n.label)} variant={current ? "secondary" : "ghost"} items={menuOf(n.children)} disabled={off} />
+              ) : (
+                <Button href={firstPage(n)?.href} variant={current ? "secondary" : "ghost"} tabIndex={off ? -1 : undefined} aria-current={current ? (n.children ? "true" : "page") : undefined}>
+                  {t(n.label)}
+                </Button>
+              )}
+            </span>
           );
         })}
+        {fit !== null && fit.length < tree.length ? (
+          <span data-topnav-more="">
+            <MenuButton
+              label={t("shell.more")}
+              variant="icon"
+              icon="more"
+              align="end"
+              items={tree
+                .filter((_, i) => !fit.includes(i))
+                .flatMap<MenuEntry>((n) => (layout === "top" && n.children ? [{ type: "group", label: t(n.label) }, ...menuOf(n.children)] : [{ label: t(n.label), href: firstPage(n)?.href }]))}
+            />
+          </span>
+        ) : null}
       </nav>
     ) : null;
   const sideNav =
