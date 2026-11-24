@@ -83,7 +83,8 @@
 .app-progress { position: fixed; inset: 0 0 auto; z-index: var(--x-z-toast); height: 0.125rem; background: var(--accent); transform-origin: 0 50%; pointer-events: none; animation: app-progress 0.6s ease-out forwards; }
 @keyframes app-progress { 0% { transform: scaleX(0); opacity: 1; } 70% { transform: scaleX(1); opacity: 1; } 100% { transform: scaleX(1); opacity: 0; } }
 /* Page transitions with react-antd-admin's names and values (keep-alive.css): 0.3s ease-in-out enter. */
-.app-page[data-transition] { animation: 0.3s ease-in-out both; }
+/* Longhands: a shorthand without a name is minified to `animation: none`. */
+.app-page[data-transition] { animation-duration: 0.3s; animation-timing-function: ease-in-out; animation-fill-mode: both; }
 .app-page[data-transition="fade"] { animation-name: app-fade; }
 .app-page[data-transition="fade-slide"] { animation-name: app-fade-slide; }
 .app-page[data-transition="fade-up"] { animation-name: app-fade-up; }
