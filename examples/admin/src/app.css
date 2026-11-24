@@ -29,7 +29,8 @@
 .app-roles > :last-child { flex: 3 1 36ch; min-width: 0; }
 
 /* Shell extras: page tabs, footer, notification bell and list. */
-.app-tabs { margin: calc(-1 * var(--x-space-2)) 0 var(--x-space-4); border-bottom: 1px solid var(--line); }
+/* Full width under the top bar, as in react-antd-admin: the strip cancels main's side and top padding. */
+.app-tabs { margin: calc(-1 * var(--x-space-6)) calc(-1 * var(--x-space-6)) var(--x-space-4); padding-right: var(--x-space-2); border-bottom: 1px solid var(--line); background: var(--bg-1); }
 .app-footer { margin-top: var(--x-space-8); padding-top: var(--x-space-4); border-top: 1px solid var(--line); font: var(--type-status); color: var(--text-2); }
 .app-bell { position: relative; display: inline-flex; }
 .app-bell-count { position: absolute; top: calc(-1 * var(--x-space-1)); right: calc(-1 * var(--x-space-1)); min-width: 2ch; padding: 0 var(--x-space-1); border-radius: var(--radius-l); background: var(--accent); color: var(--x-color-on-accent); font: var(--type-kbd); font-variant-numeric: tabular-nums; text-align: center; pointer-events: none; }

@@ -72,4 +72,8 @@ describe("TimeSeriesChart", () => {
     expect(html).not.toContain("NaN");
     expect(html).toContain("x-tschart-line");
   });
+  it("dots marks every point", () => {
+    expect(renderToStaticMarkup(<TimeSeriesChart label="v" points={[{ key: "a", label: "a", value: 1 }]} dots />)).toContain('data-dots=""');
+    expect(renderToStaticMarkup(<TimeSeriesChart label="v" points={[{ key: "a", label: "a", value: 1 }]} />)).not.toContain("data-dots");
+  });
 });

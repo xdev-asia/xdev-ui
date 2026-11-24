@@ -74,10 +74,14 @@ describe("Access demo", () => {
     expect(count(html, />Hidden</g)).toBeGreaterThan(3);
   });
   it("button control renders only the buttons and codes the role holds", () => {
-    expect(count(view("buttons"), /btn-secondary/g)).toBe(7); // six buttons plus the account switch
+    // Owner: six code-gated buttons, two role-gated buttons and the account switch.
+    expect(count(view("buttons"), /btn-secondary/g)).toBe(9);
+    for (const s of ["Component · permission code", "Component · role", "Function · permission code", "Function · role"]) expect(view("buttons")).toContain(s);
     const vh = view("buttons", viewer);
     expect(vh).toContain("This role can use none of these buttons.");
     expect(vh).not.toContain("users.delete");
+    expect(vh).not.toContain("Visible to owners and admins");
+    expect(vh).toContain("Visible to every role");
   });
   it("mode names both ways and marks the one in use; the role pages explain who sees them", () => {
     expect(view("mode")).toContain("In use");

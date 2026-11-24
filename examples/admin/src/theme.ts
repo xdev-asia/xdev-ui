@@ -6,15 +6,15 @@ const KEY = "acme-theme";
 function readPref(): ThemePreference {
   try {
     const v = window.localStorage.getItem(KEY);
-    return v === "dark" || v === "light" || v === "system" ? v : "dark";
+    return v === "dark" || v === "light" || v === "system" ? v : "system";
   } catch {
-    return "dark";
+    return "system";
   }
 }
 
 /** Theme preference with persistence; sets data-theme on <html> and follows the system when set to "system". */
 export function useTheme(): [ThemePreference, (p: ThemePreference) => void] {
-  const [pref, setPref] = useState<ThemePreference>("dark");
+  const [pref, setPref] = useState<ThemePreference>("system");
   useEffect(() => setPref(readPref()), []);
   useEffect(() => {
     const paint = (dark: boolean): void => {

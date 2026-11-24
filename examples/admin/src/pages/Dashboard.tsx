@@ -59,10 +59,10 @@ export function DashboardView({ state, onRetry, initialPeriod = "week", initialC
       ) : (
         <div className="app-stack">
           <div className="app-grid">
-            <StatTile labels={ui.statTile} loading={loading} label={t("dashboard.activeUsers")} value={data ? num(data.activeUsers) : ""} delta="+4%" deltaTrend="up" deltaTone="good" hint={t("dashboard.vsLastWeek")} />
-            <StatTile labels={ui.statTile} loading={loading} label={t("dashboard.signIns")} value={data ? num(data.signIns) : ""} delta="+12%" deltaTrend="up" deltaTone="good" hint={t("dashboard.vsLastWeek")} />
-            <StatTile labels={ui.statTile} loading={loading} label={t("dashboard.failedSignIns")} value={data ? num(data.failedSignIns) : ""} delta="+8%" deltaTrend="up" deltaTone="bad" hint={t("dashboard.vsLastWeek")} />
-            <StatTile labels={ui.statTile} loading={loading} label={t("dashboard.storage")} value={data ? `${num(data.storageGb)} GB` : ""} hint={t("dashboard.storageHint")}>
+            <StatTile labels={ui.statTile} loading={loading} icon="accounts" label={t("dashboard.activeUsers")} value={data ? num(data.activeUsers) : ""} delta="+4%" deltaTrend="up" deltaTone="good" hint={t("dashboard.vsLastWeek")} />
+            <StatTile labels={ui.statTile} loading={loading} icon="key" label={t("dashboard.signIns")} value={data ? num(data.signIns) : ""} delta="+12%" deltaTrend="up" deltaTone="good" hint={t("dashboard.vsLastWeek")} />
+            <StatTile labels={ui.statTile} loading={loading} icon="lock" label={t("dashboard.failedSignIns")} value={data ? num(data.failedSignIns) : ""} delta="+8%" deltaTrend="up" deltaTone="bad" hint={t("dashboard.vsLastWeek")} />
+            <StatTile labels={ui.statTile} loading={loading} icon="database" label={t("dashboard.storage")} value={data ? `${num(data.storageGb)} GB` : ""} hint={t("dashboard.storageHint")}>
               {data ? <Meter value={data.storageGb} warnAt={80} label={t("dashboard.storage")} /> : null}
             </StatTile>
           </div>
@@ -73,7 +73,7 @@ export function DashboardView({ state, onRetry, initialPeriod = "week", initialC
             {loading ? (
               <div className="app-pane"><Spinner size="md" label={ui.spinner.loading} /></div>
             ) : (
-              <TimeSeriesChart label={t("dashboard.visits")} points={visits.points} ticks={visits.ticks} maxLabel={num(peak)} zeroLabel={num(0)} />
+              <TimeSeriesChart label={t("dashboard.visits")} points={visits.points} ticks={visits.ticks} maxLabel={num(peak)} zeroLabel={num(0)} dots={visits.points.length <= 12} />
             )}
           </Card>
           <div className="app-grid app-grid-wide">

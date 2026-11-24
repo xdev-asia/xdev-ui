@@ -380,7 +380,7 @@ button.x-list-row-main:disabled { cursor: default; }
 .x-tschart-col { position: relative; flex: 1 1 0; min-width: 0; }
 .x-tschart-col:hover::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; border-left: 1px solid var(--line-strong); }
 .x-tschart-dot { position: absolute; left: 50%; width: var(--x-space-2); height: var(--x-space-2); border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 calc(var(--x-space-1) / 2) var(--bg-1); transform: translate(-50%, 50%); opacity: 0; }
-.x-tschart-dot[data-alone], .x-tschart-col:hover .x-tschart-dot { opacity: 1; }
+.x-tschart-dot[data-alone], .x-tschart[data-dots] .x-tschart-dot, .x-tschart-col:hover .x-tschart-dot { opacity: 1; }
 .x-tschart-tip { position: absolute; top: 0; z-index: var(--x-z-raised); display: none; padding: var(--x-space-1) var(--x-space-2); border: 1px solid var(--line-strong); border-radius: var(--radius-s); background: var(--bg-2); box-shadow: var(--shadow-menu); font: var(--type-status); color: var(--text-1); white-space: nowrap; pointer-events: none; }
 .x-tschart-col[data-side="start"] .x-tschart-tip { left: 50%; margin-left: var(--x-space-2); }
 .x-tschart-col[data-side="end"] .x-tschart-tip { right: 50%; margin-right: var(--x-space-2); }

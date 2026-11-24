@@ -120,7 +120,7 @@ export function PreferencesDrawer({ prefs, onPrefs, theme, onTheme, onClose, onS
             variant="secondary"
             onClick={() => {
               onPrefs(DEFAULT_PREFS);
-              onTheme("dark");
+              onTheme("system");
             }}
           >
             {t("prefs.reset")}
