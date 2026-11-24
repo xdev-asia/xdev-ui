@@ -110,3 +110,11 @@
 .app-footer[data-fixed] { margin-top: auto; position: sticky; bottom: calc(-1 * var(--x-space-6)); z-index: var(--x-z-raised); margin-bottom: calc(-1 * var(--x-space-6)); padding-bottom: var(--x-space-4); background: var(--bg-0); }
 .app-watermark { position: fixed; inset: 0; z-index: var(--x-z-toast); background: var(--text-3); opacity: 0.18; mask-repeat: repeat; -webkit-mask-repeat: repeat; pointer-events: none; }
 .app-update { margin-bottom: var(--x-space-6); }
+/* Spot illustration (SpotArt): a glyph on a soft disc with a coloured badge, for 403/404/500 and the access pages. */
+.app-spot { --spot: var(--accent); position: relative; display: grid; place-items: center; width: 10rem; height: 10rem; color: var(--spot); }
+.app-spot[data-tone="warn"] { --spot: var(--warn); }
+.app-spot[data-tone="danger"] { --spot: var(--danger); }
+.app-spot[data-tone="ok"] { --spot: var(--ok); }
+.app-spot-disc { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--spot) 26%, transparent), color-mix(in srgb, var(--spot) 8%, transparent) 70%); }
+.app-spot > svg { position: relative; }
+.app-spot-badge { position: absolute; top: 0.75rem; right: 0.75rem; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; background: var(--spot); color: var(--bg-0); box-shadow: 0 0 0 0.25rem var(--bg-0); }

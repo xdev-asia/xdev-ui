@@ -616,6 +616,7 @@ export const vi: Dict = {
   },
   access: {
     modeTitle: "Chế độ phân quyền",
+    modeHero: "Đang hiện ở chế độ {mode}",
     modeDescription: "Cách bảng quản trị quyết định mỗi tài khoản thấy và làm được gì.",
     front: "Phía giao diện",
     frontHint: "Bảng quản trị đọc ma trận vai trò và bỏ qua những gì vai trò không bao giờ làm được.",

@@ -614,6 +614,7 @@ export const en = {
   },
   access: {
     modeTitle: "Access mode",
+    modeHero: "Shown in {mode} mode",
     modeDescription: "How this console decides what each account sees and does.",
     front: "Front-end",
     frontHint: "The console reads the role matrix and leaves out what the role can never do.",

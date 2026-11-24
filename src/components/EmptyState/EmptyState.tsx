@@ -25,6 +25,8 @@ const DEFAULT_LABELS: EmptyStateLabels = { done: "Done", step: (current, total) 
 export interface EmptyStateProps {
   /** Icon in a soft tile; shown only for size "center". */
   icon?: IconName;
+  /** A decorative picture for a whole-page status view, in place of the small icon tile (hidden from assistive tech); size "center" only. */
+  art?: ReactNode;
   /** A large figure above the title for a whole-page status view, such as "404"; shown only for size "center". */
   figure?: ReactNode;
   /** What is missing, as a statement ("No worktrees yet"). */
@@ -44,13 +46,17 @@ export interface EmptyStateProps {
   className?: string;
 }
 
-export function EmptyState({ icon, figure, title, hint, steps, current, labels, actions, size = "inline", className }: EmptyStateProps): JSX.Element {
+export function EmptyState({ icon, art, figure, title, hint, steps, current, labels, actions, size = "inline", className }: EmptyStateProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
   const first = steps ? steps.findIndex((s) => !s.done) : -1;
   const at = steps?.length ? Math.min(steps.length, Math.max(1, current ?? (first < 0 ? steps.length : first + 1))) : 0;
   return (
     <div className={cx("x-empty", className)} data-size={size}>
-      {icon && size === "center" ? (
+      {art && size === "center" ? (
+        <div className="x-empty-art" aria-hidden="true">
+          {art}
+        </div>
+      ) : icon && size === "center" ? (
         <span className="x-empty-icon">
           <Icon name={icon} size={20} />
         </span>
