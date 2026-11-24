@@ -47,6 +47,7 @@ corepack pnpm install
 corepack pnpm dev         # demo, http://localhost:5173
 corepack pnpm build       # tokens -> ai manifest -> lib -> mcp.js -> d.ts
 corepack pnpm test        # SSR smoke (121 components) + MCP smoke (all tools)
+corepack pnpm check:layout # admin example: every route at 375/768px, light/dark, en/vi; fails on sideways scroll or a hidden current tab (screenshots in layout-report/)
 ```
 
 | change | also update |
@@ -54,7 +55,7 @@ corepack pnpm test        # SSR smoke (121 components) + MCP smoke (all tools)
 | new component `X` | `src/components/X/X.tsx` + `README.md` (first paragraph = summary, `## Rules`), export in `src/index.ts`, row in the Components table of `docs/design-system.md` (build fails without it), CSS in `src/styles/<group>.css`, preview in `demo/previews.ts` |
 | token | `tokens/tokens.json` only; `tokens.css` and the AI manifest are generated |
 | skill or template | `skills/<name>/SKILL.md` (frontmatter `name`, `description`, `license`; body at most 150 lines), `references/`, `templates/`; every name it uses must exist (`test/skills-names.test.ts`); dotfiles in templates are `_npmrc`, `_gitignore`, `_mcp.json` |
-| admin example | `examples/admin`; `test/app-rules.test.ts` runs the audit on it, and `pnpm build:example:admin` runs in CI |
+| admin example | `examples/admin`; `test/app-rules.test.ts` runs the audit on it, and `pnpm build:example:admin` runs in CI. A new route also goes in `examples/admin/layout-routes.json`; run `pnpm check:layout` (headless Chrome: `$CHROME_BIN`, or Playwright's shell) after layout changes and look at the screenshots |
 | icon | `src/icons.ts` (24 grid, stroke 1.75, no fills) |
 | rule or voice | `docs/design-system.md`; the MCP `xdevui_get_guidelines` reads its `##` sections |
 
