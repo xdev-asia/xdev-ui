@@ -249,7 +249,7 @@ export function Shell(p: ShellProps): JSX.Element {
     const r = tab.getBoundingClientRect();
     if (r.left < s.left) strip.scrollLeft -= s.left - r.left;
     else if (r.right > s.right) strip.scrollLeft += r.right - s.right;
-  }, [route.path, tabs.length]);
+  }, [route.path, tabs]);
 
   const act = (action: TabAction, target: string): void => {
     setTabMenu(null);

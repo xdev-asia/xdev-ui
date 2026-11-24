@@ -1,0 +1,111 @@
+{
+  "signIn": true,
+  "storage": {
+    "theme": "acme-theme",
+    "locale": "acme-locale",
+    "reset": [
+      "acme-prefs",
+      "acme-tabs"
+    ]
+  },
+  "locales": [
+    "en",
+    "vi"
+  ],
+  "routes": [
+    {
+      "name": "home",
+      "hash": "#/"
+    },
+    {
+      "name": "access-mode",
+      "hash": "#/access/mode"
+    },
+    {
+      "name": "page-control",
+      "hash": "#/access/pages"
+    },
+    {
+      "name": "button-control",
+      "hash": "#/access/buttons"
+    },
+    {
+      "name": "admin-visible",
+      "hash": "#/access/admin"
+    },
+    {
+      "name": "menu1-1",
+      "hash": "#/nested/menu1-1"
+    },
+    {
+      "name": "menu1-2",
+      "hash": "#/nested/menu1-2"
+    },
+    {
+      "name": "menu2",
+      "hash": "#/nested/menu2"
+    },
+    {
+      "name": "embed-1",
+      "hash": "#/outside/storybook"
+    },
+    {
+      "name": "embed-2",
+      "hash": "#/outside/docs"
+    },
+    {
+      "name": "e403",
+      "hash": "#/exception/403"
+    },
+    {
+      "name": "e404",
+      "hash": "#/exception/404"
+    },
+    {
+      "name": "e500",
+      "hash": "#/exception/500"
+    },
+    {
+      "name": "unknown",
+      "hash": "#/exception/unknown"
+    },
+    {
+      "name": "user",
+      "hash": "#/users"
+    },
+    {
+      "name": "role",
+      "hash": "#/roles"
+    },
+    {
+      "name": "menu",
+      "hash": "#/menus"
+    },
+    {
+      "name": "dept",
+      "hash": "#/departments"
+    },
+    {
+      "name": "profile",
+      "hash": "#/profile"
+    },
+    {
+      "name": "settings",
+      "hash": "#/settings"
+    },
+    {
+      "name": "about",
+      "hash": "#/about"
+    },
+    {
+      "name": "privacy",
+      "hash": "#/privacy",
+      "public": true
+    },
+    {
+      "name": "terms",
+      "hash": "#/terms",
+      "public": true
+    }
+  ]
+}
