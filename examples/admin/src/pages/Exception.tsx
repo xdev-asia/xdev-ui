@@ -8,13 +8,13 @@ import { NotFoundPage } from "./NotFound";
 /** Whole-page status views: no access (403), not found (404) and a server failure (500). */
 export function ExceptionPage({ code, onRetry }: { code: ExceptionCode | "unknown"; onRetry?: () => void }): JSX.Element {
   const { t } = useI18n();
-  if (code === "404") return <NotFoundPage />;
+  // As react-antd-admin: a menu entry whose component does not exist shows the 404 page.
+  if (code === "404" || code === "unknown") return <NotFoundPage />;
   const home = (
     <Button variant={code === "500" ? "secondary" : "primary"} href={hrefFor.dashboard()}>
       {t("app.goDashboard")}
     </Button>
   );
-  if (code === "unknown") return <EmptyState size="center" icon="help" art={<Illustration scene="unknown" />} title={t("exception.unknownTitle")} hint={t("exception.unknownHint")} actions={home} />;
   return code === "403" ? (
     <EmptyState size="center" icon="lock" art={<Illustration scene="forbidden" />} figure="403" title={t("exception.forbiddenTitle")} hint={t("exception.forbiddenHint")} actions={home} />
   ) : (

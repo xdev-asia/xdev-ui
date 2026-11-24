@@ -125,6 +125,6 @@ describe("Status, about and demo pages", () => {
   it("nested and docs pages have a title and a named frame", () => {
     expect(render(<NestedPage leaf="menu1-2" />)).toContain("Menu 1-2");
     expect(render(<EmbedPage id="storybook" />)).toContain('title="Storybook"');
-    expect(render(<ExceptionPage code="unknown" />)).toContain("This page is not built yet");
+    expect(render(<ExceptionPage code="unknown" />)).toContain("x-empty-figure\">404");
   });
 });
