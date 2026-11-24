@@ -1,6 +1,6 @@
 # Page check: dashboard
 
-**This page is a dashboard when** it opens with totals (`StatTile`) and charts (`BarChart`, `Heatmap`, `LineChart`, `FlowMap`) over a period, and the person reads it more than they act on it.
+**This page is a dashboard when** it opens with totals (`StatTile`) and charts (`BarChart`, `DonutChart`, `TimeSeriesChart`, `Heatmap`, `FlowMap`) over a period, and the person reads it more than they act on it.
 
 Source rules: `xdev-ui-admin/references/dashboard.md`, `states-feedback.md`.
 

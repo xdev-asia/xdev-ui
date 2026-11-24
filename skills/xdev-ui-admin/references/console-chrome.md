@@ -70,7 +70,7 @@ One `PaletteTrigger` (it binds Ctrl+K and Cmd+K) opens one `CommandPalette`. Sec
 
 ## Page tabs
 
-A row of the pages opened this session, above the page. `TabStrip` with `onAdd={false}`, the route path as the tab `id`, the page title as `name`, and the home page `pinned` (always first, no close button). Keep the tabs in `sessionStorage`, so a reload keeps them and a new browser tab starts clean. At the end of the row: "Reload page" (`refresh`, remounts the page with a new `key`), the focus-view button, and a `MenuButton` with Close tab, Close tabs to the left, Close tabs to the right, Close other tabs and Close all tabs, each disabled when it would do nothing. Keep the list logic pure and tested:
+A row of the pages opened this session, above the page. `TabStrip` with `onAdd={false}`, the route path as the tab `id`, the page title as `name`, and the home page `pinned` (always first, no close button). Keep the tabs in `sessionStorage`, so a reload keeps them and a new browser tab starts clean. At the end of the row: "Reload page" (`refresh`, remounts the page with a new `key`), the focus-view button, and a `MenuButton` with Close tab, Close tabs to the left, Close tabs to the right, Close other tabs and Close all tabs, each disabled when it would do nothing. Each tab gets the page's menu `icon`; `variant` picks the look (`chrome` joined tabs by default, `card`, `plain`, `brisk`); `onReorder` lets people drag tabs or press Shift+Left/Right, with the pinned home tab staying first. Store the path, not the title, and translate the title from the nav model when rendering, so tabs follow a language switch; a record's tab shows its name, not its id. Sub-views of one page (settings sections) share one tab. When the strip is wider than the screen, scroll the current tab into view on every route change by adjusting the strip's `scrollLeft` (not `scrollIntoView`, which also scrolls the page). Keep the list logic pure and tested:
 
 ```ts
 /** Add once at the end, refresh the title, keep at most `max` (oldest dropped). */
@@ -108,3 +108,12 @@ Set `document.title` to "Page · Product" on every route change, so history, boo
 ## Test the root
 
 Pages are tested as views; also render the root `App` once with `renderToStaticMarkup`. A hook that reads a context (`useI18n` inside `useToasts`) above its provider passes every view test and still leaves a blank page in the browser.
+
+## Layouts
+
+react-antd-admin's four menu positions, all from one nav model:
+- **Side** (default): `NavList` in `nav`.
+- **Top**: `AppShell navHidden` drops the sidebar from 768px up and puts `brand` in the top bar; put a `nav` of sections in `crumbs`, a `MenuButton variant="ghost"` per section with children (the current one `secondary`), and move sections that do not fit into a "More" (`MenuButton variant="icon" icon="more"`) instead of cutting a label. Phones still get the drawer, so pass the full `nav` too.
+- **Mixed**: sections in the top bar, the current section's pages in the sidebar; a section without pages hides the sidebar.
+- **Two columns**: a narrow column of section links, then the current section's `NavList`.
+`sideTheme="dark" | "light"` draws the sidebar in that theme whatever the page uses. Widths are tokens: set `--w-side` (sidebar) and `--w-rail` (folded rail) on `:root` from preferences; on phones the drawer keeps at least 17.5rem.

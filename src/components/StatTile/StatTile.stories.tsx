@@ -16,3 +16,4 @@ export const WithDelta: Story = { args: { delta: "+12%", deltaTrend: "up", delta
 export const BadDelta: Story = { args: { label: "Failed sign-ins", value: "37", delta: "+8%", deltaTrend: "up", deltaTone: "bad" } };
 export const Loading: Story = { args: { loading: true } };
 export const WithMeter: Story = { args: { label: "Storage", value: "82 GB", children: <Meter value={82} warnAt={80} label="Used" /> } };
+export const WithIcon: Story = { args: { icon: "accounts", delta: "+12%", deltaTrend: "up", deltaTone: "good", hint: "vs last 7 days" } };

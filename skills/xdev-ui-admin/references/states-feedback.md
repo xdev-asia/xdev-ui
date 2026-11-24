@@ -16,7 +16,7 @@ if (state.kind === "loading") return <Skeleton shape="block" height="320px" anno
 if (state.kind === "error") return <Banner title={t("users.loadFailed")} action={<Button variant="secondary" onClick={retry}>{t("common.retry")}</Button>} />;
 ```
 
-Whole-page status views (403, 404, 500) are in the tree list and status pages reference.
+Whole-page status views (403, 404, 500) are in the tree list and status pages reference. Give them `EmptyState size="center"` with `figure="404"` (the large code above the title) and, if the product has illustrations, `art` (decorative, `aria-hidden`, in place of the icon tile); the title and hint still say what happened and what to do.
 
 ## Rules
 - Show a skeleton only after about 300 ms, so fast loads do not flicker; never leave it after an error.

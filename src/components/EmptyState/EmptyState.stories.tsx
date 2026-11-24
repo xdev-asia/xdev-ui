@@ -40,3 +40,13 @@ export const WithSteps: Story = {
     actions: <Button variant="primary">Pick an agent</Button>,
   },
 };
+/** A whole-page status view: a large figure over the title; `art` takes a decorative picture in place of the icon tile. */
+export const StatusPage: Story = {
+  args: {
+    size: "center",
+    icon: "search",
+    figure: "404",
+    title: "Page not found",
+    hint: "The page you are looking for does not exist or was moved.",
+  },
+};
