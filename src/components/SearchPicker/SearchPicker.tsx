@@ -62,7 +62,7 @@ function firstEnabled(items: SearchPickerItem[]): string | null {
 export function searchPickerKey(items: SearchPickerItem[], active: string | null, key: string, query: string): KeyResult {
   const enabled = items.filter((i) => !i.disabled);
   const at = enabled.findIndex((i) => i.id === active);
-  const current = at >= 0 ? enabled[at].id : (enabled[0]?.id ?? null);
+  const current = at >= 0 ? (enabled[at]?.id ?? null) : (enabled[0]?.id ?? null);
   if (key === "ArrowDown") return { active: enabled[Math.min(at + 1, enabled.length - 1)]?.id ?? null, pick: null, clear: false };
   if (key === "ArrowUp") return { active: enabled[Math.max(at - 1, 0)]?.id ?? null, pick: null, clear: false };
   if (key === "Enter") return { active: current, pick: current, clear: false };

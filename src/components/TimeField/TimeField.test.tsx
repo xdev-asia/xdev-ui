@@ -33,7 +33,7 @@ function tree(draft: string | null, props: Partial<Props> = {}, bad = false) {
   reset([draft, bad, value]);
   const onChange = vi.fn();
   const t = TimeField({ ...base, onChange, ...props, value });
-  const input = findAll(t, (e) => e.type === "input" && e.props.type === "text")[0];
+  const input = findAll(t, (e) => e.type === "input" && e.props.type === "text")[0]!;
   const [setDraft, setBad, setSeen] = h.sets;
   return { t, input, onChange, setDraft, setBad, setSeen };
 }
@@ -91,7 +91,7 @@ describe("TimeField markup", () => {
 describe("TimeField typing", () => {
   it("keeps the raw text while typing", () => {
     const { input, setDraft, setBad } = tree(null);
-    input.props.onChange({ target: { value: "93" } });
+    input!.props.onChange({ target: { value: "93" } });
     expect(setDraft).toHaveBeenCalledWith("93");
     expect(setBad).toHaveBeenCalledWith(false);
     expect(tree("93").input.props.value).toBe("93");
@@ -115,19 +115,19 @@ describe("TimeField typing", () => {
   });
   it("does not call onChange when the text normalises to the current value", () => {
     const { input, onChange, setDraft } = tree("930");
-    input.props.onBlur();
+    input!.props.onBlur();
     expect(onChange).not.toHaveBeenCalled();
     expect(setDraft).toHaveBeenCalledWith(null);
   });
   it("does nothing on blur without pending text", () => {
     const { input, onChange, setBad } = tree(null);
-    input.props.onBlur();
+    input!.props.onBlur();
     expect(onChange).not.toHaveBeenCalled();
     expect(setBad).not.toHaveBeenCalled();
   });
   it("commits null when the box is emptied", () => {
     const { input, onChange } = tree("  ");
-    input.props.onBlur();
+    input!.props.onBlur();
     expect(onChange).toHaveBeenCalledWith(null);
   });
   it("flags unparseable or out-of-range text and keeps it", () => {
@@ -187,13 +187,13 @@ describe("TimeField outside value changes", () => {
     expect(setSeen).toHaveBeenCalledWith("11:00");
     expect(setDraft).toHaveBeenCalledWith(null);
     expect(setBad).toHaveBeenCalledWith(false);
-    const input = findAll(t, (e) => e.type === "input" && e.props.type === "text")[0];
+    const input = findAll(t, (e) => e.type === "input" && e.props.type === "text")[0]!;
     expect(input.props.value).toBe("11:00");
     expect(input.props["aria-invalid"]).toBeUndefined();
   });
   it("keeps pending text while value is unchanged", () => {
     const { setSeen, input } = tree("bad", {}, true);
     expect(setSeen).not.toHaveBeenCalled();
-    expect(input.props.value).toBe("bad");
+    expect(input!.props.value).toBe("bad");
   });
 });

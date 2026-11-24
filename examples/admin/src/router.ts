@@ -26,14 +26,14 @@ const decode = (s: string): string | null => {
 
 /** Pure: turns a path such as "/users/u12?tab=activity" into a route. */
 export function matchRoute(input: string): Route {
-  const path = ("/" + input.replace(/^#/, "").split("?")[0].replace(/^\/+|\/+$/g, "")).replace(/\/$/, "") || "/";
+  const path = ("/" + input.replace(/^#/, "").split("?")[0]!.replace(/^\/+|\/+$/g, "")).replace(/\/$/, "") || "/";
   const name = STATIC[path];
   if (name) return { name, params: {}, path };
-  const user = /^\/users\/([^/]+)$/.exec(path);
-  const userId = user ? decode(user[1]) : null;
+  const user = /^\/users\/([^/]+)$/.exec(path)?.[1];
+  const userId = user !== undefined ? decode(user) : null;
   if (userId !== null) return { name: "user", params: { id: userId }, path };
-  const section = /^\/settings\/([^/]+)$/.exec(path);
-  const sectionId = section ? decode(section[1]) : null;
+  const section = /^\/settings\/([^/]+)$/.exec(path)?.[1];
+  const sectionId = section !== undefined ? decode(section) : null;
   if (sectionId !== null) return { name: "settings", params: { section: sectionId }, path };
   return { name: "not-found", params: {}, path };
 }

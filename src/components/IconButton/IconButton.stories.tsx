@@ -13,6 +13,10 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 export const Disabled: Story = { args: { disabled: true } };
+/** The spinner replaces the icon; `label` stays the accessible name. */
+export const Busy: Story = { args: { icon: "save", label: "Save row", busy: true } };
+/** Destructive icon-only action; confirm it with a Dialog when it cannot be undone. */
+export const Danger: Story = { args: { icon: "trash", label: "Delete row", tone: "danger" } };
 export const Toolbar: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 4 }}>

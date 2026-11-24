@@ -48,9 +48,9 @@ describe("Toaster", () => {
     toast("Archived", { action: { label: "Undo", onClick } });
     const tree = Toaster({});
     const [t] = findAll(tree, (e) => typeof e.props.onAction === "function");
-    t.props.onAction();
+    t!.props.onAction();
     expect(onClick).toHaveBeenCalledOnce();
-    t.props.onDismiss();
+    t!.props.onDismiss();
     expect(renderToStaticMarkup(<Toaster />)).not.toContain("Archived");
   });
   it("pauses on hover and focus, resumes on leave and blur", () => {

@@ -36,8 +36,8 @@ describe("TreeView", () => {
     const onToggle = vi.fn();
     const onOpen = vi.fn();
     const btns = findAll(TreeView({ rows, onToggle, onOpen }), (e) => e.props.role === "treeitem");
-    btns[0].props.onClick();
-    btns[1].props.onClick();
+    btns[0]!.props.onClick();
+    btns[1]!.props.onClick();
     expect(onToggle).toHaveBeenCalledWith("src");
     expect(onOpen).toHaveBeenCalledWith("src/App.tsx");
   });

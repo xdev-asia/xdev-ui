@@ -19,7 +19,7 @@ export const OneOpenAtATime: Story = {
     const [open, setOpen] = useState<string | null>("claude");
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        {[["claude", "Claude"], ["codex", "Codex"]].map(([id, name]) => (
+        {([["claude", "Claude"], ["codex", "Codex"]] as const).map(([id, name]) => (
           <AgentRow key={id} name={name} cli={id} summary="Default model" expanded={open === id} onToggle={(x) => setOpen(x ? id : null)}>
             Profile form goes here.
           </AgentRow>

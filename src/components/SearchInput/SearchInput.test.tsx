@@ -27,7 +27,7 @@ describe("SearchInput", () => {
   });
   it("wires onClear", () => {
     const onClear = vi.fn();
-    findAll(SearchInput({ value: "x", onClear }), (e) => e.type === "button")[0].props.onClick();
+    findAll(SearchInput({ value: "x", onClear }), (e) => e.type === "button")[0]!.props.onClick();
     expect(onClear).toHaveBeenCalledOnce();
   });
 });

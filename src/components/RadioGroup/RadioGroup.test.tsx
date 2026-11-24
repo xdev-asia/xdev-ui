@@ -32,7 +32,7 @@ describe("RadioGroup", () => {
   });
   it("wires onChange", () => {
     const onChange = vi.fn();
-    findAll(RadioGroup({ name: "s", options, onChange }), (e) => e.type === "input")[1].props.onChange();
+    findAll(RadioGroup({ name: "s", options, onChange }), (e) => e.type === "input")[1]!.props.onChange();
     expect(onChange).toHaveBeenCalledWith("bash");
     expect(setInner).toHaveBeenCalledWith("bash");
   });

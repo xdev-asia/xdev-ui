@@ -27,7 +27,7 @@ describe("checkFiles", () => {
   it("multiple honours maxFiles", () => {
     const r = checkFiles([f("a"), f("b"), f("c")], { multiple: true, maxFiles: 2 });
     expect(r.accepted).toHaveLength(2);
-    expect(r.rejected[0].reason).toBe("count");
+    expect(r.rejected[0]!.reason).toBe("count");
     expect(checkFiles([f("a"), f("b"), f("c")], { multiple: true }).accepted).toHaveLength(3);
   });
 });
@@ -69,5 +69,18 @@ describe("FileDrop", () => {
   it("shows an item's status text after the size", () => {
     const html = renderToStaticMarkup(<FileDrop label="Files" onFiles={() => {}} items={[{ id: "1", name: "a.mp3", size: 2048, status: "Waiting" }]} />);
     expect(html).toContain('<span class="x-filedrop-status">Waiting</span>');
+  });
+});
+
+describe("FileDrop inputProps", () => {
+  it("passes name, id and data attributes to the file input, keeping its own type", () => {
+    const html = renderToStaticMarkup(
+      <FileDrop label="Files" onFiles={() => {}} inputProps={{ name: "docs", id: "pick", "data-field": "upload" }} />,
+    );
+    expect(html).toMatch(/<input[^>]*name="docs"/);
+    expect(html).toMatch(/<input[^>]*id="pick"/);
+    expect(html).toMatch(/<input[^>]*data-field="upload"/);
+    expect(html).toMatch(/<input[^>]*type="file"/);
+    expect(html).toContain('for="pick"');
   });
 });

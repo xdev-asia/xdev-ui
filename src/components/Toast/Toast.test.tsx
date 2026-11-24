@@ -22,7 +22,7 @@ describe("Toast", () => {
   });
   it("wires onDismiss", () => {
     const onDismiss = vi.fn();
-    findAll(Toast({ children: "x", onDismiss }), (e) => e.type === "button")[0].props.onClick();
+    findAll(Toast({ children: "x", onDismiss }), (e) => e.type === "button")[0]!.props.onClick();
     expect(onDismiss).toHaveBeenCalledOnce();
   });
   it("is alert for danger when it stands alone", () => {

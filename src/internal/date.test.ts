@@ -114,20 +114,20 @@ describe("monthGrid", () => {
     const g = monthGrid(2026, 11);
     expect(g).toHaveLength(6);
     for (const w of g) expect(w).toHaveLength(7);
-    expect(g[0][0]).toBe("2026-10-26");
-    expect(g[0][6]).toBe("2026-11-01");
-    expect(g[5][6]).toBe("2026-12-06");
+    expect(g[0]![0]).toBe("2026-10-26");
+    expect(g[0]![6]).toBe("2026-11-01");
+    expect(g[5]![6]).toBe("2026-12-06");
     expect(g.flat().every((d) => dayOfWeek(d) !== undefined)).toBe(true);
-    expect(g.map((w) => dayOfWeek(w[0]))).toEqual([1, 1, 1, 1, 1, 1]);
+    expect(g.map((w) => dayOfWeek(w[0]!))).toEqual([1, 1, 1, 1, 1, 1]);
   });
   it("honours weekStartsOn", () => {
     const g = monthGrid(2026, 11, 0);
-    expect(g[0][0]).toBe("2026-11-01");
-    expect(dayOfWeek(g[0][0])).toBe(0);
+    expect(g[0]![0]).toBe("2026-11-01");
+    expect(dayOfWeek(g[0]![0]!)).toBe(0);
   });
   it("starts on the 1st when the month begins on the week start", () => {
-    expect(monthGrid(2026, 6)[0][0]).toBe("2026-06-01"); // a Monday
-    expect(monthGrid(2026, 2)[0][0]).toBe("2026-01-26");
+    expect(monthGrid(2026, 6)[0]![0]).toBe("2026-06-01"); // a Monday
+    expect(monthGrid(2026, 2)[0]![0]).toBe("2026-01-26");
   });
   it("contains every day of the month exactly once, in order", () => {
     const days = monthGrid(2024, 2).flat().filter((d) => d.startsWith("2024-02"));
@@ -241,7 +241,7 @@ describe("names", () => {
   it("lists weekdays from the week start", () => {
     expect(weekdayNames().map((w) => w.short)).toEqual(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]);
     expect(weekdayNames("en", 0)[0]).toEqual({ short: "Sun", long: "Sunday" });
-    expect(weekdayNames("en", 6)[0].long).toBe("Saturday");
+    expect(weekdayNames("en", 6)[0]!.long).toBe("Saturday");
   });
   it("speaks a full date", () => {
     expect(dayLabel("2026-11-06")).toBe("Friday, November 6, 2026");

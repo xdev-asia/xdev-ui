@@ -46,9 +46,9 @@ describe("AppShell", () => {
   it("toggles through onNavOpenChange; the backdrop closes", () => {
     const onNavOpenChange = vi.fn();
     const tree = AppShell({ ...base, navOpen: true, onNavOpenChange });
-    findAll(tree, (e) => e.props.className === "x-shell-menu")[0].props.onClick();
+    findAll(tree, (e) => e.props.className === "x-shell-menu")[0]!.props.onClick();
     expect(onNavOpenChange).toHaveBeenLastCalledWith(false);
-    findAll(tree, (e) => e.props.className === "x-shell-backdrop")[0].props.onClick();
+    findAll(tree, (e) => e.props.className === "x-shell-backdrop")[0]!.props.onClick();
     expect(onNavOpenChange).toHaveBeenCalledTimes(2);
   });
   it("bottomNav renders under main inside the page column, and only when given", () => {
@@ -87,7 +87,7 @@ describe("AppShell", () => {
   });
   it("skip link focuses main without changing location.hash", () => {
     const tree = AppShell({ ...base, mainId: "page" });
-    const link = findAll(tree, (e) => e.props.className === "x-skip-link")[0];
+    const link = findAll(tree, (e) => e.props.className === "x-skip-link")[0]!;
     const main = { focus: vi.fn() };
     const getElementById = vi.fn(() => main);
     vi.stubGlobal("document", { getElementById });
@@ -134,17 +134,17 @@ describe("AppShell", () => {
       AppShell({ ...base, navOpen: true, onNavOpenChange });
       const refs = h.refs; // in order: menu, side, backdrop, col, close
       const [menu, side, backdrop, col] = refs;
-      menu.current = { focus: vi.fn(), getClientRects: () => [{}] };
-      side.current = { focus: vi.fn(), querySelectorAll: () => [first, last] };
-      backdrop.current = { focus: vi.fn() };
-      col.current = { inert: false };
+      menu!.current = { focus: vi.fn(), getClientRects: () => [{}] };
+      side!.current = { focus: vi.fn(), querySelectorAll: () => [first, last] };
+      backdrop!.current = { focus: vi.fn() };
+      col!.current = { inert: false };
       vi.stubGlobal("document", {
         activeElement: null,
         addEventListener: (t: string, fn: (e: any) => void) => listeners.set(t, fn),
         removeEventListener: (t: string) => listeners.delete(t),
       });
-      const cleanup = h.effects[0]() as () => void;
-      return { menu: menu.current, backdrop: backdrop.current, col: col.current, cleanup, onNavOpenChange };
+      const cleanup = h.effects[0]!() as () => void;
+      return { menu: menu!.current, backdrop: backdrop!.current, col: col!.current, cleanup, onNavOpenChange };
     };
     const done = () => vi.unstubAllGlobals();
 
@@ -164,13 +164,13 @@ describe("AppShell", () => {
       h.effects.length = 0;
       h.refs.length = 0;
       AppShell({ ...base, navOpen: true });
-      h.refs[0].current = { focus: vi.fn(), getClientRects: () => [] };
-      h.refs[3].current = { inert: false };
-      expect(h.effects[0]()).toBeUndefined();
-      expect(h.refs[3].current.inert).toBe(false);
+      h.refs[0]!.current = { focus: vi.fn(), getClientRects: () => [] };
+      h.refs[3]!.current = { inert: false };
+      expect(h.effects[0]!()).toBeUndefined();
+      expect(h.refs[3]!.current.inert).toBe(false);
       h.effects.length = 0;
       AppShell({ ...base, navOpen: false });
-      expect(h.effects[0]()).toBeUndefined();
+      expect(h.effects[0]!()).toBeUndefined();
     });
     it("closing returns focus to the menu button and drops the listener", () => {
       const { menu, cleanup } = open();

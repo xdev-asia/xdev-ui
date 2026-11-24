@@ -48,7 +48,7 @@ export function parseTime(text: string, opts: TimeTextOptions = {}): string | nu
   }
   const parts = t.split(/[:.]/);
   if (dur) {
-    if (parts.length !== 2 || !/^\d+$/.test(parts[0]) || !/^\d{1,2}$/.test(parts[1])) return null;
+    if (parts.length !== 2 || !/^\d+$/.test(parts[0] ?? "") || !/^\d{1,2}$/.test(parts[1] ?? "")) return null;
     return build(0, Number(parts[0]), Number(parts[1]), opts);
   }
   if (!parts.every((p) => /^\d{1,2}$/.test(p))) return null;
@@ -61,9 +61,9 @@ export function parseTime(text: string, opts: TimeTextOptions = {}): string | nu
 export function timeToSeconds(value: string | null | undefined, opts: TimeTextOptions = {}): number | null {
   const v = value == null ? null : parseTime(value, opts);
   if (v === null) return null;
-  const p = v.split(":").map(Number);
-  if (opts.mode === "duration") return p[0] * 60 + p[1];
-  return p[0] * 3600 + p[1] * 60 + (p[2] ?? 0);
+  const [h = NaN, m = NaN, s = 0] = v.split(":").map(Number);
+  if (opts.mode === "duration") return h * 60 + m;
+  return h * 3600 + m * 60 + s;
 }
 
 /** Formats a number of seconds as a value, wrapped into the range (time mode without `seconds` drops the seconds). */

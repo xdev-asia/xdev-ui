@@ -27,7 +27,7 @@ export function isLeapYear(y: number): boolean {
 
 /** Days in month `m` (1–12) of year `y`. */
 export function daysInMonth(y: number, m: number): number {
-  return [31, isLeapYear(y) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][m - 1];
+  return [31, isLeapYear(y) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][m - 1] ?? NaN;
 }
 
 export function isValidYmd(y: number, m: number, d: number): boolean {
@@ -210,7 +210,7 @@ export function parseDateText(text: string, format = "dd/mm/yyyy"): string | nul
   const parts = text.trim().split(/\s*[/.-]\s*/);
   if (!pat || parts.length !== 3) return null;
   const v: Record<"d" | "m" | "y", string> = { d: "", m: "", y: "" };
-  pat.order.forEach((k, i) => (v[k] = parts[i]));
+  pat.order.forEach((k, i) => (v[k] = parts[i] ?? ""));
   if (!/^\d{1,2}$/.test(v.d) || !/^\d{1,2}$/.test(v.m) || !/^\d{4}$/.test(v.y)) return null;
   const [y, m, d] = [Number(v.y), Number(v.m), Number(v.d)];
   return isValidYmd(y, m, d) ? toIso(y, m, d) : null;

@@ -32,7 +32,7 @@ describe("DataTable", () => {
   });
   it("sort button calls onSortChange with the next sort", () => {
     const onSortChange = vi.fn();
-    const btn = findAll(DataTable({ ...base, sort: { key: "name", dir: "asc" }, onSortChange }), (e) => e.props.className === "x-table-sort")[0];
+    const btn = findAll(DataTable({ ...base, sort: { key: "name", dir: "asc" }, onSortChange }), (e) => e.props.className === "x-table-sort")[0]!;
     btn.props.onClick();
     expect(onSortChange).toHaveBeenCalledWith({ key: "name", dir: "desc" });
   });
@@ -46,11 +46,11 @@ describe("DataTable", () => {
   });
   it("select all adds every row; select all again clears them", () => {
     const onSelectedChange = vi.fn();
-    const sel = (selected: string[]) => findAll(DataTable({ ...base, selected: new Set(selected), onSelectedChange }), (e) => e.props["aria-label"] === "Select all rows")[0];
+    const sel = (selected: string[]) => findAll(DataTable({ ...base, selected: new Set(selected), onSelectedChange }), (e) => e.props["aria-label"] === "Select all rows")[0]!;
     sel([]).props.onChange();
-    expect([...onSelectedChange.mock.calls[0][0]].sort()).toEqual(["1", "2"]);
+    expect([...onSelectedChange.mock.calls[0]![0]].sort()).toEqual(["1", "2"]);
     sel(["1", "2"]).props.onChange();
-    expect([...onSelectedChange.mock.calls[1][0]]).toEqual([]);
+    expect([...onSelectedChange.mock.calls[1]![0]]).toEqual([]);
     expect(sel(["1"]).props.indeterminate).toBe(true);
   });
   it("shows the empty node when there are no rows", () => {
@@ -84,7 +84,7 @@ describe("DataTable", () => {
     const disabled = (html: string) => html.match(/<button[^>]*class="x-table-handle"[^>]*disabled=""/g)?.length ?? 0;
     expect(disabled(renderToStaticMarkup(<DataTable {...base} reorderable sort={{ key: "name", dir: "asc" }} />))).toBe(2);
     expect(disabled(renderToStaticMarkup(<DataTable {...base} reorderable loading />))).toBe(2);
-    expect(disabled(renderToStaticMarkup(<DataTable {...base} rows={[rows[0]]} reorderable />))).toBe(1);
+    expect(disabled(renderToStaticMarkup(<DataTable {...base} rows={[rows[0]!]} reorderable />))).toBe(1);
   });
   it("the empty row spans the handle column too", () => {
     expect(renderToStaticMarkup(<DataTable {...base} rows={[]} reorderable selected={new Set()} empty="none" />)).toContain('colSpan="4"');
@@ -134,7 +134,7 @@ describe("DataTable", () => {
     it("calls onSortChange with the picked sort, or null for the default order", () => {
       const onSortChange = vi.fn();
       const tree = DataTable({ ...base, stack: true, sort: null, onSortChange });
-      const select = findAll(tree, (e) => typeof e.props?.onChange === "function" && Array.isArray(e.props?.options))[0];
+      const select = findAll(tree, (e) => typeof e.props?.onChange === "function" && Array.isArray(e.props?.options))[0]!;
       select.props.onChange({ target: { value: "name:desc" } });
       select.props.onChange({ target: { value: "" } });
       select.props.onChange({ target: { value: "role:asc" } });

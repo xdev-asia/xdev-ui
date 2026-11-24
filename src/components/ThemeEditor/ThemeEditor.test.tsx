@@ -48,7 +48,7 @@ describe("ThemeEditor", () => {
   it("calls onMode from the mode switch", () => {
     const onMode = vi.fn();
     const root = ThemeEditor({ ...props, onMode });
-    const seg = findAll(root, (e) => e.type === Segmented)[0];
+    const seg = findAll(root, (e) => e.type === Segmented)[0]!;
     seg.props.onChange("light");
     expect(onMode).toHaveBeenCalledWith("light");
   });

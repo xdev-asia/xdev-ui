@@ -168,6 +168,10 @@
   .settings-nav-item, .task-chip, .x-calendar-preset, .ws-tick, .search-input, .ws-field input, .dialog-input {
     min-height: 44px;
   }
+  /* Field with end content: the wrapper is the 44px box; the input inside fills it. */
+  .x-field-control { height: auto; min-height: 44px; }
+  .ws-field .x-field-control input { min-height: 0; }
+  .lang-select[data-size="sm"] { height: auto; min-height: 44px; }
   .btn { box-sizing: border-box; }
   /* Seven 40px day cells still fit a 320px window inside the popover. */
   .x-calendar-day { min-width: 40px; min-height: 40px; }

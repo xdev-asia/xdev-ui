@@ -121,7 +121,7 @@ export function MenuButton({
       typed.current = { query, at: now };
       const labels = els.map((el) => el.querySelector(".x-menu-label")?.textContent ?? el.textContent ?? "");
       const hit = menuTypeahead(labels, index, query);
-      if (hit != null) els[hit].focus();
+      if (hit != null) els[hit]?.focus();
     }
   };
 

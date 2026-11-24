@@ -177,7 +177,9 @@ export function FlowMap({ hub, nodes, sources = [], label, labels, className }: 
   useEffect(() => {
     const node = root.current;
     if (!node || typeof ResizeObserver === "undefined") return;
-    const ro = new ResizeObserver(([entry]) => setBox({ w: entry.contentRect.width, h: entry.contentRect.height }));
+    const ro = new ResizeObserver(([entry]) => {
+      if (entry) setBox({ w: entry.contentRect.width, h: entry.contentRect.height });
+    });
     ro.observe(node);
     return () => ro.disconnect();
   }, []);
@@ -228,29 +230,30 @@ export function FlowMap({ hub, nodes, sources = [], label, labels, className }: 
         <div className="x-flowmap-world" style={{ width: world.w, height: world.h }}>
           <svg className="x-flowmap-edges" width={world.w} height={world.h} aria-hidden="true">
             {sources.map((n, i) => {
-              const from = at(placed.left[i]);
+              const from = at(placed.left[i]!);
               const d = curve(from.left + FLOW_NODE.w / 2, from.top, centre.left - FLOW_HUB.w / 2, centre.top + hubY(i, sources.length));
               return <Edge key={`in-${n.id}`} node={n} side="in" d={d} />;
             })}
             {points.map((p, i) => {
+              const node = nodes[i]!;
               const end = at(p);
               const d = sides
                 ? curve(centre.left + FLOW_HUB.w / 2, centre.top + hubY(i, nodes.length), end.left - FLOW_NODE.w / 2, end.top)
                 : `M${centre.left} ${centre.top}L${end.left} ${end.top}`;
-              return <Edge key={nodes[i].id} node={nodes[i]} side={sides ? "out" : undefined} d={d} />;
+              return <Edge key={node.id} node={node} side={sides ? "out" : undefined} d={d} />;
             })}
           </svg>
           {sources.length > 0 && (
             <ul className="x-flowmap-nodes" data-side="in">
               {sources.map((n, i) => (
-                <Node key={n.id} node={n} style={at(placed.left[i])} />
+                <Node key={n.id} node={n} style={at(placed.left[i]!)} />
               ))}
             </ul>
           )}
           {nodes.length > 0 && (
             <ul className="x-flowmap-nodes" data-side={sides ? "out" : undefined}>
               {nodes.map((n, i) => (
-                <Node key={n.id} node={n} style={at(points[i])} />
+                <Node key={n.id} node={n} style={at(points[i]!)} />
               ))}
             </ul>
           )}

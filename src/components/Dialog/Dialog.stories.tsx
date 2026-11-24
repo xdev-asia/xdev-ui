@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Button } from "../Button/Button";
 import { fn } from "storybook/test";
 import { Dialog } from "./Dialog";
 
@@ -28,4 +29,21 @@ export const Danger: Story = {
 };
 export const Busy: Story = {
   args: { alert: true, tone: "danger", busy: true, title: "Delete user lan@example.com?", confirmLabel: "Delete user", children: "This cannot be undone." },
+};
+export const CustomActions: Story = {
+  args: {
+    title: "Share link",
+    description: "Anyone with the link can open the chat.",
+    dismissible: true,
+    body: "plain",
+    children: "https://chat.example.com/s/8f2c",
+    actions: (
+      <Button variant="secondary" icon="copy">
+        Copy link
+      </Button>
+    ),
+  },
+};
+export const DismissibleNoActions: Story = {
+  args: { title: "Model details", dismissible: true, actions: null, children: "Context window 200k tokens. Vision and tool use." },
 };

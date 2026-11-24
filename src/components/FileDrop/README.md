@@ -12,4 +12,5 @@ Drop zone and file chooser that checks type, size and count before handing files
 - `onFiles` gets only the files that pass `checkFiles`; the rest are listed under the zone with the reason and passed to `onReject`.
 - FileDrop does not upload. The caller uploads, then passes `items` with `progress` (0 to 100) and `error`, and removes an item on `onRemove`.
 - For one image with crop and preview use `ImageField` from `@xdev-asia/ui/image`.
+- `inputProps` reaches the hidden file input (`name`, `id`, `data-*`, `aria-describedby`); FileDrop keeps `type`, `accept`, `multiple`, `disabled` and `onChange`.
 - `checkFiles`, `matchesAccept` and `formatBytes` are exported for server-side or form validation.

@@ -43,7 +43,7 @@ describe("BoardCard", () => {
     expect(onOpen).toHaveBeenCalledTimes(1);
     onClick();
     expect(onOpen).toHaveBeenCalledTimes(2);
-    const wrap = findAll(root, (e) => e.props.className === "x-board-card-menu")[0];
+    const wrap = findAll(root, (e) => e.props.className === "x-board-card-menu")[0]!;
     const stop = vi.fn();
     wrap.props.onClick({ stopPropagation: stop });
     wrap.props.onKeyDown({ stopPropagation: stop });
@@ -68,7 +68,7 @@ describe("BoardCard", () => {
   it("keeps clicks and keys in actions away from onOpen", () => {
     const onOpen = vi.fn();
     const root = renderCard({ title: "T", onOpen, actions: <button type="button">x</button> }, null);
-    const wrap = findAll(root, (e) => e.props.className === "x-board-card-actions")[0];
+    const wrap = findAll(root, (e) => e.props.className === "x-board-card-actions")[0]!;
     const stop = vi.fn();
     wrap.props.onClick({ stopPropagation: stop });
     wrap.props.onKeyDown({ stopPropagation: stop });

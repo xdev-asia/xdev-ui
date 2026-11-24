@@ -24,7 +24,7 @@ describe("PairingCode", () => {
     const onCopy = vi.fn();
     const html = renderToStaticMarkup(<PairingCode value="7K4QM2XD9P" copyLabel="Copy code" onCopy={onCopy} />);
     expect(html).toContain('aria-label="Copy code"');
-    const button = findAll(PairingCode({ value: "7K4QM2XD9P", copyLabel: "Copy code", onCopy }), (e) => e.props.label === "Copy code")[0];
+    const button = findAll(PairingCode({ value: "7K4QM2XD9P", copyLabel: "Copy code", onCopy }), (e) => e.props.label === "Copy code")[0]!;
     button.props.onClick();
     expect(onCopy).toHaveBeenCalledTimes(1);
   });

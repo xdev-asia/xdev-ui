@@ -23,7 +23,7 @@ describe("Segmented", () => {
   it("calls onChange and updates inner state", () => {
     const onChange = vi.fn();
     const buttons = findAll(Segmented({ options, onChange }), (e) => e.type === "button");
-    buttons[1].props.onClick();
+    buttons[1]!.props.onClick();
     expect(onChange).toHaveBeenCalledWith("b");
     expect(setInner).toHaveBeenCalledWith("b");
   });

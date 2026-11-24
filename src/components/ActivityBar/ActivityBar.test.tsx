@@ -19,7 +19,7 @@ describe("ActivityBar", () => {
   });
   it("calls onSelect", () => {
     const onSelect = vi.fn();
-    findAll(ActivityBar({ onSelect }), (e) => e.type === "button")[0].props.onClick();
+    findAll(ActivityBar({ onSelect }), (e) => e.type === "button")[0]!.props.onClick();
     expect(onSelect).toHaveBeenCalledWith("docs");
   });
   it("adds extra and bottom items with active state, badges and onSelect", () => {
@@ -34,8 +34,8 @@ describe("ActivityBar", () => {
     const onSelect = vi.fn();
     const buttons = findAll(ActivityBar({ extraItems, bottomItems, onSelect }), (e) => e.type === "button");
     expect(buttons).toHaveLength(8 + 2 + 1);
-    buttons[8].props.onClick();
-    buttons[10].props.onClick();
+    buttons[8]!.props.onClick();
+    buttons[10]!.props.onClick();
     expect(onSelect).toHaveBeenNthCalledWith(1, "board");
     expect(onSelect).toHaveBeenNthCalledWith(2, "settings");
     expect(setInner).toHaveBeenCalledWith("settings");

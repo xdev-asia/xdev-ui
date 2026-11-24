@@ -37,7 +37,7 @@ export function menuTypeahead(labels: readonly string[], from: number, query: st
   const start = q.length > 1 ? Math.max(0, from) : from + 1;
   for (let n = 0; n < labels.length; n++) {
     const i = (((start + n) % labels.length) + labels.length) % labels.length;
-    if (labels[i].toLocaleLowerCase().startsWith(q)) return i;
+    if (labels[i]?.toLocaleLowerCase().startsWith(q)) return i;
   }
   return null;
 }

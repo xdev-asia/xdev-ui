@@ -94,7 +94,8 @@ export function SettingsShell({ groups, value, onChange, query, onQuery, childre
   const onSearchKeyDown = (e: KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === "Enter" && shown[0]) {
       e.preventDefault();
-      choose(shown[0].items[0].id);
+      const first = shown[0].items[0];
+      if (first) choose(first.id);
     }
   };
   return (

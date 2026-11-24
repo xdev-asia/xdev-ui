@@ -34,12 +34,12 @@ const render = (locale: Locale, p: AuditLogViewProps) =>
 
 describe("filterAudit", () => {
   it("matches actor text, kinds and an inclusive date range", () => {
-    const actor = events[0].actor;
+    const actor = events[0]!.actor;
     expect(filterAudit(events, { ...none, actor: actor.toUpperCase() }).every((e) => e.actor === actor)).toBe(true);
     const kind = filterAudit(events, { ...none, kinds: new Set(["roleUpdate"]) });
     expect(kind.length).toBeGreaterThan(0);
     expect(kind.every((e) => e.kind === "roleUpdate")).toBe(true);
-    const day = events[0].time.slice(0, 10);
+    const day = events[0]!.time.slice(0, 10);
     const same = filterAudit(events, { ...none, from: day, to: day });
     expect(same.length).toBeGreaterThan(0);
     expect(same.every((e) => e.time.slice(0, 10) === day)).toBe(true);

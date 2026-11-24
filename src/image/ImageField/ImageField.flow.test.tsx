@@ -66,7 +66,7 @@ describe("ImageField flow", () => {
     const onBusyChange = vi.fn();
     const onUpload = vi.fn(async () => "https://cdn.test/new.webp");
     const tree = ImageField({ label: "Cover", aspect, value: null, onChange, onUpload, onBusyChange });
-    const cropper = findAll(tree, (el) => el.type === ImageCropper)[0];
+    const cropper = findAll(tree, (el) => el.type === ImageCropper)[0]!;
     expect(cropper.props).toMatchObject({ src: "blob:picked", aspect: 16 / 9 });
     cropper.props.onConfirm(area, 90);
     await flush();
@@ -74,7 +74,7 @@ describe("ImageField flow", () => {
     expect(onUpload).toHaveBeenCalledWith(cropped, "photo.webp");
     expect(onChange).toHaveBeenCalledWith("https://cdn.test/new.webp");
     expect(setters[1]).toHaveBeenCalledWith(null);
-    expect(setters[3].mock.calls.map((c) => c[0] === null)).toEqual([false, true]);
+    expect(setters[3]!.mock.calls.map((c) => c[0] === null)).toEqual([false, true]);
     expect(onBusyChange.mock.calls).toEqual([[true], [false]]);
   });
 
@@ -82,7 +82,7 @@ describe("ImageField flow", () => {
     state = [false, { url: "blob:picked", name: "photo.png", fresh: true }];
     const onChange = vi.fn();
     const tree = ImageField({ label: "Cover", aspect, value: null, onChange, onUpload: vi.fn(async () => Promise.reject(new Error("Server said no"))) });
-    findAll(tree, (el) => el.type === ImageCropper)[0].props.onConfirm(area, 0);
+    findAll(tree, (el) => el.type === ImageCropper)[0]!.props.onConfirm(area, 0);
     await flush();
     expect(onChange).not.toHaveBeenCalled();
     expect(setters[2]).toHaveBeenLastCalledWith("Server said no");
@@ -92,9 +92,9 @@ describe("ImageField flow", () => {
     state = [false, { url: "blob:picked", name: "photo.png", fresh: true }];
     const onChange = vi.fn();
     const tree = ImageField({ label: "Cover", aspect, value: "https://cdn.test/a.webp", onChange, onUpload: vi.fn() });
-    findAll(tree, (el) => el.props.children === "Remove")[0].props.onClick();
+    findAll(tree, (el) => el.props.children === "Remove")[0]!.props.onClick();
     expect(onChange).toHaveBeenCalledWith(null);
-    findAll(tree, (el) => el.type === ImageCropper)[0].props.onCancel();
+    findAll(tree, (el) => el.type === ImageCropper)[0]!.props.onCancel();
     expect(setters[1]).toHaveBeenCalledWith(null);
   });
 });

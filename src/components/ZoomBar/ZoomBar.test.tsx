@@ -30,7 +30,7 @@ describe("ZoomBar", () => {
     const icons = findAll(tree, (e) => e.type === IconButton);
     expect(icons.map((i) => i.props.icon)).toEqual(["minus", "maximize", "plus"]);
     icons.forEach((i) => i.props.onClick());
-    findAll(tree, (e) => e.type === "button")[0].props.onClick();
+    findAll(tree, (e) => e.type === "button")[0]!.props.onClick();
     expect([out, fit, inn, actual].map((f) => f.mock.calls.length)).toEqual([1, 1, 1, 1]);
   });
   it("is a single Tab stop with arrow navigation", () => {
@@ -44,6 +44,6 @@ describe("ZoomBar", () => {
     vi.stubGlobal("document", { activeElement: items[2] });
     tree.props.onKeyDown({ key: "ArrowRight", preventDefault: vi.fn(), currentTarget: ring });
     vi.unstubAllGlobals();
-    expect(items[0].focus).toHaveBeenCalled();
+    expect(items[0]!.focus).toHaveBeenCalled();
   });
 });

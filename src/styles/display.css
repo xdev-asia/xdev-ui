@@ -21,6 +21,12 @@
 .badge[data-status="changed"] { color: var(--x-color-signal); background: var(--x-color-signal-soft); }
 .badge[data-status="unchanged"] { color: var(--x-color-muted); background: transparent; box-shadow: inset 0 0 0 1px var(--x-color-line); }
 .badge[data-status="foreign"] { color: var(--x-color-warn); background: var(--x-color-warn-soft); }
+/* Tones come after statuses: with both set, the tone wins. */
+.badge[data-tone="neutral"] { color: var(--x-color-muted); background: transparent; box-shadow: inset 0 0 0 1px var(--x-color-line); }
+/* --x-color-accent as text on its soft ground is under 4.5:1 in dark, so the accent is the edge and the text is ink. */
+.badge[data-tone="accent"] { color: var(--x-color-ink); background: var(--x-color-accent-soft); box-shadow: inset 0 0 0 1px var(--x-color-accent); }
+.badge[data-tone="ok"] { color: var(--x-color-ok); background: var(--x-color-ok-soft); box-shadow: none; }
+.badge[data-tone="warn"] { color: var(--x-color-warn); background: var(--x-color-warn-soft); box-shadow: none; }
 .badge[data-tone="danger"] { color: var(--x-color-danger); background: var(--x-color-danger-soft); box-shadow: none; }
 
 .ws-tag {

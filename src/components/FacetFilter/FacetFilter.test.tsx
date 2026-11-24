@@ -81,11 +81,11 @@ describe("FacetFilter", () => {
     const tree = FacetFilter({ ...base, selected: ["suspended"], onChange });
     const boxes = findAll(tree, (e) => e.props.checked !== undefined && typeof e.props.onChange === "function");
     expect(boxes).toHaveLength(3);
-    boxes[0].props.onChange();
+    boxes[0]!.props.onChange();
     expect(onChange).toHaveBeenLastCalledWith(["active", "suspended"]);
-    boxes[2].props.onChange();
+    boxes[2]!.props.onChange();
     expect(onChange).toHaveBeenLastCalledWith([]);
-    const clear = findAll(tree, (e) => e.props.variant === "secondary")[0];
+    const clear = findAll(tree, (e) => e.props.variant === "secondary")[0]!;
     clear.props.onClick();
     expect(onChange).toHaveBeenLastCalledWith([]);
   });

@@ -37,30 +37,30 @@ describe("TabStrip", () => {
     const mk = (n: number) => Array.from({ length: n }, () => ({ focus: vi.fn(), click: vi.fn() }));
     const list = mk(3);
     const run = (key: string, at: number) => {
-      const btn = findAll(TabStrip({ tabs: [{ id: "a", name: "a" }, { id: "b", name: "b" }, { id: "c", name: "c" }] }), (e) => e.type === "button" && e.props.role === "tab")[at];
-      const ev = { key, preventDefault: vi.fn(), currentTarget: Object.assign(list[at], { closest: () => ({ querySelectorAll: () => list }) }) };
+      const btn = findAll(TabStrip({ tabs: [{ id: "a", name: "a" }, { id: "b", name: "b" }, { id: "c", name: "c" }] }), (e) => e.type === "button" && e.props.role === "tab")[at]!;
+      const ev = { key, preventDefault: vi.fn(), currentTarget: Object.assign(list[at]!, { closest: () => ({ querySelectorAll: () => list }) }) };
       btn.props.onKeyDown(ev);
       return ev;
     };
     run("ArrowRight", 2);
-    expect(list[0].focus).toHaveBeenCalled();
-    expect(list[0].click).toHaveBeenCalled();
+    expect(list[0]!.focus).toHaveBeenCalled();
+    expect(list[0]!.click).toHaveBeenCalled();
     run("ArrowLeft", 0);
-    expect(list[2].click).toHaveBeenCalled();
+    expect(list[2]!.click).toHaveBeenCalled();
     run("Home", 1);
-    expect(list[0].click).toHaveBeenCalledTimes(2);
+    expect(list[0]!.click).toHaveBeenCalledTimes(2);
     run("End", 1);
-    expect(list[2].click).toHaveBeenCalledTimes(2);
+    expect(list[2]!.click).toHaveBeenCalledTimes(2);
   });
   it("Delete closes a closable tab and focuses its neighbour; dirty tabs are left alone", () => {
     const onClose = vi.fn();
     const list = [{ focus: vi.fn() }, { focus: vi.fn() }];
     const btns = findAll(TabStrip({ tabs, onClose }), (e) => e.type === "button" && e.props.role === "tab");
-    const ev = (i: number) => ({ key: "Delete", preventDefault: vi.fn(), currentTarget: Object.assign(list[i], { closest: () => ({ querySelectorAll: () => list }) }) });
-    btns[0].props.onKeyDown(ev(0));
+    const ev = (i: number) => ({ key: "Delete", preventDefault: vi.fn(), currentTarget: Object.assign(list[i]!, { closest: () => ({ querySelectorAll: () => list }) }) });
+    btns[0]!.props.onKeyDown(ev(0));
     expect(onClose).toHaveBeenCalledWith("a");
-    expect(list[1].focus).toHaveBeenCalled();
-    btns[1].props.onKeyDown(ev(1)); // b is dirty
+    expect(list[1]!.focus).toHaveBeenCalled();
+    btns[1]!.props.onKeyDown(ev(1)); // b is dirty
     expect(onClose).toHaveBeenCalledOnce();
   });
   it("hides + when onAdd is false", () => {
@@ -71,9 +71,9 @@ describe("TabStrip", () => {
     const onClose = vi.fn();
     const onAdd = vi.fn();
     const btns = findAll(TabStrip({ tabs, onSelect, onClose, onAdd }), (e) => e.type === "button");
-    btns[0].props.onClick(); // tab a
-    btns[1].props.onClick(); // close a
-    btns[btns.length - 1].props.onClick(); // add
+    btns[0]!.props.onClick(); // tab a
+    btns[1]!.props.onClick(); // close a
+    btns[btns.length - 1]!.props.onClick(); // add
     expect(onSelect).toHaveBeenCalledWith("a");
     expect(setInner).toHaveBeenCalledWith("a");
     expect(onClose).toHaveBeenCalledWith("a");

@@ -27,9 +27,9 @@ export const Graph: Story = {
   render: () => (
     <div style={{ background: "var(--bg-1)", color: "var(--text-1)", fontFamily: "var(--font-mono)", fontSize: 12 }}>
       {rows.map((row, i) => (
-        <div key={items[i].id} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div key={items[i]!.id} style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <CommitGraph row={row} />
-          <span>{items[i].id}</span>
+          <span>{items[i]!.id}</span>
         </div>
       ))}
     </div>
