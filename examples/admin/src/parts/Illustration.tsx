@@ -5,7 +5,7 @@ export type Scene = "forbidden" | "not-found" | "server-error" | "unknown";
 const TONE: Record<Scene, "warn" | "accent" | "danger"> = { forbidden: "warn", "not-found": "accent", "server-error": "danger", unknown: "accent" };
 
 /** The object beside the person: a locked door, a magnifier, a server rack or a box with a question mark. */
-function Prop({ scene }: { scene: Scene }): JSX.Element {
+function SceneProp({ scene }: { scene: Scene }): JSX.Element {
   if (scene === "forbidden")
     return (
       <g>
@@ -49,7 +49,7 @@ function Prop({ scene }: { scene: Scene }): JSX.Element {
 }
 
 /** Badge symbol: a lock for 403, "?" for 404 and unknown, "!" for 500. */
-function Badge({ scene }: { scene: Scene }): JSX.Element {
+function BadgeGlyph({ scene }: { scene: Scene }): JSX.Element {
   return (
     <g>
       <circle className="ill-badge" cx="158" cy="44" r="17" />
@@ -84,7 +84,7 @@ export function Illustration({ scene }: { scene: Scene }): JSX.Element {
       <path className="ill-leaf" d="M50 150 c-14 -10 -14 -30 -2 -42 c4 14 6 28 2 42 z" />
       <path className="ill-leaf ill-leaf-dark" d="M52 150 c12 -12 22 -16 26 -34 c-14 4 -24 16 -26 34 z" />
       <path className="ill-pot" d="M40 150 h24 l-3 26 h-18 z" />
-      <Prop scene={scene} />
+      <SceneProp scene={scene} />
       {/* Person: legs, shoes, body, arms, head, hair */}
       <rect className="ill-pants" x="88" y="126" width="10" height="46" rx="4" />
       <rect className="ill-pants" x="102" y="126" width="10" height="46" rx="4" />
@@ -97,7 +97,7 @@ export function Illustration({ scene }: { scene: Scene }): JSX.Element {
       <circle className="ill-skin" cx="100" cy="68" r="13" />
       <path className="ill-hair" d="M87 66 a13 13 0 0 1 26 -2 c-6 -4 -14 -6 -20 -2 c-2 1 -4 3 -6 4 z" />
       <circle className="ill-eye" cx="105" cy="69" r="1.6" />
-      <Badge scene={scene} />
+      <BadgeGlyph scene={scene} />
     </svg>
   );
 }
