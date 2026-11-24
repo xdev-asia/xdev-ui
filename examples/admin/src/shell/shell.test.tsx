@@ -133,7 +133,7 @@ describe("appearance", () => {
     expect(onAccent("#52c41a")).toBe("#141414");
   });
   it("sets only the vars that differ from the stylesheet, plus the colour filters", () => {
-    expect(rootStyle(DEFAULT_PREFS)).toEqual({ vars: {}, filter: "" });
+    expect(rootStyle(DEFAULT_PREFS)).toEqual({ vars: { "--w-side": "210px" }, filter: "" });
     const s = rootStyle({ ...DEFAULT_PREFS, preset: "red", radius: 4, sideWidth: 220, railWidth: 48, colorWeak: true, gray: true });
     expect(s.vars).toMatchObject({ "--accent": "#f5222d", "--x-color-on-accent": "#ffffff", "--radius-l": "4px", "--x-radius-lg": "6px", "--w-side": "220px", "--w-rail": "48px" });
     expect(s.filter).toBe("invert(100%) grayscale(100%)");

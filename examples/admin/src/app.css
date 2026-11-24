@@ -62,7 +62,7 @@
 .x-shell[data-nav-collapsed] .app-nav-fold { justify-content: center; }
 /* Back to top: over the page, bottom right, above the toasts' corner. */
 .app-back-top { position: fixed; right: var(--x-space-6); bottom: calc(var(--x-space-8) * 2); z-index: var(--x-z-sticky); }
-.app-footer { display: flex; flex-wrap: wrap; gap: var(--x-space-2) var(--x-space-4); }
+.app-footer { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--x-space-2) var(--x-space-4); }
 .app-footer a, .x-auth-footer a { color: var(--text-2); }
 /* Legal pages: public, before or after sign-in. */
 .app-legal { min-height: 100vh; min-height: 100dvh; padding-block: var(--x-space-8); background: var(--bg-0); color: var(--text-1); }
@@ -104,6 +104,8 @@
   .app-progress { display: none; }
 }
 /* Fixed footer: stays at the bottom edge of main while the page scrolls under it. */
-.app-footer[data-fixed] { position: sticky; bottom: calc(-1 * var(--x-space-6)); z-index: var(--x-z-raised); margin-bottom: calc(-1 * var(--x-space-6)); padding-bottom: var(--x-space-4); background: var(--bg-0); }
+/* Fixed footer: main becomes a column so the footer sits at the window's bottom on short pages and sticks there on long ones. */
+.x-shell-main:has(> .app-footer[data-fixed]) { display: flex; flex-direction: column; }
+.app-footer[data-fixed] { margin-top: auto; position: sticky; bottom: calc(-1 * var(--x-space-6)); z-index: var(--x-z-raised); margin-bottom: calc(-1 * var(--x-space-6)); padding-bottom: var(--x-space-4); background: var(--bg-0); }
 .app-watermark { position: fixed; inset: 0; z-index: var(--x-z-toast); background: var(--text-3); opacity: 0.18; mask-repeat: repeat; -webkit-mask-repeat: repeat; pointer-events: none; }
 .app-update { margin-bottom: var(--x-space-6); }

@@ -88,7 +88,8 @@ export const DEFAULT_PREFS: Prefs = {
   collapsed: false,
   accordion: true,
   sideTheme: "auto",
-  sideWidth: 296,
+  // react-antd-admin's defaults: a 210px sidebar and a footer fixed to the bottom of the window.
+  sideWidth: 210,
   railWidth: 60,
   columnWidth: 80,
   tabs: true,
@@ -103,7 +104,7 @@ export const DEFAULT_PREFS: Prefs = {
   transition: true,
   transitionName: "fade-slide",
   footer: true,
-  fixedFooter: false,
+  fixedFooter: true,
   company: "Acme",
   companySite: "https://ui.xdev.asia/",
   copyrightYear: "2026",
