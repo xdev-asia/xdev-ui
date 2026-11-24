@@ -15,11 +15,12 @@ export function ExceptionPage({ code, onRetry }: { code: ExceptionCode | "unknow
   );
   if (code === "unknown") return <EmptyState size="center" icon="help" title={t("exception.unknownTitle")} hint={t("exception.unknownHint")} actions={home} />;
   return code === "403" ? (
-    <EmptyState size="center" icon="lock" title={t("exception.forbiddenTitle")} hint={t("exception.forbiddenHint")} actions={home} />
+    <EmptyState size="center" icon="lock" figure="403" title={t("exception.forbiddenTitle")} hint={t("exception.forbiddenHint")} actions={home} />
   ) : (
     <EmptyState
       size="center"
       icon="alert"
+      figure="500"
       title={t("exception.serverTitle")}
       hint={t("exception.serverHint")}
       actions={
