@@ -433,7 +433,7 @@ export const vi: Dict = {
     collapse: "Thu gọn {name}",
     edit: "Sửa {name}",
     editTitle: "Sửa menu",
-    editHint: "Thay đổi hiện trên thanh bên ở lần đăng nhập sau.",
+    editHint: "Ở chế độ quyền back-end, mục bị tắt rời thanh bên ngay.",
     show: "Hiện trên thanh bên",
     save: "Lưu menu",
     cancel: "Hủy",
