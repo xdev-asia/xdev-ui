@@ -3,12 +3,13 @@ import { createRoot } from "react-dom/client";
 import * as X from "../src";
 import "../src/styles/fonts.css";
 import "../src/styles/index.css";
-import { COMPONENTS, GROUPS, ICON_COUNT, MCP_TOOLS, REPO, SHOWCASES, TOKEN_COUNT, VERSION } from "./data";
+import { COMPONENTS, FEATURED, GROUPS, ICON_COUNT, MCP_TOOLS, REPO, SHOWCASES, SKILLS, TOKEN_COUNT, VERSION } from "./data";
 import { Palette } from "./palette";
 import { previews } from "./previews";
 import "./home.css";
 
 const SB = "./storybook/";
+const CONSOLE = SHOWCASES[0]?.href ?? "./showcase/admin/";
 
 /* ---------- theme ---------- */
 
@@ -51,10 +52,10 @@ function Nav({ theme, onTheme, onSearch }: { theme: Theme; onTheme: (t: Theme) =
         </a>
         <nav className="hp-nav-links" aria-label="Primary">
           <a href="#components">Components</a>
+          <a href="#showcase">Showcase</a>
           <a href="#install">Install</a>
-          <a href="#mcp">MCP</a>
+          <a href="#agents">Agents</a>
           <a href={SB}>Storybook</a>
-          <X.MenuButton className="hp-nav-drop" label="Showcase" items={SHOWCASES.map((x) => ({ label: x.name, href: x.href }))} />
         </nav>
         <div className="hp-nav-tools">
           <button type="button" className="hp-search" onClick={onSearch} aria-haspopup="dialog">
@@ -73,8 +74,9 @@ function Nav({ theme, onTheme, onSearch }: { theme: Theme; onTheme: (t: Theme) =
               label="Menu"
               items={[
                 { label: "Components", href: "#components" },
+                { label: "Showcase", href: "#showcase" },
                 { label: "Install", href: "#install" },
-                { label: "MCP", href: "#mcp" },
+                { label: "Agents", href: "#agents" },
                 { label: "Storybook", href: SB },
                 { type: "group", label: "Showcase" },
                 ...SHOWCASES.map((x) => ({ label: x.name, href: x.href })),
@@ -191,9 +193,9 @@ function Hero() {
   return (
     <section className="hp-hero" aria-labelledby="hp-h1">
       <div className="hp-wrap hp-hero-copy">
-        <a className="hp-pill" href={`${REPO}/releases`}>
+        <a className="hp-pill" href="#showcase">
           <X.Badge status="new">new</X.Badge>
-          <span>{COMPONENTS.length} components and an MCP server</span>
+          <span>An admin console built only from these parts</span>
           <span aria-hidden="true">→</span>
         </a>
         <h1 id="hp-h1">The interface kit for the desktop where agents work.</h1>
@@ -201,8 +203,8 @@ function Hero() {
           React components, design tokens and an MCP server. The same parts xDev is built from, dark by default, light on request, labelled in English and Vietnamese.
         </p>
         <div className="hp-cta">
+          <a className="btn-secondary hp-btn" href={CONSOLE}>Open the admin console</a>
           <a className="btn hp-btn" href={SB}>Open Storybook</a>
-          <a className="btn-secondary hp-btn" href={REPO}>View on GitHub</a>
         </div>
         <CopyLine text={INSTALL} />
       </div>
@@ -220,7 +222,7 @@ function Facts() {
     { n: String(COMPONENTS.length), t: "components", s: `${GROUPS.length} groups, one import each` },
     { n: String(TOKEN_COUNT), t: "design tokens", s: "Colour, space, radius, type" },
     { n: String(ICON_COUNT), t: "icons", s: "24 grid, stroke 1.75" },
-    { n: "2", t: "themes", s: "Dark and light, one token set" },
+    { n: String(SKILLS.length), t: "agent skills", s: `And ${MCP_TOOLS.length} MCP tools for Claude, Codex, Cursor` },
   ];
   return (
     <section className="hp-wrap hp-facts" aria-label="At a glance">
@@ -230,6 +232,133 @@ function Facts() {
           <p className="hp-fact-s">{f.s}</p>
         </div>
       ))}
+    </section>
+  );
+}
+
+/* ---------- showcase ---------- */
+
+const VISITS = [1420, 1510, 1488, 1630, 1702, 1655, 1590, 1720, 1810, 1760, 1902, 1870, 1955, 2040];
+const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+/** The admin console's dashboard in miniature, made of the same parts. Scaled into its frame, inert. */
+function ConsoleMock() {
+  const nav = (items: [string, string, X.IconName][], value?: string) => (
+    <X.NavList items={items.map(([id, label, icon]) => ({ id, label, icon }))} value={value} />
+  );
+  return (
+    <div className="hp-console">
+      <aside className="hp-console-side">
+        <div className="hp-console-brand">
+          <X.BrandMark size={20} />
+          <span>Acme console</span>
+        </div>
+        <p className="hp-console-group">Overview</p>
+        {nav([["d", "Dashboard", "home"]], "d")}
+        <p className="hp-console-group">Access</p>
+        {nav([["u", "Users", "accounts"], ["r", "Roles", "shield"], ["p", "Permissions", "key"]])}
+        <p className="hp-console-group">System</p>
+        {nav([["m", "Menus", "list"], ["t", "Departments", "layers"], ["a", "Audit log", "history"], ["s", "Settings", "settings"]])}
+      </aside>
+      <div className="hp-console-main">
+        <div className="hp-console-top">
+          <X.IconButton icon="sidebar" label="Collapse sidebar" />
+          <X.Breadcrumb items={[{ label: "Overview" }, { label: "Dashboard" }]} />
+          <span className="hp-console-spacer" />
+          <X.PaletteTrigger onOpen={() => {}} hotkey={false} />
+          <X.IconButton icon="bell" label="Notifications" />
+          <X.IconButton icon="globe" label="Language" />
+          <X.ThemeSwitch variant="icon" value="dark" onChange={() => {}} />
+          <X.Avatar name="Ada Lovelace" size="sm" />
+        </div>
+        <div className="hp-console-tabs">
+          <X.TabStrip
+            label="Open pages"
+            selected="d"
+            onAdd={false}
+            onClose={() => {}}
+            tabs={[
+              { id: "d", name: "Dashboard", pinned: true },
+              { id: "u", name: "Users" },
+              { id: "m", name: "Menus" },
+              { id: "p", name: "Permissions" },
+            ]}
+          />
+        </div>
+        <div className="hp-console-body">
+          <div>
+            <p className="hp-console-title">Dashboard</p>
+            <p className="hp-console-desc">How the workspace is doing this week.</p>
+          </div>
+          <div className="hp-console-stats">
+            <X.StatTile label="Active users" value="39" delta="+4%" deltaTrend="up" deltaTone="good" hint="vs last 7 days" />
+            <X.StatTile label="Sign-ins" value="1,284" delta="+12%" deltaTrend="up" deltaTone="good" hint="vs last 7 days" />
+            <X.StatTile label="Storage used" value="82 GB" hint="of 100 GB">
+              <X.Meter value={82} warnAt={80} label="Storage used" />
+            </X.StatTile>
+          </div>
+          <X.Card
+            title="Visits"
+            titleAside={<X.Segmented label="Period" defaultValue="w" options={[{ value: "w", label: "This week" }, { value: "m", label: "This month" }, { value: "y", label: "This year" }]} />}
+          >
+            <X.TimeSeriesChart
+              label="Visits"
+              points={VISITS.map((v, i) => ({ key: String(i), value: v, label: `${v} visits` }))}
+              ticks={DAYS.map((d, i) => ({ index: i * 2, label: d }))}
+              maxLabel="2,040"
+              zeroLabel="0"
+            />
+          </X.Card>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const CONSOLE_FEATURES: [X.IconName, string][] = [
+  ["activity", "Dashboard with a trend, breakdowns and stat tiles"],
+  ["accounts", "Users, roles and a preview of what each role sees"],
+  ["layers", "Menus and departments as tree lists, edited in a drawer"],
+  ["search", "Ctrl K search, notifications and page tabs"],
+  ["sidebar", "An icon sidebar and a focus view for the content"],
+  ["lock", "Four ways to sign in, in English and Vietnamese"],
+];
+
+function Showcase() {
+  return (
+    <section className="hp-sec" id="showcase" aria-labelledby="hp-sc-h">
+      <div className="hp-wrap hp-showcase">
+        <div className="hp-showcase-copy">
+          <p className="hp-eyebrow">Showcase</p>
+          <h2 id="hp-sc-h">A whole admin console, built only from these parts</h2>
+          <p className="hp-sec-sub">Rebuilt page by page after react-antd-admin, with no app components of its own: every screen is the library plus tokens.</p>
+          <ul className="hp-features">
+            {CONSOLE_FEATURES.map(([icon, text]) => (
+              <li key={text}>
+                <X.Icon name={icon} />
+                <span>{text}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="hp-cta hp-cta-start">
+            <a className="btn-secondary hp-btn" href={`${REPO}/tree/main/examples/admin`}>Read the code</a>
+            <a className="btn hp-btn" href={CONSOLE}>Open the console</a>
+          </div>
+          <p className="hp-creds">
+            Sign in with <code>admin@example.com</code> and <code>admin-demo</code>.
+          </p>
+        </div>
+        <a className="hp-browser" href={CONSOLE} aria-label="Open the admin console" data-reveal>
+          <span className="hp-browser-bar" aria-hidden="true">
+            <span className="hp-browser-url">ui.xdev.asia/showcase/admin</span>
+          </span>
+          <span className="hp-browser-body">
+            <Fit style={{ width: 1120, height: 680 }}>
+              <ConsoleMock />
+            </Fit>
+          </span>
+        </a>
+      </div>
     </section>
   );
 }
@@ -268,16 +397,21 @@ function Fit({ style = {}, children }: { style?: CSSProperties; children: ReactN
 function Gallery() {
   const [group, setGroup] = useState("All");
   const [q, setQ] = useState("");
+  const [all, setAll] = useState(false);
   const hits = useMemo(() => {
     const s = q.trim().toLowerCase();
     return COMPONENTS.filter((c) => (group === "All" || c.group === group) && (!s || `${c.name} ${c.summary}`.toLowerCase().includes(s)));
   }, [group, q]);
+  // Unfiltered, the page opens on a dozen parts; a filter, a group or "Show all" lists every match.
+  const browsing = all || q.trim() !== "" || group !== "All";
+  const shown = browsing ? hits : FEATURED.map((n) => hits.find((c) => c.name === n)).filter((c): c is (typeof hits)[number] => !!c);
 
   return (
     <section className="hp-sec" id="components" aria-labelledby="hp-gal-h">
       <div className="hp-wrap">
         <div className="hp-sec-head">
           <div>
+            <p className="hp-eyebrow">Components</p>
             <h2 id="hp-gal-h">Every part, rendered live</h2>
             <p className="hp-sec-sub">Each card is the component itself, not a picture of it. Open one for its states, props and rules.</p>
           </div>
@@ -300,14 +434,21 @@ function Gallery() {
             </X.FilterChip>
           ))}
         </div>
-        {hits.length ? (
+        {shown.length ? (
           <ul className="hp-grid">
-            {hits.map((c) => {
+            {shown.map((c) => {
               const p = previews[c.name];
               return (
                 <li key={c.name} className="hp-comp">
                   <div className="hp-comp-stage">
-                    {p ? <Fit style={p.style}>{p.render(X, h)}</Fit> : <span className="hp-comp-none">{c.name}</span>}
+                    {p ? (
+                      <Fit style={p.style}>{p.render(X, h)}</Fit>
+                    ) : (
+                      <span className="hp-comp-none">
+                        <X.Icon name="grid" size={20} />
+                        <span>Preview in Storybook</span>
+                      </span>
+                    )}
                   </div>
                   <div className="hp-comp-meta">
                     <div className="hp-comp-row">
@@ -325,6 +466,13 @@ function Gallery() {
             <X.EmptyState size="center" icon="search" title="Nothing matches" hint={`No component name or summary contains “${q}”.`} actions={<X.Button variant="secondary" onClick={() => { setQ(""); setGroup("All"); }}>Clear filters</X.Button>} />
           </div>
         )}
+        {group === "All" && !q.trim() ? (
+          <div className="hp-more">
+            <X.Button variant="secondary" aria-expanded={all} onClick={() => setAll(!all)}>
+              {all ? "Show the featured parts" : `Show all ${COMPONENTS.length} components`}
+            </X.Button>
+          </div>
+        ) : null}
       </div>
     </section>
   );
@@ -380,6 +528,7 @@ function Themes() {
       <div className="hp-wrap">
         <div className="hp-sec-head">
           <div>
+            <p className="hp-eyebrow">Themes</p>
             <h2 id="hp-th-h">Two themes, one set of tokens</h2>
             <p className="hp-sec-sub">
               Set <code>data-theme</code> on any element. Components read only tokens, so a pane can be light inside a dark app.
@@ -421,6 +570,7 @@ function Install() {
       <div className="hp-wrap">
         <div className="hp-sec-head">
           <div>
+            <p className="hp-eyebrow">Install</p>
             <h2 id="hp-in-h">On screen in three steps</h2>
             <p className="hp-sec-sub">React 19, no runtime dependencies beyond it. Every label ships in English and Vietnamese.</p>
           </div>
@@ -462,25 +612,48 @@ const MCP_JSON = `{
   }
 }`;
 
-function Mcp() {
+const SKILLS_CMD = "npx xdev-ui-skills install";
+
+function Agents() {
   return (
-    <section className="hp-sec" id="mcp" aria-labelledby="hp-mcp-h">
-      <div className="hp-wrap hp-mcp">
-        <div className="hp-mcp-copy">
-          <h2 id="hp-mcp-h">Agents read the same catalogue you do</h2>
-          <p className="hp-sec-sub">
-            The package ships an MCP server. Claude Code, Codex or Cursor ask it for components, exact props, tokens and rules before they write a line, so generated screens use real parts.
-          </p>
-          <X.CodeBlock language=".mcp.json" code={MCP_JSON} />
-          <p className="hp-mcp-alt">
-            No MCP client? <a href="./llms.txt">llms.txt</a> and <a href="./ai-manifest.json">ai-manifest.json</a> hold the same content.
-          </p>
+    <section className="hp-sec" id="agents" aria-labelledby="hp-ag-h">
+      <div className="hp-wrap">
+        <div className="hp-sec-head">
+          <div>
+            <p className="hp-eyebrow">Agents</p>
+            <h2 id="hp-ag-h">Agents read the same catalogue you do</h2>
+            <p className="hp-sec-sub">
+              Claude Code, Codex or Cursor ask the bundled MCP server for components, exact props, tokens and rules before they write a line, and follow the skills to build and review a screen.
+            </p>
+          </div>
         </div>
-        <ul className="hp-tools" aria-label="MCP tools">
-          {MCP_TOOLS.map((t, i) => (
-            <li key={t.name} className="hp-tool" data-reveal style={{ ["--i" as string]: i }}>
-              <code className="hp-tool-name">{t.name}</code>
-              <p>{t.body}</p>
+        <div className="hp-mcp" id="mcp">
+          <div className="hp-mcp-copy">
+            <h3 className="hp-sub-h">MCP server</h3>
+            <X.CodeBlock language=".mcp.json" code={MCP_JSON} />
+            <p className="hp-mcp-alt">
+              No MCP client? <a href="./llms.txt">llms.txt</a> and <a href="./ai-manifest.json">ai-manifest.json</a> hold the same content.
+            </p>
+          </div>
+          <ul className="hp-tools" aria-label="MCP tools">
+            {MCP_TOOLS.map((t, i) => (
+              <li key={t.name} className="hp-tool" data-reveal style={{ ["--i" as string]: i }}>
+                <code className="hp-tool-name">{t.name}</code>
+                <p>{t.body}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="hp-skills-head">
+          <h3 className="hp-sub-h">Agent skills</h3>
+          <X.CodeBlock language="bash" code={SKILLS_CMD} />
+        </div>
+        <ul className="hp-skills" aria-label="Agent skills">
+          {SKILLS.map((s, i) => (
+            <li key={s.name} className="hp-skill" data-reveal style={{ ["--i" as string]: i }}>
+              <code>{s.name}</code>
+              <h4>{s.title}</h4>
+              <p>{s.body}</p>
             </li>
           ))}
         </ul>
@@ -498,8 +671,8 @@ function Closing() {
         <X.BrandMark size={40} />
         <h2 id="hp-close-h">Build the next screen with the parts xDev uses.</h2>
         <div className="hp-cta">
+          <a className="btn-secondary hp-btn" href={CONSOLE}>Open the admin console</a>
           <a className="btn hp-btn" href={SB}>Open Storybook</a>
-          <a className="btn-secondary hp-btn" href={`${REPO}#readme`}>Read the README</a>
         </div>
       </div>
     </section>
@@ -520,6 +693,7 @@ function Footer({ onSearch }: { onSearch: () => void }) {
         <nav className="hp-foot-col" aria-label="Docs">
           <h3>Docs</h3>
           <a href={SB}>Storybook</a>
+          <a href={CONSOLE}>Admin console</a>
           <button type="button" onClick={onSearch}>Search components</button>
           <a href="./llms.txt">llms.txt</a>
           <a href="./ai-manifest.json">ai-manifest.json</a>
@@ -582,10 +756,11 @@ function Home() {
       <main>
         <Hero />
         <Facts />
+        <Showcase />
         <Gallery />
         <Themes />
         <Install />
-        <Mcp />
+        <Agents />
         <Closing />
       </main>
       <Footer onSearch={openSearch} />
