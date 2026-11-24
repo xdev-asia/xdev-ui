@@ -83,6 +83,8 @@ export interface DateRangePickerProps {
   id?: string;
   /** Opens the calendar on mount (previews). */
   defaultOpen?: boolean;
+  /** Render the calendar into `document.body` (default true). false keeps it inside the field, for an inline preview or a scrolling panel. */
+  portal?: boolean;
   labels?: Partial<DateRangePickerLabels>;
   className?: string;
 }
@@ -112,6 +114,7 @@ export function DateRangePicker({
   error,
   id,
   defaultOpen = false,
+  portal = true,
   labels,
   className,
 }: DateRangePickerProps): JSX.Element {
@@ -128,7 +131,8 @@ export function DateRangePicker({
   const [draft, setDraft] = useState<Record<End, string | null>>({ start: null, end: null });
   const [bad, setBad] = useState<Record<End, boolean>>({ start: false, end: false });
   const gridRef = useRef<HTMLDivElement | null>(null);
-  const moveFocus = useRef(defaultOpen);
+  // Only an open the person asks for moves focus into the grid; mounted open (defaultOpen) leaves focus and scroll alone.
+  const moveFocus = useRef(false);
 
   useEffect(() => {
     if (!open || !moveFocus.current) return;
@@ -237,6 +241,7 @@ export function DateRangePicker({
           placement="bottom-end"
           label={l.calendar}
           className="x-date-popover"
+          portal={portal}
           trigger={(t) => <IconButton icon="calendar" label={l.openCalendar} disabled={disabled} onClick={() => (open ? close() : show())} {...t} />}
         >
           <div className="x-date-range-body">

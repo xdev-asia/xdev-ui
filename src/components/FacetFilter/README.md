@@ -10,6 +10,7 @@ Chip-style trigger that opens a popover with a searchable checkbox list, for fil
 - `toggleFacetValue(selected, value, options)` adds or removes a value and returns the selection in option order; values that are not options stay at the end.
 
 ## Rules
+- `portal={false}` keeps the list inside the filter instead of `document.body`, for an inline preview.
 - Controlled: keep `selected` in the parent, filter the rows there and reset to page 1 when it changes.
 - `label` is the facet in sentence case ("Status", "Role"); it names both the trigger and the panel. Do not repeat the picked values in the trigger; the count says how many.
 - `count` on each option is the number of matches with the other filters applied, like `FilterChip`.

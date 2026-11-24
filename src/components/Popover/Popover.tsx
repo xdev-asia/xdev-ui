@@ -47,10 +47,17 @@ export function Popover({ open, onClose, trigger, placement = "bottom-start", la
     return onViewportChange(place);
   }, [open, portalled, placement]);
 
+  // Mounted open (a preview, a restored state) is not a person opening it: focus stays put and the page does not
+  // scroll to the panel. Every later open moves focus in.
+  const openedOnMount = useRef(open);
   useEffect(() => {
-    if (!open) return;
+    if (!open) {
+      openedOnMount.current = false;
+      return;
+    }
+    if (openedOnMount.current) return;
     const back = document.activeElement as HTMLElement | null;
-    panel.current?.focus();
+    panel.current?.focus({ preventScroll: true });
     const onKey = (e: KeyboardEvent): void => {
       if (e.key === "Escape") {
         e.stopPropagation();

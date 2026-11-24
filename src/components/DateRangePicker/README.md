@@ -6,6 +6,7 @@ Start and end date boxes with a two-month calendar in a popover, for filtering b
 `div.ws-field.x-date-picker.x-date-range-picker[role=group]` > `label`, `div.x-date-control` (start `input`, `span.x-date-range-sep`, end `input`, calendar `IconButton` in a `Popover`), `small` hint or error. The panel holds `div.x-date-range-body` (optional `div.x-calendar-presets[role=group]` of `button.x-calendar-preset[aria-pressed]`, then `div.x-calendar[data-months="2"]`) and `div.x-calendar-footer` (Clear, Today).
 
 ## Rules
+- `portal={false}` keeps the calendar inside the field instead of `document.body`: for an inline preview, or a panel that scrolls on its own.
 - `value` is `{ start: string | null; end: string | null }` in ISO; either end may be null while the user is choosing.
 - In the calendar the first click sets the start (`{ start, end: null }`) and keeps it open; the second sets the end and closes. When the second day is earlier the ends swap. While the end is pending the days up to the pointer or the focused day are previewed.
 - Typing into one box commits on blur or Enter like `DatePicker`; ends that cross are swapped. Each box has its own `aria-label` (`labels.start`, `labels.end`).
