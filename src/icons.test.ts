@@ -25,3 +25,19 @@ describe("shell icons", () => {
     }
   });
 });
+
+describe("form, feedback, media and tool icons", () => {
+  const names = ["save", "thumbs-up", "thumbs-down", "volume", "mic", "paperclip", "palette", "hand", "cursor", "wrench", "building", "pip"] as const;
+  it("registers them", () => {
+    for (const name of names) expect(ICON_NAMES, name).toContain(name);
+  });
+  it("draws them as strokes only, inside the 24 grid", () => {
+    for (const name of names) {
+      expect(ICONS[name].length, name).toBeGreaterThan(0);
+      for (const [, attrs] of ICONS[name]) {
+        expect(attrs, name).not.toHaveProperty("fill");
+        for (const v of Object.values(attrs)) if (typeof v === "number") expect(v, name).toBeLessThanOrEqual(24);
+      }
+    }
+  });
+});

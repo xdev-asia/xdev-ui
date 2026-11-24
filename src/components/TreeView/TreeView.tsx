@@ -70,7 +70,8 @@ export function TreeView({ rows, selected, onToggle, onOpen, labels, className }
     if (!res) return;
     e.preventDefault();
     if ("focus" in res) {
-      setFocusId(rows[res.focus].id);
+      const target = rows[res.focus];
+      if (target) setFocusId(target.id);
       refs.current[res.focus]?.focus();
     } else if ("toggle" in res) onToggle?.(res.toggle);
     else onOpen?.(res.open);

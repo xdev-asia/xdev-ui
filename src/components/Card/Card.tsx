@@ -1,7 +1,7 @@
-import { useId, type JSX, type ReactNode } from "react";
+import { useId, type HTMLAttributes, type JSX, type ReactNode } from "react";
 import { cx } from "../../internal/cx";
 
-export interface CardProps {
+export interface CardProps extends Omit<HTMLAttributes<HTMLElement>, "title"> {
   /** Heading of the card; also names the section. */
   title?: ReactNode;
   /** A control set right after the title, outside the heading: a mode or filter select that acts on the whole card. */
@@ -16,16 +16,18 @@ export interface CardProps {
   flush?: boolean;
   children?: ReactNode;
   className?: string;
+  /** Class on the `.x-card-body`, e.g. a grid or gap utility for the content. */
+  bodyClassName?: string;
   /** Heading element of the title, to fit the page outline. Default 3 (h3). */
   headingLevel?: 2 | 3 | 4 | 5 | 6;
 }
 
-export function Card({ title, titleAside, subtitle, monoSubtitle = false, actions, flush = false, children, className, headingLevel = 3 }: CardProps): JSX.Element {
+export function Card({ title, titleAside, subtitle, monoSubtitle = false, actions, flush = false, children, className, bodyClassName, headingLevel = 3, ...rest }: CardProps): JSX.Element {
   const titleId = `x-card-${useId()}`;
   const head = title || subtitle || actions;
   const Heading = `h${headingLevel}` as "h2" | "h3" | "h4" | "h5" | "h6";
   return (
-    <section className={cx("x-card", className)} aria-labelledby={title ? titleId : undefined}>
+    <section {...rest} className={cx("x-card", className)} aria-labelledby={title ? titleId : rest["aria-labelledby"]}>
       {head ? (
         <div className="x-card-head">
           <div className="x-card-heading">
@@ -46,7 +48,7 @@ export function Card({ title, titleAside, subtitle, monoSubtitle = false, action
           {actions ? <div className="x-card-actions">{actions}</div> : null}
         </div>
       ) : null}
-      <div className="x-card-body" data-flush={flush ? "" : undefined}>
+      <div className={cx("x-card-body", bodyClassName)} data-flush={flush ? "" : undefined}>
         {children}
       </div>
     </section>

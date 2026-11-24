@@ -35,7 +35,7 @@ const render = (locale: Locale, p: RolesViewProps) =>
 
 describe("togglePermission", () => {
   it("returns a changed copy and leaves the original alone", () => {
-    const admin = roles[1];
+    const admin = roles[1]!;
     const next = togglePermission(admin, "roles", "update", true);
     expect(next.permissions.roles.update).toBe(true);
     expect(admin.permissions.roles.update).toBe(false);

@@ -46,3 +46,12 @@ export const Checks: Story = {
     </div>
   ),
 };
+export const Tones: Story = {
+  render: () => (
+    <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+      {(["ok", "warn", "danger", "accent", "neutral"] as const).map((t) => (
+        <StatusDot key={t} tone={t} label={t} />
+      ))}
+    </div>
+  ),
+};

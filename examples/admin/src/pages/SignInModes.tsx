@@ -141,7 +141,7 @@ export function ForgotPassword({ initialSentTo }: { initialSentTo?: string }): J
 
 /** Requests an account; an owner approves it. Nothing is created in the demo. */
 export function RegisterForm({ initialRequested }: { initialRequested?: string }): JSX.Element {
-  const { t } = useI18n();
+  const { t, ui } = useI18n();
   const [name, setName] = useState("");
   const [email, setEmail] = useState(initialRequested ?? "");
   const [password, setPassword] = useState("");
@@ -174,6 +174,7 @@ export function RegisterForm({ initialRequested }: { initialRequested?: string }
         type="password"
         name="new-password"
         autoComplete="new-password"
+        labels={ui.field}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         hint={t("signIn.passwordHint")}

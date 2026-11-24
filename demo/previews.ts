@@ -116,7 +116,11 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.Badge, { status: "unchanged" }, "unchanged"),
       h(X.Badge, { status: "foreign" }, "foreign"),
       h(X.Badge, { tone: "danger" }, "failed"),
-      h(X.Badge, null, "neutral"));
+      h(X.Badge, null, "neutral"),
+      h(X.Badge, { tone: "neutral", title: "Not published yet" }, "draft"),
+      h(X.Badge, { tone: "accent" }, "internal"),
+      h(X.Badge, { tone: "ok" }, "active"),
+      h(X.Badge, { tone: "warn" }, "pending"));
     return el;
     },
   },
@@ -159,7 +163,10 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.Button, { variant: "ghost" }, "Show more"),
       h(X.Button, { variant: "link", href: "#" }, "Read the docs"),
       h(X.Button, { size: "sm", variant: "secondary" }, "Small"),
-      h(X.Button, { variant: "secondary", disabled: true }, "Disabled"));
+      h(X.Button, { variant: "secondary", disabled: true }, "Disabled"),
+      h(X.Button, { variant: "primary", icon: "save", busy: true }, "Save"),
+      h(X.Button, { variant: "secondary", iconEnd: "chevron" }, "More filters"),
+      h(X.Button, { variant: "link", href: "#", iconEnd: "external" }, "Status page"));
     return el;
     },
   },
@@ -284,7 +291,25 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     var el;
     el = h(React.Fragment, null,
       h(X.Field, { label: "Session name", placeholder: "fix-auth-redirect", hint: "Becomes the branch name." }),
-      h(X.Field, { label: "Port", defaultValue: "80", error: "Pick a port above 1024." }));
+      h(X.Field, { label: "Port", defaultValue: "80", error: "Pick a port above 1024." }),
+      h(X.Field, { label: "Timeout", defaultValue: "500", inputMode: "numeric", end: "ms", hint: "Time limit in milliseconds." }),
+      h(X.Field, { label: "Webhook secret", type: "password", defaultValue: "whsec_1234", mono: true, action: h(X.Button, { variant: "link" }, "Generate") }));
+    return el;
+    },
+  },
+  "Label": {
+    style: {"display": "flex", "flexDirection": "column", "gap": "12px", "alignItems": "flex-start", "padding": "16px", "width": "320px"},
+    render: (X, h) => {
+    var el;
+    el = h(React.Fragment, null,
+      h("div", { style: { display: "flex", flexDirection: "column", gap: 4 } },
+        h(X.Label, { htmlFor: "pv-label-model" }, "Default model"),
+        h(X.Select, { id: "pv-label-model", defaultValue: "b" },
+          h("optgroup", { label: "Fast" }, h("option", { value: "a" }, "Small")),
+          h("optgroup", { label: "Large" }, h("option", { value: "b" }, "Medium"), h("option", { value: "c" }, "Large")))),
+      h("div", { style: { display: "flex", flexDirection: "column", gap: 4 } },
+        h(X.Label, { htmlFor: "pv-label-owner", required: true }, "Owner"),
+        h(X.Button, { id: "pv-label-owner", variant: "secondary" }, "Choose a person")));
     return el;
     },
   },
@@ -316,7 +341,9 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.IconButton, { icon: "search", label: "Search" }),
       h(X.IconButton, { icon: "more", label: "More actions" }),
       h(X.IconButton, { icon: "close", label: "Close panel" }),
-      h(X.IconButton, { icon: "plus", label: "Add (touch size)", size: "lg" }));
+      h(X.IconButton, { icon: "plus", label: "Add (touch size)", size: "lg" }),
+      h(X.IconButton, { icon: "save", label: "Save row", busy: true }),
+      h(X.IconButton, { icon: "trash", label: "Delete row", tone: "danger" }));
     return el;
     },
   },
@@ -417,7 +444,12 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     var el;
     el = h(React.Fragment, null,
       h(X.Select, { "aria-label": "Language", defaultValue: "en", options: [{ value: "en", label: "English" }, { value: "vi", label: "Tiếng Việt" }] }),
-      h(X.Select, { "aria-label": "Profile", options: [{ value: "claude", label: "Claude" }, { value: "codex", label: "Codex" }, { value: "custom", label: "Custom" }] }));
+      h(X.Select, { "aria-label": "Profile", options: [{ value: "claude", label: "Claude" }, { value: "codex", label: "Codex" }, { value: "custom", label: "Custom" }] }),
+      h(X.Select, { "aria-label": "Status filter", size: "sm", defaultValue: "all" },
+        h("option", { value: "all" }, "All statuses"),
+        h("optgroup", { label: "Open" }, h("option", { value: "running" }, "Running"), h("option", { value: "waiting" }, "Waiting")),
+        h("optgroup", { label: "Closed" }, h("option", { value: "done" }, "Done"), h("option", { value: "failed" }, "Failed"))),
+      h(X.SearchInput, { size: "sm", placeholder: "Filter", "aria-label": "Filter" }));
     return el;
     },
   },
@@ -453,7 +485,8 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     el = h(React.Fragment, null,
       row("session", ["working", "waiting", "failed", "done", "idle", "exited"].map(function (s) { return h(X.StatusDot, { key: s, state: s, label: s, pulse: s === "working" }); })),
       row("PR", ["open", "draft", "merged", "closed"].map(function (s) { return h(X.StatusDot, { key: s, pr: s, label: s }); })),
-      row("check", ["pass", "pending", "fail", "skipping", "cancel"].map(function (s) { return h(X.StatusDot, { key: s, check: s, label: s }); })));
+      row("check", ["pass", "pending", "fail", "skipping", "cancel"].map(function (s) { return h(X.StatusDot, { key: s, check: s, label: s }); })),
+      row("tone", ["ok", "warn", "danger", "accent", "neutral"].map(function (s) { return h(X.StatusDot, { key: s, tone: s, label: s }); })));
     return el;
     },
   },
@@ -464,7 +497,9 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
     el = h(React.Fragment, null,
       h(X.Switch, { label: "Auto-accept edits", defaultChecked: true }),
       h(X.Switch, { label: "Notify when an agent waits" }),
-      h(X.Switch, { label: "Disabled", disabled: true }));
+      h(X.Switch, { label: "Disabled", disabled: true }),
+      h(X.Switch, { label: "Weekly digest", hint: "A summary every Monday at 09:00." }),
+      h(X.Switch, { label: "Enabled", hideLabel: true, defaultChecked: true }));
     return el;
     },
   },
@@ -560,6 +595,15 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       h(X.FilterChip, { pressed: true, count: 4 }, "Working"),
       h(X.FilterChip, { pressed: false, count: 2 }, "Waiting"),
       h(X.FilterChip, { pressed: false, count: 9 }, "Done")),
+  },
+  "ToggleButton": {
+    style: {"display": "flex", "gap": "6px", "flexWrap": "wrap", "padding": "16px"},
+    render: (X, h) => h(React.Fragment, null,
+      h(X.ToggleButton, { pressed: true }, "apps:read"),
+      h(X.ToggleButton, { pressed: false }, "apps:write"),
+      h(X.ToggleButton, { pressed: false, tone: "warning", title: "Only an owner can grant this" }, "workspace:delete"),
+      h(X.ToggleButton, { pressed: true, tone: "warning" }, "members:remove"),
+      h(X.ToggleButton, { pressed: true, disabled: true }, "apps:share")),
   },
   "ListRow": {
     style: {"padding": "16px", "width": "340px"},

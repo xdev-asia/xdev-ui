@@ -38,8 +38,8 @@ describe("SaveBar", () => {
     const onSave = vi.fn();
     const onDiscard = vi.fn();
     const [discard, save] = findAll(SaveBar({ dirty: true, onSave, onDiscard }), (e) => e.type === Button);
-    discard.props.onClick();
-    save.props.onClick();
+    discard!.props.onClick();
+    save!.props.onClick();
     expect(onDiscard).toHaveBeenCalledOnce();
     expect(onSave).toHaveBeenCalledOnce();
   });
@@ -59,7 +59,7 @@ describe("useUnsavedGuard", () => {
   it("adds beforeunload while dirty and removes it on cleanup", () => {
     const { listeners } = fakeWindow(true);
     useUnsavedGuard(true);
-    const cleanup = h.effects[0]() as () => void;
+    const cleanup = h.effects[0]!() as () => void;
     const handler = listeners.get("beforeunload") as (e: { preventDefault: () => void; returnValue: unknown }) => void;
     const e = { preventDefault: vi.fn(), returnValue: undefined as unknown };
     handler(e);
@@ -70,7 +70,7 @@ describe("useUnsavedGuard", () => {
   it("does nothing while clean", () => {
     const { win } = fakeWindow(false);
     const g = useUnsavedGuard(false);
-    h.effects[0]();
+    h.effects[0]!();
     expect(win.addEventListener).not.toHaveBeenCalled();
     expect(g.confirmLeave()).toBe(true);
     expect(win.confirm).not.toHaveBeenCalled();
@@ -101,7 +101,7 @@ describe("useUnsavedGuard guardLinks", () => {
   it("cancels a hash link click when the user stays", () => {
     const { listeners, win } = fakeDom(false);
     useUnsavedGuard(true, "Leave?", { guardLinks: true });
-    h.effects[1]();
+    h.effects[1]!();
     const e = click("http://app.test/admin/#/words");
     listeners.get("click")!(e);
     expect(win.confirm).toHaveBeenCalledWith("Leave?");
@@ -110,14 +110,14 @@ describe("useUnsavedGuard guardLinks", () => {
   it("lets the click through when the user agrees, and is off by default", () => {
     const { listeners } = fakeDom(true);
     useUnsavedGuard(true, "Leave?", { guardLinks: true });
-    h.effects[1]();
+    h.effects[1]!();
     const e = click("http://app.test/admin/#/words");
     listeners.get("click")!(e);
     expect(e.preventDefault).not.toHaveBeenCalled();
     h.effects.length = 0;
     const off = fakeDom(false);
     useUnsavedGuard(true);
-    h.effects[1]();
+    h.effects[1]!();
     expect(off.doc.addEventListener).not.toHaveBeenCalled();
   });
 });

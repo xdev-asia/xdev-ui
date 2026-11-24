@@ -5,7 +5,7 @@ import { CommitGraph, graphWidth } from "./CommitGraph";
 import { graphRows, type GraphItem, type GraphRow } from "./graphLanes";
 
 const render = (row: GraphRow): string => renderToStaticMarkup(<CommitGraph row={row} />);
-const one = (item: GraphItem, refs = {}): GraphRow => graphRows([item], refs)[0];
+const one = (item: GraphItem, refs = {}): GraphRow => graphRows([item], refs)[0]!;
 
 describe("CommitGraph", () => {
   it("draws a plain commit as a filled 3.5 node", () => {
@@ -39,8 +39,8 @@ describe("CommitGraph", () => {
     expect(graphWidth(3, 1)).toBe(44);
     expect(graphWidth(1, 5)).toBe(66);
     const rows = graphRows([{ id: "m", parents: ["a", "b", "c"] }]);
-    expect(render(rows[0])).toContain('width="44"');
-    expect(render(rows[0])).toContain('height="24"');
+    expect(render(rows[0]!)).toContain('width="44"');
+    expect(render(rows[0]!)).toContain('height="24"');
   });
 
   it("colours only through the graph tokens", () => {

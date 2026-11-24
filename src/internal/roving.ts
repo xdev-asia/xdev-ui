@@ -46,5 +46,5 @@ export function rovingKeyDown(e: { key: string; preventDefault: () => void; curr
   const next = rovingIndex(e.key, index, items.length);
   if (next == null) return;
   e.preventDefault();
-  items[next].focus();
+  items[next]?.focus();
 }

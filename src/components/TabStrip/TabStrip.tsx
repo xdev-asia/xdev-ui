@@ -65,8 +65,8 @@ export function TabStrip({ tabs, selected, defaultSelected, onSelect, onClose, o
     const next = rovingIndex(e.key, at, list.length);
     if (next == null) return;
     e.preventDefault();
-    list[next].focus();
-    list[next].click();
+    list[next]?.focus();
+    list[next]?.click();
   };
   return (
     <div className="ws-tabstrip">

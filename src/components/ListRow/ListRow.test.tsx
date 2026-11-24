@@ -21,7 +21,7 @@ describe("ListRow", () => {
   });
   it("wires onClick", () => {
     const onClick = vi.fn();
-    findAll(ListRow({ title: "x", onClick }), (e) => e.type === "button")[0].props.onClick();
+    findAll(ListRow({ title: "x", onClick }), (e) => e.type === "button")[0]!.props.onClick();
     expect(onClick).toHaveBeenCalled();
   });
 });

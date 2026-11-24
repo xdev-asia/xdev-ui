@@ -18,11 +18,11 @@ const decode = (s: string): string | null => {
 
 /** Pure: turns "#/items/i3?x=1" into a route. */
 export function matchRoute(hash: string): Route {
-  const path = "/" + hash.replace(/^#/, "").split("?")[0].replace(/^\/+|\/+$/g, "");
+  const path = "/" + hash.replace(/^#/, "").split("?")[0]!.replace(/^\/+|\/+$/g, "");
   const name = STATIC[path];
   if (name) return { name, params: {} };
-  const item = /^\/items\/([^/]+)$/.exec(path);
-  const id = item ? decode(item[1]) : null;
+  const item = /^\/items\/([^/]+)$/.exec(path)?.[1];
+  const id = item !== undefined ? decode(item) : null;
   return id !== null ? { name: "item", params: { id } } : { name: "not-found", params: {} };
 }
 

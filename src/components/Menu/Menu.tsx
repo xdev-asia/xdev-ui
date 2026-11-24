@@ -117,6 +117,7 @@ export function Menu({ items, label, initialFocus = "first", onClose, renderLink
       const ch = e.key.toLowerCase();
       for (let n = 1; n <= enabled.length; n++) {
         const cand = enabled[(start + n) % enabled.length];
+        if (!cand) continue;
         if (cand.getAttribute("aria-disabled") !== "true" && (cand.textContent ?? "").trim().toLowerCase().startsWith(ch)) {
           e.preventDefault();
           cand.focus();

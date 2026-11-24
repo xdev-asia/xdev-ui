@@ -35,7 +35,7 @@ describe("SwatchGroup", () => {
   it("click calls onChange with the option value", () => {
     const onChange = vi.fn();
     const root = SwatchGroup({ "aria-label": "Colour", value: "red", onChange, options });
-    findAll(root, (e) => e.props.role === "radio")[2].props.onClick();
+    findAll(root, (e) => e.props.role === "radio")[2]!.props.onClick();
     expect(onChange).toHaveBeenCalledWith("blue");
   });
   it("arrow keys move the selection, wrap, and focus the new swatch", () => {

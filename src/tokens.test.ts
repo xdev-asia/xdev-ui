@@ -45,7 +45,7 @@ describe("tokens.css", () => {
       const css = readFileSync(file, "utf8");
       const local = new Set([...css.matchAll(/(--[a-z0-9-]+)\s*:/gi)].map((m) => m[1]));
       for (const m of css.matchAll(/var\(\s*(--x[a-z0-9-]*)/gi)) {
-        if (!defined.has(m[1]) && !local.has(m[1]) && !INLINE.test(m[1])) missing.push(`${file}: ${m[1]}`);
+        if (!defined.has(m[1]) && !local.has(m[1]) && !INLINE.test(m[1]!)) missing.push(`${file}: ${m[1]}`);
       }
     }
     expect(missing).toEqual([]);
@@ -101,11 +101,11 @@ describe("tailwind.css", () => {
     }
   });
   it("has no declaration that points at itself", () => {
-    expect(decls.filter(([name, value]) => value.includes(`var(${name})`))).toEqual([]);
+    expect(decls.filter(([name, value]) => value!.includes(`var(${name})`))).toEqual([]);
   });
   it("only points at tokens that exist", () => {
     const defined = new Set([...tokensCss.matchAll(/^\s*(--[a-z0-9-]+):/gim)].map((m) => m[1]));
-    const used = decls.flatMap(([, v]) => [...v.matchAll(/var\((--[a-z0-9-]+)/g)].map((m) => m[1]));
+    const used = decls.flatMap(([, v]) => [...v!.matchAll(/var\((--[a-z0-9-]+)/g)].map((m) => m[1]));
     expect(used.filter((u) => !defined.has(u))).toEqual([]);
   });
   it("uses the breakpoint tokens, in rem", () => {
@@ -123,7 +123,7 @@ describe("layout css", () => {
     for (const file of cssFiles(resolve(src, "styles"))) {
       const css = readFileSync(file, "utf8");
       for (const m of css.matchAll(/@media[^{]*?\((min|max)-width:\s*([0-9.]+(?:rem|px))\)/g)) {
-        if (m[1] === "min" ? !rems.has(m[2]) : !pxBelow.has(m[2])) bad.push(`${file}: ${m[0]}`);
+        if (m[1] === "min" ? !rems.has(m[2]!) : !pxBelow.has(m[2]!)) bad.push(`${file}: ${m[0]}`);
       }
     }
     expect(bad).toEqual([]);
@@ -133,7 +133,7 @@ describe("layout css", () => {
     for (const file of cssFiles(resolve(src, "styles"))) {
       if (file.endsWith("tokens.css")) continue;
       for (const m of readFileSync(file, "utf8").matchAll(/z-index:\s*([^;]+);/g)) {
-        if (!/var\(--x-z-/.test(m[1]) && m[1].trim() !== "0" && m[1].trim() !== "auto") bad.push(`${file}: ${m[0]}`);
+        if (!/var\(--x-z-/.test(m[1]!) && m[1]!.trim() !== "0" && m[1]!.trim() !== "auto") bad.push(`${file}: ${m[0]}`);
       }
     }
     expect(bad).toEqual([]);

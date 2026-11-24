@@ -372,6 +372,11 @@ describe("audit: page rules", () => {
         `export const I = () => <Spinner size="md" label={t("loading")} />;`,
         `export function J() { const [d, setD] = useState<Dialog | null>(null); return d; }`,
         `export const K = () => <Spinner />;`,
+        `export const L = () => <Field label={t("name")} type="email" autoComplete="email" />;`,
+        `export const M = () => <Field label={t("pw")} type="password" autoComplete="current-password" />;`,
+        `export const N = () => <Field label={t("pin")} type="password" reveal={false} autoComplete="off" />;`,
+        `export const O = () => <Label htmlFor="x">{t("owner")}</Label>;`,
+        `export const P = () => <Label htmlFor="x" required>{t("owner")}</Label>;`,
         "",
       ].join("\n"),
       "en.ts": `export const en = { ok: "OK" };\n`,
@@ -387,6 +392,8 @@ describe("audit: page rules", () => {
         [4, "warn", "Dialog has no labels"],
         [7, "warn", "EmptyState has no la"],
         [11, "warn", "Spinner has no label"],
+        [13, "warn", "Field has no labels;"],
+        [16, "warn", "Label has no labels;"],
       ]);
     } finally {
       rmSync(dir, { recursive: true, force: true });

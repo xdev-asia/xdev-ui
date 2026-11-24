@@ -13,13 +13,16 @@ export interface StatusDotProps {
   tone?: StatusTone;
   /** Only with state="working". */
   pulse?: boolean;
+  /** Visible text set right after the dot; the dot is then decorative. */
   label?: ReactNode;
+  /** Class on the outer element: the `.x-dot-label` wrapper with a label, the dot itself without. */
+  className?: string;
 }
 
-export function StatusDot({ state, pr, check, tone, pulse, label }: StatusDotProps): JSX.Element {
+export function StatusDot({ state, pr, check, tone, pulse, label, className }: StatusDotProps): JSX.Element {
   const dot = (
     <span
-      className={cx("ws-dot", pulse && "ws-pulse")}
+      className={cx("ws-dot", pulse && "ws-pulse", !label && className)}
       aria-hidden={label ? true : undefined}
       data-state={state}
       data-pr={pr}
@@ -29,7 +32,7 @@ export function StatusDot({ state, pr, check, tone, pulse, label }: StatusDotPro
   );
   if (!label) return dot;
   return (
-    <span className="x-dot-label">
+    <span className={cx("x-dot-label", className)}>
       {dot}
       {label}
     </span>

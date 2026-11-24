@@ -23,7 +23,7 @@ describe("BulkBar", () => {
   });
   it("clear calls onClear", () => {
     const onClear = vi.fn();
-    const btn = findAll(BulkBar({ count: 2, onClear }), (e) => e.props.className === "x-bulk-clear")[0];
+    const btn = findAll(BulkBar({ count: 2, onClear }), (e) => e.props.className === "x-bulk-clear")[0]!;
     btn.props.onClick();
     expect(onClear).toHaveBeenCalledOnce();
   });

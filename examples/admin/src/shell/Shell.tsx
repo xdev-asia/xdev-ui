@@ -67,7 +67,7 @@ export function Shell(p: ShellProps): JSX.Element {
 
   const groups = navFor(roles, session.role);
   const here = currentOf(route);
-  const title = route.name === "user" ? route.params.id : here ? t(here.entry.label) : t("app.notFoundTitle");
+  const title = route.name === "user" ? (route.params.id ?? "") : here ? t(here.entry.label) : t("app.notFoundTitle");
   const homeTitle = t("nav.dashboard");
 
   // Page tabs survive a reload within this browser tab (sessionStorage), like the open pages of a desktop app.

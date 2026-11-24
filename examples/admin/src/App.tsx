@@ -53,7 +53,7 @@ function Routes({ session, roles, version, openDialog, onRolesChanged, theme, on
     case "users":
       return <UsersPage session={session} roles={roles} version={version} onCreate={() => openDialog({ kind: "create" })} onDelete={onDelete} />;
     case "user":
-      return <UserDetailPage key={route.params.id} id={route.params.id} session={session} roles={roles} onDelete={onDelete} />;
+      return <UserDetailPage key={route.params.id} id={route.params.id ?? ""} session={session} roles={roles} onDelete={onDelete} />;
     case "dashboard":
       return <DashboardPage />;
     case "roles":

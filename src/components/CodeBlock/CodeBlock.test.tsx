@@ -29,7 +29,7 @@ describe("CodeBlock", () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     vi.stubGlobal("navigator", { clipboard: { writeText } });
     const onCopy = vi.fn();
-    findAll(CodeBlock({ code, onCopy }), (e) => e.type === "button")[0].props.onClick();
+    findAll(CodeBlock({ code, onCopy }), (e) => e.type === "button")[0]!.props.onClick();
     await vi.waitFor(() => expect(onCopy).toHaveBeenCalledWith(code));
     expect(writeText).toHaveBeenCalledWith(code);
     expect(setInner).toHaveBeenCalledWith(true);
@@ -38,7 +38,7 @@ describe("CodeBlock", () => {
     const writeText = vi.fn().mockRejectedValue(new Error("denied"));
     vi.stubGlobal("navigator", { clipboard: { writeText } });
     const onCopy = vi.fn();
-    findAll(CodeBlock({ code, onCopy }), (e) => e.type === "button")[0].props.onClick();
+    findAll(CodeBlock({ code, onCopy }), (e) => e.type === "button")[0]!.props.onClick();
     await vi.waitFor(() => expect(writeText).toHaveBeenCalled());
     await Promise.resolve();
     expect(onCopy).not.toHaveBeenCalled();

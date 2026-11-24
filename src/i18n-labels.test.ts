@@ -33,6 +33,8 @@ import {
   Toolbar,
   TreeView,
   FontField,
+  Field,
+  Label,
   Drawer,
   FileDrop,
   FormDialog,
@@ -352,5 +354,17 @@ describe("labels override every default English string", () => {
     const html = renderToStaticMarkup(h(AudioPreview, { src: "/a.mp3", labels: { play: S("pl"), stop: S("st") } }));
     expect(html).toContain(S("pl"));
     expectNoEnglish(html, ["Play preview", "Stop preview"]);
+  });
+
+  it("Field (password toggle)", () => {
+    const html = renderToStaticMarkup(h(Field, { label: "L", type: "password", labels: { show: S("s"), hide: S("h") } }));
+    expect(html).toContain(S("s"));
+    expectNoEnglish(html, ["Show password", "Hide password"]);
+  });
+
+  it("Label", () => {
+    const html = renderToStaticMarkup(h(Label, { htmlFor: "x", required: true, labels: { required: S("r") } }, "L"));
+    expect(html).toContain(S("r"));
+    expectNoEnglish(html, ["required"]);
   });
 });

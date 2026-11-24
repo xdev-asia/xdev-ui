@@ -19,7 +19,7 @@ describe("package.json", () => {
     expect(pkg.files).toEqual(expect.arrayContaining(["dist", "skills", "bin"]));
     expect(pkg.bin["xdev-ui-skills"]).toBe("./bin/xdev-ui-skills.mjs");
     expect(pkg.bin["xdev-ui-mcp"]).toBe("./dist/mcp.js");
-    expect(existsSync(join(root, pkg.bin["xdev-ui-skills"]))).toBe(true);
+    expect(existsSync(join(root, pkg.bin["xdev-ui-skills"]!))).toBe(true);
     expect(readFileSync(join(root, "bin/xdev-ui-skills.mjs"), "utf8").startsWith("#!/usr/bin/env node")).toBe(true);
   });
   it("keeps dotfiles out of skills templates, because npm drops them from the tarball", () => {

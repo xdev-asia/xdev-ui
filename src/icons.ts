@@ -158,7 +158,21 @@ export const ICONS = {
   type: [["path", { d: "M5 7V5h14v2M12 5v14M9 19h6" }]],
   board: [["rect", { x: 3, y: 4, width: 18, height: 16, rx: 2 }], ["path", { d: "M9 4v16M15 4v16M6 8h0M12 8h0M18 8h0" }]],
   automation: [["path", { d: "M20 12a8 8 0 1 1-2.3-5.6L20 8M20 3v5h-5" }], ["path", { d: "M10 9.5v5l4-2.5z" }]],
-  droplet: [["path", { d: "M12 3.5C9 7 6 10.2 6 14a6 6 0 0 0 12 0c0-3.8-3-7-6-10.5z" }]]
+  droplet: [["path", { d: "M12 3.5C9 7 6 10.2 6 14a6 6 0 0 0 12 0c0-3.8-3-7-6-10.5z" }]],
+
+  // Forms, feedback, media and tools
+  save: [["path", { d: "M5 4h11l4 4v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z" }], ["path", { d: "M8 4v4h7V4M8 20v-6h8v6" }]],
+  "thumbs-up": [["path", { d: "M7 11v9" }], ["path", { d: "M7 11l4-7a2 2 0 0 1 3 2.2L13 10h5.6a2 2 0 0 1 2 2.4l-1.4 6A2 2 0 0 1 17.2 20H4a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1z" }]],
+  "thumbs-down": [["path", { d: "M7 13V4" }], ["path", { d: "M7 13l4 7a2 2 0 0 0 3-2.2L13 14h5.6a2 2 0 0 0 2-2.4l-1.4-6A2 2 0 0 0 17.2 4H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1z" }]],
+  volume: [["path", { d: "M4 9h4l5-4v14l-5-4H4z" }], ["path", { d: "M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" }]],
+  mic: [["rect", { x: 9, y: 3, width: 6, height: 11, rx: 3 }], ["path", { d: "M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6" }]],
+  paperclip: [["path", { d: "M21 11.5 12.4 20a5.5 5.5 0 0 1-7.8-7.8l8.5-8.5a3.7 3.7 0 0 1 5.2 5.2l-8.5 8.5a1.8 1.8 0 0 1-2.6-2.6L15 7" }]],
+  palette: [["path", { d: "M12 3a9 9 0 0 0 0 18c1 0 1.8-.8 1.8-1.8 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4c0-4.4-4-8-9-8z" }], ["circle", { cx: 7.5, cy: 10.5, r: 1 }], ["circle", { cx: 10.5, cy: 7, r: 1 }], ["circle", { cx: 15, cy: 7, r: 1 }], ["circle", { cx: 17.5, cy: 10.5, r: 1 }]],
+  hand: [["path", { d: "M8 14V5.5a1.5 1.5 0 0 1 3 0V11M11 11V4.5a1.5 1.5 0 0 1 3 0V11M14 11V6a1.5 1.5 0 0 1 3 0v6M17 12V9a1.5 1.5 0 0 1 3 0v5a7 7 0 0 1-7 7h-1.5a6 6 0 0 1-4.6-2.2L4 14.5a1.6 1.6 0 0 1 2.4-2.1L8 14" }]],
+  cursor: [["path", { d: "M4 4l6.5 16 2.3-6.7L19.5 11z" }], ["path", { d: "m13 13 6 6" }]],
+  wrench: [["path", { d: "M15 4.1a5 5 0 0 0-5.6 6.8l-5.9 5.9a1.8 1.8 0 0 0 2.5 2.5l5.9-5.9a5 5 0 0 0 7.9-4.4L16.6 9.6l-2.2-2.2z" }]],
+  building: [["path", { d: "M5 21V5a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v16M15 9h3a1 1 0 0 1 1 1v11M3 21h18M9 8h2M9 12h2M9 16h2" }]],
+  pip: [["rect", { x: 3, y: 5, width: 18, height: 14, rx: 2 }], ["rect", { x: 12, y: 11, width: 6, height: 5, rx: 1 }]]
 } as const satisfies Record<string, readonly Part[]>;
 
 export type IconName = keyof typeof ICONS;

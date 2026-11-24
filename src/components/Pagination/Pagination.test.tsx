@@ -20,19 +20,19 @@ describe("Pagination", () => {
   });
   it("disables previous on the first page and next on the last", () => {
     const first = findAll(Pagination({ page: 1, pageSize: 20, total: 57, onPageChange: noop }), (e) => e.type === IconButton);
-    expect(first[0].props.disabled).toBe(true);
-    expect(first[1].props.disabled).toBe(false);
+    expect(first[0]!.props.disabled).toBe(true);
+    expect(first[1]!.props.disabled).toBe(false);
     const last = findAll(Pagination({ page: 3, pageSize: 20, total: 57, onPageChange: noop }), (e) => e.type === IconButton);
-    expect(last[0].props.disabled).toBe(false);
-    expect(last[1].props.disabled).toBe(true);
+    expect(last[0]!.props.disabled).toBe(false);
+    expect(last[1]!.props.disabled).toBe(true);
     const only = findAll(Pagination({ page: 1, pageSize: 20, total: 5, onPageChange: noop }), (e) => e.type === IconButton);
     expect(only.every((b) => b.props.disabled)).toBe(true);
   });
   it("calls onPageChange with the neighbouring page", () => {
     const onPageChange = vi.fn();
     const [prev, next] = findAll(Pagination({ page: 2, pageSize: 20, total: 57, onPageChange }), (e) => e.type === IconButton);
-    prev.props.onClick();
-    next.props.onClick();
+    prev!.props.onClick();
+    next!.props.onClick();
     expect(onPageChange.mock.calls).toEqual([[1], [3]]);
   });
   it("renders the page-size select only with options", () => {

@@ -42,13 +42,13 @@ describe("LaunchCard", () => {
     const onChange = vi.fn();
     const onStart = vi.fn();
     const tree = LaunchCard({ ...base, onChange, onStart });
-    findAll(tree, (e) => e.type === "textarea")[0].props.onChange({ target: { value: "New" } });
+    findAll(tree, (e) => e.type === "textarea")[0]!.props.onChange({ target: { value: "New" } });
     expect(onChange).toHaveBeenLastCalledWith({ ...value, prompt: "New" });
-    findAll(tree, (e) => e.props.onChange && e.props.options === worktrees)[0].props.onChange({ target: { value: "main" } });
+    findAll(tree, (e) => e.props.onChange && e.props.options === worktrees)[0]!.props.onChange({ target: { value: "main" } });
     expect(onChange).toHaveBeenLastCalledWith({ ...value, worktree: "main" });
-    findAll(tree, (e) => e.props.options === agents)[0].props.onChange("claude");
+    findAll(tree, (e) => e.props.options === agents)[0]!.props.onChange("claude");
     expect(onChange).toHaveBeenLastCalledWith({ ...value, agent: "claude" });
-    findAll(tree, (e) => e.props.variant === "primary")[0].props.onClick();
+    findAll(tree, (e) => e.props.variant === "primary")[0]!.props.onClick();
     expect(onStart).toHaveBeenCalledTimes(1);
   });
   it("labels replace every English default", () => {

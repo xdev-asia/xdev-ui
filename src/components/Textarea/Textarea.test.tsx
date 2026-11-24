@@ -26,7 +26,7 @@ describe("Textarea", () => {
   });
   it("hint sits outside the label, inside the ws-field wrapper", () => {
     const html = renderToStaticMarkup(<Textarea id="p" label="Env" hint="One per line" />);
-    expect(html).toMatch(/^<div class="ws-field"><label for="p">Env<\/label><textarea[^>]*><\/textarea><small id="p-hint">One per line<\/small><\/div>$/);
+    expect(html).toMatch(/^<div class="ws-field"><label for="p" class="x-label">Env<\/label><textarea[^>]*><\/textarea><small id="p-hint">One per line<\/small><\/div>$/);
   });
   it("passes ref to the textarea", () => {
     const ref = { current: null };

@@ -52,7 +52,7 @@ const render = (props: Partial<Parameters<typeof SortableList<Item>>[0]> = {}): 
   return SortableList<Item>({ ...base, ...props }) as ReactElement;
 };
 const handles = (el: ReactElement) => findAll(el, (e) => e.props.className === "x-sortable-handle");
-const live = (el: ReactElement) => findAll(el, (e) => e.props.role === "status")[0].props.children;
+const live = (el: ReactElement) => findAll(el, (e) => e.props.role === "status")[0]!.props.children;
 const order = (el: ReactElement) => findAll(el, (e) => e.type === "li").map((e) => String(e.key));
 const key = (k: string) => ({ key: k, preventDefault: vi.fn() });
 
@@ -72,7 +72,7 @@ describe("SortableList", () => {
     h.i = 0;
     expect(count(renderToStaticMarkup(<SortableList {...base} disabled />))).toBe(3);
     h.i = 0;
-    expect(count(renderToStaticMarkup(<SortableList {...base} items={[items[0]]} />))).toBe(1);
+    expect(count(renderToStaticMarkup(<SortableList {...base} items={[items[0]!]} />))).toBe(1);
   });
 
   it("labels the handle by key when getLabel is missing, and takes overrides", () => {
@@ -86,22 +86,22 @@ describe("SortableList", () => {
     const onReorder = vi.fn();
     let el = render({ onReorder });
     const space = key(" ");
-    handles(el)[0].props.onKeyDown(space);
+    handles(el)[0]!.props.onKeyDown(space);
     expect(space.preventDefault).toHaveBeenCalled();
     el = render({ onReorder });
     expect(live(el)).toBe("Alpha lifted. Use the up and down arrow keys to move it, Space to drop it, Escape to cancel.");
-    expect(findAll(el, (e) => e.type === "li")[0].props["data-lifted"]).toBe("");
+    expect(findAll(el, (e) => e.type === "li")[0]!.props["data-lifted"]).toBe("");
 
-    handles(el)[0].props.onKeyDown(key("ArrowDown"));
+    handles(el)[0]!.props.onKeyDown(key("ArrowDown"));
     el = render({ onReorder });
     expect(order(el)).toEqual(["b", "a", "c"]);
     expect(live(el)).toBe("Moved to position 2 of 3.");
 
-    handles(el)[1].props.onKeyDown(key("End"));
+    handles(el)[1]!.props.onKeyDown(key("End"));
     el = render({ onReorder });
     expect(order(el)).toEqual(["b", "c", "a"]);
 
-    handles(el)[2].props.onKeyDown(key("Enter"));
+    handles(el)[2]!.props.onKeyDown(key("Enter"));
     el = render({ onReorder });
     expect(live(el)).toBe("Dropped at position 3 of 3.");
     expect(onReorder).toHaveBeenCalledWith(0, 2);
@@ -110,12 +110,12 @@ describe("SortableList", () => {
   it("keyboard: Escape cancels and puts the row back without calling onReorder", () => {
     const onReorder = vi.fn();
     let el = render({ onReorder });
-    handles(el)[1].props.onKeyDown(key(" "));
+    handles(el)[1]!.props.onKeyDown(key(" "));
     el = render({ onReorder });
-    handles(el)[1].props.onKeyDown(key("ArrowUp"));
+    handles(el)[1]!.props.onKeyDown(key("ArrowUp"));
     el = render({ onReorder });
     expect(order(el)).toEqual(["b", "a", "c"]);
-    handles(el)[0].props.onKeyDown(key("Escape"));
+    handles(el)[0]!.props.onKeyDown(key("Escape"));
     el = render({ onReorder });
     expect(order(el)).toEqual(["a", "b", "c"]);
     expect(live(el)).toBe("Reorder cancelled. The item is back in its place.");
@@ -126,10 +126,10 @@ describe("SortableList", () => {
     const onReorder = vi.fn();
     let el = render({ onReorder });
     const tab = key("Tab");
-    handles(el)[0].props.onKeyDown(tab);
+    handles(el)[0]!.props.onKeyDown(tab);
     expect(tab.preventDefault).not.toHaveBeenCalled();
     el = render({ onReorder, disabled: true });
-    handles(el)[0].props.onKeyDown(key(" "));
+    handles(el)[0]!.props.onKeyDown(key(" "));
     el = render({ onReorder, disabled: true });
     expect(live(el)).toBe("");
   });
@@ -137,13 +137,13 @@ describe("SortableList", () => {
   it("announcement labels are overridable", () => {
     const labels = { lifted: (n: string) => `nhấc ${n}`, moved: (p: number, t: number) => `${p}/${t}`, dropped: (p: number) => `thả ${p}`, cancelled: "huỷ" };
     let el = render({ labels });
-    handles(el)[0].props.onKeyDown(key(" "));
+    handles(el)[0]!.props.onKeyDown(key(" "));
     el = render({ labels });
     expect(live(el)).toBe("nhấc Alpha");
-    handles(el)[0].props.onKeyDown(key("ArrowDown"));
+    handles(el)[0]!.props.onKeyDown(key("ArrowDown"));
     el = render({ labels });
     expect(live(el)).toBe("2/3");
-    handles(el)[1].props.onKeyDown(key("Escape"));
+    handles(el)[1]!.props.onKeyDown(key("Escape"));
     el = render({ labels });
     expect(live(el)).toBe("huỷ");
   });
@@ -153,13 +153,13 @@ describe("SortableList", () => {
     const rows = [0, 40, 80].map((top) => ({ getBoundingClientRect: () => ({ top, height: 40 }) }));
     const target = { closest: () => ({ children: rows }), setPointerCapture: vi.fn() };
     let el = render({ onReorder });
-    handles(el)[0].props.onPointerDown({ button: 0, pointerId: 1, currentTarget: target, preventDefault() {} });
+    handles(el)[0]!.props.onPointerDown({ button: 0, pointerId: 1, currentTarget: target, preventDefault() {} });
     el = render({ onReorder });
-    expect(findAll(el, (e) => e.type === "li")[0].props["data-dragging"]).toBe("");
-    handles(el)[0].props.onPointerMove({ clientY: 110 });
+    expect(findAll(el, (e) => e.type === "li")[0]!.props["data-dragging"]).toBe("");
+    handles(el)[0]!.props.onPointerMove({ clientY: 110 });
     el = render({ onReorder });
-    expect(findAll(el, (e) => e.type === "li")[2].props["data-drop"]).toBe("after");
-    handles(el)[0].props.onPointerUp();
+    expect(findAll(el, (e) => e.type === "li")[2]!.props["data-drop"]).toBe("after");
+    handles(el)[0]!.props.onPointerUp();
     el = render({ onReorder });
     expect(onReorder).toHaveBeenCalledWith(0, 2);
     expect(live(el)).toBe("Dropped at position 3 of 3.");

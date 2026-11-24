@@ -19,3 +19,26 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 export const Disabled: Story = { args: { disabled: true } };
+export const Small: Story = { args: { size: "sm", "aria-label": "Status filter" } };
+export const Grouped: Story = {
+  args: {
+    options: undefined,
+    defaultValue: "running",
+    "aria-label": "Status filter",
+    children: (
+      <>
+        <option value="all">All statuses</option>
+        <optgroup label="Open">
+          <option value="running">Running</option>
+          <option value="waiting">Waiting</option>
+        </optgroup>
+        <optgroup label="Closed">
+          <option value="done">Done</option>
+          <option value="failed">Failed</option>
+        </optgroup>
+      </>
+    ),
+  },
+};
+export const Labelled: Story = { args: { label: "Default profile", hint: "Used for new sessions." } };
+export const Invalid: Story = { args: { label: "Default profile", error: "Pick a profile." } };

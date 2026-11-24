@@ -6,7 +6,7 @@ import { UserDetailView, UserNotFound, validateUser, type UserDetailViewProps } 
 
 const users = seedUsers();
 const roles = seedRoles();
-const user = users[2];
+const user = users[2]!;
 const noop = () => {};
 
 function props(over: Partial<UserDetailViewProps> = {}): UserDetailViewProps {

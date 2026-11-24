@@ -13,3 +13,5 @@ export const Off: Story = {};
 export const On: Story = { args: { defaultChecked: true } };
 export const Disabled: Story = { args: { disabled: true, defaultChecked: true } };
 export const Unlabelled: Story = { args: { label: undefined, "aria-label": "Sound" } };
+export const WithHint: Story = { args: { label: "Weekly digest", hint: "A summary every Monday at 09:00." } };
+export const HiddenLabel: Story = { args: { label: "Enabled", hideLabel: true, defaultChecked: true } };

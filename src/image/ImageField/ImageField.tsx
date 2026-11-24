@@ -201,8 +201,9 @@ export function ImageField({
     const file = files?.[0];
     if (!file || locked) return;
     const { rejected } = checkFiles([file], { accept, maxSize });
-    if (rejected.length) {
-      setProblem(l.rejected(file.name, rejected[0].reason, maxLabel));
+    const [firstRejected] = rejected;
+    if (firstRejected) {
+      setProblem(l.rejected(file.name, firstRejected.reason, maxLabel));
       return;
     }
     setProblem(null);

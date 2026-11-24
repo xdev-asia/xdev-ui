@@ -17,7 +17,7 @@ describe("store", () => {
     const s = createStore();
     const u = await s.createUser({ name: "New Person", email: "new@example.com", role: "viewer", invite: true });
     expect(u.status).toBe("invited");
-    expect((await s.listUsers())[0].id).toBe(u.id);
+    expect((await s.listUsers())[0]!.id).toBe(u.id);
     await expect(s.createUser({ name: "Dup", email: "NEW@example.com", role: "viewer", invite: false })).rejects.toMatchObject({ code: "email-taken" });
   });
   it("updates, suspends and deletes", async () => {
@@ -39,7 +39,7 @@ describe("store", () => {
   it("keeps the owner role read-only", async () => {
     const s = createStore();
     const [owner] = await s.listRoles();
-    await expect(s.saveRole(owner)).rejects.toMatchObject({ code: "failed" });
+    await expect(s.saveRole(owner!)).rejects.toMatchObject({ code: "failed" });
   });
   it("fails only the named resources", async () => {
     const s = createStore({ fail: ["users"] });

@@ -25,7 +25,7 @@ describe("NavList", () => {
   });
   it("wires onSelect", () => {
     const onSelect = vi.fn();
-    findAll(NavList({ items, onSelect }), (e) => e.type === "button")[1].props.onClick();
+    findAll(NavList({ items, onSelect }), (e) => e.type === "button")[1]!.props.onClick();
     expect(onSelect).toHaveBeenCalledWith("agents");
   });
   it("renders an item icon before the label", () => {
@@ -57,9 +57,9 @@ describe("NavList", () => {
   it("collapsible puts the items in a Disclosure headed by the title", () => {
     const tree = NavList({ items, title: "Content", collapsible: true, defaultOpen: false });
     const [disc] = findAll(tree, (e) => e.type === Disclosure);
-    expect(disc.props.title).toBe("Content");
-    expect(disc.props.defaultExpanded).toBe(false);
-    expect(disc.props.className).toBe("settings-nav-group");
+    expect(disc!.props.title).toBe("Content");
+    expect(disc!.props.defaultExpanded).toBe(false);
+    expect(disc!.props.className).toBe("settings-nav-group");
     expect(findAll(tree, (e) => e.type === "h2")).toHaveLength(0);
     const html = renderToStaticMarkup(<NavList items={items} title="Content" collapsible />);
     expect(html).toContain('aria-expanded="true"');

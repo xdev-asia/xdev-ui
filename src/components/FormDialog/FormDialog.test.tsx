@@ -54,7 +54,7 @@ describe("FormDialog", () => {
     tree.props.children.props.onSubmit(e);
     expect(e.preventDefault).toHaveBeenCalled();
     expect(onSubmit).toHaveBeenCalledWith(e);
-    findAll(tree, (el) => el.type === Button)[0].props.onClick();
+    findAll(tree, (el) => el.type === Button)[0]!.props.onClick();
     expect(onCancel).toHaveBeenCalledOnce();
   });
   it("shows a form error as an alert", () => {

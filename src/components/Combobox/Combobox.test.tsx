@@ -127,32 +127,32 @@ describe("Combobox", () => {
     expect(html).toContain('aria-label="Clear"');
     const tags = findAll(Combobox({ label: "Cities", multiple: true, options, value: ["hn", "dn"], onChange }), (e) => e.type === Tag);
     expect(tags).toHaveLength(2);
-    tags[0].props.onRemove();
+    tags[0]!.props.onRemove();
     expect(onChange).toHaveBeenCalledWith(["dn"]);
   });
   it("picks on click: single closes, multiple toggles and keeps the list open", () => {
     h.states.length = 0;
     const single = vi.fn();
     const tree = Combobox({ label: "City", options, value: null, onChange: single, defaultOpen: true });
-    findAll(tree, (e) => e.props.role === "option")[2].props.onClick();
+    findAll(tree, (e) => e.props.role === "option")[2]!.props.onClick();
     expect(single).toHaveBeenCalledWith("dn");
-    expect(h.states[0].set).toHaveBeenCalledWith(false);
+    expect(h.states[0]!.set).toHaveBeenCalledWith(false);
 
     h.states.length = 0;
     const multi = vi.fn();
     const tree2 = Combobox({ label: "Cities", multiple: true, options, value: ["hn"], onChange: multi, defaultOpen: true });
     const opts = findAll(tree2, (e) => e.props.role === "option");
-    opts[0].props.onClick();
+    opts[0]!.props.onClick();
     expect(multi).toHaveBeenLastCalledWith([]);
-    opts[2].props.onClick();
+    opts[2]!.props.onClick();
     expect(multi).toHaveBeenLastCalledWith(["hn", "dn"]);
-    opts[1].props.onClick();
+    opts[1]!.props.onClick();
     expect(multi).toHaveBeenCalledTimes(2);
-    expect(h.states[0].set).not.toHaveBeenCalledWith(false);
+    expect(h.states[0]!.set).not.toHaveBeenCalledWith(false);
   });
   it("Backspace on the empty box drops the last chip; Enter picks the active option", () => {
     const multi = vi.fn();
-    const input = findAll(Combobox({ label: "Cities", multiple: true, options, value: ["hn", "dn"], onChange: multi, defaultOpen: true }), (e) => e.props.role === "combobox")[0];
+    const input = findAll(Combobox({ label: "Cities", multiple: true, options, value: ["hn", "dn"], onChange: multi, defaultOpen: true }), (e) => e.props.role === "combobox")[0]!;
     const ev = (key: string) => ({ key, preventDefault: vi.fn(), stopPropagation: vi.fn() });
     const bs = ev("Backspace");
     input.props.onKeyDown(bs);

@@ -45,44 +45,44 @@ describe("MenuButton", () => {
   it("variant icon renders an IconButton named by label", () => {
     const tree = MenuButton({ label: "More actions", variant: "icon", items });
     const [btn] = findAll(tree, (e) => e.type === IconButton);
-    expect(btn.props.label).toBe("More actions");
-    expect(btn.props.icon).toBe("more");
+    expect(btn!.props.label).toBe("More actions");
+    expect(btn!.props.icon).toBe("more");
     expect(findAll(tree, (e) => e.type === Button)).toHaveLength(0);
   });
   it("ArrowDown and ArrowUp on the trigger open the menu; Enter, Space and click toggle through the native click", () => {
     const [btn] = findAll(MenuButton({ label: "A", items }), (e) => e.type === Button);
     for (const k of ["ArrowDown", "ArrowUp"]) {
       const e = key(k);
-      btn.props.onKeyDown(e);
+      btn!.props.onKeyDown(e);
       expect(e.preventDefault).toHaveBeenCalled();
     }
     const enter = key("Enter");
-    btn.props.onKeyDown(enter);
+    btn!.props.onKeyDown(enter);
     expect(enter.preventDefault).not.toHaveBeenCalled();
     expect(h.set).toHaveBeenCalledTimes(2);
     expect(h.set).toHaveBeenLastCalledWith(true);
-    btn.props.onClick();
+    btn!.props.onClick();
     expect(h.set).toHaveBeenLastCalledWith(true);
     h.open = true;
     const [openBtn] = findAll(MenuButton({ label: "A", items }), (e) => e.type === Button);
-    openBtn.props.onClick();
+    openBtn!.props.onClick();
     expect(h.set).toHaveBeenLastCalledWith(false);
   });
   it("a disabled trigger does not open", () => {
     const [btn] = findAll(MenuButton({ label: "A", items, disabled: true }), (e) => e.type === Button);
-    expect(btn.props.disabled).toBe(true);
+    expect(btn!.props.disabled).toBe(true);
   });
   it("Escape and Tab in the menu close it; Escape does not bubble to a dialog", () => {
     h.open = true;
     vi.stubGlobal("document", { activeElement: null });
     const [menu] = findAll(MenuButton({ label: "A", items }), (e) => e.type === Menu);
     const esc = key("Escape");
-    menu.props.onKeyDown(esc);
+    menu!.props.onKeyDown(esc);
     expect(esc.preventDefault).toHaveBeenCalled();
     expect(esc.stopPropagation).toHaveBeenCalled();
     expect(h.set).toHaveBeenLastCalledWith(false);
     const tab = key("Tab");
-    menu.props.onKeyDown(tab);
+    menu!.props.onKeyDown(tab);
     expect(tab.preventDefault).not.toHaveBeenCalled();
     expect(h.set).toHaveBeenCalledTimes(2);
     vi.unstubAllGlobals();
@@ -90,8 +90,8 @@ describe("MenuButton", () => {
   it("choosing an item or clicking outside closes the menu", () => {
     h.open = true;
     const tree = MenuButton({ label: "A", items });
-    findAll(tree, (e) => e.type === Menu)[0].props.onAction();
-    findAll(tree, (e) => e.props.className === "ws-menu-backdrop")[0].props.onClick();
+    findAll(tree, (e) => e.type === Menu)[0]!.props.onAction();
+    findAll(tree, (e) => e.props.className === "ws-menu-backdrop")[0]!.props.onClick();
     expect(h.set).toHaveBeenCalledTimes(2);
     expect(h.set).toHaveBeenLastCalledWith(false);
   });

@@ -47,7 +47,7 @@ describe("ImageCropper", () => {
 
   it("passes the frame label and fixed zoom range to react-easy-crop", () => {
     const tree = ImageCropper({ src: "blob:a", aspect: 1, onCancel: noop, onConfirm: noop });
-    const cropper = findAll(tree, (el) => el.type === Cropper)[0];
+    const cropper = findAll(tree, (el) => el.type === Cropper)[0]!;
     expect(cropper.props).toMatchObject({ image: "blob:a", aspect: 1, minZoom: 1, maxZoom: 3, cropperProps: { "aria-label": "Crop frame" } });
     cropper.props.onCropComplete({}, area);
     expect(setters[3]).toHaveBeenCalledWith(area);
@@ -65,13 +65,13 @@ describe("ImageCropper", () => {
 
   it("zoom slider, rotate and reset update the state", () => {
     const tree = ImageCropper({ src: "blob:a", aspect: 1, onCancel: noop, onConfirm: noop });
-    findAll(tree, (el) => el.type === "input")[0].props.onChange({ currentTarget: { value: "2.5" } });
+    findAll(tree, (el) => el.type === "input")[0]!.props.onChange({ currentTarget: { value: "2.5" } });
     expect(setters[1]).toHaveBeenCalledWith(2.5);
     const [rotate, reset] = findAll(tree, (el) => el.type === Button);
-    rotate.props.onClick();
-    const turn = setters[2].mock.calls[0][0] as (r: number) => number;
+    rotate!.props.onClick();
+    const turn = setters[2]!.mock.calls[0]![0] as (r: number) => number;
     expect([turn(0), turn(270)]).toEqual([90, 0]);
-    reset.props.onClick();
+    reset!.props.onClick();
     expect(setters[0]).toHaveBeenCalledWith({ x: 0, y: 0 });
     expect(setters[1]).toHaveBeenLastCalledWith(1);
     expect(setters[2]).toHaveBeenLastCalledWith(0);

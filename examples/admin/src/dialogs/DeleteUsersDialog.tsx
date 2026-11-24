@@ -18,7 +18,7 @@ export function DeleteUsersDialog({ users, busy, onConfirm, onCancel }: DeleteUs
     <Dialog
       alert
       modal
-      title={one ? t("deleteUsers.titleOne", { name: users[0].name }) : t("deleteUsers.titleMany", { count: users.length })}
+      title={one ? t("deleteUsers.titleOne", { name: users[0]?.name ?? "" }) : t("deleteUsers.titleMany", { count: users.length })}
       confirmLabel={one ? t("deleteUsers.confirmOne") : t("deleteUsers.confirmMany", { count: users.length })}
       cancelLabel={t("deleteUsers.cancel")}
       confirmDisabled={busy}

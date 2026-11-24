@@ -14,7 +14,7 @@ const manifest = JSON.parse(readFileSync(join(root, "generated/ai-manifest.json"
 const components = new Map(manifest.components.map((c) => [c.name, c]));
 // Secondary components (GridItem in Grid) live in their main component's entry; find them by their Props interface.
 for (const c of manifest.components) {
-  for (const m of c.types.matchAll(/export interface (\w+)Props\b/g)) if (!components.has(m[1])) components.set(m[1], c);
+  for (const m of c.types.matchAll(/export interface (\w+)Props\b/g)) if (!components.has(m[1]!)) components.set(m[1]!, c);
 }
 const tokenNames = new Set(manifest.tokens.map((t) => t.name));
 const iconNames = new Set(manifest.icons);
@@ -57,7 +57,7 @@ interface Chunk {
 const chunks: Chunk[] = [
   ...mdFiles.flatMap((file) => {
     const text = readFileSync(file, "utf8");
-    return [...text.matchAll(/```(\w*)\n([\s\S]*?)```/g)].map((m) => ({ file, lang: m[1], text: m[2] }));
+    return [...text.matchAll(/```(\w*)\n([\s\S]*?)```/g)].map((m) => ({ file, lang: m[1]!, text: m[2]! }));
   }),
   ...sourceFiles.map((file) => ({ file, lang: file.endsWith(".css") ? "css" : file.endsWith(".tsx") ? "tsx" : "ts", text: readFileSync(file, "utf8") })),
 ];
@@ -67,12 +67,12 @@ const where = (file: string): string => relative(root, file);
 /** Names a chunk defines or imports from somewhere other than the library, so they are not library components. */
 function localNames(text: string): Set<string> {
   const out = new Set<string>(REACT);
-  for (const m of text.matchAll(/\b(?:function|const|class|let|var)\s+([A-Z]\w*)/g)) out.add(m[1]);
+  for (const m of text.matchAll(/\b(?:function|const|class|let|var)\s+([A-Z]\w*)/g)) out.add(m[1]!);
   for (const m of text.matchAll(/import\s+(?:type\s+)?\{([^}]*)\}\s+from\s+["']([^"']+)["']/g)) {
     if (m[2] === "@xdev-asia/ui") continue;
-    for (const n of m[1].split(",")) out.add(n.replace(/^\s*type\s+/, "").replace(/\s+as\s+\w+/, "").trim());
+    for (const n of m[1]!.split(",")) out.add(n.replace(/^\s*type\s+/, "").replace(/\s+as\s+\w+/, "").trim());
   }
-  for (const m of text.matchAll(/import\s+([A-Z]\w*)\s+from/g)) out.add(m[1]);
+  for (const m of text.matchAll(/import\s+([A-Z]\w*)\s+from/g)) out.add(m[1]!);
   return out;
 }
 
@@ -96,7 +96,7 @@ function openingTags(text: string): { name: string; attrs: string[] }[] {
       else if (c === ">" && depth === 0 && text[i - 1] !== "=") break;
       else if (depth === 0) body += c;
     }
-    tags.push({ name: m[1], attrs: [...body.matchAll(/(?:^|\s)([A-Za-z][\w-]*)(?=\s*=|\s|\/|$)/g)].map((a) => a[1]) });
+    tags.push({ name: m[1]!, attrs: [...body.matchAll(/(?:^|\s)([A-Za-z][\w-]*)(?=\s*=|\s|\/|$)/g)].map((a) => a[1]!) });
   }
   return tags;
 }
@@ -137,7 +137,7 @@ describe("skills and example reference only names that exist", () => {
     const bad: string[] = [];
     for (const c of chunks.filter((x) => x.lang === "tsx" || x.lang === "ts")) {
       for (const m of c.text.matchAll(/import\s+(?:type\s+)?\{([^}]*)\}\s+from\s+["']@xdev-asia\/ui["']/g)) {
-        for (const raw of m[1].split(",")) {
+        for (const raw of m[1]!.split(",")) {
           const n = raw.replace(/^\s*type\s+/, "").replace(/\s+as\s+\w+/, "").trim();
           if (n && !runtimeExports.has(n) && !new RegExp(`\\b(?:interface|type|const)\\s+${n}\\b`).test(typeText) && !/^(IconName|ThemePreference|ResolvedTheme)$/.test(n))
             bad.push(`${where(c.file)}: ${n}`);
@@ -149,11 +149,11 @@ describe("skills and example reference only names that exist", () => {
 
   it("tokens exist", () => {
     const local = new Set<string>();
-    for (const c of chunks) for (const m of c.text.matchAll(/(--[a-z0-9-]+)\s*:/gi)) local.add(m[1].slice(2));
+    for (const c of chunks) for (const m of c.text.matchAll(/(--[a-z0-9-]+)\s*:/gi)) local.add(m[1]!.slice(2));
     const bad: string[] = [];
     const scan = (file: string, text: string): void => {
       for (const m of text.matchAll(/(?:var\(|`)--([a-z0-9]+(?:-[a-z0-9]+)*)(?![\w*-])/g)) {
-        if (!tokenNames.has(m[1]) && !local.has(m[1]) && !CLI_FLAGS.has(m[1])) bad.push(`${where(file)}: --${m[1]}`);
+        if (!tokenNames.has(m[1]!) && !local.has(m[1]!) && !CLI_FLAGS.has(m[1]!)) bad.push(`${where(file)}: --${m[1]}`);
       }
     };
     for (const c of chunks) scan(c.file, c.text);
@@ -164,7 +164,7 @@ describe("skills and example reference only names that exist", () => {
   it("CSS classes named in prose exist", () => {
     const bad: string[] = [];
     for (const p of prose) {
-      for (const m of p.text.matchAll(/`\.((?:x|ws)-[\w-]+|btn[\w-]*|dialog[\w-]*)`/g)) if (!classNames.has(m[1])) bad.push(`${where(p.file)}: .${m[1]}`);
+      for (const m of p.text.matchAll(/`\.((?:x|ws)-[\w-]+|btn[\w-]*|dialog[\w-]*)`/g)) if (!classNames.has(m[1]!)) bad.push(`${where(p.file)}: .${m[1]}`);
     }
     expect(bad).toEqual([]);
   });
@@ -173,8 +173,8 @@ describe("skills and example reference only names that exist", () => {
     const bad: string[] = [];
     const all = [...chunks.map((c) => ({ file: c.file, text: c.text })), ...prose];
     for (const { file, text } of all) {
-      for (const m of text.matchAll(/\bicon(?:=|:\s*)\{?\s*"([a-z0-9-]+)"/g)) if (!iconNames.has(m[1])) bad.push(`${where(file)}: ${m[1]}`);
-      for (const m of text.matchAll(/<Icon\s+name=\{?"([a-z0-9-]+)"/g)) if (!iconNames.has(m[1])) bad.push(`${where(file)}: ${m[1]}`);
+      for (const m of text.matchAll(/\bicon(?:=|:\s*)\{?\s*"([a-z0-9-]+)"/g)) if (!iconNames.has(m[1]!)) bad.push(`${where(file)}: ${m[1]}`);
+      for (const m of text.matchAll(/<Icon\s+name=\{?"([a-z0-9-]+)"/g)) if (!iconNames.has(m[1]!)) bad.push(`${where(file)}: ${m[1]}`);
     }
     expect(bad).toEqual([]);
   });

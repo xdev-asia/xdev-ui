@@ -29,8 +29,8 @@ describe("ReactionBar", () => {
     const seen: string[] = [];
     const tree = ReactionBar({ items: ITEMS, onToggle: (k) => seen.push(k) });
     const buttons = (tree.props.children as { props: { onClick: () => void } }[]).map((c) => c.props.onClick);
-    buttons[1]();
-    buttons[0]();
+    buttons[1]!();
+    buttons[0]!();
     expect(seen).toEqual(["HEART", "THUMBS_UP"]);
   });
 

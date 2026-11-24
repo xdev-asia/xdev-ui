@@ -10,8 +10,8 @@ describe("flowMapLayout", () => {
   it("places nothing for no node and a single node straight above the hub", () => {
     expect(flowMapLayout(0)).toEqual([]);
     const [one] = flowMapLayout(1);
-    expect(one.x).toBeCloseTo(0);
-    expect(one.y).toBeLessThan(0);
+    expect(one!.x).toBeCloseTo(0);
+    expect(one!.y).toBeLessThan(0);
   });
 
   it("never lets two nodes, or a node and the hub, overlap", () => {
@@ -29,7 +29,7 @@ describe("flowMapLayout", () => {
 describe("flowMapSides", () => {
   it("puts sources left of the hub and nodes right of it, clear of it and of each other", () => {
     const hub: Box = { x: 0, y: 0, ...FLOW_HUB };
-    for (const [l, r] of [[1, 1], [3, 7], [12, 2]]) {
+    for (const [l, r] of [[1, 1], [3, 7], [12, 2]] as const) {
       const { left, right } = flowMapSides(l, r);
       expect(left).toHaveLength(l);
       expect(right).toHaveLength(r);
@@ -44,8 +44,8 @@ describe("flowMapSides", () => {
 
   it("centres each column on the hub", () => {
     const { left, right } = flowMapSides(1, 2);
-    expect(left[0].y).toBeCloseTo(0);
-    expect(right[0].y + right[1].y).toBeCloseTo(0);
+    expect(left[0]!.y).toBeCloseTo(0);
+    expect(right[0]!.y + right[1]!.y).toBeCloseTo(0);
   });
 });
 

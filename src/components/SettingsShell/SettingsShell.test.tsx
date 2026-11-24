@@ -10,10 +10,10 @@ const base = { groups, value: "appearance", onChange() {}, onQuery() {} };
 
 describe("matchesSetting / filterSettingsGroups", () => {
   it("matches label and keywords, ignoring case and diacritics", () => {
-    expect(matchesSetting(groups[0].items[0], "DARK")).toBe(true);
-    expect(matchesSetting(groups[0].items[1], "ngon ngu")).toBe(true);
-    expect(matchesSetting(groups[0].items[0], "font")).toBe(false);
-    expect(matchesSetting(groups[0].items[0], "  ")).toBe(true);
+    expect(matchesSetting(groups[0]!.items[0]!, "DARK")).toBe(true);
+    expect(matchesSetting(groups[0]!.items[1]!, "ngon ngu")).toBe(true);
+    expect(matchesSetting(groups[0]!.items[0]!, "font")).toBe(false);
+    expect(matchesSetting(groups[0]!.items[0]!, "  ")).toBe(true);
   });
   it("drops items and then empty groups", () => {
     expect(filterSettingsGroups(groups, "font").map((g) => g.id)).toEqual(["t"]);

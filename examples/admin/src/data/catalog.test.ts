@@ -46,14 +46,14 @@ describe("seed data", () => {
     for (const [p, n] of [["week", 7], ["month", 30], ["year", 12]] as const) {
       const s = visitSeries(p);
       expect(s).toHaveLength(n);
-      expect(s.every((x, i) => i === 0 || x.at > s[i - 1].at)).toBe(true);
+      expect(s.every((x, i) => i === 0 || x.at > s[i - 1]!.at)).toBe(true);
     }
   });
   it("sorts category share largest first and sums to 100", () => {
     for (const c of ["all", "online", "store"] as const) {
       const s = categoryShare(c);
       expect(s.reduce((n, x) => n + x.value, 0)).toBe(100);
-      expect(s.every((x, i) => i === 0 || x.value <= s[i - 1].value)).toBe(true);
+      expect(s.every((x, i) => i === 0 || x.value <= s[i - 1]!.value)).toBe(true);
     }
   });
 });

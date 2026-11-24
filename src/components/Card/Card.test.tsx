@@ -34,6 +34,25 @@ describe("Card", () => {
     expect(renderToStaticMarkup(<Card title="Models" />)).not.toContain("x-card-title-row");
   });
 
+  it("spreads HTML attributes onto the section and bodyClassName onto the body", () => {
+    const onClick = () => {};
+    const html = renderToStaticMarkup(
+      <Card id="usage" role="region" aria-describedby="usage-hint" data-testid="usage-card" onClick={onClick} bodyClassName="grid gap-2" className="wide">
+        body
+      </Card>,
+    );
+    expect(html).toContain('<section id="usage" role="region" aria-describedby="usage-hint" data-testid="usage-card" class="x-card wide">');
+    expect(html).toContain('<div class="x-card-body grid gap-2">body</div>');
+  });
+  it("names the section by its title over a passed aria-labelledby; keeps the passed one without a title", () => {
+    expect(renderToStaticMarkup(<Card title="Users" aria-labelledby="other" />)).toContain('aria-labelledby="x-card-:c1:"');
+    expect(renderToStaticMarkup(<Card aria-labelledby="other" />)).toContain('aria-labelledby="other"');
+  });
+  it("renders no head without a title, subtitle or actions", () => {
+    const html = renderToStaticMarkup(<Card bodyClassName="b">x</Card>);
+    expect(html).toBe('<section class="x-card"><div class="x-card-body b">x</div></section>');
+  });
+
   it("wraps a long subtitle instead of ending it in an ellipsis", () => {
     const css = readFileSync(new URL("../../styles/display.css", import.meta.url), "utf8");
     const rule = css.match(/\.x-card-sub \{([^}]*)\}/)?.[1] ?? "";

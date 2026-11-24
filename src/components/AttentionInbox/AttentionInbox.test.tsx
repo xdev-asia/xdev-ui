@@ -23,7 +23,7 @@ describe("AttentionInbox", () => {
   });
   it("hides the badge at 0 and caps at 99+", () => {
     expect(renderToStaticMarkup(<AttentionInbox items={[]} onOpen={() => {}} />)).not.toContain("x-attention-count");
-    const many = Array.from({ length: 120 }, (_, i): AttentionItem => ({ ...items[0], id: String(i) }));
+    const many = Array.from({ length: 120 }, (_, i): AttentionItem => ({ ...items[0]!, id: String(i) }));
     expect(renderToStaticMarkup(<AttentionInbox items={many} onOpen={() => {}} />)).toContain("99+");
   });
   it("lists the oldest wait first with kind text and wait time", () => {
@@ -56,11 +56,11 @@ describe("AttentionInbox", () => {
     const onOpen = vi.fn();
     const rows = findAll(AttentionInbox({ items, onOpen, now: NOW, open: true }), (e) => e.props["aria-label"] === "Open feat/a");
     expect(rows).toHaveLength(1);
-    rows[0].props.onClick();
+    rows[0]!.props.onClick();
     expect(onOpen).toHaveBeenCalledWith("old");
   });
   it("sortByWait puts unparsable times last", () => {
-    const sorted = sortByWait([{ ...items[0], id: "x", since: "nope" }, ...items]);
+    const sorted = sortByWait([{ ...items[0]!, id: "x", since: "nope" }, ...items]);
     expect(sorted.map((i) => i.id)).toEqual(["old", "bad", "new", "x"]);
   });
 });

@@ -54,8 +54,8 @@ describe("Menu", () => {
   it("does not wire disabled items", () => {
     const onSelect = vi.fn();
     const btns = findAll(Menu({ items: [{ label: "A", onSelect }, { label: "B", onSelect, disabled: true }] }), (e) => e.type === "button");
-    btns[0].props.onClick({ currentTarget: { closest: () => null } });
-    expect(btns[1].props.onClick).toBeUndefined();
+    btns[0]!.props.onClick({ currentTarget: { closest: () => null } });
+    expect(btns[1]!.props.onClick).toBeUndefined();
     expect(onSelect).toHaveBeenCalledOnce();
   });
   it("maps trigger keys to the item the menu opens on", () => {
@@ -129,9 +129,9 @@ describe("Menu", () => {
     const html = renderToStaticMarkup(<Menu roving items={[{ label: "A" }, { label: "B", href: "/b" }]} />);
     expect(html.match(/tabindex="-1"/g)).toHaveLength(2);
     const [btn] = findAll(Menu({ items: [{ label: "A", onSelect }, { label: "B", href: "/b", onSelect }], onAction }), (e) => e.type === "button");
-    btn.props.onClick();
+    btn!.props.onClick();
     const [link] = findAll(Menu({ items: [{ label: "B", href: "/b", onSelect }], onAction }), (e) => e.type === "a");
-    link.props.onClick();
+    link!.props.onClick();
     expect(onSelect).toHaveBeenCalledTimes(2);
     expect(onAction).toHaveBeenCalledTimes(2);
   });

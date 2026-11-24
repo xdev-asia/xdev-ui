@@ -39,7 +39,7 @@ describe("Dashboard", () => {
   }
   it("names the recent events and their actors", () => {
     const html = render("en", { status: "ready", data });
-    expect(html).toContain(data.recent[0].actor);
+    expect(html).toContain(data.recent[0]!.actor);
   });
   it("uses a good tone for growth and a bad tone for failed sign-ins", () => {
     const html = render("en", { status: "ready", data });
@@ -56,6 +56,6 @@ describe("trend", () => {
     expect(month.points).toHaveLength(30);
     expect(month.ticks.length).toBeLessThanOrEqual(7);
     expect(trend("year", "vi", unit).ticks).toHaveLength(6);
-    expect(month.points[0].label).toMatch(/visits$/);
+    expect(month.points[0]!.label).toMatch(/visits$/);
   });
 });

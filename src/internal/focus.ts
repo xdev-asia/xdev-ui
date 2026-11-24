@@ -26,9 +26,9 @@ export function trapTarget<T>(items: readonly T[], active: unknown, shift: boole
   const first = items[0];
   const last = items[items.length - 1];
   const idx = items.indexOf(active as T);
-  if (idx === -1) return shift ? last : first; // focus is on the container or outside
-  if (shift && active === first) return last;
-  if (!shift && active === last) return first;
+  if (idx === -1) return (shift ? last : first) ?? null; // focus is on the container or outside
+  if (shift && active === first) return last ?? null;
+  if (!shift && active === last) return first ?? null;
   return null;
 }
 

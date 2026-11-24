@@ -54,19 +54,19 @@ const decode = (s: string): string | null => {
 
 /** Pure: turns a path such as "/users/u12?tab=activity" into a route. */
 export function matchRoute(input: string): Route {
-  const path = ("/" + input.replace(/^#/, "").split("?")[0].replace(/^\/+|\/+$/g, "")).replace(/\/$/, "") || "/";
+  const path = ("/" + input.replace(/^#/, "").split("?")[0]!.replace(/^\/+|\/+$/g, "")).replace(/\/$/, "") || "/";
   const name = STATIC[path];
   if (name) return { name, params: {}, path };
-  const user = /^\/users\/([^/]+)$/.exec(path);
-  const userId = user ? decode(user[1]) : null;
+  const user = /^\/users\/([^/]+)$/.exec(path)?.[1];
+  const userId = user !== undefined ? decode(user) : null;
   if (userId !== null) return { name: "user", params: { id: userId }, path };
-  const section = /^\/settings\/([^/]+)$/.exec(path);
-  const sectionId = section ? decode(section[1]) : null;
+  const section = /^\/settings\/([^/]+)$/.exec(path)?.[1];
+  const sectionId = section !== undefined ? decode(section) : null;
   if (sectionId !== null) return { name: "settings", params: { section: sectionId }, path };
-  const exception = /^\/exception\/(\d{3})$/.exec(path);
-  if (exception && (EXCEPTIONS as readonly string[]).includes(exception[1])) return { name: "exception", params: { code: exception[1] }, path };
-  const nested = /^\/nested\/([\w-]+)$/.exec(path);
-  if (nested && (NESTED as readonly string[]).includes(nested[1])) return { name: "nested", params: { leaf: nested[1] }, path };
+  const code = /^\/exception\/(\d{3})$/.exec(path)?.[1];
+  if (code !== undefined && (EXCEPTIONS as readonly string[]).includes(code)) return { name: "exception", params: { code }, path };
+  const leaf = /^\/nested\/([\w-]+)$/.exec(path)?.[1];
+  if (leaf !== undefined && (NESTED as readonly string[]).includes(leaf)) return { name: "nested", params: { leaf }, path };
   return { name: "not-found", params: {}, path };
 }
 

@@ -128,42 +128,42 @@ describe("DatePicker behaviour", () => {
 
   it("commits typed text on blur and Enter", () => {
     const { input, setDraft, setBad } = tree();
-    input.props.onChange({ target: { value: "7/11/2026" } });
+    input!.props.onChange({ target: { value: "7/11/2026" } });
     expect(setDraft).toHaveBeenCalledWith("7/11/2026");
     expect(setBad).toHaveBeenCalledWith(false);
   });
   it("picks a day from the calendar and closes", () => {
     const { cal, onChange, setOpen } = tree();
-    cal.props.onPick("2026-11-20");
+    cal!.props.onPick("2026-11-20");
     expect(onChange).toHaveBeenCalledWith("2026-11-20");
     expect(setOpen).toHaveBeenCalledWith(false);
   });
   it("Today picks today, Clear clears", () => {
     const { buttons, onChange } = tree();
-    buttons[1].props.onClick();
+    buttons[1]!.props.onClick();
     expect(onChange).toHaveBeenLastCalledWith("2026-11-06");
-    buttons[0].props.onClick();
+    buttons[0]!.props.onClick();
     expect(onChange).toHaveBeenLastCalledWith(null);
   });
   it("opens on the calendar button, focused on the value, and moves focus into the grid", () => {
     const { popover, setOpen, setFocused } = tree({ value: "2026-11-20" });
-    const trigger = popover.props.trigger({ "aria-expanded": false, "aria-controls": "p", "aria-haspopup": "dialog" });
+    const trigger = popover!.props.trigger({ "aria-expanded": false, "aria-controls": "p", "aria-haspopup": "dialog" });
     expect(trigger.type).toBe(IconButton);
     trigger.props.onClick();
     expect(setFocused).toHaveBeenCalledWith("2026-11-20");
     expect(setOpen).toHaveBeenCalledWith(true);
-    const moveFocus = h.refs[1];
+    const moveFocus = h.refs[1]!;
     expect(moveFocus.current).toBe(true);
   });
   it("Escape closes through Popover's onClose", () => {
     const { popover, setOpen } = tree();
-    popover.props.onClose();
+    popover!.props.onClose();
     expect(setOpen).toHaveBeenCalledWith(false);
   });
   it("Alt+ArrowDown in the box opens the calendar", () => {
     const { input, setOpen } = tree();
     const e = { key: "ArrowDown", altKey: true, preventDefault: vi.fn() };
-    input.props.onKeyDown(e);
+    input!.props.onKeyDown(e);
     expect(e.preventDefault).toHaveBeenCalled();
     expect(setOpen).toHaveBeenCalledWith(true);
   });
@@ -172,13 +172,13 @@ describe("DatePicker behaviour", () => {
     DatePicker({ ...base, value: "2026-11-06", defaultOpen: true });
     const [gridRef, moveFocus] = h.refs;
     const day = { focus: vi.fn() };
-    gridRef.current = { querySelector: (s: string) => (s === '[tabindex="0"]' ? day : null) };
-    h.effects[0]();
+    gridRef!.current = { querySelector: (s: string) => (s === '[tabindex="0"]' ? day : null) };
+    h.effects[0]!();
     expect(day.focus).not.toHaveBeenCalled(); // a page that loads with it open does not scroll to it
-    moveFocus.current = true; // what opening it from the field sets
-    h.effects[0]();
+    moveFocus!.current = true; // what opening it from the field sets
+    h.effects[0]!();
     expect(day.focus).toHaveBeenCalledOnce();
-    h.effects[0]();
+    h.effects[0]!();
     expect(day.focus).toHaveBeenCalledOnce(); // only once per request
   });
 });
@@ -189,7 +189,7 @@ describe("DatePicker typing", () => {
     reset([false, "2026-11-06", draft, false]);
     const onChange = vi.fn();
     const t = DatePicker({ ...base, value: "2026-11-06", onChange, ...props });
-    const input = findAll(t, (e) => e.type === "input" && e.props.type === "text")[0];
+    const input = findAll(t, (e) => e.type === "input" && e.props.type === "text")[0]!;
     return { input, onChange, setFocused: h.sets[1], setDraft: h.sets[2], setBad: h.sets[3] };
   };
   it("shows the draft while typing", () => {
@@ -198,30 +198,30 @@ describe("DatePicker typing", () => {
   });
   it("commits a valid date on blur", () => {
     const { input, onChange, setDraft, setFocused } = typed("7.11.2026");
-    input.props.onBlur();
+    input!.props.onBlur();
     expect(onChange).toHaveBeenCalledWith("2026-11-07");
     expect(setDraft).toHaveBeenCalledWith(null);
     expect(setFocused).toHaveBeenCalledWith("2026-11-07");
   });
   it("commits on Enter", () => {
     const { input, onChange } = typed("1-12-2026");
-    input.props.onKeyDown({ key: "Enter" });
+    input!.props.onKeyDown({ key: "Enter" });
     expect(onChange).toHaveBeenCalledWith("2026-12-01");
   });
   it("does nothing without a draft", () => {
     const { input, onChange, setBad } = typed(null);
-    input.props.onBlur();
+    input!.props.onBlur();
     expect(onChange).not.toHaveBeenCalled();
     expect(setBad).not.toHaveBeenCalled();
   });
   it("clears the value when the box is emptied", () => {
     const { input, onChange } = typed("  ");
-    input.props.onBlur();
+    input!.props.onBlur();
     expect(onChange).toHaveBeenCalledWith(null);
   });
   it("flags an impossible date and keeps the value", () => {
     const { input, onChange, setBad } = typed("31/02/2026");
-    input.props.onBlur();
+    input!.props.onBlur();
     expect(onChange).not.toHaveBeenCalled();
     expect(setBad).toHaveBeenCalledWith(true);
   });
@@ -266,7 +266,7 @@ describe("Calendar", () => {
     const [months] = findAll(tree, (e) => e.props.className === "x-calendar-months");
     const key = (k: string, shiftKey = false) => {
       const e = { key: k, shiftKey, preventDefault: vi.fn() };
-      months.props.onKeyDown(e);
+      months!.props.onKeyDown(e);
       return e;
     };
     expect(key("ArrowDown").preventDefault).toHaveBeenCalled();
@@ -282,8 +282,8 @@ describe("Calendar", () => {
   it("month buttons step by one", () => {
     const onMonthStep = vi.fn();
     const [prev, next] = findAll(Calendar({ ...props, onMonthStep }), (e) => e.type === IconButton);
-    prev.props.onClick();
-    next.props.onClick();
+    prev!.props.onClick();
+    next!.props.onClick();
     expect(onMonthStep.mock.calls).toEqual([[-1], [1]]);
   });
   it("clicking an enabled day picks it; a disabled one has no handler", () => {

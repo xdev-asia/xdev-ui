@@ -41,8 +41,8 @@ describe("Menus", () => {
     expect(render(<MenusView tree={tree} canEdit onSave={() => {}} />)).toContain("Edit Dashboard");
   });
   it("needs a name", () => {
-    expect(validateMenu({ ...tree[0].data, name: " " })).toEqual({ name: "menus.nameRequired" });
-    expect(validateMenu(tree[0].data)).toEqual({});
+    expect(validateMenu({ ...tree[0]!.data, name: " " })).toEqual({ name: "menus.nameRequired" });
+    expect(validateMenu(tree[0]!.data)).toEqual({});
   });
 });
 

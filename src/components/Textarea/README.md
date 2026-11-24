@@ -6,6 +6,8 @@ Labelled multi-line text input with an optional hint or error, for prompts, note
 `div.ws-field` > `label[for]`, `textarea.kit-textarea` (`.ws-mono` when `mono`), `small` (hint or error). Same wrapper and states as `Field`.
 
 ## Rules
+- `error` replaces the hint, marks the textarea invalid and is announced when it appears (`role="alert"`).
+- `required` draws an asterisk after the label (`aria-hidden`; the textarea's own `required` is what assistive tech reads). `hideLabel` keeps the label for screen readers only, when the surrounding UI already names the box.
 - Label above, sentence case, no trailing colon. Placeholder shows an example, never the label.
 - `mono` for anything that is code or machine-read: commands, JSON, `KEY=value` lines, paths.
 - `resize="vertical"` by default; `"none"` only inside fixed layouts such as a dialog.

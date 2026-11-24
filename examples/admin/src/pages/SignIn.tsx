@@ -100,6 +100,7 @@ export function SignInPage({ onSignedIn, theme, onThemeChange, initial }: SignIn
                   type="password"
                   name="password"
                   autoComplete="current-password"
+                  labels={ui.field}
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value);

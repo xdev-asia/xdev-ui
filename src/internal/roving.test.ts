@@ -38,13 +38,13 @@ describe("roving tabindex", () => {
       return preventDefault;
     };
     expect(press("ArrowRight", 2)).toHaveBeenCalled();
-    expect(items[0].focus).toHaveBeenCalledOnce();
+    expect(items[0]!.focus).toHaveBeenCalledOnce();
     press("ArrowLeft", 0);
-    expect(items[2].focus).toHaveBeenCalledOnce();
+    expect(items[2]!.focus).toHaveBeenCalledOnce();
     press("End", 0);
-    expect(items[2].focus).toHaveBeenCalledTimes(2);
+    expect(items[2]!.focus).toHaveBeenCalledTimes(2);
     press("Home", 2);
-    expect(items[0].focus).toHaveBeenCalledTimes(2);
+    expect(items[0]!.focus).toHaveBeenCalledTimes(2);
     expect(press("x", 1)).not.toHaveBeenCalled();
   });
 });

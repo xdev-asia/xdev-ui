@@ -66,6 +66,9 @@ a.x-menu-item { text-decoration: none; }
 }
 .dialog[data-size="wide"] { max-width: min(96vw, 1100px); }
 .dialog-title { margin: 0 0 var(--x-space-2); font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+.dialog-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--x-space-3); }
+.dialog-head-text { min-width: 0; }
+.dialog-head > .ws-icon-btn { flex: none; margin: -6px -6px 0 0; }
 .dialog-desc { margin: 0 0 var(--x-space-4); color: var(--x-color-muted); line-height: 1.5; }
 .dialog-body { margin: 0 0 var(--x-space-6); color: var(--x-color-muted); line-height: 1.6; }
 .dialog-actions { display: flex; justify-content: flex-end; gap: var(--x-space-2); }

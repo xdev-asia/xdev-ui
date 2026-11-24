@@ -146,7 +146,7 @@ export function comboboxKey(s: ComboboxKeyState, key: string): ComboboxKeyResult
       return s.open ? { ...none, handled: true, active: move(key, at) } : none;
     case "Enter": {
       if (!s.open || at < 0) return none;
-      return { ...none, handled: true, pick: s.rows[at].id };
+      return { ...none, handled: true, pick: idAt(at) };
     }
     case "Escape":
       if (s.open) return { ...none, handled: true, stop: true, open: false };

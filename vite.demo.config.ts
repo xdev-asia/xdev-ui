@@ -12,7 +12,8 @@ function storyTitles(): Record<string, string> {
     const file = resolve(dir, name, `${name}.stories.tsx`);
     if (!existsSync(file)) continue;
     const m = /title:\s*"([^"]+)"/.exec(readFileSync(file, "utf8"));
-    if (m) out[name] = m[1];
+    const title = m?.[1];
+    if (title !== undefined) out[name] = title;
   }
   return out;
 }
