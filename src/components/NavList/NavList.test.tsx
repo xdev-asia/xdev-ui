@@ -76,4 +76,26 @@ describe("NavList", () => {
     expect(html).toContain('<span class="x-sr-only">2 failing</span>');
     expect(renderToStaticMarkup(<NavList items={items} />)).not.toContain("settings-nav-tone");
   });
+  it("nests branches as details, opens the one that holds the current item and shares a name in an accordion", () => {
+    const tree = [
+      { id: "home", label: "Home", icon: "home" as const, href: "#/" },
+      {
+        id: "nested",
+        label: "Nested",
+        icon: "list" as const,
+        children: [
+          { id: "m1", label: "Menu 1", icon: "file" as const, children: [{ id: "m11", label: "Menu 1-1", icon: "file" as const, href: "#/m11" }] },
+          { id: "m2", label: "Menu 2", icon: "file" as const, href: "#/m2" },
+        ],
+      },
+      { id: "sys", label: "System", icon: "settings" as const, children: [{ id: "u", label: "Users", icon: "accounts" as const, href: "#/u" }] },
+    ];
+    const html = renderToStaticMarkup(<NavList items={tree} value="m11" accordion />);
+    expect(html.match(/<details/g)).toHaveLength(3);
+    expect(html).toMatch(/<details class="settings-nav-branch" name="nav-root" open="">/);
+    expect(html).toContain('name="nav-nested" open=""');
+    expect(html).toMatch(/<details class="settings-nav-branch" name="nav-root"><summary/);
+    expect(html).toContain('aria-current="page" style="--nav-depth:2"');
+    expect(renderToStaticMarkup(<NavList items={tree} value="home" />)).not.toContain("name=");
+  });
 });

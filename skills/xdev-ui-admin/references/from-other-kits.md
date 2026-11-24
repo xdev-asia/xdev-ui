@@ -20,8 +20,8 @@ How to rebuild an admin template made with Ant Design, Ant Design Pro, MUI or sh
 | Ant Design or Pro | `@xdev-asia/ui` |
 |---|---|
 | `ProLayout`, `Layout` with `Sider` and `Header` | `AppShell` (`nav`, `crumbs`, `actions`) |
-| `Menu` in the sider, sub-menus | `NavList` per group; secondary groups `collapsible` |
-| sider collapse trigger (`MenuFold`, collapsed width) | `AppShell` `navCollapsed` + `onNavCollapsedChange` (a rail of icons) |
+| `Menu` in the sider, sub-menus (accordion) | one `NavList` with `children` (up to three levels) and `accordion`; the branch with the current page opens |
+| sider collapse trigger (`MenuFold`, collapsed width) | `AppShell` `navCollapsed` (a rail of icons); the fold button in `navFooter`, as at the foot of the sider, or `onNavCollapsedChange` for one in the top bar |
 | `Breadcrumb` | `Breadcrumb` in `crumbs` |
 | multi-tab bar (keep-alive tabs), tab right-click menu, refresh | `TabStrip` with `onAdd={false}`, home `pinned`, a `MenuButton` of close actions, a reload `IconButton` |
 | tab "maximize" (content full screen) | `AppShell` `chromeHidden` |
@@ -61,7 +61,9 @@ How to rebuild an admin template made with Ant Design, Ant Design Pro, MUI or sh
 | `Avatar` | `Avatar` for people; `Emblem` for things |
 | `Card` | `Card` (no shadow; `flush` for edge-to-edge content) |
 | `Tree` with checkboxes, `TreeSelect`, `Transfer` | gap: a `Checkbox` matrix for permissions today; propose the part for the library |
-| sign-in with password, code, register, forgot | one card, a `Segmented` for password or code, `CodeInput` for the code, links to reset and register (sign-in reference) |
+| split login page (art left, form right), password, code, register, forgot | `AuthShell` (headline, tagline, language and theme in `actions`, copyright and legal links in `footer`), a `Segmented` for password or code, `CodeInput`, links to reset and register (sign-in reference) |
+| access demo (page control, button control, role-only pages) | real account switch, the nav model filtered by role, `can()` for buttons, `EmptyState` for the role-only pages |
+| privacy policy, terms of service (public routes) | `Prose` in a `Container`, open before sign-in |
 
 ## What not to carry over
 

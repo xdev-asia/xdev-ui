@@ -64,6 +64,10 @@
   .x-shell[data-nav-collapsed]:not([data-drawer="lg"]) .settings-nav { padding-inline: var(--x-space-2); }
   .x-shell[data-nav-collapsed]:not([data-drawer="lg"]) .settings-nav-item { justify-content: center; padding: 0; min-height: var(--x-space-8); }
   .x-shell[data-nav-collapsed]:not([data-drawer="lg"]) .settings-nav-icon { margin: 0; }
+  .x-shell[data-nav-collapsed]:not([data-drawer="lg"]) .settings-nav-chevron { display: none; }
+  /* A rail shows the top level only, plus the branch that holds the current page. */
+  .x-shell[data-nav-collapsed]:not([data-drawer="lg"]) .settings-nav-branch:not(:has(> summary[data-current])) > .settings-nav-sub { display: none; }
+  .x-shell[data-nav-collapsed]:not([data-drawer="lg"]) .settings-nav-item { padding-inline-start: 0; }
   .x-shell[data-nav-collapsed]:not([data-drawer="lg"]) .settings-nav-tone { position: absolute; transform: translate(var(--x-space-2), calc(-1 * var(--x-space-2))); }
   .x-shell[data-nav-collapsed]:not([data-drawer="lg"]) .settings-nav-item { position: relative; }
   .x-shell[data-nav-collapsed]:not([data-drawer="lg"]) .settings-nav + .settings-nav { margin-top: var(--x-space-2); padding-top: var(--x-space-2); border-top: 1px solid var(--line); }
@@ -84,6 +88,10 @@
   .x-shell[data-nav-collapsed][data-drawer="lg"] .settings-nav { padding-inline: var(--x-space-2); }
   .x-shell[data-nav-collapsed][data-drawer="lg"] .settings-nav-item { justify-content: center; padding: 0; min-height: var(--x-space-8); }
   .x-shell[data-nav-collapsed][data-drawer="lg"] .settings-nav-icon { margin: 0; }
+  .x-shell[data-nav-collapsed][data-drawer="lg"] .settings-nav-chevron { display: none; }
+  /* A rail shows the top level only, plus the branch that holds the current page. */
+  .x-shell[data-nav-collapsed][data-drawer="lg"] .settings-nav-branch:not(:has(> summary[data-current])) > .settings-nav-sub { display: none; }
+  .x-shell[data-nav-collapsed][data-drawer="lg"] .settings-nav-item { padding-inline-start: 0; }
   .x-shell[data-nav-collapsed][data-drawer="lg"] .settings-nav-tone { position: absolute; transform: translate(var(--x-space-2), calc(-1 * var(--x-space-2))); }
   .x-shell[data-nav-collapsed][data-drawer="lg"] .settings-nav-item { position: relative; }
   .x-shell[data-nav-collapsed][data-drawer="lg"] .settings-nav + .settings-nav { margin-top: var(--x-space-2); padding-top: var(--x-space-2); border-top: 1px solid var(--line); }

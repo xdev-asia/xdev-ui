@@ -238,6 +238,17 @@
 .settings-nav-item:has(.settings-nav-icon) { justify-content: flex-start; }
 .settings-nav-item:has(.settings-nav-icon) .settings-nav-label { flex: 1; }
 .settings-nav-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Branches (items with children): a native details. Depth indents by one space step per level. */
+.settings-nav-item { padding-inline-start: calc(var(--x-space-2) + var(--nav-depth, 0) * var(--x-space-4)); }
+.settings-nav-depth { display: contents; }
+.settings-nav-branch { display: flex; flex-direction: column; gap: 2px; }
+.settings-nav-branch > summary { list-style: none; cursor: pointer; }
+.settings-nav-branch > summary::-webkit-details-marker { display: none; }
+.settings-nav-branch > summary .settings-nav-label { flex: 1; }
+.settings-nav-branch > summary[data-current] { color: var(--text-1); }
+.settings-nav-chevron { flex: none; margin-inline-start: auto; color: var(--text-3); transform: rotate(-90deg); }
+.settings-nav-branch[open] > summary .settings-nav-chevron { transform: none; }
+.settings-nav-sub { display: flex; flex-direction: column; gap: 2px; }
 .settings-nav-tone { display: inline-flex; flex: none; line-height: 0; }
 .settings-nav-count {
   min-width: 18px;
