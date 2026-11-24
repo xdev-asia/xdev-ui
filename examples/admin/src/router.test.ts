@@ -25,6 +25,13 @@ describe("matchRoute", () => {
     expect(matchRoute("#/nope").name).toBe("not-found");
     expect(matchRoute("#/users/a/b").name).toBe("not-found");
   });
+  it("matches the showcase pages, status pages and nested demo leaves", () => {
+    for (const n of ["permissions", "menus", "departments", "profile", "about", "docs"]) expect(matchRoute(`#/${n}`).name).toBe(n);
+    expect(matchRoute(hrefFor.exception("403"))).toMatchObject({ name: "exception", params: { code: "403" } });
+    expect(matchRoute("#/exception/418").name).toBe("not-found");
+    expect(matchRoute(hrefFor.nested("menu1-2"))).toMatchObject({ name: "nested", params: { leaf: "menu1-2" } });
+    expect(matchRoute("#/nested/menu9").name).toBe("not-found");
+  });
   it("builds hrefs that match back", () => {
     expect(matchRoute(hrefFor.user("u 1")).params.id).toBe("u 1");
     expect(matchRoute(hrefFor.settings("general")).name).toBe("settings");

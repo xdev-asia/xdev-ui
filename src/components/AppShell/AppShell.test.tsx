@@ -51,6 +51,20 @@ describe("AppShell", () => {
     findAll(tree, (e) => e.props.className === "x-shell-backdrop")[0].props.onClick();
     expect(onNavOpenChange).toHaveBeenCalledTimes(2);
   });
+  it("folds the sidebar into a rail with a top-bar button only when the app owns the state", () => {
+    expect(renderToStaticMarkup(<AppShell {...base} />)).not.toContain("x-shell-collapse");
+    const onNavCollapsedChange = vi.fn();
+    const html = renderToStaticMarkup(<AppShell {...base} navCollapsed onNavCollapsedChange={onNavCollapsedChange} labels={{ expandNav: "Mở rộng" }} />);
+    expect(html).toContain("data-nav-collapsed");
+    expect(html).toMatch(/class="[^"]*x-shell-collapse[^"]*"[^>]*aria-expanded="false"|aria-expanded="false"[^>]*x-shell-collapse/);
+    expect(html).toContain('aria-label="Mở rộng"');
+    const btn = findAll(AppShell({ ...base, navCollapsed: true, onNavCollapsedChange }), (e) => typeof e.props?.className === "string" && e.props.className.includes("x-shell-collapse"))[0];
+    btn.props.onClick();
+    expect(onNavCollapsedChange).toHaveBeenCalledWith(false);
+  });
+  it("chromeHidden marks the shell so the page fills the window", () => {
+    expect(renderToStaticMarkup(<AppShell {...base} chromeHidden />)).toContain("data-chrome-hidden");
+  });
   it("bottomNav renders under main inside the page column, and only when given", () => {
     const html = renderToStaticMarkup(<AppShell {...base} bottomNav={<nav aria-label="Tabs">tabs</nav>} />);
     expect(html).toContain('data-bottom-nav=""');

@@ -1,4 +1,5 @@
 import type { JSX } from "react";
+import { Icon } from "../Icon/Icon";
 import { IconButton } from "../IconButton/IconButton";
 import { Segmented } from "../Segmented/Segmented";
 import { THEME_PREFERENCES, type ResolvedTheme, type ThemePreference } from "../../theme/theme";
@@ -30,8 +31,10 @@ export interface ThemeSwitchProps {
   /**
    * "segmented" (default): System, Dark, Light.
    * "icon": one round button for a top bar that flips dark and light; offer System elsewhere (a menu).
+   * "icons": System, Dark and Light as three icon segments (monitor, moon, sun), each named and titled, for a
+   * settings row or a sign-in footer where words would crowd the control.
    */
-  variant?: "segmented" | "icon";
+  variant?: "segmented" | "icon" | "icons";
   /** The theme on screen. The icon variant needs it while `value` is "system". Default: `value`, or "dark". */
   resolved?: ResolvedTheme;
   /** Override the English defaults (e.g. for vi). */
@@ -52,6 +55,18 @@ export function ThemeSwitch({ value, onChange, variant = "segmented", resolved, 
         disabled={disabled}
         onClick={() => onChange(next)}
       />
+    );
+  }
+  if (variant === "icons") {
+    const ICON = { system: "monitor", dark: "moon", light: "sun" } as const;
+    return (
+      <div className="segmented x-theme-icons" role="group" aria-label={l.group}>
+        {THEME_PREFERENCES.map((p) => (
+          <button key={p} type="button" aria-pressed={p === value} aria-label={l[p]} title={l[p]} disabled={disabled} onClick={() => onChange(p)}>
+            <Icon name={ICON[p]} size={16} />
+          </button>
+        ))}
+      </div>
     );
   }
   return (

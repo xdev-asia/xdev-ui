@@ -8,8 +8,11 @@ Design system and React component package (`@xdev-asia/ui`) for xDev: the deskto
 - **Name the object.** "Kill session fix-auth-redirect?", not "Are you sure?".
 - **Say the consequence, not the mechanism.** "Uncommitted changes stay in the worktree."
 - **Bilingual.** Every string ships in English and Vietnamese (`en`, `vi`). Roboto carries Vietnamese diacritics; keep labels short enough to survive a 30% longer translation.
-- **Identifiers stay literal.** Branches, paths, commands and counts are set in mono and never translated.
+- **Identifiers stay literal.** Branches, paths, commands and counts are set in mono and never translated; wrap brand names, paths and codes in `translate="no"` so browser translation leaves them alone.
 - **No exclamation marks, no emoji in UI chrome.**
+- **Speak to the person.** Second person and active voice: "Get a link by email", not "We will email you" or "A link will be sent".
+- **Typography marks.** The ellipsis is one character, `…`, never three dots. Text for a wait ends with it ("Loading…", "Saving…"), and so does a placeholder, which shows an example rather than repeating the label ("Name, path or code…"). Keep a number and its unit together with a no-break space ("10&nbsp;MB").
+- **Where other guides differ.** Some guides (Vercel's Web Interface Guidelines, Chicago style) ask for Title Case on buttons and headings; xDev keeps sentence case everywhere.
 
 ## Visual foundations
 

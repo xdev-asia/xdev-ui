@@ -454,3 +454,39 @@ describe("audit: motion, viewport and paste rules", () => {
     expect(only(inDir({ "A.tsx": tsx }))).toEqual([["paste-block", "error", 1]]);
   });
 });
+
+describe("audit: label-voice and arrow functions", () => {
+  it("does not read code after an arrow as UI text", () => {
+    const tsx = "export const A = (xs: X[]) => xs.filter((e) => !e.off).map<Row>((e) => e);\nexport const B = () => <p>Saved!</p>;\n";
+    expect(inDir({ "A.tsx": tsx }).filter((x) => x.rule === "label-voice").map((x) => x.line)).toEqual([2]);
+  });
+});
+
+describe("audit: web interface rules", () => {
+  const only = (f: Finding[], rule: string) => f.filter((x) => x.rule === rule).map((x) => [x.file, x.line, x.level]);
+  it("ellipsis flags three dots in UI text, placeholders and strings files", () => {
+    const tsx = 'export const A = () => <p>Loading...</p>;\nexport const B = () => <input placeholder="Search..." />;\nexport const C = () => <p>Loading…</p>;\n';
+    expect(only(inDir({ "A.tsx": tsx }), "ellipsis")).toEqual([["A.tsx", 1, "warn"], ["A.tsx", 2, "warn"]]);
+  });
+  it("click-div flags clickable divs and spans without a role", () => {
+    const tsx = 'export const A = () => <div onClick={go}>Open</div>;\nexport const B = () => <div role="button" tabIndex={0} onClick={go} onKeyDown={k}>Open</div>;\nexport const C = () => <span onClick={go} />;\n';
+    expect(only(inDir({ "A.tsx": tsx }), "click-div")).toEqual([["A.tsx", 1, "error"], ["A.tsx", 3, "error"]]);
+  });
+  it("nav-onclick flags buttons that only navigate", () => {
+    const tsx = 'export const A = () => <Button onClick={() => navigate("#/")}>Home</Button>;\nexport const B = () => <Button href="#/">Home</Button>;\nexport const C = () => <button onClick={() => { window.location.href = "/x"; }}>Go</button>;\n';
+    expect(only(inDir({ "A.tsx": tsx }), "nav-onclick").map((x) => x[1])).toEqual([1, 3]);
+  });
+  it("zoom-block reads the index.html above the source folder", () => {
+    const dir = mkdtempSync(join(tmpdir(), "xdev-audit-"));
+    try {
+      mkdirSync(join(dir, "src"));
+      writeFileSync(join(dir, "src/a.css"), ".a { color: var(--text-1); }\n");
+      writeFileSync(join(dir, "index.html"), '<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />\n');
+      const f = audit(join(dir, "src"), { manifest }).findings.filter((x: Finding) => x.rule === "zoom-block");
+      expect(f).toHaveLength(1);
+      expect(f[0].level).toBe("error");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});

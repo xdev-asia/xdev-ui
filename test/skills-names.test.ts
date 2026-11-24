@@ -29,6 +29,7 @@ const DOM_PROPS = new Set([
   "key", "ref", "id", "className", "style", "role", "tabIndex", "title", "lang", "hidden", "children",
   "href", "target", "rel", "type", "name", "value", "defaultValue", "checked", "defaultChecked", "disabled", "placeholder", "required",
   "autoComplete", "autoFocus", "readOnly", "min", "max", "step", "maxLength", "minLength", "pattern", "htmlFor", "form",
+  "spellCheck", "inputMode", "autoCapitalize", "autoCorrect", "enterKeyHint", "translate", "referrerPolicy", "loading",
   "onClick", "onChange", "onInput", "onSubmit", "onKeyDown", "onKeyUp", "onBlur", "onFocus", "onMouseDown", "onMouseEnter", "onMouseLeave",
 ]);
 

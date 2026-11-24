@@ -20,6 +20,8 @@
 .segmented button:not(:disabled):hover { color: var(--x-color-ink); background: var(--x-color-surface-2); }
 .segmented button[aria-pressed="true"] { background: var(--x-color-accent); color: var(--x-color-on-accent); }
 .segmented button:disabled { opacity: 0.6; cursor: default; }
+/* ThemeSwitch variant="icons": square icon segments; the name is the aria-label and the title. */
+.x-theme-icons button { display: inline-grid; place-items: center; min-width: var(--x-space-8); padding: 0; }
 .segmented-count { margin-left: var(--x-space-1); font-size: 11px; font-variant-numeric: tabular-nums; opacity: 0.75; }
 
 .lang-select {

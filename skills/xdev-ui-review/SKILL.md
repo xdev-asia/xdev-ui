@@ -21,12 +21,12 @@ Fix the highest priority first. A higher row can force changes that make a lower
 
 | priority | category | must have | avoid | audit rules |
 |---|---|---|---|---|
-| 1 critical | Access | visible focus, a name on every control, 4.5:1 text and 3:1 UI contrast, keyboard for every action | `outline: none` with no replacement, a clickable `div`, an unnamed icon button | `focus-outline`, `positive-tabindex`, `icon-button-name`, `img-alt`, `contrast` |
+| 1 critical | Access | visible focus, a name on every control, 4.5:1 text and 3:1 UI contrast, keyboard for every action | `outline: none` with no replacement, a clickable `div`, an unnamed icon button, a viewport that blocks zoom | `focus-outline`, `positive-tabindex`, `icon-button-name`, `img-alt`, `click-div`, `zoom-block`, `contrast` |
 | 2 critical | Tokens and identity | tokens for colour, space, type, z-index; one accent; cyan only as focus | hex, Tailwind palette colours, px font sizes, a coloured left stripe | `raw-colour`, `raw-px`, `raw-font`, `unknown-token`, `left-stripe`, `raw-z-index` |
-| 3 high | States and data safety | loading, error, empty and success for every region; input kept on error; destructive confirms | a blank page on error, a lost form, a double submit | `list-empty`, `confirm-dialog`, `form-busy` |
+| 3 high | States and data safety | loading, error, empty and success for every region; input kept on error; destructive confirms | a blank page on error, a lost form, a double submit | `list-empty`, `confirm-dialog`, `form-busy`, `nav-onclick` |
 | 4 high | Layout | no page scroll sideways at 320 to 1440px; tables scroll in their wrapper; space reserved for late content | fixed widths over 320px, clipped text, content that jumps, `100vh` under a phone's address bar | `fixed-width`, `nowrap`, `viewport-height` |
 | 5 high | Actions | one primary per surface, last in its row; hide what the role can never do, disable with a reason | two primaries, a reason only in a tooltip | `primary-count` |
-| 6 medium | Language | sentence case, verbs on buttons, `en` and `vi` for every string and every `labels` | emoji, `!`, Title Case, English left in a library part | `label-voice`, `i18n-parity`, `i18n-labels` |
+| 6 medium | Language | sentence case, verbs on buttons, `en` and `vi` for every string and every `labels` | emoji, `!`, Title Case, three dots, English left in a library part | `label-voice`, `ellipsis`, `i18n-parity`, `i18n-labels` |
 | 7 medium | Forms | a visible label, errors on the field, autofill and paste allowed | placeholder as label, errors only in a toast, blocked paste | `autocomplete`, `paste-block` |
 | 8 medium | Motion and platform | reduced motion, forced colours, 24px targets (44px on touch) | slides and spins with no `prefers-reduced-motion` guard, layout animation, a resting `will-change` | `reduced-motion`, `layout-motion`, `will-change`, `forced-colors`, `target-size` |
 | 9 medium | Page patterns | the shape each pattern expects | a bare `AuthShell`, a delta with no baseline, a card with no face | `sign-in-shell`, `stat-delta`, `resource-face` |
@@ -68,6 +68,10 @@ node <skill-dir>/scripts/audit.mjs src --i18n src/i18n
 | `form-busy` | warn | a `FormDialog` with no `busy` |
 | `autocomplete` | warn | a `password`, `email` or `tel` field or input with no `autoComplete` |
 | `img-alt` | error | an `img` with no `alt` |
+| `click-div` | error | a `div`, `span`, `li`, `p`, `td` or `img` with `onClick` and no `role` |
+| `zoom-block` | error | `user-scalable=no` or `maximum-scale=1` in the `index.html` beside or above the scanned folder |
+| `nav-onclick` | warn | an `onClick` that only calls `navigate(`, `router.push(` or sets `location` |
+| `ellipsis` | warn | three dots in UI text, a placeholder or a strings file |
 | `paste-block` | error | an `onPaste` handler that calls `preventDefault` |
 | `raw-z-index` | warn | a numeric `z-index` or `zIndex` other than 0, 1 and -1; use `var(--x-z-*)` |
 | `viewport-height` | warn | a `vh` height with no `dvh`/`svh` after it, a `vh` height in a `style` prop, or Tailwind `h-screen` |
@@ -111,6 +115,8 @@ Then run the check for each page's type. A page can be more than one type (a lis
 | a `Dialog`, `FormDialog`, `Drawer` or a form of `Field`s | `references/pages/dialogs-forms.md` |
 | `AuthShell`, or a step of signing in (code, consent, hand-off, link landing) | `references/pages/sign-in.md` |
 | cards of providers, models, tools, integrations or apps | `references/pages/provider-grid.md` |
+
+Then do the [web interface pass](references/web-interface.md): forms, links and URL state, copy, headings, theme and locale, what the audit cannot read.
 
 Then check each widget against its APG keyboard and ARIA contract and walk the heuristics checklist from the `xdev-ui-ux-standards` skill. It gives each audit rule its WCAG or platform source.
 

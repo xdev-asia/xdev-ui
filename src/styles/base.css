@@ -67,6 +67,11 @@ body {
 :where(.x-page-desc, .dialog-desc, .x-form-dialog-desc, .x-empty-hint, .banner-text) { text-wrap: pretty; }
 :where(.x-stat-value, .x-stat-delta, .ws-meter-pct) { font-variant-numeric: tabular-nums; }
 
+/* Taps act at once (no double-tap zoom wait); drag handles keep their own touch-action: none. */
+:where(button, a[href], input, select, textarea, label, summary, [role="button"], [role="tab"], [role="option"], [role="menuitem"], [role="switch"]) {
+  touch-action: manipulation;
+}
+
 .x-sr-only {
   position: absolute;
   width: 1px;

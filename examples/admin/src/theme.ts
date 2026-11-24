@@ -17,7 +17,11 @@ export function useTheme(): [ThemePreference, (p: ThemePreference) => void] {
   const [pref, setPref] = useState<ThemePreference>("dark");
   useEffect(() => setPref(readPref()), []);
   useEffect(() => {
-    const paint = (dark: boolean): void => applyTheme(document.documentElement, resolveTheme(pref, dark));
+    const paint = (dark: boolean): void => {
+      applyTheme(document.documentElement, resolveTheme(pref, dark));
+      // Browser chrome (mobile address bar) takes the page's own background, read after the theme applies.
+      document.querySelector('meta[name="theme-color"]')?.setAttribute("content", getComputedStyle(document.body).backgroundColor);
+    };
     paint(systemPrefersDark(window.matchMedia.bind(window)));
     if (pref !== "system") return;
     return watchSystemTheme(window.matchMedia.bind(window), paint);

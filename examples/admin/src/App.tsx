@@ -5,8 +5,17 @@ import type { Role } from "./data/seed";
 import { StoreContext, useStore } from "./data/context";
 import { storeFromLocation, StoreError } from "./data/store";
 import { I18nProvider, readLocale, useI18n, type Locale } from "./i18n";
-import { hrefFor, navigate, useRoute } from "./router";
+import { hrefFor, navigate, useRoute, type ExceptionCode, type NESTED } from "./router";
 import { Shell } from "./shell/Shell";
+import { canOpen } from "./shell/nav";
+import { usePrefs } from "./shell/prefs";
+import { AboutPage } from "./pages/About";
+import { DepartmentsPage } from "./pages/Departments";
+import { DocsPage, NestedPage } from "./pages/Demo";
+import { ExceptionPage } from "./pages/Exception";
+import { MenusPage } from "./pages/Menus";
+import { PermissionsPage } from "./pages/Permissions";
+import { ProfilePage } from "./pages/Profile";
 import { NotifyContext, useNotify, useToasts } from "./shell/notify";
 import { useTheme } from "./theme";
 import { CreateUserDialog } from "./dialogs/CreateUserDialog";
@@ -37,6 +46,8 @@ interface RoutesProps {
 
 function Routes({ session, roles, version, openDialog, onRolesChanged, theme, onThemeChange }: RoutesProps): JSX.Element {
   const route = useRoute();
+  // The sidebar hides what the role cannot read; a typed or shared link gets the not-found page, so it does not reveal the page.
+  if (!canOpen(route, roles, session.role)) return <NotFoundPage />;
   const onDelete = (users: Pick<User, "id" | "name">[], done: () => void): void => openDialog({ kind: "delete", users, done });
   switch (route.name) {
     case "users":
@@ -51,6 +62,22 @@ function Routes({ session, roles, version, openDialog, onRolesChanged, theme, on
       return <SettingsPage session={session} roles={roles} section={route.params.section} theme={theme} onThemeChange={onThemeChange} />;
     case "audit":
       return <AuditLogPage session={session} roles={roles} />;
+    case "permissions":
+      return <PermissionsPage roles={roles} role={session.role} />;
+    case "menus":
+      return <MenusPage session={session} roles={roles} />;
+    case "departments":
+      return <DepartmentsPage />;
+    case "profile":
+      return <ProfilePage session={session} />;
+    case "about":
+      return <AboutPage />;
+    case "exception":
+      return <ExceptionPage code={route.params.code as ExceptionCode} />;
+    case "nested":
+      return <NestedPage leaf={route.params.leaf as (typeof NESTED)[number]} />;
+    case "docs":
+      return <DocsPage />;
     default:
       return <NotFoundPage />;
   }
@@ -102,9 +129,10 @@ function Dialogs({ dialog, busy, setBusy, close, changed }: { dialog: Dialog | n
   );
 }
 
-export function App(): JSX.Element {
-  const [locale, setLocaleState] = useState<Locale>("en");
+/** Everything under the language provider: toasts and pages read their words from it. */
+function Console(): JSX.Element {
   const [theme, setTheme] = useTheme();
+  const [prefs, setPrefs] = usePrefs();
   const session = useSession();
   const route = useRoute();
   const store = useMemo(() => storeFromLocation(typeof window === "undefined" ? "" : window.location.search), []);
@@ -113,6 +141,33 @@ export function App(): JSX.Element {
   const [dialog, setDialog] = useState<Dialog | null>(null);
   const [version, setVersion] = useState(0);
   const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    if (session) store.listRoles().then(setRoles, () => setRoles([]));
+  }, [session, store]);
+  useEffect(() => {
+    if (!session && route.name !== "sign-in") navigate(hrefFor.signIn());
+    if (session && route.name === "sign-in") navigate(hrefFor.dashboard());
+  }, [session, route.name]);
+
+  return (
+    <StoreContext.Provider value={store}>
+      <NotifyContext.Provider value={notify}>
+        {!session ? (
+          <SignInPage onSignedIn={signIn} theme={theme} onThemeChange={setTheme} />
+        ) : (
+          <Shell route={route} session={session} roles={roles} toasts={toasts} onSignOut={signOut} prefs={prefs} onPrefs={setPrefs} theme={theme} onThemeChange={setTheme}>
+            <Routes session={session} roles={roles} version={version} openDialog={setDialog} onRolesChanged={() => store.listRoles().then(setRoles, () => {})} theme={theme} onThemeChange={setTheme} />
+            <Dialogs dialog={dialog} busy={busy} setBusy={setBusy} close={() => setDialog(null)} changed={() => setVersion((n) => n + 1)} />
+          </Shell>
+        )}
+      </NotifyContext.Provider>
+    </StoreContext.Provider>
+  );
+}
+
+export function App(): JSX.Element {
+  const [locale, setLocaleState] = useState<Locale>("en");
 
   useEffect(() => {
     try {
@@ -124,13 +179,6 @@ export function App(): JSX.Element {
   useEffect(() => {
     document.documentElement.lang = locale;
   }, [locale]);
-  useEffect(() => {
-    if (session) store.listRoles().then(setRoles, () => setRoles([]));
-  }, [session, store]);
-  useEffect(() => {
-    if (!session && route.name !== "sign-in") navigate(hrefFor.signIn());
-    if (session && route.name === "sign-in") navigate(hrefFor.dashboard());
-  }, [session, route.name]);
 
   const setLocale = useCallback((l: Locale) => {
     setLocaleState(l);
@@ -143,18 +191,7 @@ export function App(): JSX.Element {
 
   return (
     <I18nProvider locale={locale} onLocaleChange={setLocale}>
-      <StoreContext.Provider value={store}>
-        <NotifyContext.Provider value={notify}>
-          {!session ? (
-            <SignInPage onSignedIn={signIn} theme={theme} onThemeChange={setTheme} />
-          ) : (
-            <Shell route={route} session={session} roles={roles} toasts={toasts} onSignOut={signOut}>
-              <Routes session={session} roles={roles} version={version} openDialog={setDialog} onRolesChanged={() => store.listRoles().then(setRoles, () => {})} theme={theme} onThemeChange={setTheme} />
-              <Dialogs dialog={dialog} busy={busy} setBusy={setBusy} close={() => setDialog(null)} changed={() => setVersion((n) => n + 1)} />
-            </Shell>
-          )}
-        </NotifyContext.Provider>
-      </StoreContext.Provider>
+      <Console />
     </I18nProvider>
   );
 }

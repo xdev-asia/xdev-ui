@@ -257,7 +257,7 @@ export function UserNotFound(): JSX.Element {
       icon="accounts"
       title={t("user.notFoundTitle")}
       hint={t("user.notFoundHint")}
-      actions={<Button variant="primary" onClick={() => navigate(hrefFor.users())}>{t("user.backToUsers")}</Button>}
+      actions={<Button variant="primary" href={hrefFor.users()}>{t("user.backToUsers")}</Button>}
     />
   );
 }

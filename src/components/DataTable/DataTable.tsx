@@ -62,7 +62,7 @@ const DEFAULT_LABELS: DataTableLabels = {
   selectRow: (rowLabel) => `Select ${rowLabel}`,
   sortedAsc: "sorted ascending",
   sortedDesc: "sorted descending",
-  loading: "Loading",
+  loading: "Loading…",
   reorderColumn: "Order",
   reorderHandle: (rowLabel) => `Reorder ${rowLabel}`,
   lifted: (rowLabel) => `${rowLabel} lifted. Use the up and down arrow keys to move it, Space to drop it, Escape to cancel.`,

@@ -22,7 +22,7 @@ Read the design system through the bundled MCP server instead of guessing props 
 | `xdevui_get_component` | README rules + exported props + CSS classes of one part |
 | `xdevui_search_tokens` | find the token for a colour, space, radius or type size |
 | `xdevui_list_icons` | valid `IconName` values |
-| `xdevui_search_docs` | find which component or rule covers a topic |
+| `xdevui_search_docs` | find which component, rule or skill pattern covers a topic (`scope`: `components`, `guidelines`, `skills`) |
 | `xdevui_get_skill` | read a skill (`xdev-ui-build-app`, `xdev-ui-admin`, `xdev-ui-design`, `xdev-ui-review`, `xdev-ui-ux-standards`, `xdev-ui-motion`, `xdev-ui-improve`) and its references |
 
 Prompt `xdevui_build_ui` runs those steps in order; `xdevui_build_app` and `xdevui_build_admin` do the same through a skill and its template. Without MCP: `node_modules/@xdev-asia/ui/dist/llms-full.txt` (or <https://ui.xdev.asia/llms-full.txt>) holds the same content in one file.

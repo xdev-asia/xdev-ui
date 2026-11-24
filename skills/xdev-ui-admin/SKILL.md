@@ -1,6 +1,6 @@
 ---
 name: xdev-ui-admin
-description: "Designs and builds admin and back-office screens with @xdev-asia/ui, covering both UX decisions and code: page layout with Container, Stack, Grid and the Tailwind v4 theme, dashboards, resource lists with DataTable, FacetFilter, BulkBar, reorder and Pagination, detail pages, forms in FormDialog, Drawer or a page with SaveBar and unsaved-changes guard, Combobox, DatePicker, FileDrop, ImageField crop and upload, RichTextEditor, loading, error and empty states, navigation, users and roles, settings, audit log, and a review checklist. Use when designing, building or reviewing a console, back office, dashboard, CMS or CRUD screen with @xdev-asia/ui."
+description: "Designs and builds admin and back-office screens with @xdev-asia/ui, covering both UX decisions and code: page layout with Container, Stack, Grid and the Tailwind v4 theme, dashboards, resource lists with DataTable, FacetFilter, BulkBar, reorder and Pagination, detail pages, forms in FormDialog, Drawer or a page with SaveBar and unsaved-changes guard, Combobox, DatePicker, FileDrop, ImageField crop and upload, RichTextEditor, loading, error and empty states, navigation, users and roles, settings, audit log, console chrome (command palette search, notifications, page tabs, preferences drawer, nested menus), tree lists, 403, 404 and 500 pages, a part map for rebuilding Ant Design, Pro, MUI or shadcn admin templates, and a review checklist. Use when designing, building or reviewing a console, back office, dashboard, CMS or CRUD screen with @xdev-asia/ui, or rebuilding another kit's admin template on it."
 license: Apache-2.0
 ---
 
@@ -26,7 +26,7 @@ npx xdev-ui-skills create admin my-admin
 cd my-admin && pnpm install && pnpm dev
 ```
 
-The template has sign-in, dashboard, a list, a detail with an edit form, settings and not-found over an in-memory `store.ts` and a `can(role, capability)` check. `examples/admin` in the library repository is a full console.
+The template has sign-in, dashboard, a list, a detail with an edit form, settings and not-found over an in-memory `store.ts` and a `can(role, capability)` check. `examples/admin` in the library repository is a full console: every page pattern below plus the console chrome, tree lists, status pages, a role preview and four sign-in modes.
 
 Existing app on Tailwind v4: import `@xdev-asia/ui/styles.css`, then `@xdev-asia/ui/tailwind.css`, after `tailwindcss` ([layout](references/layout.md)).
 
@@ -65,6 +65,9 @@ Existing app on Tailwind v4: import `@xdev-asia/ui/styles.css`, then `@xdev-asia
 | Settings | `NavList`, `SettingRow`, `Switch`, `Select`, `ThemeSwitch` | [settings](references/settings.md) |
 | Audit log | `DateRangePicker`, `FacetFilter`, `Disclosure`, `Pagination` | [audit log](references/audit-log.md) |
 | Any page on a phone or tablet | `PageHeader actions`, `Grid columns`, `DataTable sticky` / `stack`, sheet `Dialog` | [responsive](references/responsive.md) |
+| Top bar and shell extras: search, notifications, full screen, preferences, page tabs, nested menus | `PaletteTrigger`, `CommandPalette`, `Popover`, `Drawer`, `SettingRow`, `TabStrip`, `NavList collapsible` | [console chrome](references/console-chrome.md) |
+| Tree of records (menus, departments, categories); 403, 404 and 500 pages | `DataTable` with tree rows, `Drawer`, `EmptyState` | [tree list and status pages](references/tree-list.md) |
+| Rebuilding an Ant Design, Pro, MUI or shadcn admin template | the part map | [from other kits](references/from-other-kits.md) |
 
 ## Decisions that come up on every screen
 
@@ -93,7 +96,7 @@ Existing app on Tailwind v4: import `@xdev-asia/ui/styles.css`, then `@xdev-asia
 ## Rules
 
 - One `PageHeader` (the only `h1`) and one primary `Button` per view; the primary is last in its row.
-- Pages are a pure `XView` (props in, markup out) plus an `XPage` that loads data; tests render the view with `renderToStaticMarkup` in every state.
+- Pages are a pure `XView` (props in, markup out) plus an `XPage` that loads data; tests render the view with `renderToStaticMarkup` in every state, and one test renders the root `App`.
 - Filtering, sorting, validation and CSV are pure functions with unit tests. Search, filters, sort, page and tab live in the URL.
 - Never lose the user's input: errors keep the values; leaving a dirty form asks (`useUnsavedGuard`, `confirmLeave`).
 - Dates are ISO `YYYY-MM-DD` strings. Uploads lock Save while busy.

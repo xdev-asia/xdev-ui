@@ -16,6 +16,8 @@ if (state.kind === "loading") return <Skeleton shape="block" height="320px" anno
 if (state.kind === "error") return <Banner title={t("users.loadFailed")} action={<Button variant="secondary" onClick={retry}>{t("common.retry")}</Button>} />;
 ```
 
+Whole-page status views (403, 404, 500) are in the tree list and status pages reference.
+
 ## Rules
 - Show a skeleton only after about 300 ms, so fast loads do not flicker; never leave it after an error.
 - One message per problem, in one place: a field error is not also a toast.

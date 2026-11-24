@@ -20,6 +20,15 @@ export function checkCredentials(email: string, password: string): SignInResult 
   return a ? { ok: true, session: { name: a.name, email: a.email, role: a.role } } : { ok: false };
 }
 
+/** Demo only: the code every demo account receives by email. */
+export const DEMO_CODE = "246810";
+
+/** Demo only: signs a demo account in with the emailed code. */
+export function checkCode(email: string, code: string): SignInResult {
+  const a = ACCOUNTS.find((x) => x.email === email.trim().toLowerCase());
+  return a && code === DEMO_CODE ? { ok: true, session: { name: a.name, email: a.email, role: a.role } } : { ok: false };
+}
+
 let current: Session | null = null;
 const listeners = new Set<() => void>();
 const emit = (): void => listeners.forEach((l) => l());

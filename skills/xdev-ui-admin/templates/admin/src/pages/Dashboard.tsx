@@ -4,7 +4,7 @@ import { useStore } from "../data/context";
 import type { Summary } from "../data/store";
 import { useLoad, type Load } from "../data/useLoad";
 import { useI18n } from "../i18n";
-import { href, navigate } from "../router";
+import { href } from "../router";
 
 export interface DashboardViewProps {
   state: Load<Summary>;
@@ -29,7 +29,7 @@ export function DashboardView({ state, onRetry }: DashboardViewProps): JSX.Eleme
             <StatTile labels={ui.statTile} loading={loading} label={t("dashboard.active")} value={data ? num(data.active) : ""} />
             <StatTile labels={ui.statTile} loading={loading} label={t("dashboard.archived")} value={data ? num(data.archived) : ""} />
           </div>
-          <Card title={t("dashboard.recent")} actions={<Button variant="secondary" onClick={() => navigate(href.items)}>{t("dashboard.viewItems")}</Button>} flush>
+          <Card title={t("dashboard.recent")} actions={<Button variant="secondary" href={href.items}>{t("dashboard.viewItems")}</Button>} flush>
             {loading ? (
               <div className="app-pane"><Spinner size="md" label={ui.spinner.loading} /></div>
             ) : data && data.recent.length ? (

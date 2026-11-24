@@ -54,7 +54,7 @@ describe("Roles", () => {
       expect(html.match(/<h1/g)).toHaveLength(1);
     });
     it(`has loading and error states (${locale})`, () => {
-      expect(render(locale, props({ state: { status: "loading" } }))).toContain(locale === "en" ? ">Loading<" : ">Đang tải<");
+      expect(render(locale, props({ state: { status: "loading" } }))).toContain(locale === "en" ? ">Loading…<" : ">Đang tải…<");
       expect(render(locale, props({ state: { status: "error" } }))).toContain(locale === "en" ? "Try again" : "Thử lại");
     });
   }

@@ -10,7 +10,7 @@ export interface SaveBarLabels {
   saving: string;
 }
 
-const DEFAULT_LABELS: SaveBarLabels = { unsaved: "You have unsaved changes", save: "Save", discard: "Discard", saving: "Saving" };
+const DEFAULT_LABELS: SaveBarLabels = { unsaved: "You have unsaved changes", save: "Save", discard: "Discard", saving: "Saving…" };
 
 export interface SaveBarProps {
   /** The form differs from what is saved. The bar shows only while dirty or busy. */

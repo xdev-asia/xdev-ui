@@ -27,3 +27,32 @@
 .app-roles { display: flex; flex-wrap: wrap; gap: var(--x-space-4); align-items: flex-start; }
 .app-roles > :first-child { flex: 1 1 22ch; min-width: 0; }
 .app-roles > :last-child { flex: 3 1 36ch; min-width: 0; }
+
+/* Shell extras: page tabs, footer, notification bell and list. */
+.app-tabs { margin: calc(-1 * var(--x-space-2)) 0 var(--x-space-4); border-bottom: 1px solid var(--line); }
+.app-footer { margin-top: var(--x-space-8); padding-top: var(--x-space-4); border-top: 1px solid var(--line); font: var(--type-status); color: var(--text-2); }
+.app-bell { position: relative; display: inline-flex; }
+.app-bell-count { position: absolute; top: calc(-1 * var(--x-space-1)); right: calc(-1 * var(--x-space-1)); min-width: 2ch; padding: 0 var(--x-space-1); border-radius: var(--radius-l); background: var(--accent); color: var(--x-color-on-accent); font: var(--type-kbd); font-variant-numeric: tabular-nums; text-align: center; pointer-events: none; }
+.app-notices { width: min(24rem, calc(100vw - 2 * var(--x-space-4))); }
+.app-notices-head { display: flex; align-items: center; justify-content: space-between; gap: var(--x-space-2); padding: var(--x-space-2) var(--x-space-3); border-bottom: 1px solid var(--line); }
+.app-notices-title { margin: 0; font: var(--type-label); color: var(--text-1); }
+.app-notices-empty { margin: 0; padding: var(--x-space-2) var(--x-space-3); font: var(--type-status); color: var(--text-2); }
+
+/* Tree lists in a DataTable: indent by depth, leaves keep the toggle's width. */
+.app-tree-name { display: inline-flex; align-items: center; gap: var(--x-space-1); min-width: 0; }
+.app-tree-spacer { flex: none; width: var(--x-space-6); }
+
+/* Permissions preview and embedded docs. */
+.app-check-list { margin-top: var(--x-space-3); }
+.app-check-row { display: flex; align-items: center; justify-content: space-between; gap: var(--x-space-3); min-height: var(--h-row); padding: 0 var(--x-space-4); border-bottom: 1px solid var(--line); }
+.app-check-row:last-child { border-bottom: 0; }
+.app-muted-inline { color: var(--text-2); }
+.app-frame { display: block; width: 100%; height: 70vh; height: 70dvh; border: 0; background: var(--bg-0); }
+.app-row { display: flex; flex-wrap: wrap; gap: var(--x-space-3); align-items: center; }
+/* Long names wrap instead of pushing a row wider than its column. */
+.app-person, .app-check-row > span { min-width: 0; overflow-wrap: anywhere; }
+.app-tabs { display: flex; align-items: flex-end; gap: var(--x-space-2); }
+.app-tabs-strip { flex: 1; min-width: 0; }
+.app-tabs-tools { display: flex; flex: none; align-items: center; gap: var(--x-space-1); padding-bottom: var(--x-space-1); }
+.app-wide-only { display: inline-flex; }
+@media (max-width: 767.98px) { .app-wide-only { display: none; } }

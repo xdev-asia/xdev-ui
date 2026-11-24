@@ -50,6 +50,11 @@ for (const topic of ["layout", "data-and-forms", "agent-skills"]) {
   const g = await call("xdevui_get_guidelines", { topic });
   assert.ok(!g.isError && g.body.length > 200, `guideline ${topic} missing`);
 }
+const patterns = await call("xdevui_search_docs", { query: "page tabs", scope: "skills" });
+assert.ok(patterns.body.includes("skill:xdev-ui-admin/references/console-chrome.md"), "skill references missing from search");
+assert.ok(!patterns.body.includes("component:"), "scope skills should leave components out");
+const menuButton = await call("xdevui_get_component", { name: "MenuButton" });
+assert.ok(!menuButton.isError && menuButton.body.includes("MenuButtonProps"), "a part that shares a folder should be found by name");
 const invalid = await call("xdevui_search_docs", { query: "x" });
 assert.equal(invalid.isError, true, "one-character query should be rejected");
 

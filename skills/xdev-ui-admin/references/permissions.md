@@ -23,3 +23,4 @@ export function can(roles: Role[], role: RoleId, capability: Capability): boolea
 - Pass the role and the matrix to views as props, so tests can render a viewer and an admin.
 - One capability name per action; do not scatter role names through components.
 - After the matrix is saved, reload the roles so the shell updates at once.
+- Drive the sidebar, the search and any "preview as role" page from one nav model filtered by the same `canRead`, so a preview cannot drift from what the role really sees. A preview page says it changes only the view (`Banner tone="info"`).
