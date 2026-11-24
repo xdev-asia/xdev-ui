@@ -56,18 +56,34 @@ export function Popover({ open, onClose, trigger, placement = "bottom-start", la
       return;
     }
     if (openedOnMount.current) return;
-    const back = document.activeElement as HTMLElement | null;
-    panel.current?.focus({ preventScroll: true });
+    // Focus goes back to the trigger. Read it from the anchor: a child (a Menu) may already have moved focus inside
+    // the panel, because child effects run first.
+    const trigger = anchor.current?.querySelector<HTMLElement>("button, a[href], [tabindex]");
+    const active = document.activeElement as HTMLElement | null;
+    const back = trigger ?? (panel.current?.contains(active) ? null : active);
+    // A child that already took focus (a Menu's first item) keeps it; otherwise the panel takes it.
+    if (!panel.current?.contains(document.activeElement)) panel.current?.focus({ preventScroll: true });
     const onKey = (e: KeyboardEvent): void => {
       if (e.key === "Escape") {
         e.stopPropagation();
         close.current();
       }
     };
+    // Tabbing out of the panel closes it, so it never stays open behind the focus.
+    const onFocusOut = (e: FocusEvent): void => {
+      const to = e.relatedTarget as Node | null;
+      if (!to || panel.current?.contains(to) || anchor.current?.contains(to)) return;
+      close.current();
+    };
+    const node = panel.current;
     document.addEventListener("keydown", onKey);
+    node?.addEventListener("focusout", onFocusOut);
     return () => {
       document.removeEventListener("keydown", onKey);
-      back?.focus?.();
+      node?.removeEventListener("focusout", onFocusOut);
+      // Only when focus is still in the panel or lost: a Tab out already put it somewhere on purpose.
+      const now = document.activeElement;
+      if (!now || now === document.body || node?.contains(now)) back?.focus?.();
     };
   }, [open, portalled]);
 

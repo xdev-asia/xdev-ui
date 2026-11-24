@@ -8,6 +8,7 @@ import { I18nProvider, readLocale, useI18n, type Locale } from "./i18n";
 import { hrefFor, navigate, useRoute, type AccessPage, type EmbedId, type ExceptionCode, type LegalPage, type NESTED } from "./router";
 import { Shell } from "./shell/Shell";
 import { canOpen } from "./shell/nav";
+import { useFocusRescue } from "./parts/focus";
 import { disabledPaths, seedMenus, type MenuItem, type TreeNode } from "./data/catalog";
 import type { AccessMode } from "./pages/Access";
 import { usePrefs } from "./shell/prefs";
@@ -131,7 +132,7 @@ function Dialogs({ dialog, busy, setBusy, close, changed }: { dialog: Dialog | n
         setBusy(true);
         store.deleteUsers(dialog.users.map((u) => u.id)).then(
           () => {
-            notify(t("users.deleted", { count: dialog.users.length }));
+            notify(dialog.users.length === 1 ? t("users.deletedOne") : t("users.deleted", { count: dialog.users.length }));
             dialog.done();
             changed();
           },
@@ -192,6 +193,7 @@ function Console(): JSX.Element {
 
 export function App(): JSX.Element {
   const [locale, setLocaleState] = useState<Locale>("en");
+  useFocusRescue();
 
   useEffect(() => {
     try {

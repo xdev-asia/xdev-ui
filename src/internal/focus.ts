@@ -1,5 +1,5 @@
 /** Selector for elements that take part in the Tab order. */
-export const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+export const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), summary, [tabindex]:not([tabindex="-1"])';
 
 interface FocusRoot {
   querySelectorAll: (selector: string) => ArrayLike<HTMLElement>;
@@ -8,7 +8,8 @@ interface FocusRoot {
 
 /** Tabbable descendants of `root`, in DOM order. */
 export function focusableIn(root: FocusRoot | null | undefined): HTMLElement[] {
-  return root ? Array.from(root.querySelectorAll(FOCUSABLE)) : [];
+  // Only what can take focus now: a link inside a closed <details>, or anything with no layout box, cannot.
+  return root ? Array.from(root.querySelectorAll(FOCUSABLE)).filter((el) => typeof el.getClientRects !== "function" || el.getClientRects().length > 0) : [];
 }
 
 /** Moves focus to the first tabbable descendant, or to `root` itself when there is none. */

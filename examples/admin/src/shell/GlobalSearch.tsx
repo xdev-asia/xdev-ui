@@ -40,6 +40,8 @@ export function GlobalSearch({ tree, recent = [] }: { tree: NavNode[]; recent?: 
         onClose={() => {
           setOpen(false);
           setQuery("");
+          // Back to the search box that opened it.
+          window.requestAnimationFrame(() => document.querySelector<HTMLElement>(".app-top-search")?.focus());
         }}
         query={query}
         onQueryChange={setQuery}

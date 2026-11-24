@@ -45,7 +45,17 @@ export function SearchInput({ size = "md", onClear, shortcut, count, labels, cla
         </span>
       ) : null}
       {onClear && hasValue ? (
-        <button type="button" className="search-clear" aria-label={l.clear} onClick={onClear}>
+        <button
+          type="button"
+          className="search-clear"
+          aria-label={l.clear}
+          onClick={(e) => {
+            // The button goes away once the field is empty; focus goes back to the field instead of the page.
+            const field = e.currentTarget.parentElement?.querySelector<HTMLInputElement>(".search-input");
+            onClear();
+            field?.focus();
+          }}
+        >
           <Icon name="close" size={14} />
         </button>
       ) : shortcut ? (

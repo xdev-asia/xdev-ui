@@ -96,7 +96,8 @@ function PasswordControl({ input, end, labels }: PasswordControlProps): JSX.Elem
         {end}
         <IconButton
           icon={shown ? "eye-off" : "eye"}
-          label={shown ? labels.hide : labels.show}
+          // One fixed name with the state in aria-pressed ("Show password, pressed"); a name that also flips would contradict it.
+          label={labels.show}
           size="sm"
           aria-pressed={shown}
           aria-controls={input.id}

@@ -59,7 +59,7 @@ function AccountCard({ session, onSwitch }: Pick<AccessViewProps, "session" | "o
         <span>{session.name}</span>
         <Tag>{t(`roles.names.${session.role}`)}</Tag>
         {others.map((a) => (
-          <Button key={a.email} variant="secondary" onClick={() => onSwitch(a)}>
+          <Button key={a.email} variant="secondary" data-account-switch="" onClick={() => onSwitch(a)}>
             {t("access.signInAs", { name: a.name })}
           </Button>
         ))}
@@ -224,6 +224,8 @@ export function AccessPageView({ page, session, roles, mode, onModeChange, hidde
       onSwitch={(a) => {
         signIn(a);
         notify(t("access.switched", { name: a.name }));
+        // The pressed button is replaced by "Sign in as <the other account>"; focus moves to it.
+        window.requestAnimationFrame(() => document.querySelector<HTMLElement>("[data-account-switch]")?.focus());
       }}
     />
   );

@@ -122,6 +122,8 @@
 .x-shell[data-chrome-hidden] .x-shell-top,
 .x-shell[data-chrome-hidden] .x-shell-bottom { display: none; }
 .x-shell-backdrop { display: none; }
+/* The backdrop is the drawer's keyboard close control; its focus shows as a ring just inside the screen edge. */
+.x-shell-backdrop:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: -0.375rem; }
 .x-shell-bottom { display: none; }
 .x-shell-toasts { position: fixed; right: var(--x-space-4); bottom: var(--x-space-4); z-index: var(--x-z-toast); }
 /* Titled top bar: room for a ShellTitle with its description. */

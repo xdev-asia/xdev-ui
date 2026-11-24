@@ -27,7 +27,9 @@ describe("SearchInput", () => {
   });
   it("wires onClear", () => {
     const onClear = vi.fn();
-    findAll(SearchInput({ value: "x", onClear }), (e) => e.type === "button")[0]!.props.onClick();
+    const field = { focus: vi.fn() };
+    findAll(SearchInput({ value: "x", onClear }), (e) => e.type === "button")[0]!.props.onClick({ currentTarget: { parentElement: { querySelector: () => field } } });
     expect(onClear).toHaveBeenCalledOnce();
+    expect(field.focus).toHaveBeenCalledOnce(); // the button goes away; focus returns to the field
   });
 });

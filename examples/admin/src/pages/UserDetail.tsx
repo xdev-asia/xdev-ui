@@ -1,3 +1,4 @@
+import { focusFirstInvalid } from "../parts/focus";
 import { useState, type FormEvent, type JSX } from "react";
 import {
   Banner, Button, Checkbox, DescriptionList, EmptyState, Field, FormSection, ListRow, PageHeader, RadioGroup, StatusDot, Tabs, Tag,
@@ -70,7 +71,7 @@ export function UserDetailView({ user, activity, viewer, roles, onSave, onToggle
     const v = validateUser(values);
     setErrors(v);
     setSaveFailed(false);
-    if (v.name || v.email) return;
+    if (v.name || v.email) return focusFirstInvalid(e.currentTarget as HTMLElement);
     setSaving(true);
     onSave(values).then((r) => {
       setSaving(false);
@@ -131,8 +132,8 @@ export function UserDetailView({ user, activity, viewer, roles, onSave, onToggle
           {saveFailed ? <Banner title={t("user.saveFailed")}>{t("user.saveFailedHint")}</Banner> : null}
           <form className="app-stack" onSubmit={submit} noValidate>
             <FormSection title={t("user.profileSection")} description={t("user.profileHint")} columns={2}>
-              <Field label={t("user.fullName")} value={values.name} disabled={!editable} onChange={(e) => set({ name: e.target.value })} error={errors.name ? t(errors.name) : undefined} />
-              <Field label={t("user.email")} type="email" autoComplete="off" value={values.email} disabled={!editable} onChange={(e) => set({ email: e.target.value })} error={errors.email ? t(errors.email) : undefined} />
+              <Field label={t("user.fullName")} required value={values.name} disabled={!editable} onChange={(e) => set({ name: e.target.value })} error={errors.name ? t(errors.name) : undefined} />
+              <Field label={t("user.email")} required type="email" autoComplete="off" value={values.email} disabled={!editable} onChange={(e) => set({ email: e.target.value })} error={errors.email ? t(errors.email) : undefined} />
             </FormSection>
             <FormSection
               title={t("user.accessSection")}

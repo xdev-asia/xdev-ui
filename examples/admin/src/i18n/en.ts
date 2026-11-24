@@ -164,7 +164,9 @@ export const en = {
     rowActions: "Actions for {name}",
     open: "Open",
     suspended: "Suspended {count} users.",
+    suspendedOne: "Suspended 1 user.",
     deleted: "Deleted {count} users.",
+    deletedOne: "Deleted 1 user.",
   },
   user: {
     profile: "Profile",

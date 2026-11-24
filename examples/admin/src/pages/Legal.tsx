@@ -1,4 +1,4 @@
-import type { JSX } from "react";
+import { useEffect, type JSX } from "react";
 import { BrandMark, Button, Container, Prose } from "@xdev-asia/ui";
 import { useI18n, type MessageKey } from "../i18n";
 import { hrefFor, type LegalPage } from "../router";
@@ -11,12 +11,15 @@ const BODY: Record<LegalPage, MessageKey[]> = {
 /** Privacy policy and terms of service: public pages, open before signing in, as in react-antd-admin. */
 export function LegalView({ page, signedIn }: { page: LegalPage; signedIn: boolean }): JSX.Element {
   const { t } = useI18n();
+  useEffect(() => {
+    document.title = `${t(page === "privacy" ? "legal.privacy" : "legal.terms")} · ${t("app.name")}`;
+  }, [page, t]);
   return (
     <main className="app-legal">
       <Container size="md">
         <div className="app-stack">
           <a className="app-legal-brand" href={hrefFor.dashboard()}>
-            <BrandMark size={24} />
+            <BrandMark size={24} label="" />
             <span translate="no">{t("app.name")}</span>
           </a>
           <Prose>

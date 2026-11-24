@@ -136,7 +136,7 @@ export function RolesPage({ session, roles, onRolesChanged }: { session: Session
   const store = useStore();
   const { t } = useI18n();
   const notify = useNotify();
-  const { state, reload } = useLoad<RolesData>(async () => {
+  const { state, reload, set } = useLoad<RolesData>(async () => {
     const [list, users] = await Promise.all([store.listRoles(), store.listUsers()]);
     const counts = { owner: 0, admin: 0, editor: 0, viewer: 0 } as Record<RoleId, number>;
     for (const u of users) counts[u.role]++;
@@ -176,7 +176,9 @@ export function RolesPage({ session, roles, onRolesChanged }: { session: Session
           () => {
             notify(t("roles.saved"));
             setDrafts({ ...drafts, [roleId]: undefined });
-            reload();
+            // Update in place: a reload would unmount the drawer and lose the focus inside it.
+            if (state.status === "ready") set({ ...state.data, roles: state.data.roles.map((r) => (r.id === draft.id ? draft : r)) });
+            else reload();
             onRolesChanged();
           },
           () => notify(t("app.loadFailed")),

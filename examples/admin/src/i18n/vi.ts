@@ -166,7 +166,9 @@ export const vi: Dict = {
     rowActions: "Thao tác cho {name}",
     open: "Mở",
     suspended: "Đã tạm khóa {count} người dùng.",
+    suspendedOne: "Đã tạm khóa 1 người dùng.",
     deleted: "Đã xóa {count} người dùng.",
+    deletedOne: "Đã xóa 1 người dùng.",
   },
   user: {
     profile: "Hồ sơ",

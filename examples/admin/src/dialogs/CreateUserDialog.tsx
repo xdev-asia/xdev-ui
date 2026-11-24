@@ -1,3 +1,4 @@
+import { focusFirstInvalid } from "../parts/focus";
 import { useState, type FormEvent, type JSX } from "react";
 import { Checkbox, Dialog, Field, Select } from "@xdev-asia/ui";
 import { ROLE_IDS, type RoleId } from "../data/seed";
@@ -31,7 +32,7 @@ export function CreateUserDialog({ onSubmit, onCancel, initial }: CreateUserDial
     if (saving) return;
     const v = validateUser(values);
     setErrors(v);
-    if (v.name || v.email) return;
+    if (v.name || v.email) return focusFirstInvalid((e?.currentTarget as HTMLElement | undefined) ?? document.querySelector<HTMLElement>('[role="dialog"]'));
     setSaving(true);
     onSubmit(values).then((r) => {
       setSaving(false);
@@ -51,8 +52,8 @@ export function CreateUserDialog({ onSubmit, onCancel, initial }: CreateUserDial
       labels={ui.dialog}
     >
       <form className="app-form" onSubmit={submit} noValidate>
-        <Field label={t("createUser.fullName")} autoComplete="off" value={values.name} onChange={(e) => set({ name: e.target.value })} error={errors.name ? t(errors.name) : undefined} />
-        <Field label={t("createUser.email")} type="email" autoComplete="off" value={values.email} onChange={(e) => set({ email: e.target.value })} error={errors.email ? t(errors.email) : undefined} />
+        <Field label={t("createUser.fullName")} required autoComplete="off" value={values.name} onChange={(e) => set({ name: e.target.value })} error={errors.name ? t(errors.name) : undefined} />
+        <Field label={t("createUser.email")} required type="email" autoComplete="off" value={values.email} onChange={(e) => set({ email: e.target.value })} error={errors.email ? t(errors.email) : undefined} />
         <label className="app-labelled">
           <span className="app-label">{t("createUser.role")}</span>
           <Select value={values.role} onChange={(e) => set({ role: e.target.value as RoleId })} options={ROLE_IDS.map((r) => ({ value: r, label: t(`roles.names.${r}`) }))} />
