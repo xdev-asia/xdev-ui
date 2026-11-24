@@ -2,6 +2,7 @@ import { useId, useState, type JSX, type KeyboardEvent, type ReactNode } from "r
 import type { IconName } from "../../icons";
 import type { SessionState } from "../../types";
 import { rovingIndex } from "../../internal/keys";
+import { focusableIn, trapTarget } from "../../internal/focus";
 import { Icon } from "../Icon/Icon";
 import { Kbd } from "../Kbd/Kbd";
 import { Segmented } from "../Segmented/Segmented";
@@ -46,6 +47,8 @@ export interface CommandPaletteLabels {
   close: string;
   /** aria-label of the scope row (only used with `scopes`). */
   scopes?: string;
+  /** Announced (politely) as the results change while typing. */
+  resultCount?: (n: number) => string;
 }
 
 const DEFAULT_LABELS: CommandPaletteLabels = {
@@ -57,6 +60,7 @@ const DEFAULT_LABELS: CommandPaletteLabels = {
   open: "open",
   close: "close",
   scopes: "Scope",
+  resultCount: (n) => `${n} ${n === 1 ? "result" : "results"}`,
 };
 
 export interface CommandPaletteProps {
@@ -222,10 +226,25 @@ export function CommandPalette({
         if (e.key === "Escape" && onClose) {
           e.preventDefault();
           onClose();
+          return;
+        }
+        // A modal palette keeps Tab inside it, like a dialog.
+        if (e.key === "Tab" && framed) {
+          const to = trapTarget(focusableIn(e.currentTarget), document.activeElement, e.shiftKey);
+          if (to) {
+            e.preventDefault();
+            to.focus();
+          }
         }
       }}
     >
       {title ? <div className="pal-title" id={titleId}>{title}</div> : null}
+      {/* Always mounted, so a screen reader hears the count change while typing. */}
+      {framed ? (
+        <div className="x-sr-only" role="status">
+          {q ? (count ? (l.resultCount ?? DEFAULT_LABELS.resultCount!)(count) : l.noMatches) : ""}
+        </div>
+      ) : null}
       {inputAddon ? (
         <div className="pal-input-row">
           {input}

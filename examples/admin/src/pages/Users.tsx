@@ -246,7 +246,7 @@ export function UsersPage({ session, roles, onCreate, onDelete, version }: Users
       onSuspend={(ids) =>
         store.setStatus(ids, "suspended").then(
           () => {
-            notify(t("users.suspended", { count: ids.length }));
+            notify(ids.length === 1 ? t("users.suspendedOne") : t("users.suspended", { count: ids.length }));
             setSelected(new Set());
             reload();
           },

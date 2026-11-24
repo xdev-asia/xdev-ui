@@ -83,7 +83,7 @@ describe("Field", () => {
     state.shown = true;
     const html = renderToStaticMarkup(<Field label="Password" id="p" type="password" />);
     expect(html).toContain('<input id="p" type="text"/>');
-    expect(html).toMatch(/aria-label="Hide password"[^>]*aria-pressed="true"/);
+    expect(html).toMatch(/aria-label="Show password"[^>]*aria-pressed="true"/); // one fixed name; the state is aria-pressed
     state.shown = undefined;
   });
   it("password: labels translate the toggle, reveal={false} opts out, end comes before the toggle", () => {

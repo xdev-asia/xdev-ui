@@ -9,6 +9,7 @@ export function NotFoundPage(): JSX.Element {
   return (
     <EmptyState
       size="center"
+      headingLevel={1}
       icon="search"
       art={<Illustration scene="not-found" />}
       figure="404"

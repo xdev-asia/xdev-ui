@@ -16,10 +16,11 @@ export function ExceptionPage({ code, onRetry }: { code: ExceptionCode | "unknow
     </Button>
   );
   return code === "403" ? (
-    <EmptyState size="center" icon="lock" art={<Illustration scene="forbidden" />} figure="403" title={t("exception.forbiddenTitle")} hint={t("exception.forbiddenHint")} actions={home} />
+    <EmptyState size="center" headingLevel={1} icon="lock" art={<Illustration scene="forbidden" />} figure="403" title={t("exception.forbiddenTitle")} hint={t("exception.forbiddenHint")} actions={home} />
   ) : (
     <EmptyState
       size="center"
+      headingLevel={1}
       icon="alert"
       art={<Illustration scene="server-error" />}
       figure="500"

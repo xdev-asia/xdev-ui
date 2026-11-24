@@ -1,4 +1,4 @@
-import { useRef, useState, type FormEvent, type JSX } from "react";
+import { useEffect, useRef, useState, type FormEvent, type JSX } from "react";
 import { AuthShell, Banner, BrandMark, Button, Field, Segmented, Select, ThemeSwitch, type ThemePreference } from "@xdev-asia/ui";
 import { hrefFor } from "../router";
 import { checkCredentials, type Session } from "../auth/session";
@@ -31,6 +31,9 @@ const LANGUAGE_NAMES: Record<Locale, string> = { en: "English", vi: "Tiếng Vi�
 
 export function SignInPage({ onSignedIn, theme, onThemeChange, initial }: SignInPageProps): JSX.Element {
   const { t, ui, locale, setLocale } = useI18n();
+  useEffect(() => {
+    document.title = `${t("signIn.title")} · ${t("app.name")}`;
+  }, [t]);
   // The demo account is filled in, as in react-antd-admin; a real app starts empty.
   const [email, setEmail] = useState(initial?.empty ? "" : "admin@example.com");
   const [password, setPassword] = useState(initial?.empty ? "" : "admin-demo");
@@ -47,7 +50,11 @@ export function SignInPage({ onSignedIn, theme, onThemeChange, initial }: SignIn
     if (next.email || next.password) return focusFirstInvalid(form.current);
     const result = checkCredentials(email, password);
     if (result.ok) onSignedIn(result.session);
-    else setFailed(true);
+    else {
+      setFailed(true);
+      // The alert is read out; focus goes back to the email field so the person can fix and resend.
+      window.requestAnimationFrame(() => form.current?.querySelector<HTMLInputElement>("input")?.focus());
+    }
   };
   // After the first submit, clear a field's error as soon as it is valid again.
   const revalidate = (nextEmail: string, nextPassword: string): void => {
@@ -60,7 +67,7 @@ export function SignInPage({ onSignedIn, theme, onThemeChange, initial }: SignIn
     <AuthShell
       brand={
         <>
-          <BrandMark size={24} />
+          <BrandMark size={24} label="" />
           <span translate="no">{t("app.name")}</span>
         </>
       }
@@ -107,7 +114,7 @@ export function SignInPage({ onSignedIn, theme, onThemeChange, initial }: SignIn
             {mode === "password" ? (
               <form ref={form} className="app-form" onSubmit={submit} noValidate>
                 {failed ? (
-                  <Banner title={t("signIn.wrongCredentials")}>{t("signIn.wrongCredentialsHint")}</Banner>
+                  <Banner tone="danger" title={t("signIn.wrongCredentials")}>{t("signIn.wrongCredentialsHint")}</Banner>
                 ) : null}
                 <Field
                   label={t("signIn.email")}

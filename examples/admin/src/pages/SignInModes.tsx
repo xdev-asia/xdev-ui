@@ -43,7 +43,10 @@ export function CodeSignIn({ onSignedIn, initial }: { onSignedIn: (s: Session) =
     }
     const r = checkCode(email, value);
     if (r.ok) onSignedIn(r.session);
-    else setFailed(true);
+    else {
+      setFailed(true);
+      window.requestAnimationFrame(() => form.current?.querySelector<HTMLInputElement>("input")?.focus());
+    }
   };
   if (!sent)
     return (
@@ -64,7 +67,7 @@ export function CodeSignIn({ onSignedIn, initial }: { onSignedIn: (s: Session) =
       }}
       noValidate
     >
-      {failed ? <Banner title={t("signIn.wrongCode")}>{t("signIn.wrongCodeHint")}</Banner> : null}
+      {failed ? <Banner tone="danger" title={t("signIn.wrongCode")}>{t("signIn.wrongCodeHint")}</Banner> : null}
       <div className="app-labelled">
         <span className="app-label" id="signin-code-label">
           {t("signIn.code")}

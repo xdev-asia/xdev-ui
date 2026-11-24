@@ -74,7 +74,15 @@ export function AuditLogView(p: AuditLogViewProps): JSX.Element {
       key: "details",
       header: t("audit.details"),
       cell: (e) => (
-        <Disclosure title={t("audit.details")} defaultExpanded={false}>
+        <Disclosure
+          title={
+            <>
+              {t("audit.details")}
+              <span className="x-sr-only">: {t(`audit.actions.${e.kind}`)}, {e.actor}</span>
+            </>
+          }
+          defaultExpanded={false}
+        >
           <DescriptionList items={[{ term: t("audit.ip"), value: e.ip, mono: true }, { term: "ID", value: e.id, mono: true }]} />
         </Disclosure>
       ),

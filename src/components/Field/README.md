@@ -18,6 +18,6 @@ Labelled text input with an optional hint or error line.
 - `mono` sets the value in the mono face (ids, codes, IPA, paths, keys), as `Textarea mono` does; the label and hint stay in the body face.
 - `action` puts a small control on the label row, end-aligned: a `Button variant="link"` such as "Generate". It is outside the label, so it keeps its own name.
 - `end` puts content inside the control at its end: a unit ("ms"), a small `IconButton size="sm"`. A unit in `end` is visual only; say it in the label or hint as well ("Timeout, in ms").
-- `type="password"` adds a show/hide toggle at the control end: an `IconButton` (`eye`, then `eye-off`) with `aria-pressed`, named by `labels.show` / `labels.hide` ("Show password" / "Hide password"), that switches the input between `password` and `text`. It is disabled with the input. `reveal={false}` opts out. With `end` as well, both render, the toggle last.
+- `type="password"` adds a show/hide toggle at the control end: an `IconButton` (`eye`, then `eye-off`) with `aria-pressed`, named by `labels.show` ("Show password") in both states, since `aria-pressed` carries the state (a name that also flipped would read "Hide password, pressed"); `labels.hide` is kept for compatibility, that switches the input between `password` and `text`. It is disabled with the input. `reveal={false}` opts out. With `end` as well, both render, the toggle last.
 - Built-in words come from `labels` with English defaults; pass `vi` strings from the app.
 - `Label` renders the same `label.x-label` for a custom control that is not a `Field`.
