@@ -118,3 +118,32 @@
 .app-spot-disc { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--spot) 26%, transparent), color-mix(in srgb, var(--spot) 8%, transparent) 70%); }
 .app-spot > svg { position: relative; }
 .app-spot-badge { position: absolute; top: 0.75rem; right: 0.75rem; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; background: var(--spot); color: var(--bg-0); box-shadow: 0 0 0 0.25rem var(--bg-0); }
+/* Illustration: flat scenes for 403/404/500, every fill a theme token so light and dark both read. */
+.ill { --spot: var(--accent); display: block; max-width: 100%; height: auto; }
+.ill[data-tone="warn"] { --spot: var(--warn); }
+.ill[data-tone="danger"] { --spot: var(--danger); }
+.ill-bg { fill: color-mix(in srgb, var(--spot) 12%, transparent); }
+.ill-dot { fill: color-mix(in srgb, var(--spot) 45%, transparent); }
+.ill-ground { fill: color-mix(in srgb, var(--text-2) 16%, transparent); }
+.ill-line { stroke: var(--text-2); fill: none; }
+.ill-line-fill { fill: var(--text-2); }
+.ill-object { fill: var(--bg-1); stroke: var(--text-2); stroke-width: 2; }
+.ill-object-in { fill: var(--bg-3); stroke: var(--text-2); stroke-width: 1.5; }
+.ill-glass { fill: color-mix(in srgb, var(--accent) 18%, var(--bg-1)); stroke: var(--text-2); stroke-width: 4; }
+.ill-led { fill: var(--ok); }
+.ill-led-bad { fill: var(--danger); }
+.ill-mark { fill: var(--spot); font-family: var(--font-body); font-weight: 700; }
+.ill-leaf { fill: var(--ok); }
+.ill-leaf-dark { fill: color-mix(in srgb, var(--ok) 70%, var(--text-1)); }
+.ill-pot { fill: var(--orange); }
+.ill-pants { fill: color-mix(in srgb, var(--accent) 55%, var(--text-1)); }
+.ill-shoe { fill: var(--text-1); }
+.ill-shirt { fill: var(--bg-1); stroke: var(--text-2); stroke-width: 1.5; }
+.ill-skin { fill: color-mix(in srgb, var(--orange) 35%, var(--x-color-on-accent)); }
+.ill-skin-stroke { stroke: color-mix(in srgb, var(--orange) 35%, var(--x-color-on-accent)); }
+.ill-hair { fill: color-mix(in srgb, var(--orange) 40%, var(--text-1)); }
+.ill-eye { fill: var(--text-1); }
+.ill-badge { fill: var(--spot); stroke: var(--bg-0); stroke-width: 3; }
+.ill-badge-text { fill: var(--x-color-on-accent); font-family: var(--font-body); font-weight: 700; }
+.ill-badge-fill { fill: var(--x-color-on-accent); }
+.ill-badge-stroke { stroke: var(--x-color-on-accent); }
