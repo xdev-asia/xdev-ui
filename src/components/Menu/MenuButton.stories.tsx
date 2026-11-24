@@ -21,3 +21,4 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 export const IconOnly: Story = { args: { variant: "icon", label: "Actions for Ada", align: "end" } };
 export const Inline: Story = { args: { portal: false } };
+export const Ghost: Story = { args: { variant: "ghost", label: "System" } };

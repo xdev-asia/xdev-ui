@@ -406,6 +406,16 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
       { key: "groq", label: "Groq", value: 90, valueLabel: "90k" }] });
     },
   },
+  "DonutChart": {
+    style: {"padding": "16px", "width": "420px"},
+    render: (X, h) => {
+    return h(X.DonutChart, { label: "Revenue by category", size: 120, center: h("strong", null, "$48k"), slices: [
+      { key: "software", label: "Software", value: 42, valueLabel: "42%" },
+      { key: "hardware", label: "Hardware", value: 24, valueLabel: "24%" },
+      { key: "services", label: "Services", value: 18, valueLabel: "18%" },
+      { key: "training", label: "Training", value: 16, valueLabel: "16%" }] });
+    },
+  },
   "ThemeSwitch": {
     style: {"display": "flex", "flexDirection": "column", "gap": "12px", "alignItems": "flex-start", "padding": "16px"},
     render: (X, h) => h(React.Fragment, null,
@@ -794,7 +804,7 @@ export const previews: Record<string, { style: React.CSSProperties; render: (X: 
   "StatTile": {
     style: {"display": "flex", "gap": "12px", "flexWrap": "wrap", "padding": "16px"},
     render: (X, h) => h(React.Fragment, null,
-      h(X.StatTile, { label: "Active users", value: "1,284", delta: "+12%", deltaTrend: "up", deltaTone: "good", hint: "vs last 7 days" }),
+      h(X.StatTile, { label: "Active users", value: "1,284", icon: "accounts", delta: "+12%", deltaTrend: "up", deltaTone: "good", hint: "vs last 7 days" }),
       h(X.StatTile, { label: "Storage", value: "82 GB" }, h(X.Meter, { value: 82, warnAt: 80, label: "Used" })),
       h(X.StatTile, { label: "Sign-ins", value: "0", loading: true })),
   },

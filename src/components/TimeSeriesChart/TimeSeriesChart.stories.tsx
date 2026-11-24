@@ -29,3 +29,4 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 export const AllZero: Story = { args: { points: days.map((p) => ({ ...p, value: 0 })), maxLabel: undefined } };
+export const Dots: Story = { args: { dots: true } };

@@ -45,7 +45,7 @@ How to rebuild an admin template made with Ant Design, Ant Design Pro, MUI or sh
 | `Statistic`, count-up cards | `StatTile` (no count-up animation; say what the number is compared with) |
 | ECharts line or area | `TimeSeriesChart` |
 | ECharts bar | `BarChart` |
-| ECharts pie or donut | `BarChart` sorted largest first, values in % (bars compare shares more exactly than slices) |
+| ECharts pie or donut | `DonutChart` for parts of one whole (at most 8, largest first, every value written in its legend); `BarChart` when the amounts do not add up to a whole or need exact comparison |
 | `Progress` | `Meter` |
 | `Descriptions` | `DescriptionList` |
 | `Tag` | `Tag`; a state is `StatusDot` with words, not a coloured tag |

@@ -16,6 +16,8 @@ Four `StatTile` in a grid, a `Card` with recent activity, a `Card` with usage `M
 </Card>
 ```
 
+- `icon` on a `StatTile` names what is counted (people, sign-ins, storage) in a tile at its top right; it is decorative, the label carries the meaning.
+- Charts: `TimeSeriesChart` for a measure over time (`dots` for a short series such as a week of days), `BarChart` to compare amounts, `DonutChart` for the parts of one whole (revenue by category), at most 8 slices.
 - `deltaTone` is your call: more failed sign-ins is `bad` even though the arrow points up.
 - Error: a `Banner` with a secondary "Try again" `Button`, replacing the content.
 - Empty list: `EmptyState` size `inline`.

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Breadcrumb } from "../Breadcrumb/Breadcrumb";
+import { Button } from "../Button/Button";
 import { BottomNav } from "../BottomNav/BottomNav";
 import { BrandMark } from "../BrandMark/BrandMark";
 import { NavList } from "../NavList/NavList";
@@ -47,3 +48,19 @@ export const WithBottomNav: Story = {
     ),
   },
 };
+/** Top navigation: no sidebar from 768px up, the brand in the top bar and a menu in `crumbs`; phones still get the drawer. */
+export const TopNavigation: Story = {
+  ...Default,
+  args: {
+    ...Default.args,
+    navHidden: true,
+    crumbs: (
+      <nav aria-label="Main menu" style={{ display: "flex", gap: 4 }}>
+        <Button variant="secondary" href="#">Overview</Button>
+        <Button variant="ghost" href="#">Users</Button>
+      </nav>
+    ),
+  },
+};
+/** A light sidebar whatever the page's theme, with `sideTheme`. */
+export const LightSidebar: Story = { ...Default, args: { ...Default.args, sideTheme: "light" } };
