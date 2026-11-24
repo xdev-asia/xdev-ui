@@ -1,7 +1,7 @@
 import type { JSX } from "react";
 import { Button, Card, PageHeader } from "@xdev-asia/ui";
 import { useI18n } from "../i18n";
-import type { NESTED } from "../router";
+import { EMBEDS, type EmbedId, type NESTED } from "../router";
 
 const NAMES = { "menu1-1": "nav.menu11", "menu1-2": "nav.menu12", menu2: "nav.menu2" } as const;
 
@@ -11,24 +11,24 @@ export function NestedPage({ leaf }: { leaf: (typeof NESTED)[number] }): JSX.Ele
   return <PageHeader title={t(NAMES[leaf])} description={t("nested.hint")} />;
 }
 
-export const DOCS_URL = "https://ui.xdev.asia";
-
-/** Another site inside the console, with a way out to a full tab. */
-export function DocsPage(): JSX.Element {
+/** Another site inside the console (Outside pages, Embedded), with a way out to a full tab. */
+export function EmbedPage({ id }: { id: EmbedId }): JSX.Element {
   const { t } = useI18n();
+  const url = EMBEDS[id];
+  const name = t(id === "docs" ? "nav.docs" : "nav.storybook");
   return (
     <>
       <PageHeader
-        title={t("docs.title")}
+        title={name}
         description={t("docs.description")}
         actions={
-          <Button variant="secondary" icon="external" href={DOCS_URL} target="_blank" rel="noreferrer">
+          <Button variant="secondary" icon="external" href={url} target="_blank" rel="noreferrer">
             {t("docs.openNew")}
           </Button>
         }
       />
       <Card flush>
-        <iframe className="app-frame" src={DOCS_URL} title={t("docs.frame")} loading="lazy" referrerPolicy="no-referrer" />
+        <iframe className="app-frame" src={url} title={name} loading="lazy" referrerPolicy="no-referrer" />
       </Card>
     </>
   );

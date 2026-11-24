@@ -5,7 +5,9 @@ export type RouteName =
   | "users"
   | "user"
   | "roles"
-  | "permissions"
+  | "access"
+  | "embed"
+  | "legal"
   | "menus"
   | "departments"
   | "settings"
@@ -14,7 +16,6 @@ export type RouteName =
   | "about"
   | "exception"
   | "nested"
-  | "docs"
   | "sign-in"
   | "not-found";
 
@@ -23,6 +24,15 @@ export const EXCEPTIONS = ["403", "404", "500"] as const;
 export type ExceptionCode = (typeof EXCEPTIONS)[number];
 /** Leaves of the nested-menu demo. */
 export const NESTED = ["menu1-1", "menu1-2", "menu2"] as const;
+/** The access demo pages, as in react-antd-admin's "Access" menu. */
+export const ACCESS_PAGES = ["mode", "pages", "buttons", "admin", "common"] as const;
+export type AccessPage = (typeof ACCESS_PAGES)[number];
+/** Sites shown inside the console (Outside pages, Embedded). */
+export const EMBEDS = { docs: "https://ui.xdev.asia/", storybook: "https://ui.xdev.asia/storybook/" } as const;
+export type EmbedId = keyof typeof EMBEDS;
+/** Public pages, open without signing in. */
+export const LEGAL = ["privacy", "terms"] as const;
+export type LegalPage = (typeof LEGAL)[number];
 export interface Route {
   name: RouteName;
   params: Record<string, string>;
@@ -35,12 +45,10 @@ const STATIC: Record<string, RouteName> = {
   "/roles": "roles",
   "/settings": "settings",
   "/audit": "audit",
-  "/permissions": "permissions",
   "/menus": "menus",
   "/departments": "departments",
   "/profile": "profile",
   "/about": "about",
-  "/docs": "docs",
   "/sign-in": "sign-in",
 };
 
@@ -65,6 +73,13 @@ export function matchRoute(input: string): Route {
   if (sectionId !== null) return { name: "settings", params: { section: sectionId }, path };
   const code = /^\/exception\/(\d{3})$/.exec(path)?.[1];
   if (code !== undefined && (EXCEPTIONS as readonly string[]).includes(code)) return { name: "exception", params: { code }, path };
+  if (path === "/exception/unknown") return { name: "exception", params: { code: "unknown" }, path };
+  const access = /^\/access\/([\w-]+)$/.exec(path)?.[1];
+  if (access !== undefined && (ACCESS_PAGES as readonly string[]).includes(access)) return { name: "access", params: { page: access }, path };
+  const embed = /^\/outside\/([\w-]+)$/.exec(path)?.[1];
+  if (embed !== undefined && embed in EMBEDS) return { name: "embed", params: { id: embed }, path };
+  const legal = /^\/(privacy|terms)$/.exec(path)?.[1];
+  if (legal !== undefined) return { name: "legal", params: { page: legal }, path };
   const leaf = /^\/nested\/([\w-]+)$/.exec(path)?.[1];
   if (leaf !== undefined && (NESTED as readonly string[]).includes(leaf)) return { name: "nested", params: { leaf }, path };
   return { name: "not-found", params: {}, path };
@@ -76,12 +91,14 @@ export const hrefFor = {
   user: (id: string) => `#/users/${encodeURIComponent(id)}`,
   roles: () => "#/roles",
   audit: () => "#/audit",
-  permissions: () => "#/permissions",
+  access: (page: AccessPage) => `#/access/${page}`,
+  embed: (id: EmbedId) => `#/outside/${id}`,
+  legal: (page: LegalPage) => `#/${page}`,
+  unknown: () => "#/exception/unknown",
   menus: () => "#/menus",
   departments: () => "#/departments",
   profile: () => "#/profile",
   about: () => "#/about",
-  docs: () => "#/docs",
   exception: (code: ExceptionCode) => `#/exception/${code}`,
   nested: (leaf: (typeof NESTED)[number]) => `#/nested/${leaf}`,
   settings: (section?: string) => (section ? `#/settings/${section}` : "#/settings"),

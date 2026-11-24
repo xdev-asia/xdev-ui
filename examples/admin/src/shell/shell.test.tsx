@@ -4,7 +4,7 @@ import { seedNotices } from "../data/catalog";
 import { seedRoles } from "../data/seed";
 import { I18nProvider } from "../i18n";
 import { matchRoute } from "../router";
-import { canOpen, currentOf, navFor } from "./nav";
+import { canOpen, currentOf, leaves, NAV, navFor, toItems } from "./nav";
 import { Notifications } from "./Notifications";
 import { PreferencesDrawer } from "./PreferencesDrawer";
 import { closeTabs, DEFAULT_PREFS, readPrefs, readTabs, visitTab } from "./prefs";
@@ -12,23 +12,32 @@ import { closeTabs, DEFAULT_PREFS, readPrefs, readTabs, visitTab } from "./prefs
 const roles = seedRoles();
 
 describe("nav", () => {
-  it("drops entries and groups a role cannot read", () => {
-    const viewer = navFor(roles, "viewer").flatMap((g) => g.items.map((e) => e.id));
+  const ids = (tree: ReturnType<typeof navFor>) => leaves(tree).map((l) => l.entry.id);
+  it("follows the reference's order and drops leaves and branches a role cannot see", () => {
+    expect(NAV.map((n) => n.id)).toEqual(["dashboard", "access", "nested", "outside", "exception", "system", "personal", "about"]);
+    const viewer = ids(navFor(roles, "viewer"));
     expect(viewer).toContain("users");
     expect(viewer).not.toContain("roles");
-    expect(viewer).not.toContain("menus");
-    expect(navFor(roles, "owner").flatMap((g) => g.items).length).toBeGreaterThan(viewer.length);
+    expect(viewer).toContain("access-common");
+    expect(viewer).not.toContain("access-admin");
+    expect(ids(navFor(roles, "owner"))).toContain("access-admin");
   });
-  it("finds the current entry, including pages with params", () => {
+  it("finds the current leaf with the branches above it, three levels deep", () => {
     expect(currentOf(matchRoute("#/users/u3"))?.entry.id).toBe("users");
-    expect(currentOf(matchRoute("#/exception/500"))?.entry.id).toBe("500");
-    expect(currentOf(matchRoute("#/nested/menu2"))?.group.id).toBe("nested");
+    const deep = currentOf(matchRoute("#/nested/menu1-2"));
+    expect(deep?.trail.map((b) => b.id)).toEqual(["nested", "menu1"]);
+    expect(currentOf(matchRoute("#/exception/unknown"))?.entry.id).toBe("unknown");
     expect(currentOf(matchRoute("#/nope"))).toBeNull();
   });
   it("blocks a link to a page the role cannot read", () => {
     expect(canOpen(matchRoute("#/roles"), roles, "viewer")).toBe(false);
+    expect(canOpen(matchRoute("#/access/admin"), roles, "viewer")).toBe(false);
     expect(canOpen(matchRoute("#/roles"), roles, "admin")).toBe(true);
     expect(canOpen(matchRoute("#/nope"), roles, "viewer")).toBe(true);
+  });
+  it("turns the tree into NavList items with children", () => {
+    const items = toItems(NAV, (k) => k);
+    expect(items.find((i) => i.id === "nested")?.children?.[0]?.children?.map((c) => c.id)).toEqual(["menu1-1", "menu1-2"]);
   });
 });
 
@@ -83,13 +92,13 @@ describe("shell parts", () => {
     expect(html).toContain("Bạn đã xem hết thông báo");
     expect(html).not.toContain("Đánh dấu đã đọc hết");
   });
-  it("preferences hold theme icons, language and four layout switches", () => {
+  it("preferences hold theme icons, language and the general and layout switches", () => {
     const html = renderToStaticMarkup(
       <I18nProvider locale="en">
         <PreferencesDrawer prefs={DEFAULT_PREFS} onPrefs={() => {}} theme="dark" onTheme={() => {}} onClose={() => {}} modal={false} />
       </I18nProvider>,
     );
-    expect(html.match(/role="switch"/g)).toHaveLength(4);
+    expect(html.match(/role="switch"/g)).toHaveLength(8);
     expect(html).toContain("x-theme-icons");
     expect(html).toContain("Page tabs");
     expect(html).toContain("Tiếng Việt");

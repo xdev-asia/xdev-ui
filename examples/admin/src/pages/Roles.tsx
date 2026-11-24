@@ -1,5 +1,5 @@
 import { useState, type JSX } from "react";
-import { Banner, Button, Card, Checkbox, DataTable, FormSection, ListRow, PageHeader, Spinner, type DataTableColumn } from "@xdev-asia/ui";
+import { Banner, Button, Checkbox, DataTable, Drawer, IconButton, PageHeader, Spinner, StatusDot, Tag, type DataTableColumn } from "@xdev-asia/ui";
 import { can } from "../auth/permissions";
 import type { Session } from "../auth/session";
 import { useStore } from "../data/context";
@@ -25,6 +25,9 @@ export interface RolesViewProps {
   canEdit: boolean;
   roleId: RoleId;
   onRoleChange: (id: RoleId) => void;
+  /** The edit drawer for `roleId` is open. */
+  editing: boolean;
+  onClose: () => void;
   /** The role being edited, with unsaved changes applied. */
   draft: Role | null;
   dirty: boolean;
@@ -58,9 +61,22 @@ export function RolesView(p: RolesViewProps): JSX.Element {
     })),
   ];
 
+  const roleRows: DataTableColumn<RoleId>[] = [
+    { key: "name", header: t("roles.list"), cell: (id) => t(`roles.names.${id}`) },
+    { key: "code", header: t("roles.code"), mono: true, cell: (id) => <span translate="no">{id}</span> },
+    { key: "status", header: t("roles.status"), cell: () => <StatusDot tone="ok" label={t("roles.active")} /> },
+    { key: "people", header: t("roles.people"), align: "end", mono: true, width: "min", cell: (id) => num(p.state.status === "ready" ? p.state.data.counts[id] : 0) },
+    {
+      key: "actions",
+      header: t("roles.actions"),
+      width: "min",
+      sticky: "end",
+      cell: (id) => <IconButton icon="edit" label={t("roles.edit", { role: t(`roles.names.${id}`) })} onClick={() => p.onRoleChange(id)} />,
+    },
+  ];
   return (
     <>
-      <PageHeader title={t("roles.title")} description={t("roles.description")} />
+      <PageHeader title={t("roles.title")} description={t("roles.description")} meta={<Tag>{num(ROLE_IDS.length)}</Tag>} />
       {p.state.status === "error" ? (
         <Banner title={t("app.loadFailed")} action={<Button variant="secondary" onClick={p.onRetry}>{t("app.retry")}</Button>}>
           {t("app.loadFailedHint")}
@@ -68,40 +84,33 @@ export function RolesView(p: RolesViewProps): JSX.Element {
       ) : p.state.status === "loading" ? (
         <div className="app-pane"><Spinner size="md" label={ui.spinner.loading} /></div>
       ) : (
-        <div className="app-roles">
-          <Card title={t("roles.list")} flush>
-            <ul className="app-list">
-              {ROLE_IDS.map((id) => (
-                <ListRow
-                  as="li"
-                  key={id}
-                  title={t(`roles.names.${id}`)}
-                  meta={t("roles.members", { count: num(p.state.status === "ready" ? p.state.data.counts[id] : 0) })}
-                  selected={id === p.roleId}
-                  onClick={() => p.onRoleChange(id)}
-                />
-              ))}
-            </ul>
-          </Card>
+        <DataTable caption={t("roles.list")} columns={roleRows} rows={ROLE_IDS} rowKey={(id) => id} labels={ui.dataTable} stack />
+      )}
+      {p.editing && p.state.status === "ready" ? (
+        <Drawer
+          size="wide"
+          title={t("roles.editTitle", { role: roleName })}
+          description={locked ? t("roles.ownerLocked") : t("roles.editHint")}
+          onClose={p.onClose}
+          busy={p.saving}
+          labels={ui.drawer}
+          footer={
+            editable ? (
+              <>
+                <Button variant="secondary" disabled={!p.dirty || p.saving} onClick={p.onDiscard}>{t("roles.discard")}</Button>
+                <Button variant="primary" disabled={!p.dirty || p.saving} onClick={p.onSave}>{t("roles.save")}</Button>
+              </>
+            ) : (
+              <Button variant="secondary" onClick={p.onClose}>{t("roles.close")}</Button>
+            )
+          }
+        >
           <div className="app-stack">
             {p.dirty ? <Banner title={t("roles.unsaved")}>{t("roles.unsavedHint")}</Banner> : null}
-            <FormSection
-              title={t("roles.matrix", { role: roleName })}
-              description={locked ? t("roles.ownerLocked") : undefined}
-              actions={
-                editable ? (
-                  <>
-                    <Button variant="secondary" disabled={!p.dirty || p.saving} onClick={p.onDiscard}>{t("roles.discard")}</Button>
-                    <Button variant="primary" disabled={!p.dirty || p.saving} onClick={p.onSave}>{t("roles.save")}</Button>
-                  </>
-                ) : undefined
-              }
-            >
-              <DataTable caption={t("roles.matrix", { role: roleName })} columns={columns} rows={RESOURCES} rowKey={(r) => r} labels={ui.dataTable} />
-            </FormSection>
+            <DataTable caption={t("roles.matrix", { role: roleName })} columns={columns} rows={RESOURCES} rowKey={(r) => r} labels={ui.dataTable} />
           </div>
-        </div>
-      )}
+        </Drawer>
+      ) : null}
     </>
   );
 }
@@ -117,6 +126,7 @@ export function RolesPage({ session, roles, onRolesChanged }: { session: Session
     return { roles: list, counts };
   }, [store]);
   const [roleId, setRoleId] = useState<RoleId>("admin");
+  const [editing, setEditing] = useState(false);
   const [drafts, setDrafts] = useState<Partial<Record<RoleId, Role>>>({});
   const [saving, setSaving] = useState(false);
   const saved = state.status === "ready" ? state.data.roles.find((r) => r.id === roleId) ?? null : null;
@@ -128,7 +138,15 @@ export function RolesPage({ session, roles, onRolesChanged }: { session: Session
       state={state}
       canEdit={can(roles, session.role, "roles.update")}
       roleId={roleId}
-      onRoleChange={setRoleId}
+      onRoleChange={(id) => {
+        setRoleId(id);
+        setEditing(true);
+      }}
+      editing={editing}
+      onClose={() => {
+        setDrafts({ ...drafts, [roleId]: undefined });
+        setEditing(false);
+      }}
       draft={draft}
       dirty={dirty}
       saving={saving}

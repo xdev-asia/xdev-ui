@@ -12,6 +12,11 @@ const ACCOUNTS: (Session & { password: string })[] = [
   { name: "Grace Hopper", email: "viewer@example.com", password: "viewer-demo", role: "viewer" },
 ];
 
+/** Demo only: the accounts the access pages switch between, without their passwords. */
+export function demoAccounts(): Session[] {
+  return ACCOUNTS.map(({ name, email, role }) => ({ name, email, role }));
+}
+
 export type SignInResult = { ok: true; session: Session } | { ok: false };
 
 /** Demo only: checks two hard-coded accounts. A real app calls its server. */

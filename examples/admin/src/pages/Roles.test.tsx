@@ -16,6 +16,8 @@ function props(over: Partial<RolesViewProps> = {}): RolesViewProps {
     canEdit: true,
     roleId,
     onRoleChange: noop,
+    editing: true,
+    onClose: noop,
     draft: roles.find((r) => r.id === roleId)!,
     dirty: false,
     saving: false,
@@ -48,9 +50,10 @@ describe("Roles", () => {
   for (const locale of ["en", "vi"] as const) {
     it(`lists four roles with member counts and a 4 by 4 matrix (${locale})`, () => {
       const html = render(locale, props());
-      expect(html.match(/<li class="x-list-row/g)).toHaveLength(4);
+      expect(html.match(/<button[^>]*aria-label="(Edit|Sửa) /g)).toHaveLength(4);
       expect(html.match(/type="checkbox"/g)).toHaveLength(16);
-      expect(html).toContain(locale === "en" ? "5 members" : "5 thành viên");
+      expect(html).toContain('translate="no">viewer<');
+      expect(render(locale, props({ editing: false })).match(/type="checkbox"/g)).toBeNull();
       expect(html.match(/<h1/g)).toHaveLength(1);
     });
     it(`has loading and error states (${locale})`, () => {
@@ -79,6 +82,6 @@ describe("Roles", () => {
     expect(render("en", props())).toMatch(/<button[^>]*disabled=""[^>]*>Save permissions/);
   });
   it("marks the chosen role", () => {
-    expect(render("en", props({ roleId: "editor" }))).toMatch(/aria-current|data-selected|selected/);
+    expect(render("en", props({ roleId: "editor" }))).toContain("Edit Editor");
   });
 });

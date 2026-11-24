@@ -7,17 +7,25 @@ export interface Prefs {
   footer: boolean;
   /** Sidebar folded to a rail of icons on wide screens. */
   collapsed: boolean;
+  /** Name the browser tab after the page. */
+  dynamicTitle: boolean;
+  /** A button that scrolls a long page back up. */
+  backToTop: boolean;
+  /** Reopen the page tabs after a reload. */
+  tabsPersist: boolean;
+  /** Reload, focus view and the tab menu after the tabs. */
+  tabsTools: boolean;
 }
 
-export const DEFAULT_PREFS: Prefs = { tabs: true, crumbs: true, footer: true, collapsed: false };
-const KEY = "acme-prefs";
+export const DEFAULT_PREFS: Prefs = { tabs: true, crumbs: true, footer: true, collapsed: false, dynamicTitle: true, backToTop: true, tabsPersist: true, tabsTools: true };
+export const PREFS_KEY = "acme-prefs";
 
 /** Pure: stored JSON to prefs; unknown or broken values fall back to the defaults one by one. */
 export function readPrefs(raw: string | null | undefined): Prefs {
   try {
     const v = JSON.parse(raw ?? "{}") as Partial<Record<keyof Prefs, unknown>>;
     const pick = (k: keyof Prefs): boolean => (typeof v[k] === "boolean" ? (v[k] as boolean) : DEFAULT_PREFS[k]);
-    return { tabs: pick("tabs"), crumbs: pick("crumbs"), footer: pick("footer"), collapsed: pick("collapsed") };
+    return Object.fromEntries((Object.keys(DEFAULT_PREFS) as (keyof Prefs)[]).map((k) => [k, pick(k)])) as unknown as Prefs;
   } catch {
     return DEFAULT_PREFS;
   }
@@ -27,7 +35,7 @@ export function usePrefs(): [Prefs, (next: Prefs) => void] {
   const [prefs, setPrefs] = useState<Prefs>(DEFAULT_PREFS);
   useEffect(() => {
     try {
-      setPrefs(readPrefs(window.localStorage.getItem(KEY)));
+      setPrefs(readPrefs(window.localStorage.getItem(PREFS_KEY)));
     } catch {
       /* storage blocked: keep the defaults */
     }
@@ -35,7 +43,7 @@ export function usePrefs(): [Prefs, (next: Prefs) => void] {
   const set = useCallback((next: Prefs) => {
     setPrefs(next);
     try {
-      window.localStorage.setItem(KEY, JSON.stringify(next));
+      window.localStorage.setItem(PREFS_KEY, JSON.stringify(next));
     } catch {
       /* private mode: the choice lasts for this visit */
     }

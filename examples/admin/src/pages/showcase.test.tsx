@@ -3,13 +3,14 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { seedDepartments, seedMenus } from "../data/catalog";
 import { seedRoles } from "../data/seed";
+import type { Session } from "../auth/session";
 import { I18nProvider, type Locale } from "../i18n";
 import { AboutPage } from "./About";
-import { DocsPage, NestedPage } from "./Demo";
+import { EmbedPage, NestedPage } from "./Demo";
+import { AccessView } from "./Access";
 import { DepartmentsView } from "./Departments";
 import { ExceptionPage } from "./Exception";
 import { MenusView, validateMenu } from "./Menus";
-import { PermissionsView } from "./Permissions";
 import { ProfileView, validateProfile } from "./Profile";
 
 const render = (node: ReactNode, locale: Locale = "en") => renderToStaticMarkup(<I18nProvider locale={locale}>{node}</I18nProvider>);
@@ -60,17 +61,26 @@ describe("Departments", () => {
   });
 });
 
-describe("Permissions", () => {
-  it("shows a viewer that roles and audit are hidden and no buttons", () => {
-    const html = render(<PermissionsView roles={roles} initialRole="viewer" />);
-    expect(count(html, />Hidden</g)).toBeGreaterThan(4);
-    expect(html).not.toContain("btn-secondary");
+describe("Access demo", () => {
+  const owner = { name: "Ada Lovelace", email: "admin@example.com", role: "owner" as const };
+  const viewer = { name: "Grace Hopper", email: "viewer@example.com", role: "viewer" as const };
+  const view = (page: "mode" | "pages" | "buttons" | "admin" | "common", session: Session = owner) => render(<AccessView page={page} session={session} roles={roles} onSwitch={() => {}} />);
+  it("page control offers to sign in as the other demo account and marks what the role sees", () => {
+    const html = view("pages", viewer);
+    expect(html).toContain("Sign in as Ada Lovelace");
+    expect(html).not.toContain("Sign in as Grace Hopper");
+    expect(count(html, />Hidden</g)).toBeGreaterThan(3);
   });
-  it("shows an owner every page and every button", () => {
-    const html = render(<PermissionsView roles={roles} initialRole="owner" />);
-    expect(html).not.toContain(">Hidden<");
-    expect(html).toContain("Export the audit log");
-    expect(count(html, /btn-secondary/g)).toBe(6);
+  it("button control renders only the buttons and codes the role holds", () => {
+    expect(count(view("buttons"), /btn-secondary/g)).toBe(7); // six buttons plus the account switch
+    const vh = view("buttons", viewer);
+    expect(vh).toContain("This role can use none of these buttons.");
+    expect(vh).not.toContain("users.delete");
+  });
+  it("mode names both ways and marks the one in use; the role pages explain who sees them", () => {
+    expect(view("mode")).toContain("In use");
+    expect(view("admin")).toContain("Only owners and admins see this page");
+    expect(view("common")).toContain("Only editors and viewers see this page");
   });
 });
 
@@ -105,6 +115,7 @@ describe("Status, about and demo pages", () => {
   });
   it("nested and docs pages have a title and a named frame", () => {
     expect(render(<NestedPage leaf="menu1-2" />)).toContain("Menu 1-2");
-    expect(render(<DocsPage />)).toContain('title="xdev-ui documentation"');
+    expect(render(<EmbedPage id="storybook" />)).toContain('title="Storybook"');
+    expect(render(<ExceptionPage code="unknown" />)).toContain("This page is not built yet");
   });
 });
