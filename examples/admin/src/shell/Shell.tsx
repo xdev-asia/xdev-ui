@@ -1,5 +1,5 @@
-import { Fragment, useEffect, useRef, useState, type JSX, type MouseEvent, type ReactNode } from "react";
-import { AppShell, Breadcrumb, BrandMark, IconButton, Menu, MenuButton, NavList, Popover, TabStrip, ThemeSwitch, type ThemePreference } from "@xdev-asia/ui";
+import { Suspense, useEffect, useRef, useState, type JSX, type MouseEvent, type ReactNode } from "react";
+import { AppShell, Banner, Breadcrumb, BrandMark, Button, Icon, IconButton, Menu, MenuButton, NavList, Popover, Spinner, TabStrip, ThemeSwitch, type MenuEntry, type ThemePreference } from "@xdev-asia/ui";
 import type { Session } from "../auth/session";
 import { seedNotices, type Notice } from "../data/catalog";
 import type { Role } from "../data/seed";
@@ -7,7 +7,8 @@ import { LOCALES, useI18n, type Locale } from "../i18n";
 import { hrefFor, navigate, type Route } from "../router";
 import { AccountMenu } from "./AccountMenu";
 import { GlobalSearch } from "./GlobalSearch";
-import { currentOf, leaves, navFor, toItems } from "./nav";
+import { currentOf, leaves, navFor, toItems, type NavNode } from "./nav";
+import { buildId, ROOT_VARS, rootStyle, watermarkUrl } from "./appearance";
 import { Notifications } from "./Notifications";
 import { PreferencesDrawer } from "./PreferencesDrawer";
 import { closeTabs, HOME, readTabs, visitTab, type OpenPage, type Prefs, type TabAction } from "./prefs";
@@ -63,6 +64,66 @@ function useScrolledFar(enabled: boolean): boolean {
   return far;
 }
 
+/** True from the drawer breakpoint (768px) up; the top, mixed and two-column layouts apply only there. */
+function useWide(): boolean {
+  const [wide, setWide] = useState(true);
+  useEffect(() => {
+    const mq = window.matchMedia?.("(min-width: 48rem)");
+    if (!mq) return;
+    const sync = (): void => setWide(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+  return wide;
+}
+
+/** Accent, radius, widths and the colour filters on <html>, so every part and portal follows. */
+function useAppearance(prefs: Prefs): void {
+  useEffect(() => {
+    const root = document.documentElement;
+    const { vars, filter } = rootStyle(prefs);
+    for (const name of ROOT_VARS) {
+      const value = vars[name];
+      if (value) root.style.setProperty(name, value);
+      else root.style.removeProperty(name);
+    }
+    root.style.filter = filter;
+  }, [prefs]);
+  useEffect(
+    () => () => {
+      const root = document.documentElement;
+      for (const name of ROOT_VARS) root.style.removeProperty(name);
+      root.style.filter = "";
+    },
+    [],
+  );
+}
+
+/** True once the deployed index.html points at another build than the one running; checked every minute. */
+function useUpdateCheck(enabled: boolean): boolean {
+  const [stale, setStale] = useState(false);
+  useEffect(() => {
+    const running = document.querySelector<HTMLScriptElement>('script[type="module"][src*="/assets/"]')?.getAttribute("src");
+    if (!enabled || !running) return;
+    const check = (): void => {
+      fetch(window.location.pathname, { cache: "no-store" })
+        .then((r) => (r.ok ? r.text() : ""))
+        .then((html) => {
+          const live = buildId(html);
+          if (live && live !== running) setStale(true);
+        })
+        .catch(() => {});
+    };
+    const id = window.setInterval(check, 60_000);
+    return () => window.clearInterval(id);
+  }, [enabled]);
+  return stale;
+}
+
+/** The first page under a menu section, where choosing the section goes. */
+const firstPage = (n: NavNode): NavNode | undefined => (n.children ? leaves([n]).find((l) => !l.entry.external)?.entry : n);
+
 /** The theme on screen: the preference, or the system's while the preference is "system". */
 function resolvedTheme(pref: ThemePreference): "dark" | "light" {
   if (pref !== "system") return pref;
@@ -82,9 +143,19 @@ export function Shell(p: ShellProps): JSX.Element {
   const [fullscreen, toggleFullscreen] = useFullscreen();
   const far = useScrolledFar(prefs.backToTop);
   const stripRef = useRef<HTMLDivElement | null>(null);
+  const topNavRef = useRef<HTMLElement | null>(null);
+  const wide = useWide();
+  const stale = useUpdateCheck(prefs.checkUpdates);
+  useAppearance(prefs);
 
   const tree = navFor(roles, session.role, undefined, p.hidden);
   const here = currentOf(route);
+  // Phones always get the whole menu in the drawer; the other layouts start at the drawer breakpoint.
+  const layout = wide ? prefs.navStyle : "side";
+  const topId = here ? (here.trail[0]?.id ?? here.entry.id) : null;
+  const section = tree.find((n) => n.id === topId);
+  const sideless = wide && (!prefs.sidebar || layout === "top" || (layout === "mixed" && !section?.children));
+  const iconOf = (path: string) => leaves(tree).find((l) => l.entry.href === `#${path}`)?.entry.icon;
   const title = route.name === "user" ? (route.params.id ?? "") : here ? t(here.entry.label) : t("app.notFoundTitle");
   const homeTitle = t("nav.dashboard");
 
@@ -132,6 +203,14 @@ export function Shell(p: ShellProps): JSX.Element {
     return () => document.removeEventListener("keydown", onKey);
   }, [focusView]);
 
+  // The top menu scrolls sideways when the sections do not fit; keep the current one in view (no scrollIntoView: it would move the page).
+  useEffect(() => {
+    const nav = topNavRef.current;
+    const cur = nav?.querySelector<HTMLElement>(".btn-secondary");
+    if (!nav || !cur) return;
+    if (cur.offsetLeft < nav.scrollLeft || cur.offsetLeft + cur.offsetWidth > nav.scrollLeft + nav.clientWidth) nav.scrollLeft = cur.offsetLeft - (nav.clientWidth - cur.offsetWidth) / 2;
+  }, [topId, layout]);
+
   const act = (action: TabAction, target: string): void => {
     setTabMenu(null);
     const next = closeTabs(tabs, action, target, route.path);
@@ -140,6 +219,7 @@ export function Shell(p: ShellProps): JSX.Element {
   };
   // Right-click on a tab opens the same menu as the chevron, for that tab.
   const onTabContext = (e: MouseEvent<HTMLDivElement>): void => {
+    if (!prefs.tabsMore) return;
     const tab = (e.target as HTMLElement).closest('[role="tab"]');
     const at = tab ? Array.from(stripRef.current?.querySelectorAll('[role="tab"]') ?? []).indexOf(tab) : -1;
     const hit = tabs[at];
@@ -162,6 +242,62 @@ export function Shell(p: ShellProps): JSX.Element {
   };
 
   const externals = new Set(leaves(tree).filter((l) => l.entry.external).map((l) => l.entry.id));
+  const navList = (items: NavNode[], label?: string) => (
+    <NavList
+      accordion={prefs.accordion}
+      title={label}
+      labels={ui.navList}
+      value={here?.entry.id}
+      onSelect={() => setNavOpen(false)}
+      renderLink={({ item, ...link }) => <a {...link} {...(externals.has(item.id) ? { target: "_blank", rel: "noreferrer" } : {})} />}
+      items={toItems(items, t)}
+    />
+  );
+  // Top layout: a section opens a menu of its pages; nested branches become groups.
+  const menuOf = (nodes: NavNode[]): MenuEntry[] =>
+    nodes.flatMap<MenuEntry>((n) =>
+      n.children
+        ? [{ type: "group", label: t(n.label) }, ...menuOf(n.children)]
+        : [n.external ? { label: t(n.label), onSelect: () => window.open(n.href, "_blank", "noopener") } : { label: t(n.label), href: n.href, checked: n.id === here?.entry.id }],
+    );
+  const topNav =
+    layout === "top" || layout === "mixed" ? (
+      <nav className="app-topnav" aria-label={t("shell.topNav")} ref={topNavRef}>
+        {tree.map((n) => {
+          const current = n.id === topId;
+          // The current section is the one with a border; the rest are borderless so eight sections fit beside the search.
+          if (layout === "top" && n.children) return <MenuButton key={n.id} label={t(n.label)} variant={current ? "secondary" : "ghost"} items={menuOf(n.children)} />;
+          return (
+            <Button key={n.id} href={firstPage(n)?.href} variant={current ? "secondary" : "ghost"} aria-current={current ? (n.children ? "true" : "page") : undefined}>
+              {t(n.label)}
+            </Button>
+          );
+        })}
+      </nav>
+    ) : null;
+  const sideNav =
+    layout === "mixed" ? (
+      section?.children ? navList(section.children, t(section.label)) : navList(tree)
+    ) : layout === "two-column" ? (
+      <div className="app-twocol" style={{ gridTemplateColumns: `${prefs.columnWidth}px minmax(0, 1fr)` }}>
+        <nav aria-label={t("shell.sections")}>
+          <ul className="app-twocol-sections">
+            {tree.map((n) => (
+              <li key={n.id}>
+                <a className="app-twocol-section" href={firstPage(n)?.href} aria-current={n.id === topId ? (n.children ? "true" : "page") : undefined} title={t(n.label)}>
+                  <Icon name={n.icon} size={18} />
+                  <span>{t(n.label)}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        {section?.children ? navList(section.children, t(section.label)) : null}
+      </div>
+    ) : (
+      navList(tree)
+    );
+  const year = prefs.copyrightYear.trim();
   const crumbs = [
     ...(here ? [...here.trail.map((b) => ({ label: t(b.label) })), { label: t(here.entry.label), href: here.entry.href }] : []),
     ...(route.name === "user" ? [{ label: route.params.id, mono: true }] : []),
@@ -172,7 +308,9 @@ export function Shell(p: ShellProps): JSX.Element {
       labels={ui.appShell}
       navOpen={navOpen}
       onNavOpenChange={setNavOpen}
-      navCollapsed={prefs.collapsed}
+      navCollapsed={prefs.collapsed && layout !== "two-column"}
+      navHidden={sideless}
+      sideTheme={prefs.sideTheme === "auto" ? undefined : prefs.sideTheme}
       chromeHidden={focusView}
       toasts={p.toasts}
       brand={
@@ -181,19 +319,10 @@ export function Shell(p: ShellProps): JSX.Element {
           <span translate="no">{t("app.name")}</span>
         </>
       }
-      nav={
-        <NavList
-          accordion
-          labels={ui.navList}
-          value={here?.entry.id}
-          onSelect={() => setNavOpen(false)}
-          renderLink={({ item, ...link }) => <a {...link} {...(externals.has(item.id) ? { target: "_blank", rel: "noreferrer" } : {})} />}
-          items={toItems(tree, t)}
-        />
-      }
+      nav={sideNav}
       navFooter={
         // The fold button sits at the foot of the sidebar, as in react-antd-admin; the drawer on phones has no rail.
-        <span className="app-wide-only app-nav-fold">
+        layout === "two-column" ? undefined : <span className="app-wide-only app-nav-fold">
           <IconButton
             icon="sidebar"
             label={prefs.collapsed ? ui.appShell.expandNav : ui.appShell.collapseNav}
@@ -202,7 +331,7 @@ export function Shell(p: ShellProps): JSX.Element {
           />
         </span>
       }
-      crumbs={prefs.crumbs && crumbs.length ? <Breadcrumb className="app-wide-only" items={crumbs} labels={ui.breadcrumb} /> : undefined}
+      crumbs={topNav ?? (prefs.crumbs && crumbs.length ? <Breadcrumb className="app-wide-only" items={crumbs} labels={ui.breadcrumb} /> : undefined)}
       actions={
         <>
           <GlobalSearch tree={tree} recent={tabs.filter((x) => x.path !== route.path)} />
@@ -225,23 +354,33 @@ export function Shell(p: ShellProps): JSX.Element {
         </>
       }
     >
+      {prefs.progress ? <div key={`progress-${route.path}-${reload}`} className="app-progress" aria-hidden="true" /> : null}
+      {stale ? (
+        <Banner tone="info" title={t("shell.updateTitle")} action={<Button variant="secondary" icon="refresh" onClick={() => window.location.reload()}>{t("shell.reload")}</Button>}>
+          {t("shell.updateHint")}
+        </Banner>
+      ) : null}
       {prefs.tabs && tabs.length ? (
         <div className="app-tabs">
           <div className="app-tabs-strip" ref={stripRef} onContextMenu={onTabContext}>
             <TabStrip
               label={t("shell.openPages")}
               labels={ui.tabStrip}
-              tabs={tabs.map((tab) => ({ id: tab.path, name: tab.title, pinned: tab.path === HOME }))}
+              tabs={tabs.map((tab) => ({ id: tab.path, name: tab.title, pinned: tab.path === HOME, icon: prefs.tabsIcons ? iconOf(tab.path) : undefined }))}
+              variant={prefs.tabsStyle}
+              onReorder={prefs.tabsDraggable ? (ids) => setTabs((list) => ids.flatMap((id) => list.filter((x) => x.path === id))) : undefined}
               selected={route.path}
               onSelect={(path) => navigate(`#${path}`)}
               onClose={(path) => act("close", path)}
               onAdd={false}
             />
           </div>
-          {prefs.tabsTools ? (
-            <div className="app-tabs-tools">
-              <IconButton icon="refresh" label={t("shell.reloadPage")} onClick={() => setReload((n) => n + 1)} />
+          <div className="app-tabs-tools">
+            <IconButton icon="refresh" label={t("shell.reloadPage")} onClick={() => setReload((n) => n + 1)} />
+            {prefs.tabsMaximize || focusView ? (
               <IconButton icon={focusView ? "minimize" : "maximize"} label={focusView ? t("shell.exitFocus") : t("shell.focus")} aria-pressed={focusView} onClick={() => setFocusView(!focusView)} />
+            ) : null}
+            {prefs.tabsMore ? (
               <Popover
                 open={tabMenu !== null}
                 onClose={() => setTabMenu(null)}
@@ -251,19 +390,35 @@ export function Shell(p: ShellProps): JSX.Element {
               >
                 <Menu label={t("shell.tabActions")} items={menuFor(tabMenu ?? route.path)} onClose={() => setTabMenu(null)} />
               </Popover>
-            </div>
-          ) : null}
+            ) : null}
+          </div>
         </div>
       ) : null}
-      {/* A new key remounts the page, so "Reload page" fetches it again without reloading the app. */}
-      <Fragment key={`${route.path}-${reload}`}>{p.children}</Fragment>
+      {/* A new key remounts the page, so "Reload page" fetches it again without reloading the app; the transition replays. */}
+      <div key={`${route.path}-${reload}`} className="app-page" data-transition={prefs.transition ? prefs.transitionName : undefined}>
+        <Suspense fallback={prefs.loading ? <div className="app-pane"><Spinner size="md" label={t("shell.loadingPage")} /></div> : null}>{p.children}</Suspense>
+      </div>
       {prefs.footer && !focusView ? (
-        <footer className="app-footer">
-          <span>{t("shell.footer")}</span>
+        <footer className="app-footer" data-fixed={prefs.fixedFooter ? "" : undefined}>
+          {year || prefs.company ? (
+            <span>
+              © {year ? `${year} ` : ""}
+              {prefs.companySite ? (
+                <a href={prefs.companySite} target="_blank" rel="noreferrer">
+                  {prefs.company || prefs.companySite}
+                </a>
+              ) : (
+                prefs.company
+              )}
+            </span>
+          ) : null}
+          <span>{t("shell.builtWith")}</span>
+          {prefs.icp ? (prefs.icpLink ? <a href={prefs.icpLink} target="_blank" rel="noreferrer">{prefs.icp}</a> : <span>{prefs.icp}</span>) : null}
           <a href={hrefFor.legal("privacy")}>{t("legal.privacy")}</a>
           <a href={hrefFor.legal("terms")}>{t("legal.terms")}</a>
         </footer>
       ) : null}
+      {prefs.watermark && prefs.watermarkText.trim() ? <div className="app-watermark" aria-hidden="true" style={{ maskImage: watermarkUrl(prefs.watermarkText.trim()), WebkitMaskImage: watermarkUrl(prefs.watermarkText.trim()) }} /> : null}
       {prefs.backToTop && far ? (
         <span className="app-back-top">
           <IconButton icon="arrow-up" size="lg" label={t("shell.backToTop")} onClick={() => document.getElementById("main")?.scrollTo({ top: 0 })} />

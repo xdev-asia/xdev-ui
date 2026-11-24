@@ -4,7 +4,7 @@ import { findAll } from "../../test-utils";
 
 const setInner = vi.fn();
 vi.mock("react", async (orig) => ({ ...(await orig<typeof import("react")>()), useState: (v: unknown) => [v, setInner], useId: () => "u" }));
-const { TabStrip } = await import("./TabStrip");
+const { TabStrip, moveTab } = await import("./TabStrip");
 
 const tabs = [
   { id: "a", name: "fix-auth", state: "working" as const },
@@ -83,5 +83,35 @@ describe("TabStrip", () => {
     const html = renderToStaticMarkup(<TabStrip tabs={[{ id: "home", name: "Dashboard", pinned: true }, { id: "b", name: "Users" }]} onClose={() => {}} onAdd={false} />);
     expect(html).not.toContain("Close Dashboard");
     expect(html).toContain("Close Users");
+  });
+  it("draws an icon, a variant and draggable tabs only when asked", () => {
+    const plain = renderToStaticMarkup(<TabStrip tabs={[{ id: "a", name: "a" }]} />);
+    expect(plain).not.toContain("data-variant");
+    expect(plain).not.toContain("draggable");
+    expect(renderToStaticMarkup(<TabStrip tabs={[{ id: "a", name: "a" }]} variant="chrome" />)).not.toContain("data-variant");
+    const html = renderToStaticMarkup(<TabStrip tabs={[{ id: "h", name: "Home", pinned: true, icon: "home" }, { id: "b", name: "b" }]} variant="card" onReorder={() => {}} />);
+    expect(html).toContain('data-variant="card"');
+    expect(html).toMatch(/draggable="false"[^>]*>.*draggable="true"/);
+    expect(html).toContain("<svg");
+  });
+  it("moveTab keeps pinned tabs first and clamps the target", () => {
+    const pin = new Set(["h"]);
+    expect(moveTab(["h", "a", "b", "c"], "c", 1, pin)).toEqual(["h", "c", "a", "b"]);
+    expect(moveTab(["h", "a", "b"], "a", 0, pin)).toEqual(["h", "a", "b"]);
+    expect(moveTab(["h", "a", "b"], "a", 9, pin)).toEqual(["h", "b", "a"]);
+    expect(moveTab(["h", "a"], "h", 1, pin)).toEqual(["h", "a"]);
+    expect(moveTab(["a"], "zz", 0)).toEqual(["a"]);
+  });
+  it("Shift+Arrow moves the focused tab through onReorder; pinned tabs stay", () => {
+    const onReorder = vi.fn();
+    const tree = TabStrip({ tabs: [{ id: "h", name: "Home", pinned: true }, { id: "a", name: "a" }, { id: "b", name: "b" }], onReorder });
+    const btns = findAll(tree, (e) => e.props.role === "tab");
+    const list = btns.map(() => ({}));
+    const ev = (key: string, i: number) => ({ key, shiftKey: true, preventDefault: vi.fn(), currentTarget: Object.assign(list[i]!, { closest: () => ({ querySelectorAll: () => list }) }) });
+    btns[2]!.props.onKeyDown(ev("ArrowLeft", 2));
+    expect(onReorder).toHaveBeenLastCalledWith(["h", "b", "a"]);
+    onReorder.mockClear();
+    btns[1]!.props.onKeyDown(ev("ArrowLeft", 1));
+    expect(onReorder).not.toHaveBeenCalled();
   });
 });

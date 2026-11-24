@@ -8,7 +8,11 @@ import { canOpen, currentOf, leaves, NAV, navFor, toItems } from "./nav";
 import { disabledPaths, seedMenus } from "../data/catalog";
 import { Notifications } from "./Notifications";
 import { PreferencesDrawer } from "./PreferencesDrawer";
-import { closeTabs, DEFAULT_PREFS, readPrefs, readTabs, visitTab } from "./prefs";
+import { closeTabs, DEFAULT_PREFS, readPrefs, readTabs, visitTab, type Prefs } from "./prefs";
+import { accentOf, buildId, onAccent, rootStyle, watermarkUrl } from "./appearance";
+import { Shell } from "./Shell";
+import { StoreContext } from "../data/context";
+import { createStore } from "../data/store";
 
 const roles = seedRoles();
 
@@ -55,6 +59,8 @@ describe("prefs and page tabs", () => {
     expect(readPrefs(null)).toEqual(DEFAULT_PREFS);
     expect(readPrefs("not json")).toEqual(DEFAULT_PREFS);
     expect(readPrefs('{"tabs":false,"footer":"yes"}')).toEqual({ ...DEFAULT_PREFS, tabs: false });
+    expect(readPrefs('{"navStyle":"diagonal","radius":99,"sideWidth":200,"customColor":"red","preset":"gold","tabsStyle":"card"}')).toEqual({ ...DEFAULT_PREFS, sideWidth: 200, preset: "gold", tabsStyle: "card" });
+    expect(readPrefs("[1]")).toEqual(DEFAULT_PREFS);
   });
   it("keeps home first, adds a page once, refreshes its title and drops the oldest over the limit", () => {
     let tabs = visitTab([], { path: "/users", title: "Users" });
@@ -107,9 +113,90 @@ describe("shell parts", () => {
         <PreferencesDrawer prefs={DEFAULT_PREFS} onPrefs={() => {}} theme="dark" onTheme={() => {}} onClose={() => {}} modal={false} />
       </I18nProvider>,
     );
-    expect(html.match(/role="switch"/g)).toHaveLength(8);
+    expect(html.match(/role="switch"/g)).toHaveLength(21);
+    for (const s of ["General", "Theme", "Layout", "Sidebar", "Tabs", "Animation", "Footer", "Menu position", "Two columns", "Accent colour", "Corner radius", "Tab style", "Fade and slide", "Watermark text", "ICP number"]) expect(html).toContain(s);
+    expect(html).not.toContain("Custom accent");
     expect(html).toContain("x-theme-icons");
     expect(html).toContain("Page tabs");
     expect(html).toContain("Tiếng Việt");
+  });
+});
+
+describe("appearance", () => {
+  it("maps presets to an accent and picks readable text on it", () => {
+    expect(accentOf(DEFAULT_PREFS)).toBeNull();
+    expect(accentOf({ preset: "geekblue", customColor: "#000000" })).toBe("#2f54eb");
+    expect(accentOf({ preset: "custom", customColor: "#123456" })).toBe("#123456");
+    expect(onAccent("#2f54eb")).toBe("#ffffff");
+    expect(onAccent("#fadb14")).toBe("#141414");
+    expect(onAccent("#f5222d")).toBe("#ffffff");
+    expect(onAccent("#52c41a")).toBe("#141414");
+  });
+  it("sets only the vars that differ from the stylesheet, plus the colour filters", () => {
+    expect(rootStyle(DEFAULT_PREFS)).toEqual({ vars: {}, filter: "" });
+    const s = rootStyle({ ...DEFAULT_PREFS, preset: "red", radius: 4, sideWidth: 220, railWidth: 48, colorWeak: true, gray: true });
+    expect(s.vars).toMatchObject({ "--accent": "#f5222d", "--x-color-on-accent": "#ffffff", "--radius-l": "4px", "--x-radius-lg": "6px", "--w-side": "220px", "--w-rail": "48px" });
+    expect(s.filter).toBe("invert(100%) grayscale(100%)");
+  });
+  it("escapes the watermark text and finds the build script of an index.html", () => {
+    expect(decodeURIComponent(watermarkUrl('<b>"x"</b>'))).toContain("&#60;b&#62;&#34;x&#34;&#60;/b&#62;");
+    expect(buildId('<script type="module" crossorigin src="/showcase/admin/assets/index-abc.js"></script>')).toBe("/showcase/admin/assets/index-abc.js");
+    expect(buildId('<script type="module" src="/src/main.tsx"></script>')).toBeNull();
+  });
+});
+
+describe("Shell layouts", () => {
+  const session = { name: "Ada Lovelace", email: "admin@example.com", role: "owner" as const };
+  const shell = (prefs: Partial<Prefs>, hash = "#/roles") =>
+    renderToStaticMarkup(
+      <StoreContext.Provider value={createStore()}>
+      <I18nProvider locale="en">
+        <Shell route={matchRoute(hash)} session={session} roles={roles} onSignOut={() => {}} prefs={{ ...DEFAULT_PREFS, ...prefs }} onPrefs={() => {}} theme="dark" onThemeChange={() => {}} initialTabs={[{ path: "/", title: "Dashboard" }, { path: "/roles", title: "Roles" }]} notices={[]}>
+          <p>page</p>
+        </Shell>
+      </I18nProvider>
+      </StoreContext.Provider>,
+    );
+  it("side: the whole menu in the sidebar, breadcrumb in the top bar, no top menu", () => {
+    const html = shell({});
+    expect(html).not.toContain("app-topnav");
+    expect(html).not.toContain("data-nav-hidden");
+    expect(html).toContain("ws-crumbs");
+    expect(html).toContain('data-transition="fade-slide"');
+    expect(html).toContain("app-progress");
+  });
+  it("top: sections in the top bar as menus, the sidebar hidden on wide screens", () => {
+    const html = shell({ navStyle: "top" });
+    expect(html).toContain('class="app-topnav" aria-label="Main menu"');
+    expect(html).toContain("data-nav-hidden");
+    expect(html).toContain('class="x-shell-top-brand"');
+    expect(html).toContain('aria-haspopup="menu"');
+  });
+  it("mixed: sections in the top bar, the current section's pages in the sidebar", () => {
+    const html = shell({ navStyle: "mixed" });
+    expect(html).toMatch(/aria-current="true"[^>]*>.*System/);
+    expect(html).toContain('aria-label="System"');
+    expect(html).not.toContain("data-nav-hidden");
+    expect(shell({ navStyle: "mixed" }, "#/")).toContain("data-nav-hidden");
+  });
+  it("two columns: a column of sections, then the section's pages; no fold button", () => {
+    const html = shell({ navStyle: "two-column" });
+    expect(html).toContain("app-twocol-sections");
+    expect(html).toMatch(/class="app-twocol-section" href="#\/users" aria-current="true"/);
+    expect(html).not.toContain("app-nav-fold");
+  });
+  it("tabs, sidebar theme, footer, watermark and animation follow the preferences", () => {
+    const html = shell({ tabsStyle: "brisk", sideTheme: "light", fixedFooter: true, watermark: true, transition: false, progress: false, icp: "ICP 1", tabsMore: false, tabsMaximize: false });
+    expect(html).toContain('data-variant="brisk"');
+    expect(html).toMatch(/draggable="true"/);
+    expect(html).toMatch(/<aside[^>]*data-theme="light"/);
+    expect(html).toContain('<footer class="app-footer" data-fixed="">');
+    expect(html).toContain('href="https://ui.xdev.asia/"');
+    expect(html).toContain("ICP 1");
+    expect(html).toContain("app-watermark");
+    expect(html).not.toContain("data-transition");
+    expect(html).not.toContain("app-progress");
+    expect(html).not.toContain("Tab actions");
+    expect(html).not.toContain("Focus view");
   });
 });

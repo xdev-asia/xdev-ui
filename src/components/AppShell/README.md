@@ -17,6 +17,9 @@ Page frame for a generic app or an admin console: a sidebar for navigation, a to
 - `toasts` render in a fixed bottom-right `.ws-toasts` region; pass `Toast` elements, not a `Toaster`. The region and its two live regions (`.x-toast-live`: assertive for `danger` toasts, polite for the rest) are always mounted, even with no toasts, so the first toast is announced; the empty region lets clicks through.
 - **Rail.** `navCollapsed` folds the sidebar to its icons from 768px up (1024px with `drawerBelow="lg"`); with `onNavCollapsedChange` the top bar gets a `sidebar` `IconButton` (`aria-expanded`, `aria-controls`) that folds and unfolds it. Labels, counts and group titles stay in the DOM for screen readers; each item shows its label as a hover title; only the first child of `brand` (the mark) shows. The width changes at once, without a transition. Store the choice with the app's other preferences.
 - **Focus view.** `chromeHidden` hides the sidebar and the top bar so the page fills the window (a "maximize content" button). The app keeps a visible way back in the page (the same button) and binds Esc to leave it.
+- **Top navigation.** `navHidden` drops the sidebar from 768px up (1024px with `drawerBelow="lg"`) and shows `brand` at the start of the top bar; put a horizontal menu in `crumbs`. Below that width the sidebar is the drawer, so pass the full `nav` anyway. The fold button is not rendered.
+- `sideTheme` (`"dark"` or `"light"`) sets `data-theme` on the sidebar, so its tokens follow that theme whatever the page uses.
+- The rail width is `--w-rail` (default 60px); the sidebar width is `--w-side`. Set either on `:root` to resize.
 - `labels` (`AppShellLabels`: `openNav`, `closeNav`, `skipToContent`, `nav`, `collapseNav`, `expandNav`) overrides the English defaults; pass translated strings from the app.
 - The shell scrolls `main`, not the page. Wide content scrolls inside its own wrapper, never the whole page.
 

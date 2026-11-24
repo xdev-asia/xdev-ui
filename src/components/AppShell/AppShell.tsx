@@ -50,6 +50,13 @@ export interface AppShellProps {
   onNavCollapsedChange?: (collapsed: boolean) => void;
   /** Hides the sidebar and the top bar so the page fills the window (a "focus" or maximized view); Esc is the app's to bind. */
   chromeHidden?: boolean;
+  /**
+   * Wide screens: no sidebar, the brand moves into the top bar (a "top navigation" layout; put the menu in `crumbs`).
+   * Below the drawer width the sidebar is the drawer as usual, so phones keep the whole menu.
+   */
+  navHidden?: boolean;
+  /** Draws the sidebar in this theme whatever the page's theme (a dark sidebar on a light page). */
+  sideTheme?: "dark" | "light";
   /** id of <main>, target of the skip link. Default "main". */
   mainId?: string;
   /** Override the English defaults (e.g. for vi). */
@@ -57,7 +64,7 @@ export interface AppShellProps {
   className?: string;
 }
 
-export function AppShell({ brand, nav, navFooter, title, crumbs, drawerBelow = "md", actions, bottomNav, children, toasts, navOpen = false, onNavOpenChange, navCollapsed = false, onNavCollapsedChange, chromeHidden = false, mainId = "main", labels, className }: AppShellProps): JSX.Element {
+export function AppShell({ brand, nav, navFooter, title, crumbs, drawerBelow = "md", actions, bottomNav, children, toasts, navOpen = false, onNavOpenChange, navCollapsed = false, onNavCollapsedChange, chromeHidden = false, navHidden = false, sideTheme, mainId = "main", labels, className }: AppShellProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
   const sideId = `x-shell-side-${useId()}`;
   const menuRef = useRef<HTMLButtonElement | null>(null);
@@ -103,7 +110,7 @@ export function AppShell({ brand, nav, navFooter, title, crumbs, drawerBelow = "
     }
   });
   return (
-    <div className={cx("x-shell x-ws", className)} data-nav-open={navOpen ? "true" : undefined} data-bottom-nav={bottomNav ? "" : undefined} data-titled={title ? "" : undefined} data-drawer={drawerBelow === "lg" ? "lg" : undefined} data-nav-collapsed={navCollapsed ? "" : undefined} data-chrome-hidden={chromeHidden ? "" : undefined}>
+    <div className={cx("x-shell x-ws", className)} data-nav-open={navOpen ? "true" : undefined} data-bottom-nav={bottomNav ? "" : undefined} data-titled={title ? "" : undefined} data-drawer={drawerBelow === "lg" ? "lg" : undefined} data-nav-collapsed={navCollapsed ? "" : undefined} data-chrome-hidden={chromeHidden ? "" : undefined} data-nav-hidden={navHidden ? "" : undefined}>
       <a
         className="x-skip-link"
         href={`#${mainId}`}
@@ -116,7 +123,7 @@ export function AppShell({ brand, nav, navFooter, title, crumbs, drawerBelow = "
         {l.skipToContent}
       </a>
       {navOpen ? <button type="button" ref={backdropRef} className="x-shell-backdrop" aria-label={l.closeNav} onClick={() => onNavOpenChange?.(false)} /> : null}
-      <aside className="x-shell-side" id={sideId} ref={sideRef} aria-label={l.nav}>
+      <aside className="x-shell-side" id={sideId} ref={sideRef} aria-label={l.nav} data-theme={sideTheme}>
         {brand ? <div className="x-shell-brand">{brand}</div> : null}
         <div className="x-shell-nav">
           {nav}
@@ -134,7 +141,8 @@ export function AppShell({ brand, nav, navFooter, title, crumbs, drawerBelow = "
             aria-expanded={navOpen}
             onClick={() => onNavOpenChange?.(!navOpen)}
           />
-          {onNavCollapsedChange ? (
+          {navHidden && brand ? <div className="x-shell-top-brand">{brand}</div> : null}
+          {onNavCollapsedChange && !navHidden ? (
             <IconButton
               icon="sidebar"
               label={navCollapsed ? l.expandNav : l.collapseNav}

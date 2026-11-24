@@ -62,6 +62,16 @@ describe("AppShell", () => {
     btn!.props.onClick();
     expect(onNavCollapsedChange).toHaveBeenCalledWith(false);
   });
+  it("navHidden moves the brand into the top bar and drops the fold button; sideTheme themes the sidebar", () => {
+    const html = renderToStaticMarkup(<AppShell {...base} brand="Acme" navHidden navCollapsed onNavCollapsedChange={() => {}} sideTheme="dark" />);
+    expect(html).toContain("data-nav-hidden");
+    expect(html).toContain('<div class="x-shell-top-brand">Acme</div>');
+    expect(html).not.toContain("x-shell-collapse");
+    expect(html).toMatch(/<aside[^>]*data-theme="dark"/);
+    const side = renderToStaticMarkup(<AppShell {...base} brand="Acme" />);
+    expect(side).not.toContain("x-shell-top-brand");
+    expect(side).not.toMatch(/<aside[^>]*data-theme/);
+  });
   it("chromeHidden marks the shell so the page fills the window", () => {
     expect(renderToStaticMarkup(<AppShell {...base} chromeHidden />)).toContain("data-chrome-hidden");
   });

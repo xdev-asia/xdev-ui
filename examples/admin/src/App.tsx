@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, type JSX } from "react";
+import { lazy, useCallback, useEffect, useMemo, useState, type JSX } from "react";
 import type { ThemePreference } from "@xdev-asia/ui";
 import { signIn, signOut, useSession, type Session } from "./auth/session";
 import type { Role } from "./data/seed";
@@ -11,27 +11,30 @@ import { canOpen } from "./shell/nav";
 import { disabledPaths, seedMenus, type MenuItem, type TreeNode } from "./data/catalog";
 import type { AccessMode } from "./pages/Access";
 import { usePrefs } from "./shell/prefs";
-import { AboutPage } from "./pages/About";
-import { DepartmentsPage } from "./pages/Departments";
-import { EmbedPage, NestedPage } from "./pages/Demo";
-import { AccessPageView } from "./pages/Access";
 import { LegalView } from "./pages/Legal";
-import { ExceptionPage } from "./pages/Exception";
-import { MenusPage } from "./pages/Menus";
-import { ProfilePage } from "./pages/Profile";
 import { NotifyContext, useNotify, useToasts } from "./shell/notify";
 import { useTheme } from "./theme";
 import { CreateUserDialog } from "./dialogs/CreateUserDialog";
 import { DeleteUsersDialog } from "./dialogs/DeleteUsersDialog";
-import { AuditLogPage } from "./pages/AuditLog";
-import { DashboardPage } from "./pages/Dashboard";
 import { NotFoundPage } from "./pages/NotFound";
-import { RolesPage } from "./pages/Roles";
-import { SettingsPage } from "./pages/Settings";
-import { UserDetailPage } from "./pages/UserDetail";
-import { UsersPage } from "./pages/Users";
 import type { User } from "./data/seed";
 import { SignInPage } from "./pages/SignIn";
+
+// Pages load on first visit; the shell's Suspense shows the loading indicator meanwhile.
+const AboutPage = lazy(() => import("./pages/About").then((m) => ({ default: m.AboutPage })));
+const DepartmentsPage = lazy(() => import("./pages/Departments").then((m) => ({ default: m.DepartmentsPage })));
+const AuditLogPage = lazy(() => import("./pages/AuditLog").then((m) => ({ default: m.AuditLogPage })));
+const DashboardPage = lazy(() => import("./pages/Dashboard").then((m) => ({ default: m.DashboardPage })));
+const RolesPage = lazy(() => import("./pages/Roles").then((m) => ({ default: m.RolesPage })));
+const SettingsPage = lazy(() => import("./pages/Settings").then((m) => ({ default: m.SettingsPage })));
+const UserDetailPage = lazy(() => import("./pages/UserDetail").then((m) => ({ default: m.UserDetailPage })));
+const UsersPage = lazy(() => import("./pages/Users").then((m) => ({ default: m.UsersPage })));
+const MenusPage = lazy(() => import("./pages/Menus").then((m) => ({ default: m.MenusPage })));
+const ProfilePage = lazy(() => import("./pages/Profile").then((m) => ({ default: m.ProfilePage })));
+const ExceptionPage = lazy(() => import("./pages/Exception").then((m) => ({ default: m.ExceptionPage })));
+const AccessPageView = lazy(() => import("./pages/Access").then((m) => ({ default: m.AccessPageView })));
+const EmbedPage = lazy(() => import("./pages/Demo").then((m) => ({ default: m.EmbedPage })));
+const NestedPage = lazy(() => import("./pages/Demo").then((m) => ({ default: m.NestedPage })));
 
 const LOCALE_KEY = "acme-locale";
 
