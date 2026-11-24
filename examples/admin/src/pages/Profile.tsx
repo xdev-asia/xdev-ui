@@ -1,5 +1,5 @@
 import { useRef, useState, type JSX } from "react";
-import { Avatar, Field, FormSection, PageHeader, SaveBar, Textarea, useUnsavedGuard } from "@xdev-asia/ui";
+import { Avatar, Button, Field, FormSection, PageHeader, SaveBar, Textarea, useUnsavedGuard } from "@xdev-asia/ui";
 import type { Session } from "../auth/session";
 import { useI18n, type MessageKey } from "../i18n";
 import { useNotify } from "../shell/notify";
@@ -34,6 +34,9 @@ export function ProfileView({ saved, onSave, initialDraft }: ProfileViewProps): 
   const [draft, setDraft] = useState(initialDraft ?? saved);
   const [busy, setBusy] = useState(false);
   const form = useRef<HTMLFormElement>(null);
+  const file = useRef<HTMLInputElement>(null);
+  // The photo stays in this browser tab (an object URL); a real app uploads it.
+  const [photo, setPhoto] = useState<string | null>(null);
   const dirty = JSON.stringify(draft) !== JSON.stringify(saved);
   useUnsavedGuard(dirty, t("profile.leave"), { guardLinks: true });
   const errors = validateProfile(draft);
@@ -43,7 +46,28 @@ export function ProfileView({ saved, onSave, initialDraft }: ProfileViewProps): 
       <PageHeader title={t("profile.title")} description={t("profile.description")} />
       <form ref={form} className="app-form" onSubmit={(e) => e.preventDefault()}>
         <FormSection title={t("profile.photo")} description={t("profile.photoHint")}>
-          <Avatar name={draft.name || saved.name} size="lg" />
+          <div className="app-row">
+            <Avatar name={draft.name || saved.name} src={photo} size="lg" />
+            <input
+              ref={file}
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) setPhoto(URL.createObjectURL(f));
+                e.target.value = "";
+              }}
+            />
+            <Button variant="secondary" icon="upload" onClick={() => file.current?.click()}>
+              {t("profile.upload")}
+            </Button>
+            {photo ? (
+              <Button variant="ghost" onClick={() => setPhoto(null)}>
+                {t("profile.removePhoto")}
+              </Button>
+            ) : null}
+          </div>
         </FormSection>
         <FormSection columns={2}>
           <Field label={t("profile.name")} name="name" value={draft.name} onChange={(e) => set({ name: e.target.value })} error={errors.name ? t(errors.name) : undefined} autoComplete="name" required />

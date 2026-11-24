@@ -56,3 +56,16 @@
 .app-tabs-tools { display: flex; flex: none; align-items: center; gap: var(--x-space-1); padding-bottom: var(--x-space-1); }
 .app-wide-only { display: inline-flex; }
 @media (max-width: 767.98px) { .app-wide-only { display: none; } }
+
+/* Sidebar fold button at the foot of the sidebar, full width as in the reference. */
+.app-nav-fold { display: flex; justify-content: flex-start; }
+.x-shell[data-nav-collapsed] .app-nav-fold { justify-content: center; }
+/* Back to top: over the page, bottom right, above the toasts' corner. */
+.app-back-top { position: fixed; right: var(--x-space-6); bottom: calc(var(--x-space-8) * 2); z-index: var(--x-z-sticky); }
+.app-footer { display: flex; flex-wrap: wrap; gap: var(--x-space-2) var(--x-space-4); }
+.app-footer a, .x-auth-footer a { color: var(--text-2); }
+/* Legal pages: public, before or after sign-in. */
+.app-legal { min-height: 100vh; min-height: 100dvh; padding-block: var(--x-space-8); background: var(--bg-0); color: var(--text-1); }
+.app-legal-brand { display: inline-flex; align-items: center; gap: var(--x-space-2); font-weight: 600; text-decoration: none; color: var(--text-1); }
+/* After .app-nav-fold, so the phone drawer (no rail there) hides the fold button. */
+@media (max-width: 767.98px) { .app-nav-fold { display: none; } }

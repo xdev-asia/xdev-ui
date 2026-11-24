@@ -5,7 +5,7 @@ import { hrefFor, type ExceptionCode } from "../router";
 import { NotFoundPage } from "./NotFound";
 
 /** Whole-page status views: no access (403), not found (404) and a server failure (500). */
-export function ExceptionPage({ code, onRetry }: { code: ExceptionCode; onRetry?: () => void }): JSX.Element {
+export function ExceptionPage({ code, onRetry }: { code: ExceptionCode | "unknown"; onRetry?: () => void }): JSX.Element {
   const { t } = useI18n();
   if (code === "404") return <NotFoundPage />;
   const home = (
@@ -13,6 +13,7 @@ export function ExceptionPage({ code, onRetry }: { code: ExceptionCode; onRetry?
       {t("app.goDashboard")}
     </Button>
   );
+  if (code === "unknown") return <EmptyState size="center" icon="help" title={t("exception.unknownTitle")} hint={t("exception.unknownHint")} actions={home} />;
   return code === "403" ? (
     <EmptyState size="center" icon="lock" title={t("exception.forbiddenTitle")} hint={t("exception.forbiddenHint")} actions={home} />
   ) : (

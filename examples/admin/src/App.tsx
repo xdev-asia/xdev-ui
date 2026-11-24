@@ -5,16 +5,17 @@ import type { Role } from "./data/seed";
 import { StoreContext, useStore } from "./data/context";
 import { storeFromLocation, StoreError } from "./data/store";
 import { I18nProvider, readLocale, useI18n, type Locale } from "./i18n";
-import { hrefFor, navigate, useRoute, type ExceptionCode, type NESTED } from "./router";
+import { hrefFor, navigate, useRoute, type AccessPage, type EmbedId, type ExceptionCode, type LegalPage, type NESTED } from "./router";
 import { Shell } from "./shell/Shell";
 import { canOpen } from "./shell/nav";
 import { usePrefs } from "./shell/prefs";
 import { AboutPage } from "./pages/About";
 import { DepartmentsPage } from "./pages/Departments";
-import { DocsPage, NestedPage } from "./pages/Demo";
+import { EmbedPage, NestedPage } from "./pages/Demo";
+import { AccessPageView } from "./pages/Access";
+import { LegalView } from "./pages/Legal";
 import { ExceptionPage } from "./pages/Exception";
 import { MenusPage } from "./pages/Menus";
-import { PermissionsPage } from "./pages/Permissions";
 import { ProfilePage } from "./pages/Profile";
 import { NotifyContext, useNotify, useToasts } from "./shell/notify";
 import { useTheme } from "./theme";
@@ -62,8 +63,8 @@ function Routes({ session, roles, version, openDialog, onRolesChanged, theme, on
       return <SettingsPage session={session} roles={roles} section={route.params.section} theme={theme} onThemeChange={onThemeChange} />;
     case "audit":
       return <AuditLogPage session={session} roles={roles} />;
-    case "permissions":
-      return <PermissionsPage roles={roles} role={session.role} />;
+    case "access":
+      return <AccessPageView page={route.params.page as AccessPage} session={session} roles={roles} />;
     case "menus":
       return <MenusPage session={session} roles={roles} />;
     case "departments":
@@ -73,11 +74,11 @@ function Routes({ session, roles, version, openDialog, onRolesChanged, theme, on
     case "about":
       return <AboutPage />;
     case "exception":
-      return <ExceptionPage code={route.params.code as ExceptionCode} />;
+      return <ExceptionPage code={route.params.code as ExceptionCode | "unknown"} />;
     case "nested":
       return <NestedPage leaf={route.params.leaf as (typeof NESTED)[number]} />;
-    case "docs":
-      return <DocsPage />;
+    case "embed":
+      return <EmbedPage id={route.params.id as EmbedId} />;
     default:
       return <NotFoundPage />;
   }
@@ -146,6 +147,8 @@ function Console(): JSX.Element {
     if (session) store.listRoles().then(setRoles, () => setRoles([]));
   }, [session, store]);
   useEffect(() => {
+    // Legal pages are public, as in react-antd-admin's whitelist; everything else asks to sign in first.
+    if (route.name === "legal") return;
     if (!session && route.name !== "sign-in") navigate(hrefFor.signIn());
     if (session && route.name === "sign-in") navigate(hrefFor.dashboard());
   }, [session, route.name]);
@@ -153,7 +156,9 @@ function Console(): JSX.Element {
   return (
     <StoreContext.Provider value={store}>
       <NotifyContext.Provider value={notify}>
-        {!session ? (
+        {route.name === "legal" ? (
+          <LegalView page={route.params.page as LegalPage} signedIn={!!session} />
+        ) : !session ? (
           <SignInPage onSignedIn={signIn} theme={theme} onThemeChange={setTheme} />
         ) : (
           <Shell route={route} session={session} roles={roles} toasts={toasts} onSignOut={signOut} prefs={prefs} onPrefs={setPrefs} theme={theme} onThemeChange={setTheme}>

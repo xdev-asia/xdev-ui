@@ -1,4 +1,4 @@
-import { Fragment, type JSX, type MouseEventHandler, type ReactNode } from "react";
+import { Fragment, type CSSProperties, type JSX, type MouseEventHandler, type ReactNode } from "react";
 import { cx } from "../../internal/cx";
 import type { IconName } from "../../icons";
 import { Disclosure } from "../Disclosure/Disclosure";
@@ -18,6 +18,11 @@ export interface NavListItem {
   tone?: StatusTone;
   /** The state in words, for screen readers and the tooltip ("2 failing"). */
   toneLabel?: string;
+  /**
+   * Sub-items: the item becomes a branch that opens and closes (a native `details`, so keyboard and `aria-expanded`
+   * come from the browser). A branch holding the current item opens on render. Nest up to three levels.
+   */
+  children?: NavListItem[];
 }
 
 /** Props handed to `renderLink`; spread them on your router's link. */
@@ -51,15 +56,35 @@ export interface NavListProps {
   collapsible?: boolean;
   /** Initial open state when `collapsible`. Default true. */
   defaultOpen?: boolean;
+  /** Opening a branch closes its open siblings (one submenu at a time, as in many admin sidebars). */
+  accordion?: boolean;
   /** Override the English defaults (e.g. for vi). */
   labels?: Partial<NavListLabels>;
   className?: string;
 }
 
-export function NavList({ items, value, onSelect, title, renderLink, collapsible, defaultOpen = true, labels, className }: NavListProps): JSX.Element {
+/** True when `id` is the item or one of its descendants. */
+function holds(it: NavListItem, id: string | undefined): boolean {
+  return id !== undefined && (it.id === id || !!it.children?.some((c) => holds(c, id)));
+}
+
+export function NavList({ items, value, onSelect, title, renderLink, collapsible, defaultOpen = true, accordion, labels, className }: NavListProps): JSX.Element {
   const l = { ...DEFAULT_LABELS, ...labels };
   const group = Boolean(collapsible && title);
-  const rows = items.map((it) => {
+  const render = (list: NavListItem[], depth: number, parent: string): JSX.Element[] => list.map((it) => {
+    const depthStyle = depth ? ({ ["--nav-depth" as string]: depth } as CSSProperties) : undefined;
+    if (it.children?.length) {
+      return (
+        <details key={it.id} className="settings-nav-branch" name={accordion ? `nav-${parent}` : undefined} open={holds(it, value) || undefined}>
+          <summary className="settings-nav-item" style={depthStyle} data-current={holds(it, value) ? "" : undefined}>
+            {it.icon ? <Icon name={it.icon} size={16} className="settings-nav-icon" /> : null}
+            <span className="settings-nav-label">{it.label}</span>
+            <Icon name="chevron" size={14} className="settings-nav-chevron" />
+          </summary>
+          <div className="settings-nav-sub">{render(it.children, depth + 1, it.id)}</div>
+        </details>
+      );
+    }
     const current = it.id === value ? ("page" as const) : undefined;
     const body = (
       <>
@@ -77,20 +102,21 @@ export function NavList({ items, value, onSelect, title, renderLink, collapsible
     if (it.href) {
       const onClick = onSelect ? () => onSelect(it.id) : undefined;
       if (renderLink) {
-        return <Fragment key={it.id}>{renderLink({ href: it.href, className: "settings-nav-item", "aria-current": current, onClick, children: body, item: it })}</Fragment>;
+        return <Fragment key={it.id}>{depthStyle ? <span className="settings-nav-depth" style={depthStyle}>{renderLink({ href: it.href, className: "settings-nav-item", "aria-current": current, onClick, children: body, item: it })}</span> : renderLink({ href: it.href, className: "settings-nav-item", "aria-current": current, onClick, children: body, item: it })}</Fragment>;
       }
       return (
-        <a key={it.id} className="settings-nav-item" href={it.href} aria-current={current} onClick={onClick}>
+        <a key={it.id} className="settings-nav-item" href={it.href} aria-current={current} onClick={onClick} style={depthStyle}>
           {body}
         </a>
       );
     }
     return (
-      <button key={it.id} type="button" className="settings-nav-item" aria-current={current} onClick={() => onSelect?.(it.id)}>
+      <button key={it.id} type="button" className="settings-nav-item" aria-current={current} onClick={() => onSelect?.(it.id)} style={depthStyle}>
         {body}
       </button>
     );
   });
+  const rows = render(items, 0, "root");
   return (
     <nav className={cx("settings-nav", className)} aria-label={typeof title === "string" ? title : l.nav} data-collapsible={group ? "" : undefined}>
       {group ? (

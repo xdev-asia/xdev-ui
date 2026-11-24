@@ -1,5 +1,6 @@
 import { useRef, useState, type FormEvent, type JSX } from "react";
-import { Banner, BrandMark, Button, Card, Field, Segmented, Select, ThemeSwitch, type ThemePreference } from "@xdev-asia/ui";
+import { AuthShell, Banner, BrandMark, Button, Field, Segmented, Select, ThemeSwitch, type ThemePreference } from "@xdev-asia/ui";
+import { hrefFor } from "../router";
 import { checkCredentials, type Session } from "../auth/session";
 import { LOCALES, useI18n, type Locale, type MessageKey } from "../i18n";
 import { focusFirstInvalid } from "../parts/focus";
@@ -23,15 +24,16 @@ export interface SignInPageProps {
   theme: ThemePreference;
   onThemeChange: (p: ThemePreference) => void;
   /** Starting state, for tests and screenshots. */
-  initial?: { errors?: SignInErrors; failed?: boolean; mode?: SignInMode };
+  initial?: { errors?: SignInErrors; failed?: boolean; mode?: SignInMode; empty?: boolean };
 }
 
 const LANGUAGE_NAMES: Record<Locale, string> = { en: "English", vi: "Tiếng Việt" };
 
 export function SignInPage({ onSignedIn, theme, onThemeChange, initial }: SignInPageProps): JSX.Element {
   const { t, ui, locale, setLocale } = useI18n();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // The demo account is filled in, as in react-antd-admin; a real app starts empty.
+  const [email, setEmail] = useState(initial?.empty ? "" : "admin@example.com");
+  const [password, setPassword] = useState(initial?.empty ? "" : "admin-demo");
   const [errors, setErrors] = useState<SignInErrors>(initial?.errors ?? {});
   const [failed, setFailed] = useState(initial?.failed ?? false);
   const [mode, setMode] = useState<SignInMode>(initial?.mode ?? "password");
@@ -55,11 +57,36 @@ export function SignInPage({ onSignedIn, theme, onThemeChange, initial }: SignIn
   };
 
   return (
-    <main className="app-signin">
-      <div className="app-signin-card">
-        <Card>
+    <AuthShell
+      brand={
+        <>
+          <BrandMark size={24} />
+          <span translate="no">{t("app.name")}</span>
+        </>
+      }
+      actions={
+        <>
+          <Select
+            aria-label={t("signIn.language")}
+            icon="globe"
+            value={locale}
+            onChange={(e) => setLocale(e.target.value as Locale)}
+            options={LOCALES.map((l) => ({ value: l, label: LANGUAGE_NAMES[l] }))}
+          />
+          <ThemeSwitch variant="icon" value={theme} onChange={onThemeChange} labels={ui.themeSwitch} />
+        </>
+      }
+      headline={t("signIn.headline")}
+      tagline={t("signIn.tagline")}
+      footer={
+        <span className="app-row">
+          <span>{t("signIn.copyright")}</span>
+          <a href={hrefFor.legal("privacy")}>{t("legal.privacy")}</a>
+          <a href={hrefFor.legal("terms")}>{t("legal.terms")}</a>
+        </span>
+      }
+    >
           <div className="app-form">
-            <BrandMark variant="lockup" size={28} />
             <div>
               <h1 className="app-title">{t(mode === "forgot" ? "signIn.forgotTitle" : mode === "register" ? "signIn.registerTitle" : "signIn.title")}</h1>
               <p className="app-muted">{t(mode === "forgot" ? "signIn.forgotSubtitle" : mode === "register" ? "signIn.registerSubtitle" : "signIn.subtitle")}</p>
@@ -129,17 +156,6 @@ export function SignInPage({ onSignedIn, theme, onThemeChange, initial }: SignIn
             </div>
             <p className="app-muted">{t("signIn.demo")}</p>
           </div>
-        </Card>
-        <div className="app-signin-foot">
-          <Select
-            aria-label={t("signIn.language")}
-            value={locale}
-            onChange={(e) => setLocale(e.target.value as Locale)}
-            options={LOCALES.map((l) => ({ value: l, label: LANGUAGE_NAMES[l] }))}
-          />
-          <ThemeSwitch variant="icons" value={theme} onChange={onThemeChange} labels={ui.themeSwitch} />
-        </div>
-      </div>
-    </main>
+    </AuthShell>
   );
 }

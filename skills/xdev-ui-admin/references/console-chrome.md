@@ -83,7 +83,9 @@ Make the row a preference (on by default). It scrolls sideways inside itself at 
 
 ## Secondary and nested menu groups
 
-Demo pages, status pages and deep menus go in `NavList` groups with `collapsible`. A closed group must open when the current page is inside it: pass `defaultOpen={holdsCurrent}` and a `key` that changes with `holdsCurrent`, so the group remounts open. Two levels at most: a group title, then its pages. The breadcrumb shows group / page.
+A console that mirrors a menu tree (react-antd-admin, Ant Design Pro) uses one `NavList` with `children` and `accordion`: branches are native `details`, the one holding the current page opens, and three levels is the limit. The breadcrumb lists every branch above the page. In a rail only the top level and the current branch show.
+
+Otherwise, Demo pages, status pages and deep menus go in `NavList` groups with `collapsible`. A closed group must open when the current page is inside it: pass `defaultOpen={holdsCurrent}` and a `key` that changes with `holdsCurrent`, so the group remounts open. Two levels at most: a group title, then its pages. The breadcrumb shows group / page.
 
 ## External links
 

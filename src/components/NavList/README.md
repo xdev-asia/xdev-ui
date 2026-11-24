@@ -6,6 +6,7 @@ Vertical list of sections for a settings-style page, with the current one marked
 `nav.settings-nav` > optional `h2.settings-nav-title` + `.settings-nav-item` (button, or `a` with `href`) > optional `.settings-nav-icon` (16px `Icon`), `.settings-nav-label`, optional `.settings-nav-count`. With `collapsible` and a `title`: `nav.settings-nav[data-collapsible]` > `section.ws-group.settings-nav-group` (`Disclosure`) > the items.
 
 ## Rules
+- `children` turns an item into a branch: a native `details` whose `summary` opens and closes the sub-items (keyboard and `aria-expanded` from the browser). The branch that holds `value` opens on render. Up to three levels, each indented one space step. `accordion` closes the open siblings when a branch opens (the `details` share a `name`). Use branches for an admin sidebar that mirrors a menu tree; keep one level of `collapsible` groups otherwise.
 - One NavList per region: the app sidebar, or the section list of a settings page. In the workspace app the app-level switch is the `ActivityBar`; a generic app or admin console uses `AppShell` with NavList.
 - `icon` is optional and all-or-none within one list: give every item an icon or none.
 - The current item takes `aria-current="page"`: a `--bg-3` tint and a 1px `--line` border, never a coloured stripe.

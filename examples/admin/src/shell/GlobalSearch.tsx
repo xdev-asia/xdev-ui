@@ -4,11 +4,11 @@ import { useStore } from "../data/context";
 import type { User } from "../data/seed";
 import { useI18n } from "../i18n";
 import { hrefFor, navigate } from "../router";
-import type { NavGroup } from "./nav";
+import { leaves, type NavNode } from "./nav";
 import type { OpenPage } from "./prefs";
 
 /** Ctrl+K search over the pages the role can open and the people in the workspace. */
-export function GlobalSearch({ groups, recent = [] }: { groups: NavGroup[]; recent?: OpenPage[] }): JSX.Element {
+export function GlobalSearch({ tree, recent = [] }: { tree: NavNode[]; recent?: OpenPage[] }): JSX.Element {
   const { t, ui } = useI18n();
   const store = useStore();
   const [open, setOpen] = useState(false);
@@ -24,11 +24,13 @@ export function GlobalSearch({ groups, recent = [] }: { groups: NavGroup[]; rece
       ...(query.trim() || !recent.length ? [] : [{ title: t("shell.recent"), rows: [...recent].reverse().map<PaletteRow>((r) => ({ id: `#${r.path}`, title: r.title, icon: "history" })) }]),
       {
         title: t("shell.pages"),
-        rows: groups.flatMap((g) => g.items.filter((e) => !e.external).map<PaletteRow>((e) => ({ id: e.href, title: t(e.label), detail: t(g.title), icon: e.icon }))),
+        rows: leaves(tree)
+          .filter((l) => !l.entry.external && l.entry.href)
+          .map<PaletteRow>(({ entry, trail }) => ({ id: entry.href, title: t(entry.label), detail: trail.map((b) => t(b.label)).join(" / "), icon: entry.icon })),
       },
       { title: t("shell.people"), rows: people.map<PaletteRow>((u) => ({ id: hrefFor.user(u.id), title: u.name, detail: u.email, icon: "accounts" })) },
     ],
-    [groups, people, recent, query, t],
+    [tree, people, recent, query, t],
   );
   return (
     <>

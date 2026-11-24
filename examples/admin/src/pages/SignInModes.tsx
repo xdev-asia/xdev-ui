@@ -180,6 +180,7 @@ export function RegisterForm({ initialRequested }: { initialRequested?: string }
         hint={t("signIn.passwordHint")}
         error={errors.password ? t(errors.password) : undefined}
       />
+      <p className="app-muted">{t("signIn.agree")}</p>
       <Button variant="primary" type="submit">
         {t("signIn.requestAccount")}
       </Button>
