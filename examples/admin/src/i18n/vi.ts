@@ -227,6 +227,7 @@ export const vi: Dict = {
     title: "Vai trò",
     description: "Chọn những gì mỗi vai trò làm được.",
     list: "Vai trò",
+    role: "Vai trò",
     members: "{count} thành viên",
     matrix: "Quyền của vai trò {role}",
     resource: "Tài nguyên",
@@ -605,6 +606,7 @@ export const vi: Dict = {
   },
   nested: {
     hint: "Một trang nằm sâu ba cấp trong menu. Đường dẫn và nhóm đang mở trên thanh bên cho biết vị trí của nó.",
+    hint2: "Một trang nằm sâu hai cấp trong menu. Đường dẫn và nhóm đang mở trên thanh bên cho biết vị trí của nó.",
   },
   docs: {
     title: "Tài liệu nhúng",

@@ -51,7 +51,7 @@
 .app-frame { display: block; width: 100%; height: 70vh; height: 70dvh; border: 0; background: var(--bg-0); }
 .app-row { display: flex; flex-wrap: wrap; gap: var(--x-space-3); align-items: center; }
 /* Long names wrap instead of pushing a row wider than its column. */
-.app-person, .app-check-row > span { min-width: 0; overflow-wrap: anywhere; }
+.app-person, .app-check-row > span:first-child { min-width: 0; overflow-wrap: anywhere; }
 .app-tabs { display: flex; align-items: flex-end; gap: var(--x-space-2); }
 .app-tabs-strip { flex: 1; min-width: 0; }
 .app-tabs-tools { display: flex; flex: none; align-items: center; gap: var(--x-space-1); padding-bottom: var(--x-space-1); }
@@ -149,6 +149,22 @@
 .ill-badge-stroke { stroke: var(--x-color-on-accent); }
 /* Below the drawer breakpoint main's padding is --x-space-4, so the full-width tab bar and the fixed footer cancel that instead. */
 @media (max-width: 767.98px) {
+  /* Phone top bar: no breadcrumb slot, so search takes the free width instead of leaving a gap. */
+  .x-shell-crumbs { display: none; }
+  .x-shell-actions { flex: 1; min-width: 0; justify-content: flex-end; }
+  .x-shell-actions > .app-top-search { flex: 1 1 auto; width: auto; min-width: 0; }
   .app-tabs { margin: calc(-1 * var(--x-space-4)) calc(-1 * var(--x-space-4)) var(--x-space-4); }
-  .app-footer[data-fixed] { bottom: calc(-1 * var(--x-space-4)); margin-bottom: calc(-1 * var(--x-space-4)); }
+  /* On a phone a pinned footer would cover a sixth of the screen; it scrolls with the page instead. */
+  .app-footer[data-fixed] { position: static; margin-bottom: 0; }
+  /* Embedded pages fill what is left under the top bar and the tab strip, so the page does not scroll as well as the frame. */
+  .app-frame { height: calc(100dvh - 15rem); }
 }
+/* The breadcrumb needs the room the search box takes below 1024px; the tab strip and the sidebar already say where you are. */
+@media (max-width: 1023.98px) { .app-crumbs { display: none; } }
+.x-shell-main:has(.x-savebar) .app-footer[data-fixed] { position: static; margin-bottom: 0; } /* the save bar owns the bottom edge while it shows */
+.app-back-top-room { height: calc(var(--x-space-8) + var(--x-space-6)); flex: none; }
+/* Wide tables: a person's name stays on one line and the table scrolls in its wrapper; phones stack rows into cards. */
+@media (min-width: 48rem) { .x-table .app-person { overflow-wrap: normal; } }
+.app-check-row > :last-child { flex: none; }
+[data-theme="dark"] .ill-hair { fill: color-mix(in srgb, var(--orange) 45%, var(--bg-0)); }
+[data-theme="dark"] .ill-eye { fill: var(--bg-0); }

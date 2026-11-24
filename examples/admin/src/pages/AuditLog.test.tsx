@@ -61,7 +61,7 @@ describe("AuditLog", () => {
     it(`ready: a table page, filters, pagination, details (${locale})`, () => {
       const html = render(locale, props());
       expect(html.match(/<h1/g)).toHaveLength(1);
-      expect(html.match(/<tbody>[\s\S]*<\/tbody>/)![0].match(/<tr/g)).toHaveLength(10);
+      expect(html.match(/<tbody[^>]*>[\s\S]*<\/tbody>/)![0].match(/<tr/g)).toHaveLength(10);
       expect(html.match(/type="date"/g)).toHaveLength(2);
       expect(html).toContain(locale === "en" ? "Export CSV" : "Xuất CSV");
       expect(html).toContain("aria-expanded");

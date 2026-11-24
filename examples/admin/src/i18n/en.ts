@@ -225,6 +225,7 @@ export const en = {
     title: "Roles",
     description: "Choose what each role can do.",
     list: "Roles",
+    role: "Role",
     members: "{count} members",
     matrix: "Permissions for {role}",
     resource: "Resource",
@@ -603,6 +604,7 @@ export const en = {
   },
   nested: {
     hint: "A page three levels down the menu. The breadcrumb and the open group in the sidebar show where it is.",
+    hint2: "A page two levels down the menu. The breadcrumb and the open group in the sidebar show where it is.",
   },
   docs: {
     title: "Embedded docs",

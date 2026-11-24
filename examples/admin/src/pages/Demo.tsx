@@ -8,7 +8,7 @@ const NAMES = { "menu1-1": "nav.menu11", "menu1-2": "nav.menu12", menu2: "nav.me
 /** A leaf of the nested-menu demo. */
 export function NestedPage({ leaf }: { leaf: (typeof NESTED)[number] }): JSX.Element {
   const { t } = useI18n();
-  return <PageHeader title={t(NAMES[leaf])} description={t("nested.hint")} />;
+  return <PageHeader title={t(NAMES[leaf])} description={t(leaf === "menu2" ? "nested.hint2" : "nested.hint")} />;
 }
 
 /** Another site inside the console (Outside pages, Embedded), with a way out to a full tab. */
