@@ -8,6 +8,8 @@ import { I18nProvider, readLocale, useI18n, type Locale } from "./i18n";
 import { hrefFor, navigate, useRoute, type AccessPage, type EmbedId, type ExceptionCode, type LegalPage, type NESTED } from "./router";
 import { Shell } from "./shell/Shell";
 import { canOpen } from "./shell/nav";
+import { disabledPaths, seedMenus, type MenuItem, type TreeNode } from "./data/catalog";
+import type { AccessMode } from "./pages/Access";
 import { usePrefs } from "./shell/prefs";
 import { AboutPage } from "./pages/About";
 import { DepartmentsPage } from "./pages/Departments";
@@ -43,12 +45,22 @@ interface RoutesProps {
   onRolesChanged: () => void;
   theme: ThemePreference;
   onThemeChange: (value: ThemePreference) => void;
+  access: AccessState;
 }
 
-function Routes({ session, roles, version, openDialog, onRolesChanged, theme, onThemeChange }: RoutesProps): JSX.Element {
+/** The menu catalog and the access mode, shared by the Menus page, the access demo and the shell's menu. */
+interface AccessState {
+  menus: TreeNode<MenuItem>[];
+  setMenus: (next: TreeNode<MenuItem>[]) => void;
+  mode: AccessMode;
+  setMode: (mode: AccessMode) => void;
+  hidden: ReadonlySet<string>;
+}
+
+function Routes({ session, roles, version, openDialog, onRolesChanged, theme, onThemeChange, access }: RoutesProps): JSX.Element {
   const route = useRoute();
   // The sidebar hides what the role cannot read; a typed or shared link gets the not-found page, so it does not reveal the page.
-  if (!canOpen(route, roles, session.role)) return <NotFoundPage />;
+  if (!canOpen(route, roles, session.role, access.hidden)) return <NotFoundPage />;
   const onDelete = (users: Pick<User, "id" | "name">[], done: () => void): void => openDialog({ kind: "delete", users, done });
   switch (route.name) {
     case "users":
@@ -64,9 +76,9 @@ function Routes({ session, roles, version, openDialog, onRolesChanged, theme, on
     case "audit":
       return <AuditLogPage session={session} roles={roles} />;
     case "access":
-      return <AccessPageView page={route.params.page as AccessPage} session={session} roles={roles} />;
+      return <AccessPageView page={route.params.page as AccessPage} session={session} roles={roles} mode={access.mode} onModeChange={access.setMode} hidden={access.hidden} />;
     case "menus":
-      return <MenusPage session={session} roles={roles} />;
+      return <MenusPage session={session} roles={roles} tree={access.menus} onTree={access.setMenus} />;
     case "departments":
       return <DepartmentsPage />;
     case "profile":
@@ -133,6 +145,10 @@ function Dialogs({ dialog, busy, setBusy, close, changed }: { dialog: Dialog | n
 /** Everything under the language provider: toasts and pages read their words from it. */
 function Console(): JSX.Element {
   const [theme, setTheme] = useTheme();
+  const [menus, setMenus] = useState(seedMenus);
+  const [mode, setMode] = useState<AccessMode>("front");
+  const hidden = useMemo(() => (mode === "back" ? disabledPaths(menus) : new Set<string>()), [mode, menus]);
+  const access: AccessState = { menus, setMenus, mode, setMode, hidden };
   const [prefs, setPrefs] = usePrefs();
   const session = useSession();
   const route = useRoute();
@@ -161,8 +177,8 @@ function Console(): JSX.Element {
         ) : !session ? (
           <SignInPage onSignedIn={signIn} theme={theme} onThemeChange={setTheme} />
         ) : (
-          <Shell route={route} session={session} roles={roles} toasts={toasts} onSignOut={signOut} prefs={prefs} onPrefs={setPrefs} theme={theme} onThemeChange={setTheme}>
-            <Routes session={session} roles={roles} version={version} openDialog={setDialog} onRolesChanged={() => store.listRoles().then(setRoles, () => {})} theme={theme} onThemeChange={setTheme} />
+          <Shell route={route} session={session} roles={roles} toasts={toasts} onSignOut={signOut} prefs={prefs} onPrefs={setPrefs} theme={theme} onThemeChange={setTheme} hidden={hidden}>
+            <Routes session={session} roles={roles} version={version} openDialog={setDialog} onRolesChanged={() => store.listRoles().then(setRoles, () => {})} theme={theme} onThemeChange={setTheme} access={access} />
             <Dialogs dialog={dialog} busy={busy} setBusy={setBusy} close={() => setDialog(null)} changed={() => setVersion((n) => n + 1)} />
           </Shell>
         )}

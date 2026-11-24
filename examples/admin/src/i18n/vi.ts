@@ -261,6 +261,9 @@ export const vi: Dict = {
     editTitle: "Sửa {role}",
     editHint: "Vai trò này được xem, tạo, sửa và xóa những gì.",
     close: "Đóng",
+    filter: "Lọc vai trò",
+    placeholder: "Tên hoặc mã…",
+    empty: "Không có vai trò khớp",
   },
   settings: {
     title: "Cài đặt",
@@ -439,6 +442,9 @@ export const vi: Dict = {
     empty: "Không có menu khớp",
     emptyHint: "Xóa bộ lọc để xem mọi menu.",
     count: "{n} mục",
+    add: "Thêm menu",
+    addTitle: "Thêm menu",
+    added: "Đã thêm menu",
   },
   departments: {
     title: "Phòng ban",
@@ -531,7 +537,7 @@ export const vi: Dict = {
     back: "Phía máy chủ",
     backHint: "Máy chủ gửi menu tài khoản được mở; các trang giữ nguyên.",
     inUse: "Đang dùng",
-    notInUse: "Không dùng trong bản demo",
+    notInUse: "Không dùng",
     serverNote: "Dù cách nào, máy chủ vẫn kiểm tra lại mọi yêu cầu.",
     pagesTitle: "Kiểm soát trang",
     pagesDescription: "Đổi tài khoản demo và menu thay đổi theo.",
@@ -550,6 +556,9 @@ export const vi: Dict = {
     adminHint: "Menu ẩn trang này với biên tập viên và người xem; mở bằng đường dẫn sẽ thấy trang không tìm thấy.",
     commonTitle: "Chỉ biên tập viên và người xem thấy trang này",
     commonHint: "Đăng nhập bằng tài khoản người xem để thấy trang này trên menu.",
+    mode: "Chế độ phân quyền",
+    modeHint: "Phía máy chủ: menu đi theo Hệ thống, Menu; mục nào tắt ở đó sẽ rời thanh bên.",
+    modeSwitched: "Chế độ phân quyền: {mode}",
   },
   legal: {
     privacy: "Chính sách quyền riêng tư",

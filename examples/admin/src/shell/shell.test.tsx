@@ -5,6 +5,7 @@ import { seedRoles } from "../data/seed";
 import { I18nProvider } from "../i18n";
 import { matchRoute } from "../router";
 import { canOpen, currentOf, leaves, NAV, navFor, toItems } from "./nav";
+import { disabledPaths, seedMenus } from "../data/catalog";
 import { Notifications } from "./Notifications";
 import { PreferencesDrawer } from "./PreferencesDrawer";
 import { closeTabs, DEFAULT_PREFS, readPrefs, readTabs, visitTab } from "./prefs";
@@ -34,6 +35,14 @@ describe("nav", () => {
     expect(canOpen(matchRoute("#/access/admin"), roles, "viewer")).toBe(false);
     expect(canOpen(matchRoute("#/roles"), roles, "admin")).toBe(true);
     expect(canOpen(matchRoute("#/nope"), roles, "viewer")).toBe(true);
+  });
+  it("back-end mode drops the paths System, Menus switched off, from the menu and from links", () => {
+    const hidden = disabledPaths(seedMenus());
+    expect(hidden.has("/nested/menu2")).toBe(true);
+    expect(ids(navFor(roles, "owner", undefined, hidden))).not.toContain("menu2");
+    expect(ids(navFor(roles, "owner"))).toContain("menu2");
+    expect(canOpen(matchRoute("#/nested/menu2"), roles, "owner", hidden)).toBe(false);
+    expect(canOpen(matchRoute("#/nested/menu1-1"), roles, "owner", hidden)).toBe(true);
   });
   it("turns the tree into NavList items with children", () => {
     const items = toItems(NAV, (k) => k);

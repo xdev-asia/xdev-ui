@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import { Banner, Button, Card, DescriptionList, EmptyState, PageHeader, StatusDot, Tag } from "@xdev-asia/ui";
+import { Banner, Button, Card, DescriptionList, EmptyState, PageHeader, Segmented, StatusDot, Tag } from "@xdev-asia/ui";
 import { can, type Capability } from "../auth/permissions";
 import { demoAccounts, signIn, type Session } from "../auth/session";
 import type { Role } from "../data/seed";
@@ -23,7 +23,14 @@ export interface AccessViewProps {
   roles: Role[];
   /** Signs in as another demo account; the shell, menu and buttons follow. */
   onSwitch: (account: Session) => void;
+  /** Front-end: the menu follows the role. Back-end: it also drops items switched off in System, Menus. */
+  mode?: AccessMode;
+  onModeChange?: (mode: AccessMode) => void;
+  /** Paths the back-end mode hides. */
+  hidden?: ReadonlySet<string>;
 }
+
+export type AccessMode = "front" | "back";
 
 /** The account card shared by page and button control: who is signed in, and a button per other demo account. */
 function AccountCard({ session, onSwitch }: Pick<AccessViewProps, "session" | "onSwitch">): JSX.Element {
@@ -45,8 +52,23 @@ function AccountCard({ session, onSwitch }: Pick<AccessViewProps, "session" | "o
 }
 
 /** The access demo of react-antd-admin: mode, page control, button control and two role-only pages. */
-export function AccessView({ page, session, roles, onSwitch }: AccessViewProps): JSX.Element {
+export function AccessView({ page, session, roles, onSwitch, mode = "front", onModeChange, hidden }: AccessViewProps): JSX.Element {
   const { t } = useI18n();
+  const modes = (
+    <Card headingLevel={2} title={t("access.mode")} subtitle={t("access.modeHint")}>
+      <Segmented
+        label={t("access.mode")}
+        value={mode}
+        onChange={(v) => onModeChange?.(v as AccessMode)}
+        disabled={!onModeChange}
+        options={[
+          { value: "front", label: t("access.front") },
+          { value: "back", label: t("access.back") },
+        ]}
+      />
+    </Card>
+  );
+  const use = (m: AccessMode) => <StatusDot tone={mode === m ? "ok" : "neutral"} label={t(mode === m ? "access.inUse" : "access.notInUse")} />;
   if (page === "mode")
     return (
       <>
@@ -55,11 +77,12 @@ export function AccessView({ page, session, roles, onSwitch }: AccessViewProps):
           <Card headingLevel={2}>
             <DescriptionList
               items={[
-                { term: t("access.front"), value: <span className="app-row"><StatusDot tone="ok" label={t("access.inUse")} /><span>{t("access.frontHint")}</span></span> },
-                { term: t("access.back"), value: <span className="app-row"><StatusDot tone="neutral" label={t("access.notInUse")} /><span>{t("access.backHint")}</span></span> },
+                { term: t("access.front"), value: <span className="app-row">{use("front")}<span>{t("access.frontHint")}</span></span> },
+                { term: t("access.back"), value: <span className="app-row">{use("back")}<span>{t("access.backHint")}</span></span> },
               ]}
             />
           </Card>
+          {modes}
           <Banner tone="info" title={t("access.serverNote")} />
         </div>
       </>
@@ -74,12 +97,13 @@ export function AccessView({ page, session, roles, onSwitch }: AccessViewProps):
       />
     );
   if (page === "pages") {
-    const visible = new Set(leaves(navFor(roles, session.role)).map((l) => l.entry.id));
+    const visible = new Set(leaves(navFor(roles, session.role, undefined, hidden)).map((l) => l.entry.id));
     return (
       <>
         <PageHeader title={t("access.pagesTitle")} description={t("access.pagesDescription")} />
         <div className="app-stack">
           <AccountCard session={session} onSwitch={onSwitch} />
+          {modes}
           <Card headingLevel={2} title={t("permissions.pages")} subtitle={t("permissions.pagesHint")} flush>
             <ul className="app-list app-check-list">
               {leaves(NAV)
@@ -135,7 +159,7 @@ export function AccessView({ page, session, roles, onSwitch }: AccessViewProps):
   );
 }
 
-export function AccessPageView({ page, session, roles }: { page: AccessPage; session: Session; roles: Role[] }): JSX.Element {
+export function AccessPageView({ page, session, roles, mode, onModeChange, hidden }: { page: AccessPage; session: Session; roles: Role[] } & Pick<AccessViewProps, "mode" | "onModeChange" | "hidden">): JSX.Element {
   const { t } = useI18n();
   const notify = useNotify();
   return (
@@ -143,6 +167,15 @@ export function AccessPageView({ page, session, roles }: { page: AccessPage; ses
       page={page}
       session={session}
       roles={roles}
+      mode={mode}
+      hidden={hidden}
+      onModeChange={
+        onModeChange &&
+        ((m) => {
+          onModeChange(m);
+          notify(t("access.modeSwitched", { mode: t(m === "front" ? "access.front" : "access.back") }));
+        })
+      }
       onSwitch={(a) => {
         signIn(a);
         notify(t("access.switched", { name: a.name }));

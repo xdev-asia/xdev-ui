@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { seedRoles } from "../data/seed";
 import type { Load } from "../data/useLoad";
 import { I18nProvider, type Locale } from "../i18n";
-import { RolesView, samePermissions, togglePermission, type RolesData, type RolesViewProps } from "./Roles";
+import { matchRoles, RolesView, samePermissions, togglePermission, type RolesData, type RolesViewProps } from "./Roles";
 
 const roles = seedRoles();
 const data: RolesData = { roles, counts: { owner: 1, admin: 5, editor: 17, viewer: 34 } };
@@ -80,6 +80,12 @@ describe("Roles", () => {
     expect(html.match(/class="btn"/g)).toHaveLength(1);
     expect(render("en", props())).not.toContain("Unsaved changes");
     expect(render("en", props())).toMatch(/<button[^>]*disabled=""[^>]*>Save permissions/);
+  });
+  it("filters roles by name or code and says when none match", () => {
+    expect(matchRoles("edit", (id) => id)).toEqual(["editor"]);
+    expect(matchRoles("", (id) => id)).toHaveLength(4);
+    expect(render("en", props({ initialQuery: "zzz" }))).toContain("No roles match");
+    expect(render("en", props({ initialQuery: "own" }))).toContain("1 / 4");
   });
   it("marks the chosen role", () => {
     expect(render("en", props({ roleId: "editor" }))).toContain("Edit Editor");
