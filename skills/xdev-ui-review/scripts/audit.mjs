@@ -238,6 +238,18 @@ const SIZE_PROPS = new Set(["width", "height", "min-width", "min-height", "inlin
 const MOTION = /(?:^|[\s;{])(?:transform|translate|rotate|scale|top|left|right|bottom|inset[\w-]*|margin[\w-]*|offset[\w-]*|background-position)\s*:/;
 const REDUCED = /prefers-reduced-motion\s*(?::\s*reduce\s*)?\)/;
 const GLOBAL_KEYWORDS = new Set(["none", "inherit", "initial", "unset", "revert", "revert-layer"]);
+// Properties whose change runs layout on every frame of a transition or animation (fixing-motion-performance).
+const LAYOUT_PROP = /^(?:width|height|min-width|min-height|max-width|max-height|inline-size|block-size|min-inline-size|min-block-size|max-inline-size|max-block-size|top|left|right|bottom|inset(?:-[\w-]+)?|margin(?:-[\w-]+)?|padding(?:-[\w-]+)?|flex-basis|grid-template-(?:columns|rows))$/;
+const LAYOUT_FRAME = /(?:^|[\s;{])(?:width|height|top|left|right|bottom|margin(?:-[\w-]+)?|padding(?:-[\w-]+)?)\s*:/;
+const TIMING = /^(?:-?\d*\.?\d+m?s|ease(?:-in|-out|-in-out)?|linear|step-start|step-end|allow-discrete|normal|(?:cubic-bezier|steps|linear|var)\(.*\))$/;
+/** Property names a `transition` or `transition-property` value animates; a shorthand item with no property means `all`. */
+function transitioned(prop, value) {
+  return splitList(value).map((item) => {
+    if (prop === "transition-property") return item.trim();
+    const words = item.trim().split(/\s+(?![^(]*\))/);
+    return words.find((w) => !TIMING.test(w)) ?? "all";
+  });
+}
 
 /** WCAG 2.2 relative luminance of an sRGB colour [r, g, b] in 0..255. */
 export function luminance([r, g, b]) {
@@ -368,13 +380,16 @@ export function audit(dir, opts = {}) {
   // CSS pass inputs shared across files: which @keyframes move things, and whether a universal reduced-motion guard exists.
   const parsed = new Map(sources.filter((s) => s.file.endsWith(".css")).map((s) => [s.file, cssRules(s.text)]));
   const moving = new Map();
+  const layoutFrames = new Set();
   for (const { file, text } of sources) {
     if (!parsed.has(file)) continue;
     for (const m of text.matchAll(/@keyframes\s+([-\w]+)\s*\{/g)) {
       let depth = 1;
       let i = m.index + m[0].length;
       for (; i < text.length && depth; i++) depth += text[i] === "{" ? 1 : text[i] === "}" ? -1 : 0;
-      moving.set(m[1], (moving.get(m[1]) ?? false) || MOTION.test(text.slice(m.index + m[0].length, i)));
+      const frames = text.slice(m.index + m[0].length, i);
+      moving.set(m[1], (moving.get(m[1]) ?? false) || MOTION.test(frames));
+      if (LAYOUT_FRAME.test(frames)) layoutFrames.add(m[1]);
     }
   }
   const universalGuard = [...parsed.values()].some((rules) =>
@@ -441,6 +456,27 @@ export function audit(dir, opts = {}) {
           const control = parts.map(subject).some((s) => isControl(s));
           if (!handled && !control) add(file, d.line, "nowrap", "warn", "white-space: nowrap with no overflow or text-overflow; long text widens the page at 320px.");
         }
+        // layout-motion: a transition or animation of a layout property (or `all`) runs layout every frame; move with transform and opacity.
+        if (d.prop === "transition" || d.prop === "transition-property") {
+          const hit = transitioned(d.prop, d.value).find((p) => p === "all" || LAYOUT_PROP.test(p));
+          if (hit && !GLOBAL_KEYWORDS.has(hit))
+            add(file, d.line, "layout-motion", "warn", `transition of ${hit} runs layout on every frame; transition transform or opacity, or name only the paint properties you change.`);
+        }
+        if (d.prop === "animation" || d.prop === "animation-name") {
+          const name = d.value.split(/[\s,]+/).find((t) => layoutFrames.has(t));
+          if (name) add(file, d.line, "layout-motion", "warn", `Animation ${name} changes a size, position or spacing property; animate transform and opacity instead.`);
+        }
+        // will-change: a layer promoted for good costs memory and keeps text rasterised at one scale; set it only while the motion runs.
+        if (d.prop === "will-change" && !/^auto\b/.test(d.value) && !parts.some((s) => /:(?:hover|active|focus|focus-within|focus-visible)\b|\[(?:data|aria)-/.test(s)))
+          add(file, d.line, "will-change", "warn", "will-change on a resting element; add it under the state that animates (a [data-*] set during the gesture) and drop it after.");
+        // viewport-height: 100vh is taller than the visible area on phones while the address bar shows.
+        if (/^(?:min-|max-)?(?:height|block-size)$/.test(d.prop) && /\b\d*\.?\d+vh\b/.test(d.value)) {
+          const after = r.decls.slice(r.decls.indexOf(d) + 1).some((x) => x.prop === d.prop && /\d(?:d|s|l)vh\b/.test(x.value));
+          if (!after) add(file, d.line, "viewport-height", "warn", `${d.prop}: ${d.value} hides content behind the phone address bar; follow it with the same value in dvh (or svh).`);
+        }
+        // raw-z-index: stacking outside the token scale fights menus, dialogs and toasts; 0, 1 and -1 order siblings locally.
+        if (d.prop === "z-index" && /^-?\d+$/.test(d.value) && Math.abs(Number(d.value)) > 1)
+          add(file, d.line, "raw-z-index", "warn", `z-index: ${d.value} is outside the scale; use var(--x-z-*) (dropdown, sticky, modal, toast) or 0, 1 and -1 inside a part.`);
         // target-size: a fixed or max size under 24px on the subject of an interactive selector (SC 2.5.8).
         if (/^(width|height|inline-size|block-size|max-width|max-height|max-inline-size|max-block-size)$/.test(d.prop)) {
           const px = pxOf(d.value, sizes);
@@ -614,6 +650,11 @@ export function audit(dir, opts = {}) {
       } else if (style && /box-shadow|boxShadow/.test(line) && /inset\s+-?(?:0?\.\d+|[1-9]\d*(?:\.\d+)?)(?:px|rem|em)?\s+0(?:px|rem|em)?\s+0/.test(line)) {
         add(file, n, "left-stripe", "error", "Inset box-shadow stripe on the left edge.");
       }
+      if (!css && /\b(?:min-|max-)?h-screen\b/.test(line)) add(file, n, "viewport-height", "warn", "h-screen is 100vh, taller than the visible area on phones; use h-dvh (min-h-dvh, max-h-dvh).");
+      if (!css && style && /\b(?:height|minHeight|maxHeight|blockSize|minBlockSize)\s*:\s*["'`]\d*\.?\d+vh\b/.test(line))
+        add(file, n, "viewport-height", "warn", "A vh height in a style prop hides content behind the phone address bar; use dvh.");
+      if (!css && style && /\bzIndex\s*:\s*-?\d+/.test(line) && Math.abs(Number(/\bzIndex\s*:\s*(-?\d+)/.exec(line)[1])) > 1)
+        add(file, n, "raw-z-index", "warn", "A numeric zIndex is outside the scale; use var(--x-z-*) or 0, 1 and -1 inside a part.");
       if (!css && /tabindex\s*=\s*(?:\{\s*|["'])\+?0*[1-9]\d*\s*[}"']/i.test(line)) add(file, n, "positive-tabindex", "error", "Positive tabIndex reorders focus (WCAG F44); use 0 or -1 and DOM order.");
       if (!css && style && /outline\s*:\s*["']?(none|0)\b/.test(line)) add(file, n, "focus-outline", "error", "Do not remove the focus outline; restyle it with --x-color-signal.");
       if (tokens) {
@@ -631,6 +672,10 @@ export function audit(dir, opts = {}) {
     });
     if (parsed.has(file)) cssChecks(file, parsed.get(file), text);
     if (file.endsWith(".tsx")) iconButtonChecks(file, text);
+    if (file.endsWith(".tsx")) {
+      for (const m of text.matchAll(/\bonPaste\s*=\s*\{[^}]{0,120}?preventDefault/g))
+        add(file, text.slice(0, m.index).split("\n").length, "paste-block", "error", "Blocking paste breaks password managers and copied codes and can fail SC 3.3.8; let people paste and validate the value instead.");
+    }
     if (file.endsWith(".tsx")) signInChecks(file, text);
     if (file.endsWith(".tsx")) pageChecks(file, text);
     if (file.endsWith(".tsx")) {

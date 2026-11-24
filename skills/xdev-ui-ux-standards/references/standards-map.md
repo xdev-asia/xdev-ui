@@ -89,7 +89,7 @@ One row per rule: the source, what it means in xDev, and the pass or fail check.
 | E3 | Suggest the fix when it is known | WCAG 3.3.3 AA; Understanding `error-suggestion` | "Branch exists. Use feature-2?" instead of "Invalid name" | by hand |
 | E4 | Deleting or changing user data is reversible, checked, or confirmed | WCAG 3.3.4 AA; Understanding `error-prevention-legal-financial-data` | Delete uses a modal `Dialog` with `alert`, or an undo | by hand |
 | E5 | Do not ask twice for information in the same process | WCAG 3.3.7 A; Understanding `redundant-entry` | Multi-step setup carries values forward | by hand |
-| E6 | Sign-in needs no cognitive test without a helper; paste and password managers work; manual code transcription fails | WCAG 3.3.8 AA; Understanding `accessible-authentication-minimum` | The sign-in form allows paste and autofill; device codes can be copied or opened as a link | by hand |
+| E6 | Sign-in needs no cognitive test without a helper; paste and password managers work; manual code transcription fails | WCAG 3.3.8 AA; Understanding `accessible-authentication-minimum` | The sign-in form allows paste and autofill; device codes can be copied or opened as a link; Understanding "Copy and paste": forcing transcription fails unless another method is available | audit `paste-block`, `autocomplete`; by hand |
 
 ## Names, roles and status
 

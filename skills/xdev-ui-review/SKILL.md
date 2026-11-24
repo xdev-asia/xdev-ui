@@ -22,13 +22,13 @@ Fix the highest priority first. A higher row can force changes that make a lower
 | priority | category | must have | avoid | audit rules |
 |---|---|---|---|---|
 | 1 critical | Access | visible focus, a name on every control, 4.5:1 text and 3:1 UI contrast, keyboard for every action | `outline: none` with no replacement, a clickable `div`, an unnamed icon button | `focus-outline`, `positive-tabindex`, `icon-button-name`, `img-alt`, `contrast` |
-| 2 critical | Tokens and identity | tokens for colour, space, type, z-index; one accent; cyan only as focus | hex, Tailwind palette colours, px font sizes, a coloured left stripe | `raw-colour`, `raw-px`, `raw-font`, `unknown-token`, `left-stripe` |
+| 2 critical | Tokens and identity | tokens for colour, space, type, z-index; one accent; cyan only as focus | hex, Tailwind palette colours, px font sizes, a coloured left stripe | `raw-colour`, `raw-px`, `raw-font`, `unknown-token`, `left-stripe`, `raw-z-index` |
 | 3 high | States and data safety | loading, error, empty and success for every region; input kept on error; destructive confirms | a blank page on error, a lost form, a double submit | `list-empty`, `confirm-dialog`, `form-busy` |
-| 4 high | Layout | no page scroll sideways at 320 to 1440px; tables scroll in their wrapper; space reserved for late content | fixed widths over 320px, clipped text, content that jumps | `fixed-width`, `nowrap` |
+| 4 high | Layout | no page scroll sideways at 320 to 1440px; tables scroll in their wrapper; space reserved for late content | fixed widths over 320px, clipped text, content that jumps, `100vh` under a phone's address bar | `fixed-width`, `nowrap`, `viewport-height` |
 | 5 high | Actions | one primary per surface, last in its row; hide what the role can never do, disable with a reason | two primaries, a reason only in a tooltip | `primary-count` |
 | 6 medium | Language | sentence case, verbs on buttons, `en` and `vi` for every string and every `labels` | emoji, `!`, Title Case, English left in a library part | `label-voice`, `i18n-parity`, `i18n-labels` |
-| 7 medium | Forms | a visible label, errors on the field, autofill and paste allowed | placeholder as label, errors only in a toast | `autocomplete` |
-| 8 medium | Motion and platform | reduced motion, forced colours, 24px targets (44px on touch) | slides and spins with no `prefers-reduced-motion` guard | `reduced-motion`, `forced-colors`, `target-size` |
+| 7 medium | Forms | a visible label, errors on the field, autofill and paste allowed | placeholder as label, errors only in a toast, blocked paste | `autocomplete`, `paste-block` |
+| 8 medium | Motion and platform | reduced motion, forced colours, 24px targets (44px on touch) | slides and spins with no `prefers-reduced-motion` guard, layout animation, a resting `will-change` | `reduced-motion`, `layout-motion`, `will-change`, `forced-colors`, `target-size` |
 | 9 medium | Page patterns | the shape each pattern expects | a bare `AuthShell`, a delta with no baseline, a card with no face | `sign-in-shell`, `stat-delta`, `resource-face` |
 | 10 low | Visual finish | a screenshot in dark and light at 375 and 1440px with real data | calling it done from the source alone | none: look at it |
 
@@ -68,6 +68,11 @@ node <skill-dir>/scripts/audit.mjs src --i18n src/i18n
 | `form-busy` | warn | a `FormDialog` with no `busy` |
 | `autocomplete` | warn | a `password`, `email` or `tel` field or input with no `autoComplete` |
 | `img-alt` | error | an `img` with no `alt` |
+| `paste-block` | error | an `onPaste` handler that calls `preventDefault` |
+| `raw-z-index` | warn | a numeric `z-index` or `zIndex` other than 0, 1 and -1; use `var(--x-z-*)` |
+| `viewport-height` | warn | a `vh` height with no `dvh`/`svh` after it, a `vh` height in a `style` prop, or Tailwind `h-screen` |
+| `layout-motion` | warn | a `transition` of `all` or of a size, position or spacing property, or an animation whose keyframes change one |
+| `will-change` | warn | `will-change` on a selector with no state (`:hover`, `:active`, `[data-*]`, `[aria-*]`) |
 | `stat-delta` | warn | a `StatTile` with a `delta` and no `hint` naming what it is compared with |
 | `resource-face` | warn | a `ResourceCard` with no `leading`, or an `Avatar` or `img` as its face |
 | `i18n-labels` | warn | a library part that takes `labels` used without them, so its built-in words stay English; only with `--i18n` and a manifest |
@@ -93,6 +98,7 @@ When something looks wrong and the cause is not obvious, start here:
 | Text is clipped or still English in `vi` | `i18n-parity`, `i18n-labels`, then themes and language |
 | Focus is lost after a dialog or drawer closes | keyboard section; the widget's row in the standards skill patterns |
 | A colour or size will not take a token | `references/grep-recipes.md` and `xdevui_search_tokens` |
+| An animation stutters or a zoomed view blurs | `layout-motion` and `will-change` findings, then the `xdev-ui-motion` skill |
 | The library part lacks something the page needs | the standards skill's known gaps; fix it in `@xdev-asia/ui`, not in the app |
 
 Then run the check for each page's type. A page can be more than one type (a list that opens a dialog gets both checks).

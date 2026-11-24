@@ -417,7 +417,9 @@ button.x-list-row-main:disabled { cursor: default; }
 }
 .x-panzoom:active { cursor: grabbing; }
 .x-panzoom:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: -2px; }
-.x-panzoom-content { transform-origin: 0 0; will-change: transform; }
+.x-panzoom-content { transform-origin: 0 0; }
+/* Promote the layer only while dragging: a layer kept for good stays rasterised at one scale, so zoomed text blurs. */
+.x-panzoom[data-panning] .x-panzoom-content { will-change: transform; }
 .x-zoombar { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--x-space-1); }
 .x-zoombar-pct { min-width: 56px; font-variant-numeric: tabular-nums; }
 

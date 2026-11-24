@@ -408,3 +408,49 @@ describe("audit: command line", () => {
     }
   });
 });
+
+describe("audit: motion, viewport and paste rules", () => {
+  const rules = new Set(["layout-motion", "will-change", "viewport-height", "raw-z-index", "paste-block"]);
+  const only = (f: Finding[]) => f.filter((x) => rules.has(x.rule)).map((x) => [x.rule, x.level, x.line]);
+  it("layout-motion flags transitions and keyframes of layout properties or all", () => {
+    const css = [
+      ".a { transition: width 0.2s; }",
+      ".b { transition: 0.2s; }",
+      ".c { transition: none; }",
+      ".d { transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.2, 0, 0, 1); }",
+      ".e { transition-property: margin-left, opacity; }",
+      "@keyframes grow { from { height: 0; } }",
+      ".g { animation: grow 0.2s; }",
+      "@keyframes fade { from { opacity: 0; } }",
+      ".h { animation: fade 0.2s; }",
+    ].join("\n");
+    expect(only(inDir({ "a.css": css }))).toEqual([
+      ["layout-motion", "warn", 1],
+      ["layout-motion", "warn", 2],
+      ["layout-motion", "warn", 5],
+      ["layout-motion", "warn", 7],
+    ]);
+  });
+  it("will-change is allowed only under a state", () => {
+    const css = ".a { will-change: transform; }\n.b[data-panning] .c { will-change: transform; }\n.d:hover { will-change: opacity; }\n.e { will-change: auto; }\n";
+    expect(only(inDir({ "a.css": css }))).toEqual([["will-change", "warn", 1]]);
+  });
+  it("viewport-height wants dvh after vh, in CSS, style props and Tailwind classes", () => {
+    const css = ".a { min-height: 100vh; }\n.b { height: 100vh; height: 100dvh; }\n.c { height: 100dvh; height: 100vh; }\n";
+    const tsx = 'export const A = () => <div className="min-h-screen" />;\nexport const B = () => <div style={{ height: "100vh" }} />;\nexport const C = () => <div className="h-dvh" />;\n';
+    const f = inDir({ "a.css": css, "A.tsx": tsx }).filter((x) => x.rule === "viewport-height");
+    expect(f.map((x) => `${x.file}:${x.line}`).sort()).toEqual(["A.tsx:1", "A.tsx:2", "a.css:1", "a.css:3"]);
+  });
+  it("raw-z-index allows 0, 1, -1 and tokens", () => {
+    const css = ".a { z-index: 9999; }\n.b { z-index: 1; }\n.c { z-index: var(--x-z-modal); }\n.d { z-index: -1; }\n";
+    const tsx = "export const A = () => <div style={{ zIndex: 50 }} />;\nexport const B = () => <div style={{ zIndex: 1 }} />;\n";
+    expect(only(inDir({ "a.css": css, "A.tsx": tsx }))).toEqual([
+      ["raw-z-index", "warn", 1],
+      ["raw-z-index", "warn", 1],
+    ]);
+  });
+  it("paste-block is an error", () => {
+    const tsx = 'export const A = () => <input onPaste={(e) => e.preventDefault()} />;\nexport const B = () => <input onPaste={(e) => log(e)} />;\n';
+    expect(only(inDir({ "A.tsx": tsx }))).toEqual([["paste-block", "error", 1]]);
+  });
+});

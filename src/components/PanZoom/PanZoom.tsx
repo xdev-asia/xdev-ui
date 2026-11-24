@@ -52,6 +52,8 @@ export function PanZoom({ zoom, x, y, onZoom, onPan, onReset, label, min = MIN_Z
   const onPointerDown = (e: PointerEvent<HTMLDivElement>): void => {
     if (e.button !== 0) return;
     drag.current = { px: e.clientX, py: e.clientY, x, y };
+    // will-change only while dragging (CSS reads it): a permanent layer would blur the content after a zoom.
+    e.currentTarget.setAttribute("data-panning", "");
     e.currentTarget.setPointerCapture?.(e.pointerId);
   };
   const onPointerMove = (e: PointerEvent<HTMLDivElement>): void => {
@@ -60,6 +62,7 @@ export function PanZoom({ zoom, x, y, onZoom, onPan, onReset, label, min = MIN_Z
   };
   const onPointerUp = (e: PointerEvent<HTMLDivElement>): void => {
     drag.current = null;
+    e.currentTarget.removeAttribute("data-panning");
     e.currentTarget.releasePointerCapture?.(e.pointerId);
   };
   return (

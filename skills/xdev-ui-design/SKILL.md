@@ -6,7 +6,7 @@ license: Apache-2.0
 
 # Design xDev screens with @xdev-asia/ui
 
-xDev looks like a quiet developer tool: dark first, graphite surfaces, 1px hairlines instead of shadows, one blue accent, cyan only for focus, the orange agent blade only in the logo. This skill decides the look. It hands off the rest: app setup to `xdev-ui-build-app`, console screens to `xdev-ui-admin`, the audit to `xdev-ui-review`, WCAG and keyboard contracts to `xdev-ui-ux-standards`.
+xDev looks like a quiet developer tool: dark first, graphite surfaces, 1px hairlines instead of shadows, one blue accent, cyan only for focus, the orange agent blade only in the logo. This skill decides the look. It hands off the rest: app setup to `xdev-ui-build-app`, console screens to `xdev-ui-admin`, the audit to `xdev-ui-review`, WCAG and keyboard contracts to `xdev-ui-ux-standards`, motion performance to `xdev-ui-motion`, and evidence-based tidying of an existing screen to `xdev-ui-improve`.
 
 ## When to apply
 
@@ -32,7 +32,7 @@ The owner's own decisions (1:1 ports by measurement, the top bar, the brand, no 
 | 6 | States and feedback | HIGH | empty, loading, error and success for every region | blank page on error, spinner per row | [rules](references/rules.md#6-states-and-feedback) |
 | 7 | Typography | MEDIUM | `font: var(--type-*)` only, Roboto and JetBrains Mono | raw sizes, a third face, all caps prose | [tokens](references/tokens.md#type) |
 | 8 | Navigation and information | MEDIUM | current place marked by the accent, page title, counts above grids | two nav systems, unlabelled grids | [rules](references/rules.md#8-navigation-and-information) |
-| 9 | Motion | MEDIUM | short positional transitions only, reduced-motion guard | bouncing, motion that carries meaning | [rules](references/rules.md#9-motion) |
+| 9 | Motion | MEDIUM | short `transform`/`opacity` transitions only, reduced-motion guard; performance in `xdev-ui-motion` | bouncing, layout animation, a resting `will-change` | [rules](references/rules.md#9-motion) |
 | 10 | Data display | LOW | `StatusDot` with words, `Emblem` for things, mono for numbers and IDs | coloured left stripe, same grey circle everywhere | [rules](references/rules.md#10-data-display) |
 
 ## Quick reference
@@ -41,13 +41,13 @@ Rule IDs; the full rule, the why and the check are in [rules](references/rules.m
 
 1. **Accessibility**: `a11y-contrast`, `a11y-not-colour-alone`, `a11y-icon-name`, `a11y-focus-visible`, `a11y-forced-colors`, `a11y-landmarks`, `a11y-lang`
 2. **Interaction**: `int-target-size`, `int-one-primary`, `int-keyboard-path`, `int-no-hover-only`, `int-confirm-destructive`, `int-disabled-reason`
-3. **Tokens and colour**: `tok-no-literal`, `tok-semantic-role`, `tok-one-accent`, `tok-signal-is-focus`, `tok-hairline-not-shadow`, `tok-tint-not-fill`, `tok-both-themes`
+3. **Tokens and colour**: `tok-no-literal`, `tok-semantic-role`, `tok-one-accent`, `tok-signal-is-focus`, `tok-hairline-not-shadow`, `tok-tint-not-fill`, `tok-both-themes`, `tok-z-scale`
 4. **Brand**: `brand-mark-v12`, `brand-agent-side`, `brand-clear-space`, `brand-no-redraw`, `brand-app-name`
-5. **Layout**: `lay-container`, `lay-space-scale`, `lay-radius-scale`, `lay-360`, `lay-control-width`, `lay-shell`
+5. **Layout**: `lay-container`, `lay-space-scale`, `lay-radius-scale`, `lay-360`, `lay-control-width`, `lay-top-bar-surface`, `lay-shell`, `lay-dvh`
 6. **States**: `st-empty-next-step`, `st-loading-per-region`, `st-error-retry`, `st-toast-past-tense`, `st-keep-input`
-7. **Typography**: `type-token-only`, `type-two-faces`, `type-scale-roles`, `type-mono-data`, `type-sentence-case`
+7. **Typography**: `type-token-only`, `type-two-faces`, `type-scale-roles`, `type-mono-data`, `type-wrap`, `type-sentence-case`
 8. **Navigation**: `nav-current-accent`, `nav-page-title`, `nav-count-heading`, `nav-one-system`
-9. **Motion**: `mot-short`, `mot-transform-only`, `mot-reduced`, `mot-pulse-working-only`
+9. **Motion**: `mot-short`, `mot-transform-only`, `mot-will-change`, `mot-no-blur-motion`, `mot-reduced`, `mot-pulse-working-only`
 10. **Data display**: `data-status-words`, `data-emblem-face`, `data-no-left-stripe`, `data-dimmed-off`, `data-mono-numbers`
 
 ## How to use

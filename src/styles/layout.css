@@ -418,7 +418,7 @@ fieldset.x-form-section-fields { min-width: 0; margin: 0; padding: 0; border: 0;
 }
 
 /* SiteShell (.x-site): frame for small public web pages */
-.x-site { display: flex; flex-direction: column; min-block-size: 100vh; background: var(--x-color-bg); color: var(--x-color-ink); }
+.x-site { display: flex; flex-direction: column; min-block-size: 100vh; min-block-size: 100dvh; background: var(--x-color-bg); color: var(--x-color-ink); }
 .x-site-header { padding-block: var(--x-space-3); border-block-end: 1px solid var(--x-color-line); background: var(--x-color-panel); }
 .x-site-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--x-space-3); }
 .x-site-brand { min-inline-size: 0; font: var(--type-control); }
@@ -432,7 +432,7 @@ fieldset.x-form-section-fields { min-width: 0; margin: 0; padding: 0; border: 0;
 .x-site-footer a:hover { color: var(--x-color-ink); }
 
 /* AuthShell (.x-auth): sign-in frame, a showcase side next to a form pane */
-.x-auth { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; min-block-size: 100vh; background: var(--x-color-panel); color: var(--x-color-ink); }
+.x-auth { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; min-block-size: 100vh; min-block-size: 100dvh; background: var(--x-color-panel); color: var(--x-color-ink); }
 .x-auth-showcase { display: none; position: relative; overflow: hidden; isolation: isolate; flex-direction: column; align-items: center; justify-content: center; gap: var(--x-space-8); padding: var(--x-space-8) var(--x-space-8) calc(var(--x-space-8) * 2); border-inline-end: 1px solid var(--x-color-line); text-align: center;
   background:
     radial-gradient(45% 40% at 50% 40%, color-mix(in srgb, var(--x-color-accent) 14%, transparent), transparent 70%),

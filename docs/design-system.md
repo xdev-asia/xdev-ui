@@ -108,15 +108,17 @@ Media queries cannot read `var()`, so the CSS writes 639.98px and 767.98px; `tes
 
 ## Agent skills
 
-The package ships five skills in `skills/`, in the open Agent Skills format (a `SKILL.md` with `name`, `description` and `license`, plus `references/` and `templates/`):
+The package ships seven skills in `skills/`, in the open Agent Skills format (a `SKILL.md` with `name`, `description` and `license`, plus `references/` and `templates/`):
 
 | skill | use it to |
 |---|---|
 | `xdev-ui-build-app` | start an app: shell, theme, i18n, routing, states; template `templates/app` |
 | `xdev-ui-admin` | design and build console screens: UX principles, layout (Container, Stack, Grid, Tailwind theme), dashboard, lists, forms, rich content, states, navigation, roles, settings, audit log, review checklist; template `templates/admin` |
 | `xdev-ui-design` | decide the look of a screen: rules by priority with IDs, tokens by role (dark and light), logo v12, screen recipes, porting another product's UI, anti-patterns, pre-delivery checklist |
-| `xdev-ui-review` | audit a UI with `scripts/audit.mjs` (tokens, stripes, primary buttons, en and vi parity, focus, names, target size, motion, contrast) and a manual checklist |
+| `xdev-ui-review` | audit a UI with `scripts/audit.mjs` (tokens, stripes, primary buttons, en and vi parity, focus, names, target size, motion, viewport height, z-index, paste, contrast) and a manual checklist |
 | `xdev-ui-ux-standards` | design and review against WCAG 2.2 AA, the APG patterns, the macOS, Windows and GNOME guidelines and the ten usability heuristics |
+| `xdev-ui-motion` | add or review motion: what the library already animates, the motion budget, and rendering performance (layout thrash, `will-change`, scroll, paint, blur) |
+| `xdev-ui-improve` | audit one existing screen against the rules that govern it, keep at most three proven findings and write handoff plans in `design-plans/`; read-only on product code |
 
 Install them with `npx xdev-ui-skills install` (`--codex`, `--cursor`, `--user`, `--dir <path>`, `--skill <name>`, `--force`, `--dry-run`), scaffold an app with `npx xdev-ui-skills create app|admin <dir>`, or add the Claude Code plugin: `/plugin marketplace add xdev-asia/xdev-ui`, then `/plugin install xdev-ui@xdev-asia`. Agents without a file install read a skill through the MCP tool `xdevui_get_skill`, or use the prompts `xdevui_build_app` and `xdevui_build_admin`.
 
