@@ -1,8 +1,10 @@
 name: Publish to npmjs
 # Copies a release that semantic-release already put on GitHub Packages to npmjs.com, so installs need no token.
 # release.yml calls this after each new version; run it by hand (Actions → Publish to npmjs → version) to copy an older one.
-# Needs the repo secret NPMJS_TOKEN: an npmjs.com granular access token with read and write on the @xdev-asia scope.
-# Without it the job warns and skips, so a release never fails over npmjs.
+# Auth: with the repo secret NPMJS_TOKEN (an npmjs.com granular token with read and write on @xdev-asia) it publishes
+# with that token. Without it, npm uses trusted publishing (OIDC): on npmjs.com, @xdev-asia/ui → Settings → Trusted
+# publisher → GitHub Actions, organization xdev-asia, repository xdev-ui, workflow release.yml. npm 11.5.1+ (Node 24 has it)
+# trades the job's id-token for a one-time publish token, so no secret is stored or expires.
 on:
   workflow_call:
     inputs:
@@ -52,13 +54,15 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
         run: |
-          if [ -z "$NODE_AUTH_TOKEN" ]; then
-            echo "::warning::NPMJS_TOKEN is not set, so @xdev-asia/ui@$VERSION was not published to npmjs.com"
-            exit 0
-          fi
           # The repo .npmrc points the @xdev-asia scope at GitHub Packages; this job talks to npmjs.com only.
           rm -f .npmrc
-          printf '@xdev-asia:registry=%s\n//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}\n' "$NPMJS" > "$RUNNER_TEMP/npmrc"
+          printf '@xdev-asia:registry=%s\n' "$NPMJS" > "$RUNNER_TEMP/npmrc"
+          if [ -n "$NODE_AUTH_TOKEN" ]; then
+            printf '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}\n' >> "$RUNNER_TEMP/npmrc"
+          else
+            unset NODE_AUTH_TOKEN
+            echo "No NPMJS_TOKEN: publishing through npm trusted publishing (OIDC)"
+          fi
           export NPM_CONFIG_USERCONFIG="$RUNNER_TEMP/npmrc"
           if npm view "@xdev-asia/ui@$VERSION" version >/dev/null 2>&1; then
             echo "@xdev-asia/ui@$VERSION is already on npmjs.com"
