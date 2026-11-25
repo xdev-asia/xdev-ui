@@ -310,6 +310,7 @@ const measure = (vw, touch) => `(() => {
     pageScrollsSideways: document.documentElement.scrollWidth > vw,
     mainScrollsSideways: !!main && main.scrollWidth > main.clientWidth,
     currentTabHidden: !!sel && (t.left < s.left - 1 || t.right > s.right + 1),
+    tab: sel ? { tab: [Math.round(t.left), Math.round(t.right)], strip: [Math.round(s.left), Math.round(s.right)], scrollLeft: Math.round(strip.scrollLeft) } : null,
     tapTargets: { count: tapSmall.length, first: tapSmall.slice(0, 5).map(({ el, r, near }) => desc(el) + " " + Math.round(r.width) + "x" + Math.round(r.height) + " near " + desc(near)) },
     clippedRight: { count: outer.length, first: outer.slice(0, 5).map((p) => (p.node.nodeType === 3 ? 'text "' + p.node.data.trim().slice(0, 32) + '" in ' + desc(p.el) : desc(p.node)) + " right " + p.right) },
     smallText: { count: small.length, first: small.slice(0, 5).map((x) => x.size + 'px "' + x.text + '" in ' + desc(x.el)) },
@@ -385,6 +386,10 @@ async function worker() {
     const reloaded = cdp.once("Page.loadEventFired");
     await cdp.send("Page.reload", { ignoreCache: false });
     await reloaded;
+    // Web fonts load per unicode-range subset on first use (Vietnamese diacritics, bold weights), so a page could
+    // render in a fallback font and swap after the app measured itself: a network race, not layout. Load every
+    // declared face up front so each page renders in its final fonts.
+    await run(`(async () => { await document.fonts.ready; await Promise.all([...document.fonts].map((f) => f.load().catch(() => null))); return 1; })()`, 20000);
     if (spec.signIn) await run(`(async () => { ${until} await until(() => document.querySelector("form button[type=submit]")); document.querySelector("form button[type=submit]")?.click(); await until(() => document.querySelector(".x-shell")); return 1; })()`);
     for (const route of routes) {
       await run(`(() => { location.hash = ${JSON.stringify(route.hash)}; window.__lcLast = performance.now(); return 1; })()`);
@@ -394,7 +399,7 @@ async function worker() {
       const found = {
         "page-scroll": m.pageScrollsSideways,
         "main-scroll": m.mainScrollsSideways,
-        "tab-hidden": m.currentTabHidden,
+        "tab-hidden": m.currentTabHidden && `${CHECKS["tab-hidden"].text} (tab ${m.tab.tab.join("-")}, strip ${m.tab.strip.join("-")})`,
         "tap-target": m.tapTargets?.count > 0 && `${CHECKS["tap-target"].text} (${m.tapTargets.count}): ${m.tapTargets.first.join("; ")}`,
         "clipped-right": m.clippedRight?.count > 0 && `${CHECKS["clipped-right"].text} (${m.clippedRight.count}): ${m.clippedRight.first.join("; ")}`,
         "small-text": m.smallText?.count > 0 && `${CHECKS["small-text"].text} (${m.smallText.count})`,
