@@ -47,7 +47,9 @@ corepack pnpm install
 corepack pnpm dev         # demo, http://localhost:5173
 corepack pnpm build       # tokens -> ai manifest -> lib -> mcp.js -> d.ts
 corepack pnpm test        # SSR smoke (121 components) + MCP smoke (all tools)
-corepack pnpm check:layout # admin example: every route at 375/768px, light/dark, en/vi; fails on sideways scroll or a hidden current tab (screenshots in layout-report/)
+corepack pnpm check:layout  # admin example: every route on phone-small, phone, tablet, desktop, light/dark, en/vi (screenshots + report.json in layout-report/)
+corepack pnpm check:devices # the same on all 7 device presets, as CI does (one job per device); `--devices`, `--only`, `--widths` in scripts/layout-check.mjs
+# both fail on sideways scroll, a hidden current tab, content past the right edge, tap targets under 24px on touch devices; text under 12px is a warning
 ```
 
 | change | also update |
