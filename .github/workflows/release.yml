@@ -1,6 +1,7 @@
 name: Release
 # Every push to main: semantic-release reads Conventional Commits,
-# bumps the version, tags vX.Y.Z, publishes @xdev-asia/ui to GitHub Packages, writes a GitHub release.
+# bumps the version, tags vX.Y.Z, publishes @xdev-asia/ui to GitHub Packages, writes a GitHub release,
+# then npmjs.yml copies that version to npmjs.com.
 on:
   push:
     branches: [main]
@@ -17,6 +18,8 @@ concurrency:
 jobs:
   release:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.released.outputs.version }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -40,3 +43,19 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # semantic-release writes the new version into package.json only when it released one.
+      - id: released
+        run: |
+          v=$(node -p 'require("./package.json").version')
+          if [ "$v" != "0.0.0-development" ]; then echo "version=$v" >> "$GITHUB_OUTPUT"; fi
+  npmjs:
+    needs: release
+    if: needs.release.outputs.version != ''
+    permissions:
+      contents: read
+      id-token: write
+    uses: ./.github/workflows/npmjs.yml
+    with:
+      version: ${{ needs.release.outputs.version }}
+    secrets:
+      NPMJS_TOKEN: ${{ secrets.NPMJS_TOKEN }}

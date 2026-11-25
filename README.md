@@ -143,7 +143,7 @@ Commits on `main` follow [Conventional Commits](https://www.conventionalcommits.
 | `feat!: …` / `BREAKING CHANGE:` | major |
 | `chore:`, `docs:`, `ci:` | none |
 
-It tags `vX.Y.Z`, publishes to GitHub Packages and writes the GitHub release. `pages.yml` deploys the demo to GitHub Pages at <https://ui.xdev.asia>.
+It tags `vX.Y.Z`, publishes to GitHub Packages and writes the GitHub release. Then `npmjs.yml` builds that tag with its version and publishes it to npmjs.com with provenance, using the repo secret `NPMJS_TOKEN` (an npmjs.com granular access token with read and write on the `@xdev-asia` scope); without the secret it warns and skips. To copy an older release, run *Actions → Publish to npmjs* with its version. `pages.yml` deploys the demo to GitHub Pages at <https://ui.xdev.asia>.
 
 ## License
 
