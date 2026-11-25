@@ -1,0 +1,71 @@
+name: Publish to npmjs
+# Copies a release that semantic-release already put on GitHub Packages to npmjs.com, so installs need no token.
+# release.yml calls this after each new version; run it by hand (Actions → Publish to npmjs → version) to copy an older one.
+# Needs the repo secret NPMJS_TOKEN: an npmjs.com granular access token with read and write on the @xdev-asia scope.
+# Without it the job warns and skips, so a release never fails over npmjs.
+on:
+  workflow_call:
+    inputs:
+      version:
+        type: string
+        required: true
+    secrets:
+      NPMJS_TOKEN:
+        required: false
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Released version to copy to npmjs.com, for example 4.15.0 (tag v4.15.0 must exist)"
+        required: true
+permissions:
+  contents: read
+  id-token: write
+concurrency:
+  group: npmjs-${{ inputs.version }}
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      VERSION: ${{ inputs.version }}
+      NPMJS: https://registry.npmjs.org/
+    steps:
+      - name: Check version
+        run: '[[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::not a version: $VERSION"; exit 1; }'
+      - uses: actions/checkout@v7
+        with:
+          ref: v${{ inputs.version }}
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # The tag keeps 0.0.0-development (semantic-release does not commit the bump); set it before the build,
+      # which writes the version into the agent manifest.
+      - run: npm pkg set "version=$VERSION" "publishConfig.registry=$NPMJS"
+      - run: pnpm build
+      - run: pnpm test:dist
+      - name: Publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "::warning::NPMJS_TOKEN is not set, so @xdev-asia/ui@$VERSION was not published to npmjs.com"
+            exit 0
+          fi
+          # The repo .npmrc points the @xdev-asia scope at GitHub Packages; this job talks to npmjs.com only.
+          rm -f .npmrc
+          printf '@xdev-asia:registry=%s\n//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}\n' "$NPMJS" > "$RUNNER_TEMP/npmrc"
+          export NPM_CONFIG_USERCONFIG="$RUNNER_TEMP/npmrc"
+          if npm view "@xdev-asia/ui@$VERSION" version >/dev/null 2>&1; then
+            echo "@xdev-asia/ui@$VERSION is already on npmjs.com"
+            exit 0
+          fi
+          latest=$(npm view @xdev-asia/ui version 2>/dev/null || echo 0.0.0)
+          # An older version copied by hand must not take the latest tag from a newer one.
+          if [ "$(printf '%s\n%s\n' "$latest" "$VERSION" | sort -V | tail -1)" = "$VERSION" ]; then tag=latest; else tag=backfill; fi
+          npm publish --access public --provenance --tag "$tag"
+          echo "Published @xdev-asia/ui@$VERSION to npmjs.com ($tag)" >> "$GITHUB_STEP_SUMMARY"
