@@ -193,3 +193,39 @@ export function fitSections(widths: readonly number[], avail: number, more: numb
   }
   return shown;
 }
+
+/** What `keepTabInView` needs from the page; tests pass stand-ins. */
+export interface TabViewEnv {
+  ResizeObserver?: new (cb: () => void) => { observe(el: Element): void; disconnect(): void };
+  fonts?: { ready: Promise<unknown> };
+}
+
+/**
+ * Scrolls `strip` so `tab` is fully in view, now and again whenever either one changes size or the web fonts finish
+ * loading (a font swap widens the tab after the first pass). Moves only the strip, never the page. Returns a cleanup.
+ */
+export function keepTabInView(
+  strip: HTMLElement,
+  tab: HTMLElement,
+  env: TabViewEnv = {
+    ResizeObserver: typeof ResizeObserver === "undefined" ? undefined : ResizeObserver,
+    fonts: typeof document === "undefined" ? undefined : document.fonts,
+  },
+): () => void {
+  const reveal = (): void => {
+    const s = strip.getBoundingClientRect();
+    const r = tab.getBoundingClientRect();
+    if (r.left < s.left) strip.scrollLeft -= s.left - r.left;
+    else if (r.right > s.right) strip.scrollLeft += r.right - s.right;
+  };
+  reveal();
+  let live = true;
+  const ro = env.ResizeObserver ? new env.ResizeObserver(() => live && reveal()) : null;
+  ro?.observe(strip);
+  ro?.observe(tab);
+  env.fonts?.ready.then(() => live && reveal(), () => undefined);
+  return () => {
+    live = false;
+    ro?.disconnect();
+  };
+}

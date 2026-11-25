@@ -8,7 +8,7 @@ import { hrefFor, navigate, type Route } from "../router";
 import { AccountMenu } from "./AccountMenu";
 import { GlobalSearch } from "./GlobalSearch";
 import { useStore } from "../data/context";
-import { currentOf, fitSections, leaves, navFor, toItems, type NavNode } from "./nav";
+import { currentOf, fitSections, keepTabInView, leaves, navFor, toItems, type NavNode } from "./nav";
 import { buildId, ROOT_VARS, rootStyle, watermarkUrl } from "./appearance";
 import { Notifications } from "./Notifications";
 import { PreferencesDrawer } from "./PreferencesDrawer";
@@ -244,14 +244,12 @@ export function Shell(p: ShellProps): JSX.Element {
   }, [layout, topIndex, tree.length, locale]);
 
   // Keep the current page's tab in view when the strip is wider than the screen (no scrollIntoView: it would move the page).
+  // Again when the strip or the tab resizes, and once the web font is in: the swap widens the tab after the first pass.
   useEffect(() => {
     const strip = stripRef.current?.querySelector<HTMLElement>(".ws-tabstrip");
     const tab = strip?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')?.closest<HTMLElement>(".ws-tab");
     if (!strip || !tab) return;
-    const s = strip.getBoundingClientRect();
-    const r = tab.getBoundingClientRect();
-    if (r.left < s.left) strip.scrollLeft -= s.left - r.left;
-    else if (r.right > s.right) strip.scrollLeft += r.right - s.right;
+    return keepTabInView(strip, tab);
   }, [route.path, tabs]);
 
   const act = (action: TabAction, target: string): void => {

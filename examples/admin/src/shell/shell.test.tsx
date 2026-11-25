@@ -4,7 +4,7 @@ import { seedNotices } from "../data/catalog";
 import { seedRoles } from "../data/seed";
 import { I18nProvider } from "../i18n";
 import { matchRoute } from "../router";
-import { canOpen, currentOf, fitSections, leaves, NAV, navFor, toItems } from "./nav";
+import { canOpen, currentOf, fitSections, keepTabInView, leaves, NAV, navFor, toItems } from "./nav";
 import { disabledPaths, seedMenus } from "../data/catalog";
 import { Notifications } from "./Notifications";
 import { PreferencesDrawer } from "./PreferencesDrawer";
@@ -214,5 +214,70 @@ describe("fitSections", () => {
     expect(fitSections(w, 300, 60, 4, 3)).toEqual([0, 3]);
     expect(fitSections(w, 300, 60, 4, 1)).toEqual([0, 1]);
     expect(fitSections(w, 120, 60, 4, 3)).toEqual([]);
+  });
+});
+
+describe("keepTabInView", () => {
+  // A strip 300px wide at x=0 and a tab whose box follows the strip's scroll; `width` changes when the font swaps.
+  const setup = () => {
+    const tab = { left: 200, width: 80 };
+    const strip = {
+      scrollLeft: 0,
+      getBoundingClientRect: () => ({ left: 0, right: 300 }),
+    };
+    const tabEl = { getBoundingClientRect: () => ({ left: tab.left - strip.scrollLeft, right: tab.left + tab.width - strip.scrollLeft }) };
+    const observers: { cb: () => void; els: unknown[]; off: boolean }[] = [];
+    class RO {
+      o: (typeof observers)[number];
+      constructor(cb: () => void) {
+        this.o = { cb, els: [], off: false };
+        observers.push(this.o);
+      }
+      observe(el: unknown) {
+        this.o.els.push(el);
+      }
+      disconnect() {
+        this.o.off = true;
+      }
+    }
+    let loaded = (): void => undefined;
+    const fonts = { ready: new Promise<void>((r) => (loaded = r)) };
+    return { tab, strip, tabEl, observers, RO, fonts, loaded: () => loaded() };
+  };
+  const el = (x: unknown) => x as HTMLElement;
+
+  it("scrolls the strip so the tab's right edge is in view, then again after the font swap widens it", async () => {
+    const t = setup();
+    const stop = keepTabInView(el(t.strip), el(t.tabEl), { ResizeObserver: t.RO, fonts: t.fonts });
+    expect(t.strip.scrollLeft).toBe(0); // 200..280 fits in 0..300
+    t.tab.width = 130; // the web font arrives: 200..330
+    t.loaded();
+    await t.fonts.ready;
+    await Promise.resolve();
+    expect(t.strip.scrollLeft).toBe(30);
+    stop();
+  });
+
+  it("follows a resize of the strip or the tab, and stops after cleanup", () => {
+    const t = setup();
+    const stop = keepTabInView(el(t.strip), el(t.tabEl), { ResizeObserver: t.RO, fonts: t.fonts });
+    const [ro] = t.observers;
+    expect(ro?.els).toEqual([t.strip, t.tabEl]);
+    t.tab.width = 120;
+    ro?.cb();
+    expect(t.strip.scrollLeft).toBe(20);
+    stop();
+    expect(ro?.off).toBe(true);
+    t.tab.width = 200;
+    ro?.cb();
+    expect(t.strip.scrollLeft).toBe(20);
+  });
+
+  it("still scrolls once where ResizeObserver and document.fonts are missing", () => {
+    const t = setup();
+    t.tab.left = 400;
+    const stop = keepTabInView(el(t.strip), el(t.tabEl), {});
+    expect(t.strip.scrollLeft).toBe(180);
+    stop();
   });
 });
