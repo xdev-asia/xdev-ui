@@ -4,7 +4,7 @@
   padding: 1px var(--x-space-1);
   border: 1px solid var(--x-color-line);
   border-radius: var(--x-radius-sm);
-  font: 11px var(--font-mono);
+  font: 12px var(--font-mono);
   color: var(--x-color-muted);
 }
 
@@ -13,7 +13,7 @@
   white-space: nowrap;
   padding: 1px var(--x-space-2);
   border-radius: 999px;
-  font: 600 11px/1.5 var(--font-body);
+  font: 600 12px/1.5 var(--font-body);
   color: var(--x-color-muted);
   background: var(--x-color-surface-2);
 }
@@ -31,10 +31,10 @@
 
 .ws-tag {
   display: inline-block;
-  padding: 0 5px;
+  padding: 0 6px;
   border: 1px solid var(--line);
   border-radius: var(--radius-s);
-  font: 400 10px/16px var(--font-body);
+  font: 400 12px/18px var(--font-body);
   color: var(--text-2);
   /* A tag is one short value; it never breaks inside ("Biên tập viên"). */
   white-space: nowrap;
@@ -49,17 +49,17 @@
 .ws-chip {
   display: inline-grid;
   place-items: center;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border-radius: var(--radius-s);
   background: var(--bg-3);
   color: var(--text-2);
-  font: 700 10px var(--font-mono);
+  font: 700 12px var(--font-mono);
 }
 .ws-chip[data-profile="claude"] { background: var(--orange-bg); color: var(--orange); }
 .ws-chip[data-profile="codex"] { background: var(--signal-bg); color: var(--signal); }
 
-.ws-stat { font: 10px var(--font-mono); }
+.ws-stat { font: 12px var(--font-mono); }
 .ws-stat-add { color: var(--ok); }
 .ws-stat-del { color: var(--danger); }
 
@@ -212,7 +212,7 @@ button.x-list-row-main:disabled { cursor: default; }
 .x-list-row-lead { display: inline-flex; flex: none; align-items: center; color: var(--text-2); }
 .x-list-row-text { display: flex; flex-direction: column; min-width: 0; }
 .x-list-row-title { overflow: hidden; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
-.x-list-row-meta { overflow: hidden; font-size: 11.5px; color: var(--text-2); text-overflow: ellipsis; white-space: nowrap; }
+.x-list-row-meta { overflow: hidden; font-size: 12px; color: var(--text-2); text-overflow: ellipsis; white-space: nowrap; }
 .x-list-row-trail { display: inline-flex; flex: none; align-items: center; gap: var(--x-space-2); font-size: 12px; color: var(--text-2); }
 
 /* Card (.x-card) */
@@ -296,7 +296,7 @@ button.x-list-row-main:disabled { cursor: default; }
 /* CodeBlock (.connect-snippet) */
 .connect-snippet { display: flex; flex-direction: column; gap: calc(var(--x-space-1) * 1.5); }
 .connect-head { display: flex; align-items: center; justify-content: space-between; gap: var(--x-space-2); min-height: 24px; }
-.connect-lang { font: 600 11px var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; color: var(--x-color-muted); }
+.connect-lang { font: 600 12px var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; color: var(--x-color-muted); }
 .connect-copy {
   display: inline-flex;
   align-items: center;
@@ -363,7 +363,7 @@ button.x-list-row-main:disabled { cursor: default; }
 .x-heatmap-cell[data-level="2"] { background: color-mix(in srgb, var(--signal) 50%, var(--bg-3)); }
 .x-heatmap-cell[data-level="3"] { background: color-mix(in srgb, var(--signal) 75%, var(--bg-3)); }
 .x-heatmap-cell[data-level="4"] { background: var(--signal); }
-.x-heatmap-legend { display: flex; align-items: center; gap: 3px; font: 11px var(--font-body); color: var(--x-color-muted); }
+.x-heatmap-legend { display: flex; align-items: center; gap: 3px; font: 12px var(--font-body); color: var(--x-color-muted); }
 .x-heatmap-legend span:first-child { margin-right: var(--x-space-1); }
 .x-heatmap-legend span:last-child { margin-left: var(--x-space-1); }
 
@@ -601,9 +601,9 @@ button.x-list-row-main:disabled { cursor: default; }
 .x-comment[data-state="resolved"] .x-comment-body { opacity: 0.7; }
 .x-comment-head { display: flex; align-items: center; gap: var(--x-space-2); min-width: 0; }
 .x-comment-author { overflow: hidden; font-size: 13px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
-.x-comment-time { flex: none; font-size: 11.5px; color: var(--x-color-muted); }
+.x-comment-time { flex: none; font-size: 12px; color: var(--x-color-muted); }
 .x-comment-actions { display: inline-flex; flex: none; align-items: center; gap: var(--x-space-1); margin-left: auto; }
-.x-comment-location { font: 400 11.5px/1.4 var(--font-mono); color: var(--x-color-muted); overflow-wrap: anywhere; }
+.x-comment-location { font: 400 12px/1.4 var(--font-mono); color: var(--x-color-muted); overflow-wrap: anywhere; }
 .x-comment-body { font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
 .x-comment-foot { display: flex; flex-direction: column; gap: var(--x-space-2); }
 
