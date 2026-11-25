@@ -57,6 +57,12 @@ describe("appearance tokens", () => {
     const grounds = (tokens.color.grounds ?? []).filter((g: { tokens: { name: string }[] }) => g.tokens.some((t) => t.name === "side-tint")).length;
     expect(tokensCss.match(/--side-tint:/g)).toHaveLength(2 + grounds * 2);
   });
+  it("keeps a ground's values in a pane that sets its own theme inside it", () => {
+    for (const g of tokens.color.grounds ?? []) {
+      expect(tokensCss).toContain(`[data-ground="${g.id}"] [data-theme="dark"] {`);
+      expect(tokensCss).toContain(`[data-ground="${g.id}"] [data-theme="light"] {`);
+    }
+  });
   it("sets interface text in Roboto, which carries Vietnamese diacritics, and loads it with fonts.css", () => {
     expect(tokensCss).toMatch(/--font-body:\s*"Roboto", "Segoe UI", system-ui, sans-serif;/);
     expect(tokensCss).not.toContain("Be Vietnam Pro");

@@ -354,3 +354,8 @@ a.btn, a.btn-secondary { display: inline-flex; align-items: center; justify-cont
   .hp-pal-list a { grid-template-columns: 1fr auto; }
   .hp-pal-sum { display: none; }
 }
+
+/* data-ground="ocean" (IBM Plex Sans): headings at 600 with a light negative track, as on the MUI site. */
+[data-ground="ocean"] .hp-hero h1 { font-weight: 600; letter-spacing: -0.02em; }
+[data-ground="ocean"] .hp-sec h2,
+[data-ground="ocean"] .hp-close h2 { font-weight: 600; letter-spacing: -0.01em; }

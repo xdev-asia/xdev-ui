@@ -4,7 +4,20 @@ import "../src/styles/fonts.css";
 import "../src/styles/index.css";
 
 const preview: Preview = {
+  globalTypes: {
+    ground: {
+      description: "Colour ground (data-ground on <html>)",
+      toolbar: { title: "Ground", icon: "paintbrush", items: [{ value: "", title: "Default" }, { value: "navy", title: "Navy" }, { value: "ocean", title: "Ocean" }], dynamicTitle: true },
+    },
+  },
+  initialGlobals: { ground: "" },
   decorators: [
+    (Story, ctx) => {
+      const ground = String(ctx.globals.ground ?? "");
+      if (ground) document.documentElement.dataset.ground = ground;
+      else delete document.documentElement.dataset.ground;
+      return <Story />;
+    },
     withThemeByDataAttribute({
       themes: { dark: "dark", light: "light" },
       defaultTheme: "dark",

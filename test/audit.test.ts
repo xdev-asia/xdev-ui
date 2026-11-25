@@ -262,6 +262,43 @@ describe("audit: token contrast", () => {
       expect(of(fg).filter((p) => p.ratio < 3).map((p) => `${fg}/${p.bg}/${p.theme} ${p.ratio.toFixed(2)}`)).toEqual([]);
     }
   });
+  it("each opt-in ground that sets its own accent passes the text, edge, accent, focus and link pairs in both themes", () => {
+    const json = JSON.parse(readFileSync(resolve(here, "../tokens/tokens.json"), "utf8"));
+    const base = Object.fromEntries(json.color.tokens.map((t: { name: string; value: unknown }) => [t.name, t.value]));
+    const failures: string[] = [];
+    const own = (json.color.grounds as { id: string; tokens: { name: string; value: string | Record<string, string> }[] }[]).filter((g) => g.tokens.some((t) => t.name === "accent"));
+    expect(own.map((g) => g.id)).toContain("ocean");
+    for (const g of own) {
+      for (const theme of ["dark", "light"]) {
+        const set = Object.fromEntries(g.tokens.map((t) => [t.name, typeof t.value === "string" ? t.value : t.value[theme]]));
+        const val = (n: string): string => {
+          const v = set[n] ?? (base[n] as Record<string, string>)?.[theme] ?? base[n];
+          const m = /^\{([a-z0-9-]+)\}$/.exec(String(v));
+          return m?.[1] ? val(m[1]) : String(v);
+        };
+        const rgb = (n: string) => parseColour(val(n)) as [number, number, number, number];
+        const over = rgb("bg-2");
+        // The link colour the components use: color-mix(in srgb, var(--x-color-accent) 70%, var(--text-1)).
+        const [a, t] = [rgb("x-color-accent"), rgb("text-1")];
+        const link = [0, 1, 2].map((i) => (a[i] ?? 0) * 0.7 + (t[i] ?? 0) * 0.3).concat(1);
+        const check = (fg: string, fgc: number[], bg: string, need: number) => {
+          const r = contrastRatio(fgc, rgb(bg), over);
+          if (r < need) failures.push(`${g.id}/${theme} ${fg} on ${bg} ${r.toFixed(2)} < ${need}`);
+        };
+        const grounds = ["bg-0", "bg-1", "bg-2", "bg-3"];
+        const surfaces = ["x-color-bg", "x-color-panel", "x-color-surface", "x-color-surface-2"];
+        for (const bg of [...grounds, "side-tint", "term"]) for (const fg of ["text-1", "text-2", "text-3"]) check(fg, rgb(fg), bg, 4.5);
+        for (const bg of surfaces) for (const fg of ["x-color-ink", "x-color-muted"]) check(fg, rgb(fg), bg, 4.5);
+        for (const bg of grounds) check("line-strong", rgb("line-strong"), bg, 3);
+        for (const bg of surfaces) check("x-color-line-strong", rgb("x-color-line-strong"), bg, 3);
+        check("x-color-on-accent", rgb("x-color-on-accent"), "x-color-accent", 4.5);
+        for (const bg of grounds) check("accent", rgb("accent"), bg, 3);
+        for (const bg of [...grounds, ...surfaces]) check("x-color-focus", rgb("x-color-focus"), bg, 3);
+        for (const bg of [...grounds, ...surfaces, "x-color-accent-soft"]) check("link", link, bg, 4.5);
+      }
+    }
+    expect(failures).toEqual([]);
+  });
   it("keeps the hairline tokens and strengthens them under prefers-contrast: more", () => {
     const css = readFileSync(resolve(here, "../src/styles/tokens.css"), "utf8");
     const tokens = JSON.parse(readFileSync(resolve(here, "../tokens/tokens.json"), "utf8"));
