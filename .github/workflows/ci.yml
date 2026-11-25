@@ -27,3 +27,35 @@ jobs:
       - run: pnpm build:demo
       - run: pnpm build:example:admin
       - run: npm pack --dry-run
+  # Every admin route on each emulated device (size, pixel ratio, touch, mobile user agent), light/dark, en/vi:
+  # scripts/layout-check.mjs. One short job per device; screenshots and report.json are uploaded either way.
+  devices:
+    name: devices (${{ matrix.device }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        device: [phone-small, phone, phone-android, tablet, tablet-air, laptop, desktop]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:example:admin
+      # ubuntu-latest ships Google Chrome (runner-images "Browsers and Drivers").
+      - run: node scripts/layout-check.mjs --dir dist-examples/admin --routes examples/admin/layout-routes.json --devices ${{ matrix.device }} --out layout-report
+        env:
+          CHROME_BIN: google-chrome-stable
+      - uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
+        with:
+          name: layout-report-${{ matrix.device }}
+          path: |
+            layout-report/
+            !layout-report/.profile/
+          retention-days: 14
+          if-no-files-found: ignore
