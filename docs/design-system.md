@@ -30,7 +30,7 @@ A product with its own look sets `data-ground="<id>"` next to `data-theme` on `<
 | ground | for | values |
 |---|---|---|
 | `navy` | ai-router | greys point at the `x-color-*` navy ramp (`bg-0` = `x-color-bg`, `bg-2` = `x-color-surface`, `line` = `x-color-line`); `text-3` is 4.5:1 or more on every step in both themes |
-| `ocean` | ui.xdev.asia, the admin showcase | the look of the MUI site: azure accent `#0073e6` (white text 4.57:1), blue-grey greys (hue 210, 14% saturation), a white light mode with `x-color-bg` `#ffffff`. Moves the workspace greys, `accent` and the semantic `x-color-*` surfaces, ink, lines and accent; text 4.5:1, `line-strong` 3:1 and links 4.5:1 on every step (tested). Also sets the body font to IBM Plex Sans (in `fonts.css`, with Vietnamese), radii `x-radius-md` 10px / `radius-l` 12px, and a soft inset highlight on buttons (`--x-shadow-btn`, `--x-shadow-btn-quiet`; `none` by default) |
+| `ocean` | ui.xdev.asia, the admin showcase | the look of the MUI site: azure accent `#0073e6` (white text 4.57:1), blue-grey greys (hue 210, 14% saturation), a white light mode with `x-color-bg` `#ffffff`. Moves the workspace greys, `accent` and the semantic `x-color-*` surfaces, ink, lines and accent; text 4.5:1, `line-strong` 3:1 and links 4.5:1 on every step (tested). Keeps the body font (Roboto). Also sets radii `x-radius-md` 10px / `radius-l` 12px, and a soft inset highlight on buttons (`--x-shadow-btn`, `--x-shadow-btn-quiet`; `none` by default) |
 
 ### Rules
 - **Dark first.** `dark` is the default theme; `light` mirrors every token. Previews render dark; toggle the theme to check light.

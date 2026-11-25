@@ -247,8 +247,6 @@
   --x-color-on-accent: #ffffff;
   --x-color-accent-soft: #0073e62e;
   --x-color-code-bg: #14171a;
-  --font-body: "IBM Plex Sans", "Roboto", "Segoe UI", system-ui, sans-serif;
-  --x-font-body: var(--font-body);
   --x-radius-sm: 6px;
   --x-radius-md: 10px;
   --x-radius-lg: 12px;
@@ -285,8 +283,6 @@
   --x-color-on-accent: #ffffff;
   --x-color-accent-soft: #ebf5ff;
   --x-color-code-bg: #f3f5f7;
-  --font-body: "IBM Plex Sans", "Roboto", "Segoe UI", system-ui, sans-serif;
-  --x-font-body: var(--font-body);
   --x-radius-sm: 6px;
   --x-radius-md: 10px;
   --x-radius-lg: 12px;

@@ -1,2 +1,2 @@
-/* Optional: Roboto + JetBrains Mono from Google Fonts, plus IBM Plex Sans for data-ground="ocean". All carry Vietnamese diacritics. The browser downloads a family only when a page uses it. Self-host for offline apps. */
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap");
+/* Optional: Roboto + JetBrains Mono from Google Fonts. Both carry Vietnamese diacritics. The browser downloads a family only when a page uses it. Self-host for offline apps. */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap");

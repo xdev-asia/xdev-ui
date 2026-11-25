@@ -2,7 +2,7 @@
   Home page, built to tasteskill 2.5 (github.com/Leonxlnx/taste-skill) on the xdev-ui system.
   Kind: software (a developer tool: React UI kit, tokens and an MCP server).
   Deal: hero collage · nav-mega · close-type in footer-statement · rhythm surface-pairs · buttons solid ·
-        moment counter-rolls. Colours and type are the client's own (data-ground="ocean": IBM Plex Sans),
+        moment counter-rolls. Colours and type are the client's own (data-ground="ocean", Roboto),
         not dealt. Headlines 500, text 400/500.
   Screens at 1440x900: hero 1 · console (app-frame) 1 · devices (tabs, the moment) 1 · components 1 ·
         themes 1 · install (steps) 1 · agents 1 · footer.closing 1.
