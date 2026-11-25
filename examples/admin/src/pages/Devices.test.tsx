@@ -44,6 +44,15 @@ describe("Device preview", () => {
     expect(html).toContain("Điện thoại");
     expect(html).toContain("Xem trên thiết bị");
   });
+  it("on a phone, the desktop alone shows its landscape shape in the disabled orientation switch", () => {
+    const orientation = (html: string) => html.slice(html.indexOf('aria-label="Orientation"')).split("</div>")[0] ?? "";
+    const desk = orientation(render({ initialNarrow: true, initialDevice: "desktop", initialOrientation: "portrait" }));
+    expect(desk).toMatch(/aria-pressed="true"[^>]*>Landscape</);
+    expect(count(desk, /disabled=""/g)).toBe(2);
+    const phone = orientation(render({ initialNarrow: true, initialDevice: "phone", initialOrientation: "portrait" }));
+    expect(phone).toMatch(/aria-pressed="true"[^>]*>Portrait</);
+    expect(count(phone, /disabled=""/g)).toBe(0);
+  });
   it("never offers itself, links out or pages the role cannot see", () => {
     const html = render();
     expect(html).not.toContain('value="#/devices"');

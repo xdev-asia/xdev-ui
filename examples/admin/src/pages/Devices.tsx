@@ -146,17 +146,19 @@ export interface DevicesPageProps {
   /** Starting state, for tests. */
   initialNarrow?: boolean;
   initialPage?: string;
+  initialDevice?: DeviceId;
+  initialOrientation?: Orientation;
 }
 
 /** Any menu page at phone, tablet and desktop sizes at once: three live frames of this console, signed in. */
-export function DevicesPage({ session, roles, hidden, theme, initialNarrow = false, initialPage }: DevicesPageProps): JSX.Element {
+export function DevicesPage({ session, roles, hidden, theme, initialNarrow = false, initialPage, initialDevice = "phone", initialOrientation = "portrait" }: DevicesPageProps): JSX.Element {
   const { t, locale } = useI18n();
   const narrow = useNarrow(initialNarrow);
   const list = useMemo(() => previewable(navFor(roles, session.role, undefined, hidden)), [roles, session.role, hidden]);
   const [chosen, setChosen] = useState(() => initialPage ?? `#${initialParam("page") ?? "/"}`);
   const [frameTheme, setFrameTheme] = useState<FrameTheme>("app");
-  const [orientation, setOrientation] = useState<Orientation>("portrait");
-  const [device, setDevice] = useState<DeviceId>("phone");
+  const [orientation, setOrientation] = useState<Orientation>(initialOrientation);
+  const [device, setDevice] = useState<DeviceId>(initialDevice);
   // A page the role cannot see (or this page itself, from a typed link) falls back to the first one.
   const page = list.find((l) => l.entry.href === chosen) ?? list[0];
   const framed = inFrame();
@@ -193,6 +195,9 @@ export function DevicesPage({ session, roles, hidden, theme, initialNarrow = fal
   const src = frameSrc(where.pathname, where.search, href, frameTheme === "app" ? theme : frameTheme);
   const shown = narrow ? DEVICES.filter((d) => d.id === device) : DEVICES;
   const turns = !narrow || DEVICES.some((d) => d.id === device && d.turns);
+  // A screen that does not turn (desktop, alone on a phone) shows its own shape, not the choice it ignores.
+  const fixed = turns ? null : DEVICES.find((d) => d.id === device);
+  const shape: Orientation = fixed ? (fixed.width > fixed.height ? "landscape" : "portrait") : orientation;
 
   return (
     <>
@@ -226,7 +231,7 @@ export function DevicesPage({ session, roles, hidden, theme, initialNarrow = fal
           />
           <Segmented
             label={t("devices.orientation")}
-            value={orientation}
+            value={shape}
             disabled={!turns}
             onChange={(v) => setOrientation(v as Orientation)}
             options={[
