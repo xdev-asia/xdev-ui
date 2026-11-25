@@ -70,6 +70,8 @@
   --x-container-lg: 1024px;
   --x-container-xl: 1280px;
   --x-container-2xl: 1536px;
+  --x-shadow-btn: none;
+  --x-shadow-btn-quiet: none;
   --x-z-raised: 1;
   --x-z-sticky: 5;
   --x-z-dropdown: 21;
@@ -192,7 +194,8 @@
   --shadow-menu: 0 8px 24px rgba(17, 17, 20, 0.16);
   --shadow-dialog: 0 24px 64px rgba(17, 17, 20, 0.24);
 }
-[data-ground="navy"] {
+[data-ground="navy"],
+[data-ground="navy"] [data-theme="dark"] {
   --bg-0: var(--x-color-bg);
   --bg-1: var(--x-color-panel);
   --bg-2: var(--x-color-surface);
@@ -205,7 +208,8 @@
   --term: #0c1222;
 }
 [data-theme="light"][data-ground="navy"],
-[data-theme="light"] [data-ground="navy"] {
+[data-theme="light"] [data-ground="navy"],
+[data-ground="navy"] [data-theme="light"] {
   --bg-0: var(--x-color-bg);
   --bg-1: #f7f9fd;
   --bg-2: var(--x-color-surface);
@@ -216,6 +220,81 @@
   --text-3: #5f6b86;
   --side-tint: #eaf0fb;
   --term: #ffffff;
+}
+[data-ground="ocean"],
+[data-ground="ocean"] [data-theme="dark"] {
+  --bg-0: #0b0d0f;
+  --bg-1: #0f1214;
+  --bg-2: #14171a;
+  --bg-3: #1d2126;
+  --line: #262c33;
+  --line-strong: #68737f;
+  --text-1: #e9edf0;
+  --text-2: #b6bec9;
+  --text-3: #8e98a5;
+  --side-tint: #11161b;
+  --term: #0c0f11;
+  --accent: #0073e6;
+  --x-color-bg: #0f1214;
+  --x-color-panel: #14171a;
+  --x-color-surface: #171b1f;
+  --x-color-surface-2: #1f242a;
+  --x-color-ink: #e9edf0;
+  --x-color-muted: #b6bec9;
+  --x-color-line: #272d33;
+  --x-color-line-strong: #68737f;
+  --x-color-accent: #0073e6;
+  --x-color-on-accent: #ffffff;
+  --x-color-accent-soft: #0073e62e;
+  --x-color-code-bg: #14171a;
+  --font-body: "IBM Plex Sans", "Roboto", "Segoe UI", system-ui, sans-serif;
+  --x-font-body: var(--font-body);
+  --x-radius-sm: 6px;
+  --x-radius-md: 10px;
+  --x-radius-lg: 12px;
+  --radius-s: 6px;
+  --radius-m: 8px;
+  --radius-l: 12px;
+  --x-shadow-btn: inset 0 1px 0 rgba(255, 255, 255, 0.24), inset 0 -1px 0 1px rgba(0, 0, 0, 0.24), 0 2px 4px rgba(0, 0, 0, 0.3);
+  --x-shadow-btn-quiet: inset 0 1px 0 1px rgba(29, 33, 38, 0.3), inset 0 -1px 0 1px rgba(9, 11, 11, 0.8);
+}
+[data-theme="light"][data-ground="ocean"],
+[data-theme="light"] [data-ground="ocean"],
+[data-ground="ocean"] [data-theme="light"] {
+  --bg-0: #ffffff;
+  --bg-1: #f8f9fb;
+  --bg-2: #ffffff;
+  --bg-3: #e8ebee;
+  --line: #dfe3e8;
+  --line-strong: #7a8592;
+  --text-1: #1a1e23;
+  --text-2: #303741;
+  --text-3: #566170;
+  --side-tint: #f1f5fa;
+  --term: #ffffff;
+  --accent: #0073e6;
+  --x-color-bg: #ffffff;
+  --x-color-panel: #ffffff;
+  --x-color-surface: #ffffff;
+  --x-color-surface-2: #f3f5f7;
+  --x-color-ink: #1a1e23;
+  --x-color-muted: #434d5b;
+  --x-color-line: #dfe3e8;
+  --x-color-line-strong: #7a8592;
+  --x-color-accent: #0073e6;
+  --x-color-on-accent: #ffffff;
+  --x-color-accent-soft: #ebf5ff;
+  --x-color-code-bg: #f3f5f7;
+  --font-body: "IBM Plex Sans", "Roboto", "Segoe UI", system-ui, sans-serif;
+  --x-font-body: var(--font-body);
+  --x-radius-sm: 6px;
+  --x-radius-md: 10px;
+  --x-radius-lg: 12px;
+  --radius-s: 6px;
+  --radius-m: 8px;
+  --radius-l: 12px;
+  --x-shadow-btn: inset 0 1px 0 rgba(255, 255, 255, 0.24), inset 0 -1px 0 1px rgba(0, 0, 0, 0.16), 0 2px 4px rgba(9, 11, 11, 0.1);
+  --x-shadow-btn-quiet: inset 0 1px 0 1px #ffffff, inset 0 -1px 0 1px rgba(223, 226, 231, 0.4), 0 1px 2px rgba(223, 226, 231, 0.5);
 }
 @media (prefers-contrast: more) {
   :root,

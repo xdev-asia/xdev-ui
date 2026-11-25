@@ -25,11 +25,12 @@ Design system and React component package (`@xdev-asia/ui`) for xDev: the deskto
 Inside a workspace surface, `.x-ws` remaps the semantic layer onto graphite, so one component works in both places.
 
 ### Grounds (opt-in)
-A product whose mark sits on another ground sets `data-ground="<id>"` next to `data-theme` on `<html>`. A ground moves only the workspace greys (`bg-0…bg-3`, `line`, `text-1…3`, `side-tint`, `term`) in both themes; accents, status colours and the brand stay as they are. Grounds live in `tokens.json` under `color.grounds`.
+A product with its own look sets `data-ground="<id>"` next to `data-theme` on `<html>`. A ground re-points tokens (colours, and for `ocean` also font, radii and button depth) in both themes; set it on `<html>` so the `--type-*` shorthands pick up its font; a pane that sets its own `data-theme` inside it (a light sidebar, a dark preview) keeps the ground's values for that theme. Status colours, the cyan focus ring and the brand never move. Grounds live in `tokens.json` under `color.grounds`.
 
 | ground | for | values |
 |---|---|---|
 | `navy` | ai-router | greys point at the `x-color-*` navy ramp (`bg-0` = `x-color-bg`, `bg-2` = `x-color-surface`, `line` = `x-color-line`); `text-3` is 4.5:1 or more on every step in both themes |
+| `ocean` | ui.xdev.asia, the admin showcase | the look of the MUI site: azure accent `#0073e6` (white text 4.57:1), blue-grey greys (hue 210, 14% saturation), a white light mode with `x-color-bg` `#ffffff`. Moves the workspace greys, `accent` and the semantic `x-color-*` surfaces, ink, lines and accent; text 4.5:1, `line-strong` 3:1 and links 4.5:1 on every step (tested). Also sets the body font to IBM Plex Sans (in `fonts.css`, with Vietnamese), radii `x-radius-md` 10px / `radius-l` 12px, and a soft inset highlight on buttons (`--x-shadow-btn`, `--x-shadow-btn-quiet`; `none` by default) |
 
 ### Rules
 - **Dark first.** `dark` is the default theme; `light` mirrors every token. Previews render dark; toggle the theme to check light.

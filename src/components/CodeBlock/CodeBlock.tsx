@@ -64,7 +64,8 @@ export function CodeBlock({ code, language, onCopy, labels, className }: CodeBlo
         </button>
       </div>
       <div className="connect-code">
-        <pre>
+        {/* Focusable so a keyboard user can scroll a long line sideways (WCAG 2.1.1, axe scrollable-region-focusable). */}
+        <pre tabIndex={0}>
           <code>{code}</code>
         </pre>
       </div>

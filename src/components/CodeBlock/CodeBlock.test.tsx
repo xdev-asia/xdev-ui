@@ -23,7 +23,7 @@ describe("CodeBlock", () => {
     expect(html).toContain('<span class="connect-lang">bash</span>');
     expect(html).toContain('data-copy="idle" hidden=""');
     expect(html).toContain('<span aria-live="polite">Copy</span>');
-    expect(html).toContain(`<pre><code>${code}</code></pre>`);
+    expect(html).toContain(`<pre tabindex="0"><code>${code}</code></pre>`);
   });
   it("writes to the clipboard and flips to copied", async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);

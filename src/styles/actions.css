@@ -12,6 +12,7 @@
   font: inherit;
   font-weight: 600;
   font-size: 13px;
+  box-shadow: var(--x-shadow-btn);
   cursor: pointer;
 }
 .btn-secondary {
@@ -28,6 +29,7 @@
   background: transparent;
   color: var(--x-color-ink);
   font: 600 13px var(--font-body);
+  box-shadow: var(--x-shadow-btn-quiet);
   cursor: pointer;
 }
 .btn-secondary:hover { background: var(--x-color-surface-2); }
