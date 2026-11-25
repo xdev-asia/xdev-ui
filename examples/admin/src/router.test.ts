@@ -26,7 +26,7 @@ describe("matchRoute", () => {
     expect(matchRoute("#/users/a/b").name).toBe("not-found");
   });
   it("matches the showcase pages, status pages and nested demo leaves", () => {
-    for (const n of ["menus", "departments", "profile", "about"]) expect(matchRoute(`#/${n}`).name).toBe(n);
+    for (const n of ["menus", "departments", "profile", "about", "devices"]) expect(matchRoute(`#/${n}`).name).toBe(n);
     expect(matchRoute(hrefFor.access("buttons"))).toMatchObject({ name: "access", params: { page: "buttons" } });
     expect(matchRoute("#/access/nope").name).toBe("not-found");
     expect(matchRoute(hrefFor.embed("storybook"))).toMatchObject({ name: "embed", params: { id: "storybook" } });

@@ -3,10 +3,22 @@ import { applyTheme, resolveTheme, systemPrefersDark, watchSystemTheme, type The
 
 const KEY = "acme-theme";
 
+const valid = (v: string | null): v is ThemePreference => v === "dark" || v === "light" || v === "system";
+
+/** Pure: the theme a `?theme=` query asks for (the device preview sets it on its frames), or null. */
+export function themeFromSearch(search: string): ThemePreference | null {
+  const v = new URLSearchParams(search).get("theme");
+  return valid(v) ? v : null;
+}
+
+const forced = (): ThemePreference | null => (typeof window === "undefined" ? null : themeFromSearch(window.location.search));
+
 function readPref(): ThemePreference {
+  const f = forced();
+  if (f) return f;
   try {
     const v = window.localStorage.getItem(KEY);
-    return v === "dark" || v === "light" || v === "system" ? v : "system";
+    return valid(v) ? v : "system";
   } catch {
     return "system";
   }
@@ -28,6 +40,8 @@ export function useTheme(): [ThemePreference, (p: ThemePreference) => void] {
   }, [pref]);
   const set = (p: ThemePreference): void => {
     setPref(p);
+    // A theme set by the URL (a device preview frame) is for that view only; the stored choice stays as it was.
+    if (forced()) return;
     try {
       window.localStorage.setItem(KEY, p);
     } catch {

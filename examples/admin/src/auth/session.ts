@@ -34,7 +34,43 @@ export function checkCode(email: string, code: string): SignInResult {
   return a && code === DEMO_CODE ? { ok: true, session: { name: a.name, email: a.email, role: a.role } } : { ok: false };
 }
 
-let current: Session | null = null;
+/** What the device preview puts on its window while it shows, for the console in its frames to read. */
+type Sharing = Window & { acmeSharedSession?: () => Session | null };
+
+/** True when this console runs inside a frame of a page on the same origin (the device preview). */
+export function inFrame(): boolean {
+  try {
+    return typeof window !== "undefined" && window.frameElement !== null;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Demo only: the session is kept in memory, so a console opened in a frame or a new tab would start signed out. The
+ * device preview shares its session while it shows (see `shareSession`), and a console in one of its frames, or in a
+ * tab it opened, starts with it. A page on another origin throws on access and is ignored.
+ */
+function fromHost(): Session | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const host = inFrame() ? window.parent : (window.opener as Window | null);
+    return (host as Sharing | null)?.acmeSharedSession?.() ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/** Demo only: lets consoles in same-origin frames start signed in as `s`; call the returned function to stop. */
+export function shareSession(s: Session): () => void {
+  const w = window as Sharing;
+  w.acmeSharedSession = () => s;
+  return () => {
+    delete w.acmeSharedSession;
+  };
+}
+
+let current: Session | null = fromHost();
 const listeners = new Set<() => void>();
 const emit = (): void => listeners.forEach((l) => l());
 

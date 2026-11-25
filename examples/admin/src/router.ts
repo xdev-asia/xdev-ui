@@ -14,6 +14,7 @@ export type RouteName =
   | "audit"
   | "profile"
   | "about"
+  | "devices"
   | "exception"
   | "nested"
   | "sign-in"
@@ -49,6 +50,7 @@ const STATIC: Record<string, RouteName> = {
   "/departments": "departments",
   "/profile": "profile",
   "/about": "about",
+  "/devices": "devices",
   "/sign-in": "sign-in",
 };
 
@@ -99,6 +101,7 @@ export const hrefFor = {
   departments: () => "#/departments",
   profile: () => "#/profile",
   about: () => "#/about",
+  devices: () => "#/devices",
   exception: (code: ExceptionCode) => `#/exception/${code}`,
   nested: (leaf: (typeof NESTED)[number]) => `#/nested/${leaf}`,
   settings: (section?: string) => (section ? `#/settings/${section}` : "#/settings"),

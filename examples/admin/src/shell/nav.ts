@@ -6,7 +6,8 @@ import { hrefFor, type Route } from "../router";
 
 /**
  * One menu tree, in react-antd-admin's order: Home, Access demo, Nested menus, Outside pages, Exception pages,
- * System, Personal center, About. Leaves link to a page; branches open and close.
+ * System, Personal center, About. Device preview, the showcase's own tool, sits just before About. Leaves link to a
+ * page; branches open and close.
  */
 export interface NavNode {
   id: string;
@@ -116,6 +117,7 @@ export const NAV: NavNode[] = [
       { id: "settings", label: "nav.settings", icon: "sliders", href: hrefFor.settings(), current: is("settings") },
     ],
   },
+  { id: "devices", label: "nav.devices", icon: "monitor", href: hrefFor.devices(), current: is("devices") },
   { id: "about", label: "nav.about", icon: "info", href: hrefFor.about(), current: is("about") },
 ];
 
