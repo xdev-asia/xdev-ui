@@ -41,7 +41,7 @@
 .ws-tab, .ws-tabstrip > :not(.ws-tabstrip-list), .ws-footer > *, .ws-header > * { flex: none; }
 /* A tab never runs wider than its strip (a 320px phone with tools beside the strip): the name truncates instead, so
    the current tab always fits when it is scrolled into view. */
-.ws-tab { max-width: 100%; }
+.ws-tab { max-width: 100%; box-sizing: border-box; }
 .ws-tab-main { min-width: 0; }
 .ws-footer-spacer { flex: 1 0 var(--x-space-4); }
 .ws-tab-main:focus-visible, .ws-tab-close:focus-visible { outline-offset: -2px; }
