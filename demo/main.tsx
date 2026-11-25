@@ -614,9 +614,9 @@ function Themes() {
 
 const INSTALL = "pnpm add @xdev-asia/ui";
 const STEPS = [
-  { t: "Point the scope at GitHub Packages", p: "One line in the .npmrc next to package.json.", lang: ".npmrc", code: "@xdev-asia:registry=https://npm.pkg.github.com" },
-  { t: "Add the package", p: "Components, tokens, icons and the MCP server in one dependency.", lang: "bash", code: INSTALL },
-  { t: "Import the styles once", p: "At the root of the app. Dark is the default theme.", lang: "tsx", code: 'import "@xdev-asia/ui/fonts.css";\nimport "@xdev-asia/ui/styles.css";' },
+  { t: "Add the package", p: "From npmjs.com, no token needed. Components, tokens, icons and the MCP server in one dependency.", lang: "bash", code: INSTALL },
+  { t: "Import the styles once", p: "At the root of the app.", lang: "tsx", code: 'import "@xdev-asia/ui/fonts.css";\nimport "@xdev-asia/ui/styles.css";' },
+  { t: "Pick the theme", p: "Dark is the default. Add the ocean ground for the look of this site.", lang: "index.html", code: '<html data-theme="dark" data-ground="ocean">' },
 ];
 
 const USAGE = `import { Button, StatusDot, Switch } from "@xdev-asia/ui";

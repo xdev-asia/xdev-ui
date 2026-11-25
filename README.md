@@ -1,26 +1,16 @@
 # xdev-ui
 
-Design tokens and React components for the xDev agent workspace. Published as **`@xdev-asia/ui`** on GitHub Packages.
+Design tokens and React components for the xDev agent workspace. Published as **`@xdev-asia/ui`** on npmjs.com (and GitHub Packages).
 
 ## Install
 
-`.npmrc` in the consuming repo:
-
-```ini
-@xdev-asia:registry=https://npm.pkg.github.com
-```
-
-The token needs `read:packages`, even though the package is public. pnpm ignores `${VAR}` in repo-level credentials, so put the token line in the user `~/.npmrc` (or a file named by `NPM_CONFIG_USERCONFIG` in CI):
-
-```ini
-//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
-```
-
-In GitHub Actions of another `xdev-asia` repo, give the job `permissions: packages: read`, pass `GITHUB_TOKEN: ${{ github.token }}`, and if install returns 403, grant that repo read access under *Package settings → Manage Actions access*.
+`@xdev-asia/ui` is on npmjs.com, so no registry line or token is needed:
 
 ```bash
 pnpm add @xdev-asia/ui
 ```
+
+Each release is also on GitHub Packages (`@xdev-asia:registry=https://npm.pkg.github.com` in `.npmrc`, with a token that has `read:packages`), for setups that already read from there.
 
 ## Use
 
@@ -143,7 +133,7 @@ Commits on `main` follow [Conventional Commits](https://www.conventionalcommits.
 | `feat!: …` / `BREAKING CHANGE:` | major |
 | `chore:`, `docs:`, `ci:` | none |
 
-It tags `vX.Y.Z`, publishes to GitHub Packages and writes the GitHub release. Then `npmjs.yml` builds that tag with its version and publishes it to npmjs.com with provenance, using the repo secret `NPMJS_TOKEN` (an npmjs.com granular access token with read and write on the `@xdev-asia` scope); without the secret it warns and skips. To copy an older release, run *Actions → Publish to npmjs* with its version. `pages.yml` deploys the demo to GitHub Pages at <https://ui.xdev.asia>.
+It tags `vX.Y.Z`, publishes to GitHub Packages and writes the GitHub release. Then `npmjs.yml` builds that tag with its version and publishes it to npmjs.com with provenance, using the repo secret `NPMJS_TOKEN` (an npmjs.com granular access token with read and write on the `@xdev-asia` scope), or, without that secret, npm trusted publishing (OIDC) set up on npmjs.com for `release.yml`. To copy an older release, run *Actions → Publish to npmjs* with its version. `pages.yml` deploys the demo to GitHub Pages at <https://ui.xdev.asia>.
 
 ## License
 

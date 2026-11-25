@@ -161,7 +161,7 @@ const manifest = {
   package: pkg.name,
   version: pkg.version,
   setup: [
-    `pnpm add ${pkg.name}   # registry: @xdev-asia:registry=https://npm.pkg.github.com`,
+    `pnpm add ${pkg.name}   # from npmjs.com, no token needed`,
     `import "${pkg.name}/styles.css";`,
     `import "${pkg.name}/fonts.css"; // optional`,
     `<html data-theme="dark">  // or "light"`,
