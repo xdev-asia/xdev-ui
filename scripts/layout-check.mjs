@@ -24,7 +24,7 @@
 // routes json: { "signIn": true, "storage": { "theme": "acme-theme", "locale": "acme-locale", "reset": ["acme-prefs"] },
 //   "locales": ["en", "vi"], "ready": "main", "busy": ".x-spinner", "routes": [{ "name": "home", "hash": "#/" }, { "name": "privacy", "hash": "#/privacy", "public": true }] }
 import { spawn, spawnSync } from "node:child_process";
-import { appendFileSync, createReadStream, existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { appendFileSync, createReadStream, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { createServer } from "node:http";
 import { homedir } from "node:os";
 import { extname, join, resolve } from "node:path";
@@ -85,7 +85,6 @@ const routes = args.only ? spec.routes.filter((r) => list(args.only).includes(r.
 const warnOnly = new Set([...WARN_BY_DEFAULT, ...list(args.warn)]);
 const shots = args.shots ?? "all";
 const shotScale = args["shot-scale"] ?? "css";
-const cdpPort = Number(args.port ?? 9330);
 const quietMs = Number(args.quiet ?? 350);
 const ready = spec.ready ?? "main, [role=main]";
 // Loading indicators: while one shows, the page is not settled (a CSS spinner changes no DOM, so quiet alone misses it).
@@ -124,16 +123,43 @@ function findChrome() {
   throw new Error("No Chrome found: set CHROME_BIN");
 }
 const chromeBin = findChrome();
-const chrome = spawn(chromeBin, [`--remote-debugging-port=${cdpPort}`, "--headless", "--no-sandbox", "--hide-scrollbars", "--disable-dev-shm-usage", "--no-first-run", "--no-default-browser-check", "--mute-audio", `--user-data-dir=${join(out, ".profile")}`, "about:blank"], { stdio: "ignore" });
-let version;
-for (let i = 0; i < 75 && !version; i++) {
-  try {
-    version = await (await fetch(`http://127.0.0.1:${cdpPort}/json/version`)).json();
-  } catch {
+// Chrome picks a free DevTools port (--port pins one) and writes it to DevToolsActivePort in its profile. A cold start
+// on a CI runner can take well over 15 s, so wait up to 60 s, try once more, and show Chrome's own error if both fail.
+const profileDir = join(out, ".profile");
+async function startChrome() {
+  const portFile = join(profileDir, "DevToolsActivePort");
+  rmSync(portFile, { force: true });
+  let log = "";
+  const proc = spawn(chromeBin, [`--remote-debugging-port=${args.port ?? 0}`, "--headless", "--no-sandbox", "--hide-scrollbars", "--disable-dev-shm-usage", "--no-first-run", "--no-default-browser-check", "--mute-audio", `--user-data-dir=${profileDir}`, "about:blank"], { stdio: ["ignore", "ignore", "pipe"] });
+  proc.stderr.on("data", (d) => (log = (log + d).slice(-4000)));
+  for (let i = 0; i < 300 && proc.exitCode === null; i++) {
+    let port = args.port ? Number(args.port) : 0;
+    if (!port) {
+      try {
+        port = parseInt(readFileSync(portFile, "utf8"), 10) || 0;
+      } catch {
+        /* not written yet */
+      }
+    }
+    if (port) {
+      try {
+        return { proc, port, version: await (await fetch(`http://127.0.0.1:${port}/json/version`)).json() };
+      } catch {
+        /* not listening yet */
+      }
+    }
     await wait(200);
   }
+  proc.kill();
+  return { log };
 }
-if (!version) throw new Error(`Chrome (${chromeBin}) did not start (on a bare Linux host, set LD_LIBRARY_PATH to its libraries)`);
+let launch = await startChrome();
+if (!launch.proc) {
+  console.error("Chrome did not start; trying once more");
+  launch = await startChrome();
+}
+if (!launch.proc) throw new Error(`Chrome (${chromeBin}) did not start (on a bare Linux host, set LD_LIBRARY_PATH to its libraries)\n${launch.log}`);
+const { proc: chrome, port: cdpPort, version } = launch;
 
 // A DevTools session over one WebSocket: send() resolves with the reply, on() listens to events, once() awaits one.
 async function connect(url) {
