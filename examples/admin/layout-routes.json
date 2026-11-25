@@ -94,6 +94,10 @@
       "hash": "#/settings"
     },
     {
+      "name": "devices",
+      "hash": "#/devices"
+    },
+    {
       "name": "about",
       "hash": "#/about"
     },

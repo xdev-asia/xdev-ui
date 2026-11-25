@@ -171,6 +171,22 @@
 /* A bulk bar or save bar owns the bottom edge while it shows; the fixed footer scrolls with the page meanwhile. */
 .x-shell-main:has(.x-bulk-bar) .app-footer[data-fixed] { position: static; margin-bottom: 0; }
 .app-footer a:focus-visible { outline: 2px solid var(--x-color-signal); outline-offset: 2px; }
+/* Device preview: one row of screens, each column as wide as its screen's shape (flex-grow set inline) so all stand
+   equally tall. Each frame keeps its true CSS size and is scaled down from the top-left corner; the screen box clips it,
+   so the unscaled width never reaches the page. */
+.app-devices { display: flex; gap: var(--x-space-4); }
+/* Cards in a row stretch to one height and push their screens down, so the screens line up if a head ever wraps. */
+.app-device { flex-basis: 0; min-width: 0; overflow: hidden; display: flex; flex-direction: column; }
+.app-device > .x-card-body { margin-top: auto; }
+.app-device-screen { position: relative; overflow: hidden; contain: layout paint; background: var(--bg-0); }
+.app-device-frame { position: absolute; inset: 0 auto auto 0; border: 0; transform-origin: 0 0; background: var(--bg-0); }
+@media (max-width: 1023.98px) /* below --x-bp-lg */ {
+  /* Phone and tablet share a row; the desktop screen takes the next one at full width. */
+  .app-devices { flex-wrap: wrap; }
+  .app-device[data-device="desktop"] { flex-basis: 100%; }
+}
+/* One screen at a time on a phone, at the full width (flex-grow alone would leave a portrait phone part of the row). */
+@media (max-width: 767.98px) /* below --x-bp-md */ { .app-device { flex-basis: 100%; } }
 .app-frame-wrap { position: relative; }
 .app-frame-loading { position: absolute; inset: 0; display: grid; place-items: center; background: var(--bg-1); }
 /* Notification titles get two lines before they are cut, so an IP address or a name is not lost. */

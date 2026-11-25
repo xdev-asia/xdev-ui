@@ -1,6 +1,6 @@
 import { Suspense, useEffect, useLayoutEffect, useRef, useState, type JSX, type MouseEvent, type ReactNode } from "react";
 import { AppShell, Banner, Breadcrumb, BrandMark, Button, Icon, IconButton, Menu, MenuButton, NavList, Popover, Spinner, TabStrip, ThemeSwitch, type MenuEntry, type ThemePreference } from "@xdev-asia/ui";
-import type { Session } from "../auth/session";
+import { inFrame, type Session } from "../auth/session";
 import { seedNotices, type Notice } from "../data/catalog";
 import type { Role } from "../data/seed";
 import { LOCALES, useI18n, type Locale } from "../i18n";
@@ -178,9 +178,11 @@ export function Shell(p: ShellProps): JSX.Element {
   };
   const homeTitle = t("nav.dashboard");
 
-  // Page tabs survive a reload within this browser tab (sessionStorage) while "keep tabs" is on.
+  // Page tabs survive a reload within this browser tab (sessionStorage) while "keep tabs" is on. A console in a device
+  // preview frame shares that storage with the page around it, so it keeps its tabs to itself.
+  const keepTabs = prefs.tabsPersist && !inFrame();
   useEffect(() => {
-    if (p.initialTabs || !prefs.tabsPersist) return;
+    if (p.initialTabs || !keepTabs) return;
     try {
       const stored = readTabs(window.sessionStorage.getItem(TABS_KEY));
       if (stored.length) setTabs((list) => stored.reduce((acc, x) => visitTab(acc, x), list));
@@ -201,13 +203,14 @@ export function Shell(p: ShellProps): JSX.Element {
     });
   }, [route.path, route.name, title, homeTitle]);
   useEffect(() => {
+    if (inFrame()) return;
     try {
-      if (prefs.tabsPersist) window.sessionStorage.setItem(TABS_KEY, JSON.stringify(tabs));
+      if (keepTabs) window.sessionStorage.setItem(TABS_KEY, JSON.stringify(tabs));
       else window.sessionStorage.removeItem(TABS_KEY);
     } catch {
       /* private mode */
     }
-  }, [tabs, prefs.tabsPersist]);
+  }, [tabs, keepTabs]);
   // The browser tab names the page, so history, bookmarks and the window switcher say where you are.
   useEffect(() => {
     document.title = prefs.dynamicTitle ? `${title} · ${t("app.name")}` : t("app.name");

@@ -19,7 +19,7 @@ const roles = seedRoles();
 describe("nav", () => {
   const ids = (tree: ReturnType<typeof navFor>) => leaves(tree).map((l) => l.entry.id);
   it("follows the reference's order and drops leaves and branches a role cannot see", () => {
-    expect(NAV.map((n) => n.id)).toEqual(["dashboard", "access", "nested", "outside", "exception", "system", "personal", "about"]);
+    expect(NAV.map((n) => n.id)).toEqual(["dashboard", "access", "nested", "outside", "exception", "system", "personal", "devices", "about"]);
     const viewer = ids(navFor(roles, "viewer"));
     expect(viewer).toContain("users");
     expect(viewer).not.toContain("roles");

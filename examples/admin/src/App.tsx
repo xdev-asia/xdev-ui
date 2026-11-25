@@ -32,6 +32,7 @@ const UserDetailPage = lazy(() => import("./pages/UserDetail").then((m) => ({ de
 const UsersPage = lazy(() => import("./pages/Users").then((m) => ({ default: m.UsersPage })));
 const MenusPage = lazy(() => import("./pages/Menus").then((m) => ({ default: m.MenusPage })));
 const ProfilePage = lazy(() => import("./pages/Profile").then((m) => ({ default: m.ProfilePage })));
+const DevicesPage = lazy(() => import("./pages/Devices").then((m) => ({ default: m.DevicesPage })));
 const ExceptionPage = lazy(() => import("./pages/Exception").then((m) => ({ default: m.ExceptionPage })));
 const AccessPageView = lazy(() => import("./pages/Access").then((m) => ({ default: m.AccessPageView })));
 const EmbedPage = lazy(() => import("./pages/Demo").then((m) => ({ default: m.EmbedPage })));
@@ -89,6 +90,8 @@ function Routes({ session, roles, version, openDialog, onRolesChanged, theme, on
       return <ProfilePage session={session} />;
     case "about":
       return <AboutPage />;
+    case "devices":
+      return <DevicesPage session={session} roles={roles} hidden={access.hidden} theme={theme} />;
     case "exception":
       return <ExceptionPage code={route.params.code as ExceptionCode | "unknown"} />;
     case "nested":
