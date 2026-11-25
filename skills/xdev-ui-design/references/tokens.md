@@ -42,7 +42,7 @@ Pick a token by what the thing *is*, not by the colour you want. The values belo
 
 | token | role | dark | light |
 |---|---|---|---|
-| `--accent` | the next action, the current place | #2f62e6 | #2453d6 |
+| `--accent` | the next action, the current place | #3a6be7 | #2453d6 |
 | `--signal` | focus ring only | #5bd8ff | #06699a |
 | `--ok` / `--ok-bg` | healthy, connected, saved | #4ade9b | #0e7446 |
 | `--warn` / `--warn-bg` | needs attention, degraded | #f2b544 | #8a5200 |
@@ -65,10 +65,10 @@ The `-bg` tints are 10 to 12% of the state colour: use them as the ground behind
 | `--type-menu`, `--type-tab` | 400 13px |
 | `--type-label` | 600 12px, field labels |
 | `--type-status` | 400 12px, status bar and meta |
-| `--type-section` | 600 11px, uppercase section labels |
-| `--type-badge`, `--type-tag` | 11px and 10px chips |
-| `--type-mono`, `--type-kbd` | 12px and 11px JetBrains Mono |
-| `--type-stat`, `--type-mono-stat` | 600 22px and 10px mono, numbers in tiles |
+| `--type-section` | 600 12px, uppercase section labels |
+| `--type-badge`, `--type-tag` | 12px chips |
+| `--type-mono`, `--type-kbd` | 12px JetBrains Mono |
+| `--type-stat`, `--type-mono-stat` | 600 22px and 12px mono, numbers in tiles |
 
 Faces: `--font-body` (Roboto) and `--font-mono` (JetBrains Mono). Always set the whole shorthand: `font: var(--type-body)`.
 
