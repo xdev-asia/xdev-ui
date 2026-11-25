@@ -262,13 +262,14 @@ describe("audit: token contrast", () => {
       expect(of(fg).filter((p) => p.ratio < 3).map((p) => `${fg}/${p.bg}/${p.theme} ${p.ratio.toFixed(2)}`)).toEqual([]);
     }
   });
-  it("each opt-in ground that sets its own accent passes the text, edge, accent, focus and link pairs in both themes", () => {
+  it("every ground (default and each opt-in one) passes the text, edge, accent, focus and link pairs in both themes", () => {
     const json = JSON.parse(readFileSync(resolve(here, "../tokens/tokens.json"), "utf8"));
     const base = Object.fromEntries(json.color.tokens.map((t: { name: string; value: unknown }) => [t.name, t.value]));
     const failures: string[] = [];
-    const own = (json.color.grounds as { id: string; tokens: { name: string; value: string | Record<string, string> }[] }[]).filter((g) => g.tokens.some((t) => t.name === "accent"));
-    expect(own.map((g) => g.id)).toContain("ocean");
-    for (const g of own) {
+    type Ground = { id: string; tokens: { name: string; value: string | Record<string, string> }[] };
+    const all: Ground[] = [{ id: "default", tokens: [] }, ...(json.color.grounds as Ground[])];
+    expect(all.map((g) => g.id)).toEqual(expect.arrayContaining(["default", "navy", "ocean"]));
+    for (const g of all) {
       for (const theme of ["dark", "light"]) {
         const set = Object.fromEntries(g.tokens.map((t) => [t.name, typeof t.value === "string" ? t.value : t.value[theme]]));
         const val = (n: string): string => {
