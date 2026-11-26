@@ -256,7 +256,9 @@ fieldset.x-form-section-fields { min-width: 0; margin: 0; padding: 0; border: 0;
 .x-form-section[data-layout="aside"] .x-form-section-head { margin: 0; }
 .x-form-section-body { container-type: inline-size; min-width: 0; padding: var(--x-space-4); border: 1px solid var(--line); border-radius: var(--radius-l); background: var(--bg-1); }
 @container (min-width: 720px) {
-  .x-form-section-grid { grid-template-columns: minmax(12rem, 1fr) minmax(0, 2fr); gap: var(--x-space-8); }
+  /* Heading column sized to its text (12–18rem), not a third of the row: on a wide page a 1fr column left the
+     heading far from its fields. */
+  .x-form-section-grid { grid-template-columns: minmax(12rem, 18rem) minmax(0, 1fr); gap: var(--x-space-6); }
   /* Sticky so a tall fields box (a form plus its table) keeps its heading in view. */
   .x-form-section[data-layout="aside"] .x-form-section-head { position: sticky; top: var(--x-space-4); align-self: start; padding-top: var(--x-space-2); }
 }
