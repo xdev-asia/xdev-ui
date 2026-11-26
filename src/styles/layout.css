@@ -247,6 +247,18 @@
 fieldset.x-form-section-fields { min-width: 0; margin: 0; padding: 0; border: 0; }
 .x-form-section-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--x-space-2); margin-top: var(--x-space-4); padding-top: var(--x-space-4); border-top: 1px solid var(--line); }
 @container (min-width: 481px) { .x-form-section-fields[data-columns="2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.x-form-section-head-actions { display: flex; flex-wrap: wrap; gap: var(--x-space-2); margin-top: var(--x-space-3); }
+/* layout="aside": the section is only the query container; the fields box carries the frame and is the container for
+   `columns`, so two columns follow the width of the fields, not of the whole row. */
+.x-form-section[data-layout="aside"] { padding: 0; border: 0; border-radius: 0; background: none; }
+.x-form-section[data-layout="aside"] + .x-form-section[data-layout="aside"] { margin-top: var(--x-space-6); }
+.x-form-section-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--x-space-3); }
+.x-form-section[data-layout="aside"] .x-form-section-head { margin: 0; }
+.x-form-section-body { container-type: inline-size; min-width: 0; padding: var(--x-space-4); border: 1px solid var(--line); border-radius: var(--radius-l); background: var(--bg-1); }
+@container (min-width: 720px) {
+  .x-form-section-grid { grid-template-columns: minmax(12rem, 1fr) minmax(0, 2fr); gap: var(--x-space-8); }
+  .x-form-section[data-layout="aside"] .x-form-section-head { padding-top: var(--x-space-2); }
+}
 
 /* Board (.x-board), BoardColumn (.x-board-col), BoardCard (.x-board-card) */
 .x-board { display: flex; align-items: stretch; gap: var(--x-space-3); min-width: 0; max-width: 100%; height: 100%; overflow-x: auto; padding-bottom: var(--x-space-2); }

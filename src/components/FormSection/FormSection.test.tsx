@@ -32,4 +32,17 @@ describe("FormSection", () => {
     expect(html).not.toContain("x-form-section-actions");
     expect(renderToStaticMarkup(<FormSection title="R"><input aria-label="x" /></FormSection>)).not.toContain("fieldset");
   });
+  it("aside puts the head beside a framed body that holds fields and actions", () => {
+    const html = renderToStaticMarkup(
+      <FormSection title="Name" description="Shown in the sidebar." layout="aside" headActions={<a href="#x">Open</a>} actions={<button type="button">Save</button>}>
+        <input aria-label="x" />
+      </FormSection>,
+    );
+    expect(html).toContain('data-layout="aside"');
+    expect(html).toContain('<div class="x-form-section-grid"><div class="x-form-section-head">');
+    expect(html).toContain('<div class="x-form-section-head-actions"><a href="#x">Open</a></div></div><div class="x-form-section-body"><div class="x-form-section-fields" data-columns="1">');
+    expect(html).toContain('<div class="x-form-section-actions"><button type="button">Save</button></div></div></div></section>');
+    expect(renderToStaticMarkup(<FormSection title="R">x</FormSection>)).not.toContain("data-layout");
+    expect(renderToStaticMarkup(<FormSection id="logo" title="R">x</FormSection>)).toContain('<section id="logo" class="x-form-section"');
+  });
 });

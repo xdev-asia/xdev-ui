@@ -2,6 +2,14 @@
 
 A `NavList` of sections next to a `FormSection` per section. Each setting is a `SettingRow` with its control on the right.
 
+On a wide page give each section `layout="aside"`: its heading and description sit in the left third and the fields in a box on the right, so a one-field section does not stretch a name input across 1100px and a one-button section does not take a full-width card. Wide tables (members, history) stay in a full-width `Card` below the aside sections.
+
+```tsx
+<FormSection layout="aside" title={t("brand.name")} description={t("brand.nameHint")} actions={<Button disabled={!dirty}>{t("common.save")}</Button>}>
+  <Field label={t("brand.displayName")} value={name} onChange={onName} />
+</FormSection>
+```
+
 ```tsx
 <NavList title={t("settings.title")} labels={ui.navList} value={section} items={SECTIONS.map((s) => ({ id: s, label: t(`settings.sections.${s}`), href: hrefFor.settings(s) }))} />
 <SettingRow id="setting-theme" label={t("settings.theme")} description={t("settings.themeHint")} control={<ThemeSwitch value={theme} onChange={onTheme} labels={ui.themeSwitch} />} />
