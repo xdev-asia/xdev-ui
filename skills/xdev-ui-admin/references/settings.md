@@ -2,7 +2,7 @@
 
 A `NavList` of sections next to a `FormSection` per section. Each setting is a `SettingRow` with its control on the right.
 
-On a wide page give each section `layout="aside"`: its heading and description sit in the left third and the fields in a box on the right, so a one-field section does not stretch a name input across 1100px and a one-button section does not take a full-width card. Wide tables (members, history) stay in a full-width `Card` below the aside sections.
+On a wide page give each section `layout="aside"`: its heading and description sit in a narrow left column and the fields in a box beside it, so a one-field section does not stretch a name input across 1100px and a one-button section does not take a full-width card. Wide tables (members, history) stay in a full-width `Card` below the aside sections.
 
 ```tsx
 <FormSection layout="aside" title={t("brand.name")} description={t("brand.nameHint")} actions={<Button disabled={!dirty}>{t("common.save")}</Button>}>

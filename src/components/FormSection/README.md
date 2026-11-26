@@ -13,9 +13,9 @@ Titled group of fields on a page, with an optional description and end-aligned S
 - Put the primary `Button` last in `actions`, after the secondary Cancel. Disable Save until the form has changes; do not hide it.
 - Validate on submit, then on change for fields already marked invalid. Per-field errors go in the field's `error` prop; a failure of the whole save goes in a `Banner` above the section.
 - Success is a `Toast` in past tense ("Profile saved.").
-- Settings pages and other long pages of short sections use `layout="aside"`: the heading and description take the left third, so fields are not stretched across the whole row and a one-button section does not take a full-width box. Keep one layout per page. A wide table or list stays in a full-width `Card`, not in an aside section.
+- Settings pages and other long pages of short sections use `layout="aside"`: the heading and description take a narrow left column, so fields are not stretched across the whole row and a one-button section does not take a full-width box. Keep one layout per page. A wide table or list stays in a full-width `Card`, not in an aside section.
 - `headActions` is for buttons that act on the whole section ("Add IdP", "Open allow list"); Save and Cancel stay in `actions`.
 
 ## Responsive
 - `columns={2}` follows the width of the fields box (480px), not of the page.
-- `layout="aside"` turns into two columns (1fr heading, 2fr fields) when the section is at least 720px wide, by container query, so it also stacks inside a narrow drawer or split pane. In two columns the heading is sticky, so it stays in view beside a tall fields box.
+- `layout="aside"` turns into two columns (a 12–18rem heading column beside the fields, 24px apart) when the section is at least 720px wide, by container query, so it also stacks inside a narrow drawer or split pane. In two columns the heading is sticky, so it stays in view beside a tall fields box.
