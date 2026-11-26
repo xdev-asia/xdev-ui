@@ -18,4 +18,4 @@ Titled group of fields on a page, with an optional description and end-aligned S
 
 ## Responsive
 - `columns={2}` follows the width of the fields box (480px), not of the page.
-- `layout="aside"` turns into two columns (1fr heading, 2fr fields) when the section is at least 720px wide, by container query, so it also stacks inside a narrow drawer or split pane.
+- `layout="aside"` turns into two columns (1fr heading, 2fr fields) when the section is at least 720px wide, by container query, so it also stacks inside a narrow drawer or split pane. In two columns the heading is sticky, so it stays in view beside a tall fields box.
