@@ -1,6 +1,6 @@
 ---
 name: xdev-ui-design
-description: "Design system guide for xDev products on @xdev-asia/ui: a priority-ranked rule catalogue with rule IDs (accessibility, interaction and focus, tokens and colour, brand and logo v12, layout and responsive, states and feedback, typography, navigation, motion, data display), the token roles with dark and light values, logo rules, screen recipes, a porting guide for re-skinning another product's UI as xDev, anti-patterns and a pre-delivery checklist. Use when designing, restyling, porting or reviewing the look and feel of any xDev screen, choosing tokens, colours, type, spacing or the logo, or deciding whether a new or customised component belongs in xdev-ui."
+description: "Design system guide for xDev products on @xdev-asia/ui: a direction process for redesigns (modes, three gates from project understanding to one to three directions inside xDev to a DESIGN.md brief, a craft read, precedence, an anti-generic list), craft rules (craft-* IDs for measure, rhythm, motion frequency, destructive friction, choice controls, states), a critique scorecard with fail conditions, a better-than-original check and a Before/After/Why findings table, a priority-ranked rule catalogue with rule IDs (accessibility, interaction and focus, tokens and colour, brand and logo v12, layout and responsive, states and feedback, typography, navigation, motion, data display), the token roles with dark and light values, logo rules, screen recipes, a porting guide for re-skinning another product's UI as xDev, anti-patterns and a pre-delivery checklist. Use when designing, restyling, porting or reviewing the look and feel of any xDev screen, redesigning a screen or app with a chosen direction and brief, critiquing a finished screen, choosing tokens, colours, type, spacing or the logo, or deciding whether a new or customised component belongs in xdev-ui."
 license: Apache-2.0
 ---
 
@@ -18,7 +18,18 @@ xDev looks like a quiet developer tool: dark first, graphite surfaces, 1px hairl
 
 Decide by asking: will a person *see* a different pixel after this change? If yes, apply.
 
-The owner's own decisions (1:1 ports by measurement, the top bar, the brand, no left stripes) are in [owner's notes](references/owner-notes.md); they override the rules below.
+The owner's own decisions (1:1 ports by measurement, the top bar, the brand, no left stripes) are in [owner's notes](references/owner-notes.md); they override the rules below. The full order when sources disagree: owner's notes, tokens and brand, rules, the app's `DESIGN.md`, craft, templates ([precedence](references/direction.md#precedence)).
+
+## Direction, craft and critique
+
+The library fixes the look; density, layout, information order and emphasis are still choices. Make them on purpose:
+
+| need | read |
+|---|---|
+| a redesign, a new app or screen type, a port: pick a mode, pass three gates (understand, choose a direction, write the brief), avoid generic UI | [direction](references/direction.md) |
+| the app's `DESIGN.md`: product, people, tasks, direction, preserve list, screens, states, learned constraints | [brief template](references/brief-template.md) |
+| how to use the scale well: measure, rhythm, motion frequency, destructive friction, choice controls, unhappy states first (`craft-*` IDs) | [craft](references/craft.md) |
+| deciding whether it is done: scorecard, fail conditions, better than the original, Before/After/Why table, at most three rounds | [critique](references/critique.md) |
 
 ## Rule categories by priority
 
@@ -52,7 +63,8 @@ Rule IDs; the full rule, the why and the check are in [rules](references/rules.m
 
 ## How to use
 
-1. **Classify the request**: new screen, restyle, port from another product, new component, or review.
+0. **Pick the mode** (redesign, build or critique only) and say it. For a redesign, a new app or a port, pass the three [direction](references/direction.md) gates first; each ends your turn until the person agrees, unless they said to go ahead. One fix skips the gates.
+1. **Classify the request**: new screen, restyle, port from another product, new component, or review. Read the app's `DESIGN.md` if it has one; it is the brief.
 2. **Pick the recipe** for the screen type in [screens](references/screens.md): container width, header, body pattern, states. For console pages also read the matching `xdev-ui-admin` reference.
 3. **Compose from the library.** Check props with `xdevui_get_component`, find tokens with `xdevui_search_tokens`, icons with `xdevui_list_icons`. A part the library lacks, or a library part you need to change, goes into xdev-ui first; app CSS only places parts.
 4. **Apply tokens** by role, never by value ([tokens](references/tokens.md)). App classes carry the app's prefix, never `x-` or `ws-`.
@@ -60,6 +72,7 @@ Rule IDs; the full rule, the why and the check are in [rules](references/rules.m
 6. **Porting?** Keep the other product's layout and information order; replace its look with xDev's ([porting](references/porting.md)).
    Read the [owner's notes](references/owner-notes.md) first: a 1:1 port matches measured geometry, the top bar uses icon buttons, and they win over the general rules.
 7. **Verify**: run the audit, take dark and light screenshots at 1440px and 375px (and check 768px: no horizontal page scroll), walk the [checklist](references/checklist.md). Compare with the reference picture if there is one.
+8. **Critique** against the brief with the [critique](references/critique.md) scorecard; fix Critical, High and quick wins, at most three rounds. Do not claim a visual check you did not screenshot.
 
 ```bash
 node node_modules/@xdev-asia/ui/skills/xdev-ui-review/scripts/audit.mjs src --i18n src/strings --contrast
@@ -98,6 +111,7 @@ import { Button, Container, Emblem, Grid, PageHeader, ResourceCard, StatusDot } 
 - **State is words plus a dot or tint.** Never a colour alone, never a coloured left stripe on a rounded card or row.
 - **Dense, not cramped.** Rows are `--h-row`, toolbars `--h-toolbar`, gaps from `--x-space-2` to `--x-space-6`.
 - **Every string is translated**, in `en` and `vi`, sentence case, no emoji, no exclamation marks.
+- **Not generic.** No marketing hero on a tool, no gradient blobs, no filler card grids, no invented numbers ([anti-generic list](references/direction.md#anti-generic-list)).
 - **Look at it.** The audit cannot see ugliness; screenshots can.
 
 ## Pre-delivery checklist
