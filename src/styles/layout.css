@@ -54,7 +54,7 @@
    animating a grid column runs layout on every frame. The fold button instead snaps the grid once and slides the
    difference with transform (FLIP, internal/fold.ts); data-folding lives only while that runs. */
 .x-shell[data-folding] { overflow: clip; }
-.x-shell[data-folding] .x-shell-side { position: relative; z-index: 1; }
+.x-shell[data-folding] .x-shell-side { position: relative; z-index: var(--x-z-raised); }
 /* Folding: a ghost of the wide sidebar beside the rail, shrunk by transform so the column's edge never shows a gap. */
 .x-shell[data-folding="in"] .x-shell-side::after {
   content: "";
