@@ -49,8 +49,8 @@ export const ICONS = {
   menu: [["path", { d: "M4 6h16M4 12h16M4 18h16" }]],
   sidebar: [["rect", { x: 3, y: 4, width: 18, height: 16, rx: 2 }], ["path", { d: "M9 4v16" }]],
   // The AppShell fold button: the bar is the sidebar's edge, the arrow says which way the next click moves it.
-  "sidebar-collapse": [["path", { d: "M5 6v12" }], ["path", { d: "M19 12h-9M14.5 7.5 10 12l4.5 4.5" }]],
-  "sidebar-expand": [["path", { d: "M5 6v12" }], ["path", { d: "M10 12h9M14.5 7.5 19 12l-4.5 4.5" }]],
+  "sidebar-collapse": [["rect", { x: 3, y: 4, width: 18, height: 16, rx: 2 }], ["path", { d: "M9 4v16" }], ["path", { d: "M17.5 12h-5M15 9.5 12.5 12l2.5 2.5" }]],
+  "sidebar-expand": [["rect", { x: 3, y: 4, width: 18, height: 16, rx: 2 }], ["path", { d: "M9 4v16" }], ["path", { d: "M12.5 12h5M15 9.5l2.5 2.5-2.5 2.5" }]],
   "panel-right": [["rect", { x: 3, y: 4, width: 18, height: 16, rx: 2 }], ["path", { d: "M15 4v16" }]],
   split: [["rect", { x: 3, y: 4, width: 18, height: 16, rx: 2 }], ["path", { d: "M12 4v16" }]],
   maximize: [["path", { d: "M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" }]],
