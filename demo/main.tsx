@@ -354,7 +354,7 @@ function ConsoleMock() {
       </aside>
       <div className="hp-console-main">
         <div className="hp-console-top">
-          <X.IconButton icon="sidebar" label="Collapse sidebar" />
+          <X.IconButton icon="sidebar-collapse" label="Collapse sidebar" />
           <X.Breadcrumb items={[{ label: "Overview" }, { label: "Dashboard" }]} />
           <span className="hp-console-spacer" />
           <X.PaletteTrigger onOpen={() => {}} hotkey={false} />

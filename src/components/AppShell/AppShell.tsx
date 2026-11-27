@@ -1,6 +1,7 @@
-import { useEffect, useId, useRef, type JSX, type ReactNode } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, type JSX, type ReactNode } from "react";
 import { cx } from "../../internal/cx";
 import { focusFirst, focusableIn, isShown, restoreFocus, trapTarget } from "../../internal/focus";
+import { foldMotion } from "../../internal/fold";
 import { IconButton } from "../IconButton/IconButton";
 import { splitUrgent, toastRegions } from "../Toast/toast-region";
 
@@ -73,6 +74,9 @@ export function AppShell({ brand, nav, navFooter, title, crumbs, drawerBelow = "
   const colRef = useRef<HTMLDivElement | null>(null);
   const close = useRef(onNavOpenChange);
   close.current = onNavOpenChange;
+  const shellRef = useRef<HTMLDivElement | null>(null);
+  // Sidebar width when the fold button was pressed; only a press animates, not the state restored on load.
+  const foldFrom = useRef<number | null>(null);
   useEffect(() => {
     // The drawer only exists below 768px, where the menu button is shown.
     if (!navOpen || !isShown(menuRef.current)) return;
@@ -99,6 +103,16 @@ export function AppShell({ brand, nav, navFooter, title, crumbs, drawerBelow = "
       restoreFocus(menu);
     };
   }, [navOpen]);
+  // Before paint, so the snapped grid is never seen: the column starts where it was and slides into place.
+  useLayoutEffect(() => {
+    const from = foldFrom.current;
+    foldFrom.current = null;
+    const shell = shellRef.current;
+    const side = sideRef.current;
+    const col = colRef.current;
+    if (from == null || !shell || !side || !col) return undefined;
+    return foldMotion(shell, side, col, from);
+  }, [navCollapsed]);
   // In a rail only icons show; each item's label (still read by screen readers) becomes its hover title.
   useEffect(() => {
     const side = sideRef.current;
@@ -110,7 +124,7 @@ export function AppShell({ brand, nav, navFooter, title, crumbs, drawerBelow = "
     }
   });
   return (
-    <div className={cx("x-shell x-ws", className)} data-nav-open={navOpen ? "true" : undefined} data-bottom-nav={bottomNav ? "" : undefined} data-titled={title ? "" : undefined} data-drawer={drawerBelow === "lg" ? "lg" : undefined} data-nav-collapsed={navCollapsed ? "" : undefined} data-chrome-hidden={chromeHidden ? "" : undefined} data-nav-hidden={navHidden ? "" : undefined}>
+    <div className={cx("x-shell x-ws", className)} ref={shellRef} data-nav-open={navOpen ? "true" : undefined} data-bottom-nav={bottomNav ? "" : undefined} data-titled={title ? "" : undefined} data-drawer={drawerBelow === "lg" ? "lg" : undefined} data-nav-collapsed={navCollapsed ? "" : undefined} data-chrome-hidden={chromeHidden ? "" : undefined} data-nav-hidden={navHidden ? "" : undefined}>
       <a
         className="x-skip-link"
         href={`#${mainId}`}
@@ -144,12 +158,15 @@ export function AppShell({ brand, nav, navFooter, title, crumbs, drawerBelow = "
           {navHidden && brand ? <div className="x-shell-top-brand">{brand}</div> : null}
           {onNavCollapsedChange && !navHidden ? (
             <IconButton
-              icon="sidebar"
+              icon={navCollapsed ? "sidebar-expand" : "sidebar-collapse"}
               label={navCollapsed ? l.expandNav : l.collapseNav}
               className="x-shell-collapse"
               aria-controls={sideId}
               aria-expanded={!navCollapsed}
-              onClick={() => onNavCollapsedChange(!navCollapsed)}
+              onClick={() => {
+                foldFrom.current = sideRef.current?.getBoundingClientRect().width ?? null;
+                onNavCollapsedChange(!navCollapsed);
+              }}
             />
           ) : null}
           {title ? <div className="x-shell-heading">{title}</div> : null}

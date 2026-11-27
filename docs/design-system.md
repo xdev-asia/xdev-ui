@@ -48,7 +48,7 @@ A product with its own look sets `data-ground="<id>"` next to `data-theme` on `<
 - Line icons on a 24 grid, stroke `currentColor` 1.75, round caps and joins, no fills.
 - 16px in controls, 20px in banners, 22px in the activity bar.
 - The set: `docs changes tasks squads agents kit accounts terminal` (from ActivityBar.tsx) plus `warn close plus search more branch chevron-left chevron-right magnifier prompt folder file check alert warn-dash restore history bot download copy plug lock swap list-checks workflow`.
-- Shell icons: `board` (kanban columns), `automation` (loop with a play mark), `panel-right` (right-docked panel), `split` (two panes), `inbox`, and `zap` (the bolt) for quick actions.
+- Shell icons: `board` (kanban columns), `automation` (loop with a play mark), `panel-right` (right-docked panel), `split` (two panes), `sidebar-collapse` and `sidebar-expand` (the AppShell fold button: an arrow towards or away from the sidebar's edge), `inbox`, and `zap` (the bolt) for quick actions.
 - Forms, feedback, media and tools: `save`, `thumbs-up`, `thumbs-down`, `volume`, `mic`, `paperclip`, `palette`, `hand` (pan), `cursor` (select), `wrench`, `building`, `pip` (picture-in-picture, a floating window). A group of people is `squads`.
 - The brand mark (logo v12) is two folded blades that cross into an `x`. Your blade follows the surface colour; the agent side is always `--brand-agent` `#ff7a3d`; the core where they overlap is white. Sub-systems keep your blade and swap the agent side for their own shape (`BrandMark system="ui"`).
 

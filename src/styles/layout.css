@@ -51,7 +51,23 @@
 
 /* Rail: the sidebar folds to its icons on wide screens (navCollapsed). Labels, counts and group titles stay in the
    DOM for screen readers and are clipped from view; each item shows its label as a title. No width transition:
-   animating a grid column runs layout on every frame. */
+   animating a grid column runs layout on every frame. The fold button instead snaps the grid once and slides the
+   difference with transform (FLIP, internal/fold.ts); data-folding lives only while that runs. */
+.x-shell[data-folding] { overflow: clip; }
+.x-shell[data-folding] .x-shell-side { position: relative; z-index: 1; }
+/* Folding: a ghost of the wide sidebar beside the rail, shrunk by transform so the column's edge never shows a gap. */
+.x-shell[data-folding="in"] .x-shell-side::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 100%;
+  width: var(--x-shell-fold, 0px);
+  border-right: 1px solid var(--line);
+  background: inherit;
+  transform-origin: left;
+  pointer-events: none;
+}
+.x-shell[data-folding] .x-shell-nav { overflow: hidden; }
 @media (min-width: 48rem) /* --x-bp-md */ {
   .x-shell[data-nav-collapsed]:not([data-drawer="lg"]) { grid-template-columns: var(--w-rail) minmax(0, 1fr); }
   .x-shell[data-nav-collapsed]:not([data-drawer="lg"]) .x-shell-brand { justify-content: center; padding: 0; }

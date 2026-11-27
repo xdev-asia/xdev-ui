@@ -14,7 +14,7 @@ describe("annotation icons", () => {
 });
 
 describe("shell icons", () => {
-  const names = ["board", "automation", "inbox", "panel-right", "split", "zap"] as const;
+  const names = ["board", "automation", "inbox", "panel-right", "split", "zap", "sidebar-collapse", "sidebar-expand"] as const;
   it("registers the names a workspace shell needs", () => {
     for (const name of names) expect(ICON_NAMES, name).toContain(name);
   });

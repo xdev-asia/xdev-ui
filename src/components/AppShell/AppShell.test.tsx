@@ -2,11 +2,12 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import { findAll } from "../../test-utils";
 
-const h = vi.hoisted(() => ({ effects: [] as Array<() => void | (() => void)>, refs: [] as Array<{ current: any }> }));
+const h = vi.hoisted(() => ({ effects: [] as Array<() => void | (() => void)>, layouts: [] as Array<() => void | (() => void)>, refs: [] as Array<{ current: any }> }));
 vi.mock("react", async (orig) => ({
   ...(await orig<typeof import("react")>()),
   useId: () => "id",
   useEffect: (fn: () => void | (() => void)) => void h.effects.push(fn),
+  useLayoutEffect: (fn: () => void | (() => void)) => void h.layouts.push(fn),
   useRef: (v: unknown) => {
     const r = { current: v };
     h.refs.push(r);
@@ -232,6 +233,63 @@ describe("AppShell", () => {
       } finally {
         done();
       }
+    });
+  });
+
+  describe("fold motion", () => {
+    // in order: menu, side, backdrop, col, close, shell, foldFrom
+    const press = (navCollapsed: boolean, widths: [number, number]) => {
+      h.layouts.length = 0;
+      h.refs.length = 0;
+      const onNavCollapsedChange = vi.fn();
+      const tree = AppShell({ ...base, navCollapsed, onNavCollapsedChange });
+      const [, side, , col, , shell] = h.refs;
+      let w = widths[0];
+      side!.current = { getBoundingClientRect: () => ({ width: w }), animate: vi.fn(() => ({ cancel: vi.fn(), addEventListener: vi.fn() })) };
+      col!.current = { animate: vi.fn(() => ({ cancel: vi.fn(), addEventListener: vi.fn() })) };
+      shell!.current = { dataset: {} as Record<string, string>, style: { setProperty: vi.fn(), removeProperty: vi.fn() } };
+      const btn = findAll(tree, (e) => typeof e.props?.className === "string" && e.props.className.includes("x-shell-collapse"))[0]!;
+      return {
+        btn,
+        side: side!.current,
+        col: col!.current,
+        shell: shell!.current,
+        click: () => {
+          btn.props.onClick();
+          w = widths[1];
+        },
+      };
+    };
+
+    it("shows an arrow towards the sidebar's edge while open and away from it as a rail", () => {
+      expect(press(false, [296, 60]).btn.props.icon).toBe("sidebar-collapse");
+      expect(press(true, [60, 296]).btn.props.icon).toBe("sidebar-expand");
+    });
+    it("a press slides the column back by the width difference with transform, never animating a width", () => {
+      const { col, side, shell, click } = press(false, [296, 60]);
+      click();
+      h.layouts[0]!();
+      expect(shell.dataset.folding).toBe("in");
+      expect(col.animate.mock.calls[0][0][0]).toEqual({ transform: "translateX(236px)" });
+      expect(side.animate.mock.calls[0][1]).toMatchObject({ pseudoElement: "::after" });
+      expect(JSON.stringify([col.animate.mock.calls, side.animate.mock.calls])).not.toMatch(/width|grid/);
+    });
+    it("unfolding reveals the sidebar with clip-path from the rail's width", () => {
+      const { col, side, shell, click } = press(true, [60, 296]);
+      click();
+      h.layouts[0]!();
+      expect(shell.dataset.folding).toBe("out");
+      expect(col.animate.mock.calls[0][0][0]).toEqual({ transform: "translateX(-236px)" });
+      expect(side.animate.mock.calls[0][0][0]).toEqual({ clipPath: "inset(0 236px 0 0)" });
+    });
+    it("does not animate without a press (state restored on load) or when the width did not change (drawer)", () => {
+      const restored = press(true, [60, 60]);
+      expect(h.layouts[0]!()).toBeUndefined();
+      expect(restored.col.animate).not.toHaveBeenCalled();
+      const drawer = press(false, [280, 280]);
+      drawer.click();
+      expect(h.layouts[0]!()).toBeUndefined();
+      expect(drawer.col.animate).not.toHaveBeenCalled();
     });
   });
 });
