@@ -150,4 +150,4 @@ Report what is left, most severe first, in one table; every row cites an audit r
 | Quick win | Users, header | no count | count in the description | `nav-count-heading` |
 ```
 
-Critical: an audit error, an accessibility failure or a broken main task. High: a failed page check every visit meets. Quick win: small and clear; fix it in the same pass. For a judgement of the whole screen against its brief, use the critique in `xdev-ui-design` (`references/critique.md`).
+Critical: an audit error, an accessibility failure or a broken main task. High: a failed page check every visit meets. Quick win: small and clear; fix it in the same pass. For a judgement of the whole screen against its brief, use the critique in `xdev-ui-design` (`xdev-ui-design/references/critique.md`).

@@ -27,7 +27,7 @@ Score each criterion 0 (fails), 1 (works with gaps) or 2 (clearly good). Write o
 | 3 | Grouping and rhythm | spacing grows from inside a group to between sections; few boxes |
 | 4 | Density | matches the brief: compact for daily work, roomier for rare setup |
 | 5 | States | empty, loading, error, no permission and partial data are designed, not defaults |
-| 6 | xDev identity | tokens only, one accent, hairlines not shadows, `BrandMark` in the shell, no anti-generic item ([direction](direction.md#anti-generic-list)) |
+| 6 | xDev identity | tokens only, one accent, hairlines not shadows, `BrandMark` in the shell, no anti-generic item (`direction.md#anti-generic-list`) |
 | 7 | Language | verbs on actions, sentence case, the product's terms, `en` and `vi` both fit |
 | 8 | Motion and feel | moves only with a cause, within the motion budget, hover by ground colour |
 | 9 | Small screen | works at 360px without sideways scroll; the main task still comes first |
@@ -72,4 +72,4 @@ Every row cites a rule ID, a craft ID, a brief line or a screenshot. A row with 
 1. Fix the Critical and High rows and the quick wins.
 2. Re-run the audit, retake the screenshots, score again.
 3. Stop when the screen is done (see the scorecard), or after three rounds. After three rounds, report what is left and why instead of going on.
-4. When a problem came back in a second round, or the person corrected a choice, add one line to "Decisions and learned constraints" in the app's `DESIGN.md` ([brief template](brief-template.md)).
+4. When a problem came back in a second round, or the person corrected a choice, add one line to "Decisions and learned constraints" in the app's `DESIGN.md` (`brief-template.md`).

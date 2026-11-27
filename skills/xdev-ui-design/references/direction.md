@@ -18,9 +18,9 @@ Ideas adapted, in our own words, from ui-craft (educlopez, MIT) and tasteful-ui 
 
 | mode | when | output |
 |---|---|---|
-| **redesign** (default for "make it better", "redo this screen") | an existing screen or app whose look or structure is the problem | the three gates, then the build, then [critique](critique.md) |
+| **redesign** (default for "make it better", "redo this screen") | an existing screen or app whose look or structure is the problem | the three gates, then the build, then `critique.md` |
 | **build** | a new screen whose brief already exists (the app's `DESIGN.md`, a ticket with a picture) | read the brief, build, critique |
-| **critique only** | "review", "what is wrong with this", no code wanted | the [critique](critique.md) table; no edits |
+| **critique only** | "review", "what is wrong with this", no code wanted | the `critique.md` table; no edits |
 
 Say which mode you picked in the first line of your reply.
 
@@ -38,7 +38,7 @@ Read before you propose anything: the app's `DESIGN.md` or `AGENTS.md`, the rout
 - **People**: who uses the screen, how often, on what device, with what expertise.
 - **Main task**: the one job the screen exists for, as a verb ("approve a run", "find a failed job").
 - **Constraints**: data volume, permissions, languages (`en` and `vi`), what is already shipped and must not move.
-- **Preserve list**: things that work and stay. Information order people learned, keyboard paths, URLs, names, a layout the owner measured (see [owner's notes](owner-notes.md)). A redesign that breaks one of these needs the person's say-so.
+- **Preserve list**: things that work and stay. Information order people learned, keyboard paths, URLs, names, a layout the owner measured (see owner's notes in `owner-notes.md`). A redesign that breaks one of these needs the person's say-so.
 
 End with one open question if something blocks the next gate; otherwise end with the gate 2 proposal.
 
@@ -57,7 +57,7 @@ For each direction write: a name of two or three words, one sentence on what it 
 
 ## Gate 3: write the brief
 
-Write or update the app's `DESIGN.md` from the [brief template](brief-template.md) with the chosen direction, the preserve list and the screens it covers. The brief is the contract: the build follows it, the critique scores against it, and decisions learned later go back into it.
+Write or update the app's `DESIGN.md` from the `brief-template.md` with the chosen direction, the preserve list and the screens it covers. The brief is the contract: the build follows it, the critique scores against it, and decisions learned later go back into it.
 
 ## Craft read
 
@@ -67,12 +67,12 @@ Before the build, write one sentence that states the direction in working terms,
 
 When two sources disagree, the higher one wins:
 
-1. The owner's notes ([owner-notes](owner-notes.md)).
-2. Tokens and brand ([tokens](tokens.md), [brand](brand.md)).
-3. The rule catalogue ([rules](rules.md)) and component `## Rules`.
+1. The owner's notes (`owner-notes.md`).
+2. Tokens and brand (`tokens.md`, `brand.md`).
+3. The rule catalogue (`rules.md`) and component `## Rules`.
 4. The app's `DESIGN.md` brief, for choices the rules leave open.
-5. Craft guidance ([craft](craft.md)).
-6. Templates and recipes ([screens](screens.md), the `xdev-ui-admin` references).
+5. Craft guidance (`craft.md`).
+6. Templates and recipes (`screens.md`, the `xdev-ui-admin` references).
 
 ## Anti-generic list
 

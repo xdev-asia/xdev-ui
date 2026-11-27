@@ -1,6 +1,6 @@
 # Brief template: the app's DESIGN.md
 
-Copy this into the app's root as `DESIGN.md` at gate 3 of the [direction](direction.md) process, then keep it current. `xdev-ui-improve` reads it first as the app's own design source, and the [critique](critique.md) scores against it. Keep it short: a section with nothing to say gets `None`.
+Copy this into the app's root as `DESIGN.md` at gate 3 of the direction (`direction.md`) process, then keep it current. `xdev-ui-improve` reads it first as the app's own design source, and the critique (`critique.md`) scores against it. Keep it short: a section with nothing to say gets `None`.
 
 ```markdown
 # <App name> design brief
@@ -48,6 +48,6 @@ Updated: <date> · Based on @xdev-asia/ui <version>
 
 ## Rules for the brief
 
-- It records choices the xdev-ui rules leave open. It never restates a token value or overrides a rule; a brief line that conflicts with [rules](rules.md) or the owner's notes is wrong.
+- It records choices the xdev-ui rules leave open. It never restates a token value or overrides a rule; a brief line that conflicts with rules (`rules.md`) or the owner's notes is wrong.
 - Every critique round that finds a repeat problem adds one line to "Decisions and learned constraints", so the next build does not make it again.
 - Library gaps are listed under "Out of scope" with the consumers that need them; they are fixed in xdev-ui, not in the app.

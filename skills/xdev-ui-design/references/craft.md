@@ -1,6 +1,6 @@
 # Craft
 
-Rules of thumb that the token set and the [rule catalogue](rules.md) leave open: how to use the scale well, not which values exist. They rank below the rules ([precedence](direction.md#precedence)); where a common craft number disagrees with xDev, the xDev value is the one written here. Ideas adapted from ui-craft (MIT), in our own words.
+Rules of thumb that the token set and the rule catalogue in `rules.md` leave open: how to use the scale well, not which values exist. They rank below the rules (precedence in `direction.md#precedence`); where a common craft number disagrees with xDev, the xDev value is the one written here. Ideas adapted from ui-craft (MIT), in our own words.
 
 ## Contents
 - Reading and type
