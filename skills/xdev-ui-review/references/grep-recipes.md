@@ -25,9 +25,12 @@ Use `font: var(--type-body)`, `var(--type-label)`, `var(--type-page-title)` or `
 ## Stripes and focus
 ```bash
 grep -rnE 'border-left|border-inline-start|borderLeft' --include='*.css' --include='*.tsx' .
+grep -rnE 'rounded.*border-[ls]-(\[|[2-9])|border-[ls]-(\[|[2-9]).*rounded' --include='*.tsx' .
 grep -rnE 'outline:\s*(none|0)' --include='*.css' .
 ```
 A stripe becomes a `--bg-3` tint, a 1px `--line` border or a `StatusDot`. Never remove the outline: the ring is `--x-color-signal`.
+
+The Tailwind spelling is the same stripe: `rounded-xl border-s-[3px] border-s-warn` bends the thick edge round both corners and reads as a bracket. Rewrite it as the `Banner` look, a tone tint plus a 1px tone ring (`bg-warn-soft inset-ring-1 inset-ring-warn/40`), and keep the state in words (title, `StatusDot` label). A long, short strip also wants a smaller radius than the cards around it (`rounded-md`, not `rounded-xl`).
 
 ## Components and tokens
 ```bash
