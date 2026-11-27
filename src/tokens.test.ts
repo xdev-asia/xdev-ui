@@ -25,7 +25,7 @@ describe("tokens.json", () => {
 });
 
 /** Custom properties that components set in an inline style, not in tokens.css. */
-const INLINE = /^--x-(grid-cols|grid-min|span)(-|$)/;
+const INLINE = /^--x-(grid-cols|grid-min|span|shell-fold)(-|$)/;
 
 describe("tokens.css", () => {
   const defined = new Set([...tokensCss.matchAll(/^\s*(--[a-z0-9-]+):/gim)].map((m) => m[1]));

@@ -69,6 +69,7 @@ const NAV = [
   { href: "#console", label: "Console" },
   { href: "#devices", label: "Devices" },
   { href: "#components", label: "Components" },
+  { href: "#icons", label: "Icons" },
   { href: "#install", label: "Install" },
   { href: "#agents", label: "Agents" },
 ];
@@ -354,7 +355,7 @@ function ConsoleMock() {
       </aside>
       <div className="hp-console-main">
         <div className="hp-console-top">
-          <X.IconButton icon="sidebar" label="Collapse sidebar" />
+          <X.IconButton icon="sidebar-collapse" label="Collapse sidebar" />
           <X.Breadcrumb items={[{ label: "Overview" }, { label: "Dashboard" }]} />
           <span className="hp-console-spacer" />
           <X.PaletteTrigger onOpen={() => {}} hotkey={false} />
@@ -562,6 +563,68 @@ function Components() {
         <p className="hp-more">
           {browsing ? `${Math.min(PER_PAGE, list.length)} of ${list.length} shown. ` : ""}
           <a className="hp-text-link" href={SB}>See all {COMPONENTS.length} in Storybook</a>
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- icons ---------- */
+
+const ICON_SIZES = [16, 20, 24] as const;
+/** Icons shown before "Show all": five rows of the widest grid. */
+const ICONS_FIRST = 40;
+
+function Icons() {
+  const [q, setQ] = useState("");
+  const [size, setSize] = useState<(typeof ICON_SIZES)[number]>(20);
+  const [all, setAll] = useState(false);
+  const [copied, setCopied] = useState("");
+  const hits = useMemo(() => {
+    const s = q.trim().toLowerCase().replace(/\s+/g, "-");
+    return s ? X.ICON_NAMES.filter((n) => n.includes(s)) : X.ICON_NAMES;
+  }, [q]);
+  const filtering = q.trim() !== "";
+  const shown = all || filtering ? hits : hits.slice(0, ICONS_FIRST);
+  const copy = (name: string) => {
+    void navigator.clipboard?.writeText(name).catch(() => {});
+    setCopied(name);
+  };
+  return (
+    <section className="hp-sec" id="icons" aria-labelledby="hp-icons-h">
+      <div className="wrap hp-wrap">
+        <div className="hp-head section-head">
+          <h2 id="hp-icons-h">{X.ICON_NAMES.length} icons on one 24px grid</h2>
+          <p className="hp-sub">Line icons with a 1.75 stroke and round joins, coloured by their parent. Click one to copy its name for <code>Icon name</code> or an <code>icon</code> prop.</p>
+        </div>
+        <div className="hp-filter">
+          <label className="hp-label hp-filter-label" htmlFor="hp-icon-filter">Filter icons</label>
+          <X.SearchInput id="hp-icon-filter" placeholder="Name, e.g. sidebar" value={q} onChange={(e) => setQ(e.target.value)} onClear={() => setQ("")} count={filtering ? hits.length : undefined} />
+          <X.Segmented label="Icon size" value={String(size)} onChange={(v) => setSize(Number(v) as (typeof ICON_SIZES)[number])} options={ICON_SIZES.map((s) => ({ value: String(s), label: `${s}px` }))} />
+        </div>
+        {shown.length ? (
+          <ul className="hp-icons" aria-label="Icons">
+            {shown.map((n) => (
+              <li key={n}>
+                <button type="button" className="hp-icon" data-copied={copied === n ? "" : undefined} onClick={() => copy(n)} aria-label={`Copy ${n}`}>
+                  <X.Icon name={n} size={size} />
+                  <code>{n}</code>
+                </button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="hp-empty">
+            <X.EmptyState size="center" icon="search" title="No icon matches" hint={`No icon name contains “${q}”.`} actions={<X.Button variant="secondary" onClick={() => setQ("")}>Clear the filter</X.Button>} />
+          </div>
+        )}
+        <p className="hp-more">
+          <span role="status">{copied ? `Copied “${copied}”. ` : ""}</span>
+          {!filtering && hits.length > ICONS_FIRST ? (
+            <button type="button" className="hp-text-link hp-link-button" onClick={() => setAll(!all)} aria-expanded={all}>
+              {all ? `Show the first ${ICONS_FIRST}` : `Show all ${hits.length} icons`}
+            </button>
+          ) : null}
         </p>
       </div>
     </section>
@@ -799,6 +862,7 @@ function Home() {
         <Console />
         <Devices theme={theme} />
         <Components />
+        <Icons />
         <Themes />
         <Install />
         <Agents />

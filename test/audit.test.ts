@@ -41,6 +41,11 @@ describe("audit: one bad fixture per rule", () => {
   it("left-stripe flags border-left, inset shadow and logical width", () => {
     expect(run("bad/left-stripe").map((x) => x.line)).toEqual([1, 2, 3]);
   });
+  it("left-stripe flags a thick Tailwind start border on a rounded box, not hairlines or blockquotes", () => {
+    const f = run("bad/left-stripe-tailwind");
+    expect(f.every((x) => x.rule === "left-stripe" && x.level === "error"), JSON.stringify(f)).toBe(true);
+    expect(f.map((x) => x.line)).toEqual([1, 2]);
+  });
   it("i18n-parity compares en and vi", () => {
     const f = run("bad/i18n-parity", { i18n: fx("bad/i18n-parity") });
     const msgs = f.filter((x) => x.rule === "i18n-parity").map((x) => x.message);

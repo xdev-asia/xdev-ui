@@ -655,6 +655,18 @@ export function audit(dir, opts = {}) {
       } else if (style && /box-shadow|boxShadow/.test(line) && /inset\s+-?(?:0?\.\d+|[1-9]\d*(?:\.\d+)?)(?:px|rem|em)?\s+0(?:px|rem|em)?\s+0/.test(line)) {
         add(file, n, "left-stripe", "error", "Inset box-shadow stripe on the left edge.");
       }
+      // Tailwind spelling of the same stripe: `rounded-xl border-s-[3px]`, `rounded-lg border-l-4`. On a rounded
+      // box the thick start edge bends round both corners and reads as a bracket. Hairlines (<= 1px) and
+      // unrounded rules (a blockquote's `border-l-2`) stay allowed.
+      if (!css && /(?<![\w-])rounded(?![\w-]*none)/.test(line)) {
+        for (const m of line.matchAll(/(?<![\w-])border-[ls]-(?:(\d+)|\[(\d*\.?\d+)(px|rem|em)?\])(?![\w-])/g)) {
+          const px = m[1] !== undefined ? Number(m[1]) : Number(m[2]) * (m[3] === "rem" || m[3] === "em" ? 16 : 1);
+          if (px > 1) {
+            add(file, n, "left-stripe", "error", `${m[0]} on a rounded box is a coloured left stripe; state is a tint, a 1px border or a StatusDot.`);
+            break;
+          }
+        }
+      }
       if (!css && /\b(?:min-|max-)?h-screen\b/.test(line)) add(file, n, "viewport-height", "warn", "h-screen is 100vh, taller than the visible area on phones; use h-dvh (min-h-dvh, max-h-dvh).");
       if (!css && style && /\b(?:height|minHeight|maxHeight|blockSize|minBlockSize)\s*:\s*["'`]\d*\.?\d+vh\b/.test(line))
         add(file, n, "viewport-height", "warn", "A vh height in a style prop hides content behind the phone address bar; use dvh.");
