@@ -33,7 +33,7 @@ A connection exists only when it is proven by a render, an import, a prop, CSS t
 
 Read, in this order, and keep only what governs the selected surface:
 
-1. The app's own `DESIGN.md`, `AGENTS.md` or design notes, when current.
+1. The app's own `DESIGN.md` (the brief `xdev-ui-design` writes from `xdev-ui-design/references/brief-template.md`: direction, preserve list, decisions and learned constraints), `AGENTS.md` or design notes, when current. A preserve-list item or a recorded decision is a contract; a finding that would break one is dropped.
 2. The owner's notes and rule catalogue of `xdev-ui-design`: `xdevui_get_skill name="xdev-ui-design" file="references/owner-notes.md"`, then `file="references/rules.md"`. Owner's notes win over the rules.
 3. The `## Rules` of each library part the surface mounts (`xdevui_get_component`) and the guidelines (`xdevui_get_guidelines`).
 4. Tokens by role (`xdevui_search_tokens`).

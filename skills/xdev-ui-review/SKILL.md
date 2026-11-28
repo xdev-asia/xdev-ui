@@ -139,3 +139,15 @@ When asked to review every page or every feature:
 ## 5. Report
 
 List what you fixed and what is left. Say which manual checks you did not run; do not claim them.
+
+Report what is left, most severe first, in one table; every row cites an audit rule, a rule ID, a page check or a screenshot:
+
+```
+| severity | where | before | after | why |
+|---|---|---|---|---|
+| Critical | Users, row actions | icon button with no name | `aria-label` "Delete user" | `a11y-icon-name` |
+| High | Users, empty | blank table | `EmptyState` with "Invite a user" | `st-empty-next-step` |
+| Quick win | Users, header | no count | count in the description | `nav-count-heading` |
+```
+
+Critical: an audit error, an accessibility failure or a broken main task. High: a failed page check every visit meets. Quick win: small and clear; fix it in the same pass. For a judgement of the whole screen against its brief, use the critique in `xdev-ui-design` (`xdev-ui-design/references/critique.md`).
